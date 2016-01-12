@@ -1,6 +1,13 @@
 manylinux
 =========
 
+Email: manylinux-discuss@googlegroups.com
+
+Archives: https://groups.google.com/forum/#!forum/manylinux-discuss
+
+Synopsis
+--------
+
 Right now, if you want to distribute a binary Python extension on
 Windows or OS/X, then there's a nice straightforward way to do that:
 you build a wheel, it gets a platform like "win32" or
