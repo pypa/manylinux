@@ -1,0 +1,14 @@
+language: c
+sudo: required
+services:
+  - docker
+
+install:
+  - docker build --rm -t buildenv docker/
+
+script:
+  >
+    PACKAGES=(numpy);
+    for pkg in "${PACKAGES[@]}"; do
+      docker run -t --rm -v `pwd`:/io buildenv /opt/3.5/bin/pip install --no-binary :all: ${pkg} -vv;
+    done

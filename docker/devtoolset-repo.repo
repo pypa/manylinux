@@ -1,5 +1,0 @@
-[devtoolset-repo]
-gpgcheck=0
-humanname=devtools 2 for Centos $releasever
-baseurl=http://people.centos.org/tru/devtools-2/$releasever/$basearch/RPMS
-name=devtools 2 for Centos $releasever
