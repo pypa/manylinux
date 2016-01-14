@@ -39,7 +39,7 @@ So: our plan here is to exploit the work these companies have already
 done, and use it to standardize a baseline "manylinux" platform for
 use in binary Python wheels. (Or, actually, a "manylinux1" platform,
 because if this works then we expect that in a few years once people
-stop using RHEL 5 then we'll want to bump out to a newer set of
+stop using RHEL 5 then we'll want to bump up to a newer set of
 baseline libraries.)
 
 
@@ -56,7 +56,7 @@ Todo
   * As a starting point, we have a copy of the docker file that
     Enthought uses in ``docker/``.
 
-  * What it's missing ATM is
+  * What it's missing ATM is builds of the Python interpreter itself.
 
 * Integrate Robert McGibbon's work to `audit and rename such wheels
   <https://github.com/rmcgibbo/deloc8>`_
