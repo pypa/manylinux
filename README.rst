@@ -59,7 +59,8 @@ Todo
   * What it's missing ATM is builds of the Python interpreter itself.
 
 * Integrate Robert McGibbon's work to `audit and rename such wheels
-  <https://github.com/rmcgibbo/deloc8>`_
+  <https://github.com/manylinux/auditwheel>`_ (now moved to the
+  manylinux organization)
 
 * Make some demo wheels that people can try to verify that this
   approach works
