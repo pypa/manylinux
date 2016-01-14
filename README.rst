@@ -76,8 +76,11 @@ Todo
 Notes
 -----
 
-I (= njs) am thinking maybe our rule for determining whether a system
-is considered to be manylinux1-compatible should be:
+One thing we'll need is a rule for determining whether a system is
+considered to be manylinux1-compatible (e.g., so pip can decide
+whether it's running on a "manylinux1 system" -- this is different
+from deciding whether a given *wheel* is manylinux1 compatible).
+I (= njs) am thinking maybe our rule should be:
 
 * the regular wheel platform tag (which is
   ``distutils.util.get_platform()``) starts with the string
