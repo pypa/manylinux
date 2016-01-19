@@ -20,14 +20,14 @@ RUN rpm -Uvh --replacepkgs epel-release-5*.rpm && rm -f epel-release-5*.rpm
 
 # Development tools and libraries
 RUN yum -y install curl wget bzip2 make git patch unzip bison yasm autoconf automake which \
-                   gcc-c++ gcc  kernel-devel-`uname -r` \
-                   devtoolset-2-binutils devtoolset-2-gcc devtoolset-2-gcc-c++ \
-                   gcc-gfortran gcc44 gcc44-c++ gcc44-gfortran \
+                   kernel-devel-`uname -r` \
+                   devtoolset-2-binutils devtoolset-2-gcc \
+                   devtoolset-2-gcc-c++ devtoolset-2-gcc-gfortran \
                    mesa-libGL-devel mesa-libGLU-devel libXt-devel cups-devel \
                    libXext-devel libSM-devel libXrender-devel libX11-devel \
                    libXrender-devel libICE-devel ncurses-devel ${PYTHON_COMPILE_DEPS}
 ENV PATH /opt/rh/devtoolset-2/root/usr/bin:$PATH
-
+ENV LD_LIBRARY_PATH /opt/rh/devtoolset-2/root/usr/lib64:/opt/rh/devtoolset-2/root/usr/lib
 
 # Compile new Pythons
 RUN for PYVER in ${PY_VERS}; do  \
