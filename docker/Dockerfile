@@ -1,5 +1,5 @@
 FROM centos:5.11
-MAINTAINER The NumPy Project
+MAINTAINER The ManyLinux project
 
 # Python versions installed in /opt/python. Could add more, if desired.
 ENV PY_VERS="2.7.11  3.5.1"
@@ -12,6 +12,9 @@ ENV LANGUAGE=en_US.UTF-8
 # image after compiling Python
 ENV PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel"
 
+# Libraries that are allowed as part of the manylinux1 profile
+ENV MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
+
 # EPEL support
 ADD https://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm /
 # Dev toolset (for LLVM and other projects requiring C++11 support)
@@ -23,9 +26,7 @@ RUN yum -y install curl wget bzip2 make git patch unzip bison yasm autoconf auto
                    kernel-devel-`uname -r` \
                    devtoolset-2-binutils devtoolset-2-gcc \
                    devtoolset-2-gcc-c++ devtoolset-2-gcc-gfortran \
-                   mesa-libGL-devel mesa-libGLU-devel libXt-devel cups-devel \
-                   libXext-devel libSM-devel libXrender-devel libX11-devel \
-                   libXrender-devel libICE-devel ncurses-devel ${PYTHON_COMPILE_DEPS}
+                   ${PYTHON_COMPILE_DEPS}
 ENV PATH /opt/rh/devtoolset-2/root/usr/bin:$PATH
 ENV LD_LIBRARY_PATH /opt/rh/devtoolset-2/root/usr/lib64:/opt/rh/devtoolset-2/root/usr/lib
 
@@ -59,5 +60,6 @@ RUN wget http://nixos.org/releases/patchelf/patchelf-0.8/patchelf-0.8.tar.gz && 
 RUN yum -y erase wireless-tools gtk2 libX11 hicolor-icon-theme \
                  avahi freetype bitstream-vera-fonts \
                  ${PYTHON_COMPILE_DEPS}  > /dev/null 2>&1 && \
+    yum -y install ${MANYLINUX1_DEPS} && \
     yum -y clean all > /dev/null 2>&1 && \
     yum list installed
