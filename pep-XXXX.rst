@@ -1,4 +1,4 @@
-PEP: 1234
+PEP: XXXX
 Title: A Platform Tag for Portable Linux Built Distributions
 Version: $Revision$
 Last-Modified: $Date$
