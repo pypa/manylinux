@@ -6,15 +6,15 @@ Author: Robert T. McGibbon <rmcgibbo@gmail.com>, Nathaniel J. Smith <njs@pobox.c
 Status: Draft
 Type: Process
 Content-Type: text/x-rst
-Created: 01-Jan-2016
-Post-History: 30-Aug-2002
+Created: 19-Jan-2016
+Post-History: 19-Jan-2016
 
 
 Abstract
 ========
 
 This PEP proposes the creation of a new platform tag for Python package built
-distributions, such as wheels, called ``manylinux_1_{x86_64,i386}`` with
+distributions, such as wheels, called ``manylinux1_{x86_64,i386}`` with
 external dependencies limited restricted to a standardized subset of
 the Linux kernel and core userspace ABI. It proposes that PyPI support
 uploading and distributing Wheels with this platform tag, and that ``pip``
@@ -56,9 +56,9 @@ extension modules for Linux -- e.g. Enthought with Canopy [2]_ and Continuum
 Analytics with Anaconda [3]_.
 
 Building on the compability lessons learned from these companies, we thus
-define a baseline ``manylinux_1`` platform tag for use by binary Python
+define a baseline ``manylinux1`` platform tag for use by binary Python
 wheels, and introduce the implementation of preliminary tools to aid in the
-construction of these ``manylinux_1`` wheels.
+construction of these ``manylinux1`` wheels.
 
 
 Key Causes of Inter-Linux Binary Incompatibility
@@ -110,8 +110,8 @@ This generally prevents built distributions compiled on the latest Linux
 distributions from being portable.
 
 
-The ``manylinux_1`` policy
-==========================
+The ``manylinux1`` policy
+=========================
 
 For these reasons, to achieve broad portability, Python wheels
 
@@ -120,7 +120,7 @@ For these reasons, to achieve broad portability, Python wheels
  * should depend only on ``old`` symbol versions in those external shared
    libraries.
 
-The ``manylinux_1`` policy thus encompasses a standard for what the
+The ``manylinux1`` policy thus encompasses a standard for what the
 permitted external shared libraries a wheel may depend on, and the maximum
 depended-upon symbol versions therein.
 
@@ -166,11 +166,11 @@ this date.
 Compilation and Tooling
 =======================
 
-To support the compilation of wheels meeting the ``manylinux_1`` standard, we
+To support the compilation of wheels meeting the ``manylinux1`` standard, we
 provide initial drafts of two tools.
 
 The first is a Docker image based on CentOS 5.11, which is recommended as an
-easy to use self-contained build box for compiling  ``manylinux_1`` wheels.
+easy to use self-contained build box for compiling  ``manylinux1`` wheels.
 Compiling on a more recently-released linux distribution will generally
 introduce dependencies on too-new versioned symbols. The image comes with a
 full compiler suite installed (``gcc``, ``g++``, and ``gfortran`` 4.8.2) as
@@ -179,7 +179,7 @@ well as the latest releases of Python and pip.
 The second tool is a command line executable called ``auditwheel``. First, it
 inspects all of the ELF files inside a wheel to check for dependencies on
 versioned symbols or external shared libraries, and verifies conformance with
-the ``manylinux_1`` policy. This includes the ability to add the new platform
+the ``manylinux1`` policy. This includes the ability to add the new platform
 tag to conforming wheels.
 
 In addition, ``auditwheel`` has the ability to automatically modify wheels that
@@ -190,7 +190,7 @@ similar result as if the libraries had been statically linked without requiring
 changes to the build system.
 
 Neither of these tools are necessary to build wheels which conform with the
-``manylinux_1`` policy. Similar results can usually be achieved by statically
+``manylinux1`` policy. Similar results can usually be achieved by statically
 linking external dependencies and/or using certain inline assembly constructs
 to instruct the linker to prefer older symbol versions, however these tricks
 can be quite esoteric.
@@ -199,7 +199,7 @@ can be quite esoteric.
 Platform Detection in ``pip``
 =============================
 
-TODO How does ``pip`` detect that it's running on a ``manylinux_1`` compatible
+TODO How does ``pip`` detect that it's running on a ``manylinux1`` compatible
 system?
 
 
@@ -213,7 +213,7 @@ effects of these patches when the underlying libraries are updated. This can
 be particularly important for security updates in packages communication
 across the network or cryptography.
 
-``manylinux_1`` wheels distributed through PyPI that bundle security-critical
+``manylinux1`` wheels distributed through PyPI that bundle security-critical
 libraries like OpenSSL will thus assume responsibility for prompt updates in
 response disclosed vulnerabilities and patches. This closely parallels the
 security implications of the distribution of binary wheels on Windows that,
