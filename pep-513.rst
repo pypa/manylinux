@@ -34,7 +34,7 @@ as ``pip``.
 
 For Linux, the situation is much more delicate. In general, compiled Python
 extension modules built on one Linux distribution will not work on other Linux
-distributions, or even on the different machines running the same Linux
+distributions, or even on different machines running the same Linux
 distribution with different system libraries installed.
 
 Build tools using PEP 425 platform tags [1]_ do not track information about the
