@@ -296,7 +296,8 @@ libraries like OpenSSL will thus assume responsibility for prompt updates in
 response disclosed vulnerabilities and patches. This closely parallels the
 security implications of the distribution of binary wheels on Windows that,
 because the platform lacks a system package manager, generally bundle their
-dependencies.
+dependencies. In particular, because its lacks a stable ABI, OpenSSL cannot be
+included in the ``manylinux1`` profile.
 
 
 Rejected Alternatives
