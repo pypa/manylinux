@@ -7,6 +7,8 @@ Archives: https://groups.google.com/forum/#!forum/manylinux-discuss
 
 .. image:: https://quay.io/repository/manylinux/manylinux/status
    :target: https://quay.io/repository/manylinux/manylinux
+.. image:: https://img.shields.io/travis/manylinux/manylinux.svg
+   :target: https://travis-ci.org/manylinux/manylinux
 
 Synopsis
 --------
