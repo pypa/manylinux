@@ -126,22 +126,37 @@ depended-upon symbol versions therein.
 
 The permitted external shared libraries are: ::
 
-  "libpanelw.so.5", "libncursesw.so.5", "libgcc_s.so.1", "libstdc++.so.6",
-  "libm.so.6", "libdl.so.2", "librt.so.1", "libcrypt.so.1", "libc.so.6",
-  "libnsl.so.1", "libutil.so.1", "libpthread.so.0", "libX11.so.6",
-  "libXext.so.6", "libXrender.so.1", "libICE.so.6", "libSM.so.6",
-  "libGL.so.1", "libgobject-2.0.so.0", "libgthread-2.0.so.0",
-  "libglib-2.0.so.0", "libgmodule-2.0.so.0", and "libgio-2.0.so.0".
+  libpanelw.so.5
+  libncursesw.so.5
+  libgcc_s.so.1
+  libstdc++.so.6
+  libm.so.6
+  libdl.so.2
+  librt.so.1
+  libcrypt.so.1
+  libc.so.6
+  libnsl.so.1
+  libutil.so.1
+  libpthread.so.0
+  libX11.so.6
+  libXext.so.6
+  libXrender.so.1
+  libICE.so.6
+  libSM.so.6
+  libGL.so.1
+  libgobject-2.0.so.0
+  libgthread-2.0.so.0
+  libglib-2.0.so.0
 
 On Debian-based systems, these libraries are provided by the packages ::
 
-    "libncurses5", "libgcc1", "libstdc++6", "libc6", "libx11-6", "libxext6",
-    "libxrender1", "libice6", "libsm6", "libgl1-mesa-glx", and "libglib2.0-0".
+    libncurses5 libgcc1 libstdc++6 libc6 libx11-6 libxext6
+    libxrender1 libice6 libsm6 libgl1-mesa-glx libglib2.0-0
 
 On RPM-based systems, these libraries are provided by the packages ::
 
-    "ncurses", "libgcc", "libstdc++", "glibc", "libXext", "libXrender",
-    "libICE", "libSM", "mesa-libGL", and "glib2".
+    ncurses libgcc libstdc++ glibc libXext libXrender
+    libICE libSM mesa-libGL glib2
 
 This list was compiled by checking the external shared library dependencies of
 the Canopy [1]_ and Anaconda [2]_ distributions, which both include a wide array
