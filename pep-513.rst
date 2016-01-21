@@ -93,7 +93,7 @@ libraries.
 Versioning of Core Shared Libraries
 -----------------------------------
 
-Even if author or maintainers of a Python extension module with to use no
+Even if the authors or maintainers of a Python extension module wish to use no
 external shared libraries, the modules will generally have a dynamic runtime
 dependency on the GNU C library, ``glibc``. While it is possible, statically
 linking ``glibc`` is usually a bad idea because of bloat, and because certain
