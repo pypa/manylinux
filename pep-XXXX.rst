@@ -185,14 +185,14 @@ To support the compilation of wheels meeting the ``manylinux1`` standard, we
 provide initial drafts of two tools.
 
 The first is a Docker image based on CentOS 5.11, which is recommended as an
-easy to use self-contained build box for compiling  ``manylinux1`` wheels.
+easy to use self-contained build box for compiling ``manylinux1`` wheels [4]_.
 Compiling on a more recently-released linux distribution will generally
 introduce dependencies on too-new versioned symbols. The image comes with a
 full compiler suite installed (``gcc``, ``g++``, and ``gfortran`` 4.8.2) as
 well as the latest releases of Python and pip.
 
-The second tool is a command line executable called ``auditwheel``. First, it
-inspects all of the ELF files inside a wheel to check for dependencies on
+The second tool is a command line executable called ``auditwheel`` [5]_. First,
+it inspects all of the ELF files inside a wheel to check for dependencies on
 versioned symbols or external shared libraries, and verifies conformance with
 the ``manylinux1`` policy. This includes the ability to add the new platform
 tag to conforming wheels.
@@ -323,7 +323,10 @@ References
    (https://store.enthought.com/downloads/)
 .. [3] Continuum Analytics Anaconda Python Distribution
    (https://www.continuum.io/downloads)
-
+.. [4] manylinux1 docker image
+   (https://quay.io/repository/manylinux/manylinux)
+.. [5] auditwheel
+   (https://pypi.python.org/pypi/auditwheel)
 
 Copyright
 =========
