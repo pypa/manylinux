@@ -302,11 +302,16 @@ dependencies.
 Rejected Alternatives
 =====================
 
-One alternative is provide separate platform tags for each Linux distribution
-(and each version thereof). This would require that package authors would be
-required to compile and upload twenty or more different built distributions of
-their package to PyPI to cover the common linux distributions in use, which we
-consider too onerous to be practical.
+One alternative would be to provide separate platform tags for each Linux
+distribution (and each version thereof), e.g. ``RHEL6``, ``ubuntu14_10``,
+``debian_jessie``, etc. Nothing in this proposal rules out the possibility of
+adding such platform tags in the future, or of further extensions to wheel
+metadata that would allow wheels to declare dependencies on external
+system-installed packages. However, such extensions would require substantially
+more work than this proposal, and still might not be appreciated by package
+developers who would prefer not to have to maintain multiple build environments
+and build multiple wheels in order to cover all the common Linux distributions.
+Therefore we consider such proposals to be out-of-scope for this PEP.
 
 
 References
