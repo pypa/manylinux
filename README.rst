@@ -5,6 +5,9 @@ Email: manylinux-discuss@googlegroups.com
 
 Archives: https://groups.google.com/forum/#!forum/manylinux-discuss
 
+.. image:: https://quay.io/repository/manylinux/manylinux/status
+   :target: https://quay.io/repository/manylinux/manylinux
+
 Synopsis
 --------
 
