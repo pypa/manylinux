@@ -59,6 +59,9 @@ Later, he asked:
     development distribution, or do you "trust" people building such wheels?
 
 
+Nathaniel wrote:
 
-
-
+    The rule is basically: "if your wheel
+    works when given access to CentOS 5's versions of the following
+    packages: ..., then your wheel is manylinux1 compatible". Any method
+    for achieving that is fair game :-).
