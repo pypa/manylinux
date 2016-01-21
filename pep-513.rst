@@ -1,10 +1,12 @@
-PEP: XXXX
+PEP: 513
 Title: A Platform Tag for Portable Linux Built Distributions
 Version: $Revision$
 Last-Modified: $Date$
 Author: Robert T. McGibbon <rmcgibbo@gmail.com>, Nathaniel J. Smith <njs@pobox.com>
+BDFL-Delegate: Nick Coghlan <ncoghlan@gmail.com>
+Discussions-To: Distutils SIG <distutils-sig@python.org>
 Status: Draft
-Type: Process
+Type: Informational
 Content-Type: text/x-rst
 Created: 19-Jan-2016
 Post-History: 19-Jan-2016
@@ -329,13 +331,13 @@ References
 .. [5] auditwheel
    (https://pypi.python.org/pypi/auditwheel)
 
+
 Copyright
 =========
 
 This document has been placed into the public domain.
 
 ..
-
    Local Variables:
    mode: indented-text
    indent-tabs-mode: nil
