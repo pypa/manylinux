@@ -211,11 +211,74 @@ to instruct the linker to prefer older symbol versions, however these tricks
 can be quite esoteric.
 
 
-Platform Detection in ``pip``
-=============================
+Platform Detection for Installers
+=================================
 
-TODO How does ``pip`` detect that it's running on a ``manylinux1`` compatible
-system?
+Because the ``manylinux1`` profile is already known to work for the many
+thousands of users of popular commercial Python distributions, we suggest that
+installation tools like ``pip`` should error on the side of assuming that a
+system *is* compatible, unless there is specific reason to think otherwise.
+
+We know of three main sources of potential incompatibility that are likely to
+arise in practice:
+
+* A linux distribution that is too old (e.g. RHEL 4)
+* A linux distribution that does not use glibc (e.g. Alpine Linux, which is
+  based on musl libc, or Android)
+* Eventually, in the future, there may exist distributions that break
+  compatibility with this profile
+
+To handle the first two cases, we propose the following simple and reliable
+check: ::
+
+    def have_glibc_version(major, minimum_minor):
+        import ctypes
+
+        process_namespace = ctypes.CDLL(None)
+        try:
+            gnu_get_libc_version = process_namespace.gnu_get_libc_version
+        except AttributeError:
+            # We are not linked to glibc.
+            return False
+
+        gnu_get_libc_version.restype = ctypes.c_char_p
+        version_str = gnu_get_libc_version()
+        # py2 / py3 compatibility:
+        if not isinstance(version_str, str):
+            version_str = version_str.decode("ascii")
+
+        version = [int(piece) for piece in version_str.split(".")]
+        assert len(version) == 2
+        if major != version[0]:
+            return False
+        if minimum_minor > version[1]:
+            return False
+        return True
+
+    # CentOS 5 uses glibc 2.5.
+    is_manylinux1_compatible = have_glibc_version(2, 5)
+
+To handle the third case, we propose the creation of a file
+``/etc/python/compatibility.cfg`` in ConfigParser format, with sample
+contents: ::
+
+   [manylinux1]
+   compatible = true
+
+where the supported values for the ``manylinux1.compatible`` entry are the
+same as those supported by the ConfigParser ``getboolean`` method.
+
+The proposed logic for ``pip`` or related tools, then, is:
+
+0) If ``distutils.util.get_platform()`` does not start with the string
+   ``"linux"``, then assume the current system is not ``manylinux1``
+   compatible.
+1) If ``/etc/python/compatibility.conf`` exists and contains a ``manylinux1``
+   key, then trust that.
+2) Otherwise, if ``have_glibc_version(2, 5)`` returns true, then assume the
+   current system can handle ``manylinux1`` wheels.
+3) Otherwise, assume that the current system cannot handle ``manylinux1``
+   wheels.
 
 
 Security Implications
