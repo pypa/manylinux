@@ -37,7 +37,7 @@ RUN echo 'e23ccafdb75cfcde782da0151731aa2185195ac745eea3846133f2e05c0e0bff  open
     wget http://www.openssl.org/source/openssl-1.0.2e.tar.gz && \
     sha256sum -c openssl-1.0.2e.tar.gz.sha256 && \
     tar -xzvf openssl-1.0.2e.tar.gz && \
-    (cd openssl-1.0.2e && ./config shared --prefix=/usr && make && make install) && \
+    (cd openssl-1.0.2e && ./config no-ssl2 shared --prefix=/usr && make && make install) && \
     rm -rf openssl-1.0.2e openssl-1.0.2e.tar.gz openssl-1.0.2e.tar.gz.sha256 && \
     for PYVER in ${PY_VERS}; do  \
         wget -q https://www.python.org/ftp/python/$PYVER/Python-$PYVER.tgz && \
