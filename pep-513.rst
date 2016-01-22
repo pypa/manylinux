@@ -218,7 +218,7 @@ Platform Detection for Installers
 
 Because the ``manylinux1`` profile is already known to work for the many
 thousands of users of popular commercial Python distributions, we suggest that
-installation tools like ``pip`` should error on the side of assuming that a
+installation tools like ``pip`` should err on the side of assuming that a
 system *is* compatible, unless there is specific reason to think otherwise.
 
 We know of three main sources of potential incompatibility that are likely to
