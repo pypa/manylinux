@@ -24,9 +24,6 @@ RUN pip install pandas
 RUN pip install regex
 RUN pip install pymongo
 
-RUN yum install -y zeromq-devel
-RUN pip install pyzmq --install-option="--zmq=/usr/lib"
-
 RUN yum install -y libjpeg-devel zlib-devel
 RUN pip install pillow
 
