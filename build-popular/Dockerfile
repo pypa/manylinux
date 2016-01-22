@@ -11,7 +11,7 @@ RUN pip install cffi
 # cryptography
 RUN wget http://www.openssl.org/source/openssl-1.0.2e.tar.gz
 RUN tar -xzvf openssl-1.0.2e.tar.gz
-RUN (cd openssl-1.0.2e && ./config shared --prefix=/usr/local && make && make install)
+RUN (cd openssl-1.0.2e && ./config no-shared no-ssl2 -fPIC --prefix=/usr/local && make && make install)
 RUN pip install cryptography
 
 # libOpenBLAS (for numpy)
