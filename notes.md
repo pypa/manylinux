@@ -65,3 +65,23 @@ Nathaniel wrote:
     works when given access to CentOS 5's versions of the following
     packages: ..., then your wheel is manylinux1 compatible". Any method
     for achieving that is fair game :-).
+
+
+
+
+From Nick :
+
+    The PEP should also be explicit that this does reintroduce the
+    bundling problem that distro unbundling policies were designed to
+    address, but:
+
+    1. In these days of automated continuous intregration & deployment
+       pipelines, publishing new versions and updating dependencies is easier
+       than it was when those policies were defined
+    2. Folks remain free to use "--no-binary" if they want to force local
+       builds rather than using pre-built wheel files
+    3. The popularity of container based deployment and "immutable
+       infrastructure" models involve substantial bundling at the application
+       layer anyway
+    4. This PEP doesn't rule out the idea of offering more targeted
+       binaries for particular Linux distributions
