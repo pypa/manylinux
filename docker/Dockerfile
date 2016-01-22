@@ -23,7 +23,7 @@ RUN rpm -Uvh --replacepkgs epel-release-5*.rpm && rm -f epel-release-5*.rpm
 
 
 # Development tools and libraries
-RUN yum -y install curl wget bzip2 make git patch unzip bison yasm autoconf automake which \
+RUN yum -y install curl wget bzip2 make git patch unzip bison yasm autoconf automake which file \
                    kernel-devel-`uname -r` \
                    devtoolset-2-binutils devtoolset-2-gcc \
                    devtoolset-2-gcc-c++ devtoolset-2-gcc-gfortran \
@@ -32,29 +32,34 @@ ENV PATH /opt/rh/devtoolset-2/root/usr/bin:$PATH
 ENV LD_LIBRARY_PATH /opt/rh/devtoolset-2/root/usr/lib64:/opt/rh/devtoolset-2/root/usr/lib
 
 
-# Compile new Pythons
+# Compile the latest Python releases.
+# (In order to have a proper SSL module, Python is compiled against openssl-1.0.2e
+# which is linked statically, and then we delete openssl afterwards)
 RUN echo 'e23ccafdb75cfcde782da0151731aa2185195ac745eea3846133f2e05c0e0bff  openssl-1.0.2e.tar.gz' > openssl-1.0.2e.tar.gz.sha256 && \
     wget http://www.openssl.org/source/openssl-1.0.2e.tar.gz && \
     sha256sum -c openssl-1.0.2e.tar.gz.sha256 && \
-    tar -xzvf openssl-1.0.2e.tar.gz && \
-    (cd openssl-1.0.2e && ./config no-ssl2 shared --prefix=/usr && make && make install) && \
+    tar -xzf openssl-1.0.2e.tar.gz && \
+    (cd openssl-1.0.2e && ./config no-ssl2 no-shared -fPIC --prefix=/usr/local/ssl && make && make install) && \
     rm -rf openssl-1.0.2e openssl-1.0.2e.tar.gz openssl-1.0.2e.tar.gz.sha256 && \
     for PYVER in ${PY_VERS}; do  \
         wget -q https://www.python.org/ftp/python/$PYVER/Python-$PYVER.tgz && \
         tar -xzf Python-$PYVER.tgz && \
         (cd Python-$PYVER && \
-            ./configure --prefix=/opt/$PYVER --with-ensurepip=install && \
-            make -j2 > /dev/null 2>&1 && \
-            make install > /dev/null 2>&1 \
+            mkdir -p /opt/$PYVER/lib && \
+            LDFLAGS="-Wl,-rpath /opt/$PYVER/lib" ./configure --prefix=/opt/$PYVER --enable-shared --with-ensurepip=install && \
+            make -j2 && \
+            make install \
         ) && \
         if [[ "$(echo $PYVER | cut -d. -f 1)" == "3" ]]; then \
             ln -s /opt/$PYVER/bin/python3 /opt/$PYVER/bin/python; \
             ln -s /opt/$PYVER/bin/pip3 /opt/$PYVER/bin/pip; \
         fi; \
         ln -s /opt/$PYVER/ /opt/$(echo $PYVER | cut -d. -f 1,2); \
+        /opt/$PYVER/bin/pip install pip --upgrade; \
         /opt/$PYVER/bin/pip install wheel; \
         rm -rf Python-$PYVER.tgz Python-$PYVER; \
-    done
+    done && \
+    rm -rf /usr/local/ssl
 
 
 # Install patchelf and auditwheel (latest)
