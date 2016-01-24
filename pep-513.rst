@@ -117,11 +117,11 @@ The ``manylinux1`` policy
 
 For these reasons, to achieve broad portability, Python wheels
 
- * should depend only on an extremely limited set of external shared
-   libraries; and
- * should depend only on "old" symbol versions in those external shared
-   libraries; and
- * should depend only on a widely-compatible kernel ABI.
+* should depend only on an extremely limited set of external shared
+  libraries; and
+* should depend only on "old" symbol versions in those external shared
+  libraries; and
+* should depend only on a widely-compatible kernel ABI.
 
 
 To be eligable for the ``manylinux1`` platform tag, a Python wheel must
