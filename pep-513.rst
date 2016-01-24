@@ -211,7 +211,7 @@ versioned symbols or external shared libraries, and verifies conformance with
 the ``manylinux1`` policy. This includes the ability to add the new platform
 tag to conforming wheels.
 
-In addition, ``auditwheel`` has the ability to fulfill modify wheels that
+In addition, ``auditwheel`` has the ability to automatically modify wheels that
 depend on external shared libraries by copying those shared libraries from
 the system into the wheel itself, and modifying the appropriate RPATH entries
 such that these libraries will be picked up at runtime. This accomplishes a
