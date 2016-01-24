@@ -123,8 +123,7 @@ For these reasons, to achieve broad portability, Python wheels
   libraries; and
 * should depend only on a widely-compatible kernel ABI.
 
-
-To be eligable for the ``manylinux1`` platform tag, a Python wheel must
+To be eligible for the ``manylinux1`` platform tag, a Python wheel must
 therefore both (a) contain binary executables and compiled code that links
 *only* to libraries (other than the appropriate ``libpython`` library, which is
 always a permitted dependency consistent with the PEP 425 ABI tag) with SONAMEs
@@ -188,7 +187,7 @@ with the following versions: ::
     GLIBCXX <= 3.4.9
     GCC <= 4.2.0
 
-To fullfill these requirements, wheels that utilize on compiled libraries
+To fulfill these requirements, wheels that utilize on compiled libraries
 beyond those included in the list should generally either bundle the required
 shared libraries inside the wheel or statically link to them.
 
@@ -309,12 +308,12 @@ in this document. This verification tasks should be left to other tools, like
 Bundled Wheels on Linux
 =======================
 
-The ``manylinux1`` policy in this PEP requires that many wheels bundle their
+The ``manylinux1`` policy in this PEP requires that wheels bundle their
 external dependencies, a practice which runs counter to the package management
 policies of many linux distributions' system package managers [9]_, [10]_.
 The primary purpose of this is compatibility. Furthermore, ``manylinux1``
-wheels  on PyPI are designed to occupy a different niche than the Python
-packages  available through the system package manager.
+wheels on PyPI are designed to occupy a different niche than the Python
+packages available through the system package manager.
 
 The decision in this PEP to depart from general Linux distribution unbundling
 policies is informed by the following concerns:
