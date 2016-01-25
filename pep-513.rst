@@ -9,7 +9,7 @@ Status: Draft
 Type: Informational
 Content-Type: text/x-rst
 Created: 19-Jan-2016
-Post-History: 24g-Jan-2016
+Post-History: 19-Jan-2016,
 
 
 Abstract
@@ -152,7 +152,7 @@ included in the following list: ::
     libglib-2.0.so.0
 
 and (b), work on a stock CentOS 5.11 [6]_ system that contains the system
-package manger's provided versions of these libraries.
+package manager's provided versions of these libraries.
 
 On Debian-based systems, these libraries are provided by the packages ::
 
@@ -188,6 +188,9 @@ with the following versions: ::
     GCC <= 4.2.0
 
 
+These recommendations are the outcome of the relevant discussions in January
+2016 [7]_, [8]_.
+
 Compilation of Compliant Wheels
 ===============================
 
@@ -200,7 +203,7 @@ Docker Image
 
 The first tool is a Docker image based on CentOS 5.11, which is recommended as
 an easy to use self-contained build box for compiling ``manylinux1`` wheels
-[7]_. Compiling on a more recently-released linux distribution will generally
+[9]_. Compiling on a more recently-released linux distribution will generally
 introduce dependencies on too-new versioned symbols. The image comes with a
 full compiler suite installed (``gcc``, ``g++``, and ``gfortran`` 4.8.2) as
 well as the latest releases of Python and ``pip``.
@@ -208,7 +211,7 @@ well as the latest releases of Python and ``pip``.
 Auditwheel
 ----------
 
-The second tools is a command line executable called ``auditwheel`` [8]_ that
+The second tools is a command line executable called ``auditwheel`` [10]_ that
 may aid in package maintainers in dealing with third-party external
 dependencies.
 
@@ -227,8 +230,8 @@ package-specific modifications to the build system, and distributing
 third-party dependencies on PyPI may require some coordination of the
 community of users of the package.
 
-As an often-automatic alternative to these options, we introduce ``auditwheel``
-[8]_. The tool inspects all of the ELF files  inside a wheel to check for
+As an often-automatic alternative to these options, we introduce ``auditwheel``.
+The tool inspects all of the ELF files  inside a wheel to check for
 dependencies on versioned symbols or external  shared libraries, and verifies
 conformance with the ``manylinux1`` policy. This  includes the ability to add
 the new platform tag to conforming wheels. More importantly, ``auditwheel`` has
@@ -247,7 +250,7 @@ While we acknowledge many approaches for dealing with third-party library
 dependencies within ``manylinux1`` wheels, we recognize that the ``manylinux1``
 policy encourages bundling external dependencies, a practice
 which runs counter to  the package management policies of many linux
-distributions' system package  managers [9]_, [10]_. The primary purpose of
+distributions' system package  managers [11]_, [12]_. The primary purpose of
 this is cross-distro compatibility.  Furthermore, ``manylinux1`` wheels on PyPI
 occupy a different  niche than the Python packages available through the
 system package manager.
@@ -406,13 +409,17 @@ References
    (https://www.continuum.io/downloads)
 .. [6] CentOS 5.11 Release Notes
    (https://wiki.centos.org/Manuals/ReleaseNotes/CentOS5.11)
-.. [7] manylinux1 docker image
+.. [7] manylinux-discuss mailing list discussion
+   (https://groups.google.com/forum/#!topic/manylinux-discuss/-4l3rrjfr9U)
+.. [8] distutils-sig discussion
+   (https://mail.python.org/pipermail/distutils-sig/2016-January/027997.html)
+.. [9] manylinux1 docker image
    (https://quay.io/repository/manylinux/manylinux)
-.. [8] auditwheel tool
+.. [10] auditwheel tool
    (https://pypi.python.org/pypi/auditwheel)
-.. [9] Fedora Bundled Software Policy
+.. [11] Fedora Bundled Software Policy
    (https://fedoraproject.org/wiki/Bundled_Software_policy)
-.. [10] Debian Policy Manual -- 4.13: Convenience copies of code
+.. [12] Debian Policy Manual -- 4.13: Convenience copies of code
     (https://www.debian.org/doc/debian-policy/ch-source.html#s-embeddedfiles)
 
 
