@@ -9,7 +9,7 @@ Status: Draft
 Type: Informational
 Content-Type: text/x-rst
 Created: 19-Jan-2016
-Post-History: 23-Jan-2016
+Post-History: 24g-Jan-2016
 
 
 Abstract
@@ -187,42 +187,113 @@ with the following versions: ::
     GLIBCXX <= 3.4.9
     GCC <= 4.2.0
 
-To fulfill these requirements, wheels that utilize on compiled libraries
-beyond those included in the list should generally either bundle the required
-shared libraries inside the wheel or statically link to them.
 
-
-Compilation and Tooling
-=======================
+Compilation of Compliant Wheels
+===============================
 
 To support the compilation of wheels meeting the ``manylinux1`` standard, we
 provide initial drafts of two tools.
 
-The first is a Docker image based on CentOS 5.11, which is recommended as an
-easy to use self-contained build box for compiling ``manylinux1`` wheels [7]_.
-Compiling on a more recently-released linux distribution will generally
+
+Docker Image
+------------
+
+The first tool is a Docker image based on CentOS 5.11, which is recommended as
+an easy to use self-contained build box for compiling ``manylinux1`` wheels
+[7]_. Compiling on a more recently-released linux distribution will generally
 introduce dependencies on too-new versioned symbols. The image comes with a
 full compiler suite installed (``gcc``, ``g++``, and ``gfortran`` 4.8.2) as
 well as the latest releases of Python and ``pip``.
 
-The second tool is a command line executable called ``auditwheel`` [8]_. First,
-it inspects all of the ELF files inside a wheel to check for dependencies on
-versioned symbols or external shared libraries, and verifies conformance with
-the ``manylinux1`` policy. This includes the ability to add the new platform
-tag to conforming wheels.
+Auditwheel
+----------
 
-In addition, ``auditwheel`` has the ability to automatically modify wheels that
-depend on external shared libraries by copying those shared libraries from
-the system into the wheel itself, and modifying the appropriate RPATH entries
-such that these libraries will be picked up at runtime. This accomplishes a
-similar result as if the libraries had been statically linked without requiring
-changes to the build system.
+The second tools is a command line executable called ``auditwheel`` [8]_ that
+may aid in package maintainers in dealing with third-party external
+dependencies.
 
-Neither of these tools are necessary to build wheels which conform with the
-``manylinux1`` policy. Similar results can usually be achieved by statically
-linking external dependencies and/or using certain inline assembly constructs
-to instruct the linker to prefer older symbol versions, however these tricks
-can be quite esoteric.
+There are at least three methods for building wheels that use third-party
+external libraries in a way that meets the above policy.
+
+1. The third-party libraries can be statically linked.
+2. The third-party shared libraries can be distributed in
+   separate packages on PyPI which are depended upon by the wheel.
+3. The third-party shared libraries can be bundled inside the wheel
+   libraries, linked with a relative path.
+
+All of these are valid option which may be effectively used by different
+packages and communities. Statically linking generally requires
+package-specific modifications to the build system, and distributing
+third-party dependencies on PyPI may require some coordination of the
+community of users of the package.
+
+As an often-automatic alternative to these options, we introduce ``auditwheel``
+[8]_. The tool inspects all of the ELF files  inside a wheel to check for
+dependencies on versioned symbols or external  shared libraries, and verifies
+conformance with the ``manylinux1`` policy. This  includes the ability to add
+the new platform tag to conforming wheels. More importantly, ``auditwheel`` has
+the ability to automatically modify wheels that depend on external shared
+libraries by copying those shared libraries from the system into the wheel
+itself, and modifying the appropriate ``RPATH`` entries such that these
+libraries will be picked up at runtime. This accomplishes a similar result as
+if the libraries had been statically linked without requiring changes to the
+build system.
+
+
+Bundled Wheels on Linux
+=======================
+
+While we acknowledge many approaches for dealing with third-party library
+dependencies within ``manylinux1`` wheels, we recognize that the ``manylinux1``
+policy encourages bundling external dependencies, a practice
+which runs counter to  the package management policies of many linux
+distributions' system package  managers [9]_, [10]_. The primary purpose of
+this is cross-distro compatibility.  Furthermore, ``manylinux1`` wheels on PyPI
+occupy a different  niche than the Python packages available through the
+system package manager.
+
+The decision in this PEP to encourage departure from general Linux distribution
+unbundling policies is informed by the following concerns:
+
+1. In these days of automated continuous integration and deployment
+   pipelines, publishing new versions and updating dependencies is easier
+   than it was when those policies were defined.
+2. ``pip`` users remain free to use the ``"--no-binary"`` option if they want
+   to force local builds rather than using pre-built wheel files.
+3. The popularity of modern container based deployment and "immutable
+   infrastructure" models involve substantial bundling at the application
+   layer anyway.
+4. Distribution of bundled wheels through PyPI is currently the norm for
+   Windows and OS X.
+5. This PEP doesn't rule out the idea of offering more targeted binaries for
+   particular Linux distributions in the future.
+
+The model described in this PEP is most ideally suited for cross-platform
+Python packages, because it means they can reuse much of the
+work that they're already doing to make static Windows and OS X wheels. We
+recognize that it is less optimal for Linux-specific packages that might
+prefer to interact more closely with Linux's unique package management
+functionality and only care about targeting a small set of particular distos.
+
+
+Security Implications
+---------------------
+
+One of the advantages of dependencies on centralized libraries in Linux is
+that bugfixes and security updates can be deployed system-wide, and
+applications which depend on these libraries will automatically feel the
+effects of these patches when the underlying libraries are updated. This can
+be particularly important for security updates in packages engaged in
+communication across the network or cryptography.
+
+``manylinux1`` wheels distributed through PyPI that bundle security-critical
+libraries like OpenSSL will thus assume responsibility for prompt updates in
+response disclosed vulnerabilities and patches. This closely parallels the
+security implications of the distribution of binary wheels on Windows that,
+because the platform lacks a system package manager, generally bundle their
+dependencies. In particular, because it lacks a stable ABI, OpenSSL cannot be
+included in the ``manylinux1`` profile.
+
 
 
 Platform Detection for Installers
@@ -305,59 +376,6 @@ in this document. This verification tasks should be left to other tools, like
 ``auditwheel``, that are developed separately.
 
 
-Bundled Wheels on Linux
-=======================
-
-The ``manylinux1`` policy in this PEP requires that wheels bundle their
-external dependencies, a practice which runs counter to the package management
-policies of many linux distributions' system package managers [9]_, [10]_.
-The primary purpose of this is compatibility. Furthermore, ``manylinux1``
-wheels on PyPI are designed to occupy a different niche than the Python
-packages available through the system package manager.
-
-The decision in this PEP to depart from general Linux distribution unbundling
-policies is informed by the following concerns:
-
-1. In these days of automated continuous integration and deployment
-   pipelines, publishing new versions and updating dependencies is easier
-   than it was when those policies were defined.
-2. ``pip`` users remain free to use the ``"--no-binary"`` option if they want
-   to force local builds rather than using pre-built wheel files.
-3. The popularity of modern container based deployment and "immutable
-   infrastructure" models involve substantial bundling at the application
-   layer anyway.
-4. Distribution of bundled wheels through PyPI is currently the norm for
-   Windows and OS X.
-5. This PEP doesn't rule out the idea of offering more targeted binaries for
-   particular Linux distributions in the future.
-
-The model described in this PEP is most ideally suited for cross-platform
-Python packages, because it works now and means they can reuse much of the
-work that they're already doing to make static Windows and OS X wheels. We
-recognize that it is less optimal for Linux-specific packages that might
-prefer to interact more closely with Linux's unique package management
-functionality and only care about targeting a small set of particular distos.
-
-
-Security Implications
----------------------
-
-One of the advantages of dependencies on centralized libraries in Linux is
-that bugfixes and security updates can be deployed system-wide, and
-applications which depend on these libraries will automatically feel the
-effects of these patches when the underlying libraries are updated. This can
-be particularly important for security updates in packages engaged in
-communication across the network or cryptography.
-
-``manylinux1`` wheels distributed through PyPI that bundle security-critical
-libraries like OpenSSL will thus assume responsibility for prompt updates in
-response disclosed vulnerabilities and patches. This closely parallels the
-security implications of the distribution of binary wheels on Windows that,
-because the platform lacks a system package manager, generally bundle their
-dependencies. In particular, because it lacks a stable ABI, OpenSSL cannot be
-included in the ``manylinux1`` profile.
-
-
 Rejected Alternatives
 =====================
 
@@ -396,6 +414,7 @@ References
    (https://fedoraproject.org/wiki/Bundled_Software_policy)
 .. [10] Debian Policy Manual -- 4.13: Convenience copies of code
     (https://www.debian.org/doc/debian-policy/ch-source.html#s-embeddedfiles)
+
 
 Copyright
 =========
