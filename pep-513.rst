@@ -191,9 +191,25 @@ with the following versions: ::
     GLIBCXX <= 3.4.9
     GCC <= 4.2.0
 
-
 These recommendations are the outcome of the relevant discussions in January
 2016 [7]_, [8]_.
+
+Note that in our recommendations below, we do not suggest that ``pip``
+or PyPI should attempt to check for and enforce the details of this
+policy (just as they don't check for and enforce the details of
+existing platform tags like ``win32``). The text above is provided (a)
+as advice to package builders, and (b) as a method for allocating
+blame if a given wheel doesn't work on some system: if it satisfies
+the policy above, then this is a bug in the spec or the installation
+tool; if it does not satisfy the policy above, then it's a bug in the
+wheel. One useful consequence of this approach is that it leaves open
+the possibility of further updates and tweaks as we gain more
+experience, e.g., we could have a "manylinux 1.1" policy which targets
+the same systems and uses the same ``manylinux1`` platform tag (and
+thus requires no further changes to ``pip`` or PyPI), but that adjusts
+the list above to remove libraries that have turned out to be
+problematic or add libraries that have turned out to be safe.
+
 
 Compilation of Compliant Wheels
 ===============================
