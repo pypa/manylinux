@@ -154,6 +154,10 @@ included in the following list: ::
 and (b), work on a stock CentOS 5.11 [6]_ system that contains the system
 package manager's provided versions of these libraries.
 
+Because CentOS 5 is only available for x86_64 and i386 architectures,
+these are the only architectures currently supported by the manylinux1
+policy.
+
 On Debian-based systems, these libraries are provided by the packages ::
 
     libncurses5 libgcc1 libstdc++6 libc6 libx11-6 libxext6
@@ -193,6 +197,15 @@ These recommendations are the outcome of the relevant discussions in January
 
 Compilation of Compliant Wheels
 ===============================
+
+The way glibc, libgcc, and libstdc++ manage their symbol versioning
+means that in practice, the compiler toolchains that most developers
+use to do their daily work are incapable of building
+``manylinux1``-compliant wheels. Therefore we do not attempt to change
+the default behavior of ``pip wheel`` / ``bdist_wheel``: they will
+continue to generate regular ``linux_*`` platform tags, and developers
+who wish to use them to generate ``manylinux1``-tagged wheels will
+have to change the tag as a second post-processing step.
 
 To support the compilation of wheels meeting the ``manylinux1`` standard, we
 provide initial drafts of two tools.
@@ -302,10 +315,17 @@ included in the ``manylinux1`` profile.
 Platform Detection for Installers
 =================================
 
-Because the ``manylinux1`` profile is already known to work for the many
-thousands of users of popular commercial Python distributions, we suggest that
-installation tools like ``pip`` should error on the side of assuming that a
-system *is* compatible, unless there is specific reason to think otherwise.
+Above, we defined what it means for a *wheel* to be
+``manylinux1``-compatible. Here we discuss what it means for a *Python
+installation* to be ``manylinux1``-compatible. In particular, this is
+important for tools like ``pip`` to know when deciding whether or not
+they should consider ``manylinux1``-tagged wheels for installation.
+
+Because the ``manylinux1`` profile is already known to work for the
+many thousands of users of popular commercial Python distributions, we
+suggest that installation tools should error on the side of assuming
+that a system *is* compatible, unless there is specific reason to
+think otherwise.
 
 We know of three main sources of potential incompatibility that are likely to
 arise in practice:
@@ -392,6 +412,16 @@ more work than this proposal, and still might not be appreciated by package
 developers who would prefer not to have to maintain multiple build environments
 and build multiple wheels in order to cover all the common Linux distributions.
 Therefore we consider such proposals to be out-of-scope for this PEP.
+
+
+Future updates
+==============
+
+We anticipate that at some point in the future there will be a
+``manylinux2`` specifying a more modern baseline environment (perhaps
+based on CentOS 6), and someday a ``manylinux3`` and so forth, but we
+defer specifying these until we have more experience with the initial
+``manylinux1`` proposal.
 
 
 References
