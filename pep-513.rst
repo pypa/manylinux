@@ -191,6 +191,7 @@ with the following versions: ::
 These recommendations are the outcome of the relevant discussions in January
 2016 [7]_, [8]_.
 
+
 Compilation of Compliant Wheels
 ===============================
 
@@ -240,7 +241,8 @@ libraries by copying those shared libraries from the system into the wheel
 itself, and modifying the appropriate ``RPATH`` entries such that these
 libraries will be picked up at runtime. This accomplishes a similar result as
 if the libraries had been statically linked without requiring changes to the
-build system.
+build system. Packagers are advised that bundling, like static linking, may
+implicate copyright concerns.
 
 
 Bundled Wheels on Linux
