@@ -155,7 +155,7 @@ and (b), work on a stock CentOS 5.11 [6]_ system that contains the system
 package manager's provided versions of these libraries.
 
 Because CentOS 5 is only available for x86_64 and i386 architectures,
-these are the only architectures currently supported by the manylinux1
+these are the only architectures currently supported by the ``manylinux1``
 policy.
 
 On Debian-based systems, these libraries are provided by the packages ::
