@@ -354,7 +354,7 @@ arise in practice:
 * A linux distribution that does not use ``glibc`` (e.g. Alpine Linux, which is
   based on musl ``libc``, or Android)
 
-Therefore, we propose a two-pronged approach. To catch the the first
+Therefore, we propose a two-pronged approach. To catch the first
 case, we standardize a mechanism for a Python distributor to signal
 that a particular Python install definitely is or is not compatible
 with ``manylinux1``: this is done by installing a module named
