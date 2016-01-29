@@ -35,12 +35,13 @@ ENV LD_LIBRARY_PATH /opt/rh/devtoolset-2/root/usr/lib64:/opt/rh/devtoolset-2/roo
 # Compile the latest Python releases.
 # (In order to have a proper SSL module, Python is compiled against openssl-1.0.2e
 # which is linked statically, and then we delete openssl afterwards)
-RUN echo 'e23ccafdb75cfcde782da0151731aa2185195ac745eea3846133f2e05c0e0bff  openssl-1.0.2e.tar.gz' > openssl-1.0.2e.tar.gz.sha256 && \
-    wget http://www.openssl.org/source/openssl-1.0.2e.tar.gz && \
-    sha256sum -c openssl-1.0.2e.tar.gz.sha256 && \
-    tar -xzf openssl-1.0.2e.tar.gz && \
-    (cd openssl-1.0.2e && ./config no-ssl2 no-shared -fPIC --prefix=/usr/local/ssl && make && make install) && \
-    rm -rf openssl-1.0.2e openssl-1.0.2e.tar.gz openssl-1.0.2e.tar.gz.sha256 && \
+RUN OPENSSL_VERSION=openssl-1.0.2f \
+    echo "932b4ee4def2b434f85435d9e3e19ca8ba99ce9a065a61524b429a9d5e9b2e9c  ${OPENSSL_VERSION}.tar.gz" > ${OPENSSL_VERSION}.tar.gz.sha256 && \
+    wget https://www.openssl.org/source/${OPENSSL_VERSION}.tar.gz && \
+    sha256sum -c ${OPENSSL_VERSION}.tar.gz.sha256 && \
+    tar -xzf ${OPENSSL_VERSION}.tar.gz && \
+    (cd ${OPENSSL_VERSION} && ./config no-ssl2 no-shared -fPIC --prefix=/usr/local/ssl && make && make install) && \
+    rm -rf ${OPENSSL_VERSION} ${OPENSSL_VERSION}.tar.gz ${OPENSSL_VERSION}.tar.gz.sha256 && \
     for PYVER in ${PY_VERS}; do  \
         wget -q https://www.python.org/ftp/python/$PYVER/Python-$PYVER.tgz && \
         tar -xzf Python-$PYVER.tgz && \
