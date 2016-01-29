@@ -35,7 +35,7 @@ ENV LD_LIBRARY_PATH /opt/rh/devtoolset-2/root/usr/lib64:/opt/rh/devtoolset-2/roo
 # Compile the latest Python releases.
 # (In order to have a proper SSL module, Python is compiled against openssl-1.0.2e
 # which is linked statically, and then we delete openssl afterwards)
-RUN OPENSSL_VERSION=openssl-1.0.2f \
+RUN export OPENSSL_VERSION=openssl-1.0.2f && \
     echo "932b4ee4def2b434f85435d9e3e19ca8ba99ce9a065a61524b429a9d5e9b2e9c  ${OPENSSL_VERSION}.tar.gz" > ${OPENSSL_VERSION}.tar.gz.sha256 && \
     wget http://www.openssl.org/source/${OPENSSL_VERSION}.tar.gz && \
     sha256sum -c ${OPENSSL_VERSION}.tar.gz.sha256 && \
