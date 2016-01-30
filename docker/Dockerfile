@@ -48,7 +48,7 @@ RUN export OPENSSL_VERSION=openssl-1.0.2f && \
     rm -rf ${OPENSSL_VERSION} ${OPENSSL_VERSION}.tar.gz ${OPENSSL_VERSION}.tar.gz.sha256 && \
     for PYVER in ${PY_VERS}; do  \
         if [[ "$(echo $PYVER | cut -d. -f 1)" == "2" ]]; then \
-            UNICODE_OPT="--enable-unicode=ucs4" \
+            UNICODE_OPT="--enable-unicode=ucs4"; \
         fi; \
         wget -q https://www.python.org/ftp/python/$PYVER/Python-$PYVER.tgz && \
         tar -xzf Python-$PYVER.tgz && \
