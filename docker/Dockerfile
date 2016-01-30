@@ -47,8 +47,8 @@ RUN export OPENSSL_VERSION=openssl-1.0.2f && \
     (cd ${OPENSSL_VERSION} && ./config no-ssl2 no-shared -fPIC --prefix=/usr/local/ssl && make && make install) && \
     rm -rf ${OPENSSL_VERSION} ${OPENSSL_VERSION}.tar.gz ${OPENSSL_VERSION}.tar.gz.sha256 && \
     for PYVER in ${PY_VERS}; do  \
-        if expr $PYVER : '^2\.' >/dev/null; then \
-            UNICODE_OPT="--enable-unicode=ucs4"  \
+        if [[ "$(echo $PYVER | cut -d. -f 1)" == "2" ]]; then \
+            UNICODE_OPT="--enable-unicode=ucs4" \
         fi; \
         wget -q https://www.python.org/ftp/python/$PYVER/Python-$PYVER.tgz && \
         tar -xzf Python-$PYVER.tgz && \
