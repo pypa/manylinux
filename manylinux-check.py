@@ -1,9 +1,9 @@
 # Logic copied from PEP 513
 
 def is_manylinux1_compatible():
-    # Only Linux, and only x86-64 / i386
+    # Only Linux, and only x86-64 / i686
     from distutils.util import get_platform
-    if get_platform() not in ["linux_x86_64", "linux_i386"]:
+    if get_platform() not in ["linux-x86_64", "linux-i686"]:
         return False
 
     # "wide" Unicode mode is mandatory (always true on CPython 3.3+)
