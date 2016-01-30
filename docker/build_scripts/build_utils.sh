@@ -41,7 +41,10 @@ function do_python_build {
     local py_ver=$1
     check_var $py_ver
     mkdir -p /opt/$py_ver/lib
-    LDFLAGS="-Wl,-rpath /opt/$py_ver/lib" ./configure --prefix=/opt/$py_ver --enable-shared
+    if [ -z "$(pyver_ge $py_ver 3.3)" ]; then
+        local unicode_flags="--enable-unicode=ucs4"
+    fi
+    LDFLAGS="-Wl,-rpath /opt/$py_ver/lib" ./configure --prefix=/opt/$py_ver --enable-shared $unicode_flags
     make -j2
     make install
 }
