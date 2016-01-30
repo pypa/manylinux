@@ -8,7 +8,8 @@ install:
 
 script:
   >
-    (set -e; for INTERP in /opt/*/bin/python; do $INTERP manylinux1-check; done)
+    set -x;
+    (set -e; for INTERP in /opt/*/bin/python; do $INTERP manylinux1-check; done);
     PACKAGES=(numpy);
     for pkg in "${PACKAGES[@]}"; do
       docker run -t --rm -v `pwd`:/io buildenv /opt/3.5/bin/pip install --no-binary :all: ${pkg} -vv;
