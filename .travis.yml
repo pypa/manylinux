@@ -7,6 +7,7 @@ install:
   - docker build --rm -t buildenv docker/
 
 script:
+  - (set -e; for INTERP in /opt/*/bin/python; do $INTERP manylinux1-check; done)
   >
     PACKAGES=(numpy);
     for pkg in "${PACKAGES[@]}"; do

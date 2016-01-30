@@ -35,6 +35,8 @@ ENV LD_LIBRARY_PATH /opt/rh/devtoolset-2/root/usr/lib64:/opt/rh/devtoolset-2/roo
 # Compile the latest Python releases.
 # (In order to have a proper SSL module, Python is compiled against openssl-1.0.2e
 # which is linked statically, and then we delete openssl afterwards)
+# Note: 3.2 and earlier need --enable-unicode=ucs4. We don't plan to ever
+# support 3.0-3.2, so really for just this just means Python 2.
 
 RUN export OPENSSL_VERSION=openssl-1.0.2f && \
     export OPENSSL_SHA256=932b4ee4def2b434f85435d9e3e19ca8ba99ce9a065a61524b429a9d5e9b2e9c && \
@@ -45,11 +47,16 @@ RUN export OPENSSL_VERSION=openssl-1.0.2f && \
     (cd ${OPENSSL_VERSION} && ./config no-ssl2 no-shared -fPIC --prefix=/usr/local/ssl && make && make install) && \
     rm -rf ${OPENSSL_VERSION} ${OPENSSL_VERSION}.tar.gz ${OPENSSL_VERSION}.tar.gz.sha256 && \
     for PYVER in ${PY_VERS}; do  \
+        if expr $PYVER : '^2\.' >/dev/null; then \
+            UNICODE_OPT="--enable-unicode=ucs4"  \
+        else \
+            UNICODE_OPT="" \
+        fi; \
         wget -q https://www.python.org/ftp/python/$PYVER/Python-$PYVER.tgz && \
         tar -xzf Python-$PYVER.tgz && \
         (cd Python-$PYVER && \
             mkdir -p /opt/$PYVER/lib && \
-            LDFLAGS="-Wl,-rpath /opt/$PYVER/lib" ./configure --prefix=/opt/$PYVER --enable-shared --with-ensurepip=install && \
+            LDFLAGS="-Wl,-rpath /opt/$PYVER/lib" ./configure $UNICODE_OPT --prefix=/opt/$PYVER --enable-shared --with-ensurepip=install && \
             make -j2 && \
             make install \
         ) && \
