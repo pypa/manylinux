@@ -4,8 +4,8 @@ services:
   - docker
 
 install:
-  - docker build --rm -t manylinux1_i686 -f images/Dockerfile-i686 images/
-  - docker build --rm -t manylinux1_x86_64 -f images/Dockerfile-x86_64 images/
+  - docker build --rm -t manylinux1_i686 -f docker/Dockerfile-i686 docker/
+  - docker build --rm -t manylinux1_x86_64 -f docker/Dockerfile-x86_64 docker/
 
 script:
   >
