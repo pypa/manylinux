@@ -1,16 +1,19 @@
 #!/bin/bash
-# Python versions installed in /opt/python. Could add more, if desired.
+# Top-level build script called from Dockerfile
 
-# Stop at any error
-set -e
+# Stop at any error, show all commands
+set -ex
 
+# Python versions to be installed in /opt/$VERSION_NO
 PY_VERS="2.6.9 2.7.11 3.3.6 3.4.4 3.5.1"
 
+# openssl version to build, with expected sha256 hash of .tar.gz
+# archive
 OPENSSL_ROOT=openssl-1.0.2f
 OPENSSL_HASH=932b4ee4def2b434f85435d9e3e19ca8ba99ce9a065a61524b429a9d5e9b2e9c
 
-# Dependencies for compiling Python that we want to remove from the final
-# image after compiling Python
+# Dependencies for compiling Python that we want to remove from
+# the final image after compiling Python
 PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel"
 
 # Libraries that are allowed as part of the manylinux1 profile
@@ -38,9 +41,8 @@ yum -y install bzip2 make git patch unzip bison yasm \
 
 # Compile the latest Python releases.
 # (In order to have a proper SSL module, Python is compiled
-# against openssl-1.0.2f which is linked statically, and then we
-# delete openssl afterwards)
-
+# against a recent openssl [see env vars above], which is linked
+# statically. We delete openssl afterwards.)
 build_openssl $OPENSSL_ROOT $OPENSSL_HASH
 build_pythons $PY_VERS
 rm -rf /usr/local/ssl
