@@ -25,9 +25,9 @@ source $MY_DIR/build_utils.sh
 
 # EPEL support
 yum -y install wget curl
-curl -LO https://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
+curl -sLO https://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
 # Dev toolset (for LLVM and other projects requiring C++11 support)
-curl -L http://people.centos.org/tru/devtools-2/devtools-2.repo > /etc/yum.repos.d/devtools-2.repo
+curl -sL http://people.centos.org/tru/devtools-2/devtools-2.repo > /etc/yum.repos.d/devtools-2.repo
 rpm -Uvh --replacepkgs epel-release-5*.rpm
 rm -f epel-release-5*.rpm
 
@@ -48,8 +48,8 @@ build_pythons $PY_VERS
 rm -rf /usr/local/ssl
 
 # Install patchelf and auditwheel (latest)
-wget http://nixos.org/releases/patchelf/patchelf-0.8/patchelf-0.8.tar.gz
-tar -xzvf patchelf-0.8.tar.gz
+curl -sLO http://nixos.org/releases/patchelf/patchelf-0.8/patchelf-0.8.tar.gz
+tar -xzf patchelf-0.8.tar.gz
 (cd patchelf-0.8 && ./configure && make && make install)
 rm -rf patchelf-0.8.tar.gz patchelf-0.8
 

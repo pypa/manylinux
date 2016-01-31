@@ -30,9 +30,9 @@ function do_python_build {
     if [ $(lex_pyver $py_ver) -lt $(lex_pyver 3.3) ]; then
         local unicode_flags="--enable-unicode=ucs4"
     fi
-    LDFLAGS="-Wl,-rpath /opt/$py_ver/lib" ./configure --prefix=/opt/$py_ver --enable-shared $unicode_flags
-    make -j2
-    make install
+    LDFLAGS="-Wl,-rpath /opt/$py_ver/lib" ./configure --prefix=/opt/$py_ver --enable-shared $unicode_flags > /dev/null
+    make -j2 > /dev/null
+    make install > /dev/null
 }
 
 
@@ -56,7 +56,7 @@ function build_python {
 
 function build_pythons {
     check_var $GET_PIP_URL
-    curl -LO $GET_PIP_URL
+    curl -sLO $GET_PIP_URL
     for py_ver in $@; do
         build_python $py_ver
     done
@@ -65,9 +65,9 @@ function build_pythons {
 
 
 function do_openssl_build {
-    ./config no-ssl2 no-shared -fPIC --prefix=/usr/local/ssl
-    make
-    make install
+    ./config no-ssl2 no-shared -fPIC --prefix=/usr/local/ssl > /dev/null
+    make > /dev/null
+    make install > /dev/null
 }
 
 
@@ -78,7 +78,7 @@ function build_openssl {
     check_var $openssl_sha256
     check_var $OPENSSL_DOWNLOAD_URL
     echo "${openssl_sha256}  ${openssl_fname}.tar.gz" > ${openssl_fname}.tar.gz.sha256
-    wget $OPENSSL_DOWNLOAD_URL/${openssl_fname}.tar.gz
+    curl -sLO $OPENSSL_DOWNLOAD_URL/${openssl_fname}.tar.gz
     sha256sum -c ${openssl_fname}.tar.gz.sha256
     tar -xzf ${openssl_fname}.tar.gz
     (cd ${openssl_fname} && do_openssl_build)
