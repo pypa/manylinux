@@ -64,3 +64,7 @@ yum -y erase wireless-tools gtk2 libX11 hicolor-icon-theme \
 yum -y install ${MANYLINUX1_DEPS}
 yum -y clean all > /dev/null 2>&1
 yum list installed
+
+for PYVER in $PY_VERS; do
+    /opt/$PYVER/bin/python $MY_DIR/manylinux1-check.py
+done

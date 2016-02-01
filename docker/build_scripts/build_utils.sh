@@ -30,6 +30,7 @@ function do_python_build {
     if [ $(lex_pyver $py_ver) -lt $(lex_pyver 3.3) ]; then
         local unicode_flags="--enable-unicode=ucs4"
     fi
+    # -Wformat added for https://bugs.python.org/issue17547 on Python 2.6
     CFLAGS="-Wformat" LDFLAGS="-Wl,-rpath /opt/$py_ver/lib" ./configure --prefix=/opt/$py_ver --enable-shared $unicode_flags > /dev/null
     make -j2 > /dev/null
     make install > /dev/null
