@@ -7,13 +7,12 @@ Archives: https://groups.google.com/forum/#!forum/manylinux-discuss
 
 The goal of the manylinux project is to provide a convenient way to
 distribute binary Python extensions as wheels on Linux. So far our
-main accomplishment is [PEP
-513](https://www.python.org/dev/peps/pep-0513/), which defines the
+main accomplishment is `PEP 513
+<https://www.python.org/dev/peps/pep-0513/>`_, which defines the
 ``manylinux1_x86_64`` and ``manylinux1_i686`` platform tags. These
 tags will soon be allowed on PyPI and supported by pip, and will allow
 projects to distribute wheels that are automatically installed (and
-work!) on the vast majority of desktop and server Linux
-distributions.
+work!) on the vast majority of desktop and server Linux distributions.
 
 This repository hosts several manylinux-related things:
 
@@ -31,7 +30,7 @@ binaries that run on most Linux distros, we have to use a very old
 distro -- CentOS 5.
 
 Rather than forcing you to install CentOS 5 yourself, install Python,
-etc., we provide two [Docker](https://docker.com/) images where we've
+etc., we provide two `Docker <https://docker.com/>`_ images where we've
 done the work for you:
 
 64-bit image (x86-64): ``quay.io/pypa/manylinux1_x86_64``
@@ -46,7 +45,7 @@ done the work for you:
 
 This images are rebuilt using Travis-CI on every commit to this
 repository; see the
-[docker/](https://github.com/pypa/manylinux/tree/master/docker)
+`docker/ <https://github.com/pypa/manylinux/tree/master/docker>`_
 directory for source code.
 
 The images currently contain:
@@ -55,7 +54,7 @@ The images currently contain:
   number>``
 - Devel packages for all the libraries that PEP 513 allows you to
   assume are present on the host system
-- The [auditwheel](https://pypi.python.org/pypi/auditwheel) tool
+- The `auditwheel <https://pypi.python.org/pypi/auditwheel>`_ tool
 
 It'd be good to put an example of how to use these images here, but
 that isn't written yet. If you want to know, then bug us on the
@@ -65,14 +64,14 @@ mailing list to fill in this section :-).
 The PEP itself
 --------------
 
-The official version of [PEP
-513](https://www.python.org/dev/peps/pep-0513/) is stored in the [PEP
-repository](https://github.com/python/peps), but we also have our [own
-copy
-here](https://github.com/pypa/manylinux/tree/master/pep-513.rst). This
-is where the PEP was originally written, so if for some reason you
-really want to see the full history of edits it went through, then
-this is the place to look.
+The official version of `PEP 513
+<https://www.python.org/dev/peps/pep-0513/>`_ is stored in the `PEP
+repository <https://github.com/python/peps>`_, but we also have our
+`own copy here
+<https://github.com/pypa/manylinux/tree/master/pep-513.rst>`_. This is
+where the PEP was originally written, so if for some reason you really
+want to see the full history of edits it went through, then this is
+the place to look.
 
 This repo also has some analysis code that was used when putting
 together the original proposal in the ``policy-info/`` directory
