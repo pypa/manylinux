@@ -3,14 +3,19 @@ sudo: required
 services:
   - docker
 
-install:
-  - docker build --rm -t buildenv docker/
+env:
+  global:
+    # QUAY_USERNAME and QUAY_PASSWORD for docker image upload
+    - secure: qLQF7I4hqU62jmYDth5JEBFJ6jHUhzbvKo9fD+1mnGRYhfq73i/TyIriv52r/Isx4fqC02sCRlM7w1cnO2HYQ9139EVdAOZP4lwJB+JcSCqUJo301nOpPwG7MORpSIfckMy05Vml9HmlP6a2XFt9AH+yuZAwRAByHfiqSEx6oHvR85kt7IH0sF1b76KiBxT7OMFtxmiZ3AFogYtlQcqvfIYXFOF8OJXtcqtkL2EjnGzXVdSARjRUtCnfHs7qOfkdAelVWJ6ZQw3tAJ3X6JBnU9yGMfkr39ZMCc97gqn/9o681BQ4N87ULr0GlhQxJqJkjncyiRZ+jOf7UN/s/wydWWElLuQxfP5YEcrHA7MGD8wVJEuJ8RnCq2NRjLhdVT0FQSU6rrPsxZJdBU/WLXWpzTmF3wyDYgk47JhSRutHerYs/kxOrhR9QLro0vWiUPkSlvxW986/iny4bxsIdRdni+NqU9izmqfdpPG0ClLvu3eBr9ijR8l3OXF9GThcntVGM9Rf7O7UayugFTudnHmy/IwAgcxN8e5SAQ1HfI7MB6BVWRAQ/bvk3zofaFDI89deL5FCxB0bnLqnKNNRytxFbNdTPLsSh1pq964/7KmE9+r8zT/UQ0OIF4QaR4RS6eLnVyKk1KtvuFfmTgjNB4qpEzn2nE7AEUJw7WPlunMcpBk=
+    - secure: tjwWSOgtBXidEMiRONfFRdQMo2in7E0++kZVNFKGEfeovmuUM1vl0k2tKgjrHtrqSx6tPBaV2nxWF27WOeMTFno/sO7lEkdehjNPPv7VP3F7bIPnOeA0zL6TEmp9KmJx7QA/HeHwNLepZ8WKgUR1Eh5Y4UyovbURl5NovuD2Iq7blxGzM6QXop0kHNcwOWWSR7ODQX5b+VVyimlQhovzeKSMYi4R3sMTkeZo7ZTdwXR5zY50AkG47yAb6UAjIDwGReM8xoMuSjKPRGOoQ6dzNgea23rOas5EqEkVKB3Y8lw8LXOS4CaxsSCu0wZGBcvkr/n+rZ3bPyGhYKurgxOxHDpK/HUk6tjX2o8LOixji4Jucgg35jexaDCNVJXZdNMokoXcJMhoU/XciCu+z9R4SBMjRG7fi1idCG71pXTOJpypT/hOaK9X62UP5vqotL0ontsSl527aiIWnq+kG7iPyH/mxWxoSXd67923NQQ9eGUKjaMJTuKaL8SL6zSYvo19vkAkiXp9m8rxmuUcYwdFXaMNukehbHXWozHYh2/+uCUNwoGj8daz/AKSDPFTL0OUmqy2HhtF1nydkS0awWSGlQHtrBwqdqMrtdlMAi5Nlcjh/R/pjidiQnZwzf4GlvRk5iP8pryQ2yxfs8AHzEgvr7yTf+i90ow61bGVwIu8Fu8=
 
 script:
-  >
-    set -ex;
-    docker run -t --rm -v $(pwd):/io buildenv sh -c 'set -e; for INTERP in /opt/*/bin/python; do $INTERP /io/manylinux1-check.py; done';
-    PACKAGES=(numpy);
-    for pkg in "${PACKAGES[@]}"; do
-      docker run -t --rm -v `pwd`:/io buildenv /opt/3.5/bin/pip install --no-binary :all: ${pkg} -vv;
-    done
+  - docker build --rm -t quay.io/pypa/manylinux1_i686:$COMMIT -f docker/Dockerfile-i686 docker/
+  - docker build --rm -t quay.io/pypa/manylinux1_x86_64:$COMMIT -f docker/Dockerfile-x86_64 docker/
+
+
+deploy:
+  provider: script
+  script: docker/deploy.sh
+  on:
+    branch: master
