@@ -5,10 +5,12 @@ Email: manylinux-discuss@googlegroups.com
 
 Archives: https://groups.google.com/forum/#!forum/manylinux-discuss
 
-.. image:: https://quay.io/repository/manylinux/manylinux/status
-   :target: https://quay.io/repository/manylinux/manylinux
-.. image:: https://img.shields.io/travis/manylinux/manylinux.svg
-   :target: https://travis-ci.org/manylinux/manylinux
+.. image:: https://quay.io/repository/pypa/manylinux1_i686/status
+   :target: https://quay.io/repository/pypa/manylinux1_i686
+.. image:: https://quay.io/repository/pypa/manylinux1_x86_64/status
+   :target: https://quay.io/repository/pypa/manylinux1_x86_64
+.. image:: https://travis-ci.org/pypa/manylinux.svg?branch=master
+   :target: https://travis-ci.org/pypa/manylinux
 
 Synopsis
 --------
