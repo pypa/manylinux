@@ -5,140 +5,92 @@ Email: manylinux-discuss@googlegroups.com
 
 Archives: https://groups.google.com/forum/#!forum/manylinux-discuss
 
-.. image:: https://quay.io/repository/pypa/manylinux1_i686/status
-   :target: https://quay.io/repository/pypa/manylinux1_i686
-.. image:: https://quay.io/repository/pypa/manylinux1_x86_64/status
-   :target: https://quay.io/repository/pypa/manylinux1_x86_64
+The goal of the manylinux project is to provide a convenient way to
+distribute binary Python extensions as wheels on Linux. So far our
+main accomplishment is `PEP 513
+<https://www.python.org/dev/peps/pep-0513/>`_, which defines the
+``manylinux1_x86_64`` and ``manylinux1_i686`` platform tags. These
+tags will soon be allowed on PyPI and supported by pip, and will allow
+projects to distribute wheels that are automatically installed (and
+work!) on the vast majority of desktop and server Linux distributions.
+
+This repository hosts several manylinux-related things:
+
+
+Docker images
+-------------
+
 .. image:: https://travis-ci.org/pypa/manylinux.svg?branch=master
    :target: https://travis-ci.org/pypa/manylinux
 
-Synopsis
---------
+Building manylinux-compatible wheels is not trivial; as a general
+rule, binaries built on one Linux distro will only work on other Linux
+distros that are the same age or newer. Therefore, if we want to make
+binaries that run on most Linux distros, we have to use a very old
+distro -- CentOS 5.
 
-Right now, if you want to distribute a binary Python extension on
-Windows or OS/X, then there's a nice straightforward way to do that:
-you build a wheel, it gets a platform like "win32" or
-"macosx_10_6_intel", you upload it to PyPI, your users download it,
-everyone's happy. On Linux, though, the situation is a mess. The
-standard advice is to make sure your build and target systems have the
-same version of the same distribution with the same packages
-installed. The standard tools don't even try to keep track of this;
-they just give up and tag all builds as "linux", with the result that
-this string is so generic it doesn't actually mean anything.
+Rather than forcing you to install CentOS 5 yourself, install Python,
+etc., we provide two `Docker <https://docker.com/>`_ images where we've
+done the work for you:
 
-It sure would be nice if we there were a standard way to build our
-packages that would let them work on *any* linux system, so we could
-distribute wheels to our users. To distinguish them from the too-vague
-"linux" tag, we might label these as "anylinux" builds.
+64-bit image (x86-64): ``quay.io/pypa/manylinux1_x86_64``
 
-Of course that's an impossible dream -- there are just too many wildly
-different linux systems out there (think about Android, embedded
-systems using weird libcs, ...). But it is possible to define a
-standard subset of the kernel+core userspace ABI that, in practice, is
-compatible enough that packages built against it will work on *many*
-linux systems, including essentially all of the desktop and server
-distributions that people actually use. We know this because there are
-companies who have been doing it for years -- e.g. Enthought with
-`Canopy <https://store.enthought.com/downloads/>`_ and Continuum with
-`Anaconda <https://www.continuum.io/downloads>`_.
+.. image:: https://quay.io/repository/pypa/manylinux1_x86_64/status
+   :target: https://quay.io/repository/pypa/manylinux1_x86_64
 
-So: our plan here is to exploit the work these companies have already
-done, and use it to standardize a baseline "manylinux" platform for
-use in binary Python wheels. (Or, actually, a "manylinux1" platform,
-because if this works then we expect that in a few years once people
-stop using RHEL 5 then we'll want to bump up to a newer set of
-baseline libraries.)
+32-bit image (i686): ``quay.io/pypa/manylinux1_i686``
 
+.. image:: https://quay.io/repository/pypa/manylinux1_i686/status
+   :target: https://quay.io/repository/pypa/manylinux1_i686
 
-Todo
-----
+This images are rebuilt using Travis-CI on every commit to this
+repository; see the
+`docker/ <https://github.com/pypa/manylinux/tree/master/docker>`_
+directory for source code.
 
-* Consolidate information about `Anaconda
-  <https://mail.scipy.org/pipermail/numpy-discussion/2016-January/074602.html>`_
-  and Canopy into a standard describing what libraries a manywheel1
-  wheel is allowed to link against.
+The images currently contain:
 
-* Create a docker image to help people actually build such wheels:
+- CPython 2.6, 2.7, 3.3, 3.4, and 3.5, installed in ``/opt/<version
+  number>``
+- Devel packages for all the libraries that PEP 513 allows you to
+  assume are present on the host system
+- The `auditwheel <https://pypi.python.org/pypi/auditwheel>`_ tool
 
-  * As a starting point, we have a copy of the docker file that
-    Enthought uses in ``docker/``.
-
-  * What it's missing ATM is builds of the Python interpreter itself.
-
-* Integrate Robert McGibbon's work to `audit and rename such wheels
-  <https://github.com/manylinux/auditwheel>`_ (now moved to the
-  manylinux organization)
-
-* Make some demo wheels that people can try to verify that this
-  approach works
-
-* Write a PEP specifying the platform, and providing advice on how pip
-  (or other pip-like installers) should determine whether the system
-  they are running on counts as a "manylinux1 system".
-
-* Get support for this into pip
-
-* Get PyPI to start allowing manylinux wheels
+It'd be good to put an example of how to use these images here, but
+that isn't written yet. If you want to know, then bug us on the
+mailing list to fill in this section :-).
 
 
-Notes
------
+The PEP itself
+--------------
 
-One thing we'll need is a rule for determining whether a system is
-considered to be manylinux1-compatible (e.g., so pip can decide
-whether it's running on a "manylinux1 system" -- this is different
-from deciding whether a given *wheel* is manylinux1 compatible).
-I (= njs) am thinking maybe our rule should be:
+The official version of `PEP 513
+<https://www.python.org/dev/peps/pep-0513/>`_ is stored in the `PEP
+repository <https://github.com/python/peps>`_, but we also have our
+`own copy here
+<https://github.com/pypa/manylinux/tree/master/pep-513.rst>`_. This is
+where the PEP was originally written, so if for some reason you really
+want to see the full history of edits it went through, then this is
+the place to look.
 
-* the regular wheel platform tag (which is
-  ``distutils.util.get_platform()``) starts with the string
-  ``"linux"``
-* the interpreter is linked to a version of glibc that is >= the one
-  in CentOS 5
-* we check some file in /etc/pypa/compatibility or something and find
-  that there is no flag in there specifically saying "this platform is
-  not manylinux1 compatible"
+This repo also has some analysis code that was used when putting
+together the original proposal in the ``policy-info/`` directory
+(might be useful someday in the future for writing a ``manylinux2``
+policy).
 
-In principle one could get much fancier trying to track down every
-library that's in the spec and checking its version etc., but keep in
-mind that the companies distributing Python-on-Linux distributions are
-using the rule "if it's linux then it's compatible", and this is
-actually working for them, and the idea here is to use the same
-baseline platform as they do. So "just assume it's compatible" is
-*very* likely to be true; trying to get fancier is likely to introduce
-more false negatives than it is to correct false positives, just
-because there are so few false positives to correct. The glibc version
-check is included because it's easy to do reliably (see below) and
-will fix the main known problem of people running RHEL 4 or
-alternative libcs. The config file check is included as
-future-proofing in case RHEL 8 or whatever decides to change things in
-a way that breaks old wheels.
+If you want to read the full discussion that led to the original
+policy, then lots of that is here:
+https://groups.google.com/forum/#!forum/manylinux-discuss
 
-How to determine whether the current Python interpreter is linked
-against glibc, and if so then what version::
+The distutils-sig archives for January 2016 also contain several
+threads.
 
-  import ctypes
 
-  # We want a symbol from glibc, which would normally done by calling
-  # CDLL("libc.so.6"). But that would have the side-effect of loading
-  # glibc if it weren't already loaded, which would defeat the purpose
-  # of this check. Instead we call CDLL(None), which calls
-  # dlopen(NULL, ...), which gives us access to all the symbols in the
-  # process's ELF namespace without loading anything new.
-  process_namespace = ctypes.CDLL(None)
+Code of Conduct
+===============
 
-  try:
-      gnu_get_libc_version = process_namespace.gnu_get_libc_version
-  except AttributeError:
-      print("Not glibc")
+Everyone interacting in the manylinux project's codebases, issue
+trackers, chat rooms, and mailing lists is expected to follow the
+`PyPA Code of Conduct`_.
 
-  gnu_get_libc_version.restype = ctypes.c_char_p
-  version_str = gnu_get_libc_version()
-  # py2 / py3 compatibility:
-  if not isinstance(version_str, str):
-      version_str = version_str.decode("ascii")
-
-  version = [int(piece) for piece in version_str.split(".")]
-  print("glibc, major version = %s, minor version = %s % version)
-
-CentOS 5 uses glibc 2.5.
+.. _PyPA Code of Conduct: https://www.pypa.io/en/latest/code-of-conduct/
