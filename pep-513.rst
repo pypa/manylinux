@@ -230,11 +230,11 @@ Ubuntu systems, ``apt install pythonX.Y`` does not even install
 There is one situation where extensions that are linked in this way
 can fail to work: if a host program (e.g., ``apache2``) uses
 ``dlopen()`` to load a module (e.g., ``mod_wsgi``) that embeds the
-CPython interpreter, and the host program does *not* set the
-``RTLD_GLOBAL`` flag, then the embedded CPython will be unable to load
-any extension modules that do not themselves link explicitly to
-``libpythonX.Y.so.1``. Fortunately, ``apache2`` *does* set the
-``RTLD_GLOBAL`` flag, as do all the other programs that
+CPython interpreter, and the host program does *not* pass the
+``RTLD_GLOBAL`` flag to ``dlopen()``, then the embedded CPython will
+be unable to load any extension modules that do not themselves link
+explicitly to ``libpythonX.Y.so.1``. Fortunately, ``apache2`` *does*
+set the ``RTLD_GLOBAL`` flag, as do all the other programs that
 embed-CPython-via-a-dlopened-plugin that we could locate, so this does
 not seem to be a serious problem in practice. The incompatibility with
 Debian/Ubuntu is more of an issue than the theoretical incompatibility
@@ -247,30 +247,32 @@ the scope of ``manylinux1``; for more discussion see: [9]_, [10]_,
 UCS-2 vs UCS-4 builds
 ---------------------
 
-All versions of CPython 2.x, plus CPython 3.0-3.2, can be built in two
-ABI-incompatible modes: one where Unicode is stored using UCS-2, and
-one where it's stored using UCS-4 (controlled by
-``--enable-unicode=ucs2`` versus ``--enable-unicode=ucs4``; CPython
-3.3 and greater use a different storage method that always supports
-UCS-4). If we want to make sure UCS-2 wheels don't get installed into
-UCS-4 CPythons and vice-versa, then something must be done.
+All versions of CPython 2.x, plus CPython 3.0-3.2 inclusive, can be
+built in two ABI-incompatible modes: builds using the
+``--enable-unicode=ucs2`` configure flag store Unicode data in UCS-2
+(or really UTF-16) format, while builds using the
+``--enable-unicode=ucs4`` configure flag store Unicode data in
+UCS-4. (CPython 3.3 and greater use a different storage method that
+always supports UCS-4.) If we want to make sure ``ucs2`` wheels don't
+get installed into ``ucs4`` CPythons and vice-versa, then something
+must be done.
 
-An earlier version of this PEP included a requirement that manylinux1
-wheels targeting these older CPython versions should always use the
-UCS-4 ABI. But then, in between the PEP's initial acceptance and its
-implementation, ``pip`` and ``wheel`` gained first-class support for
-tracking and checking this aspect of ABI compatibility for the
-relevant CPython versions, which is a better solution. So we now allow
-the ``manylinux1`` platform tags to be used in combination with any
-SOABI field. However, to maintain compatibility it is crucial to
-ensure that all ``manylinux1`` wheels set a non-trivial abi tag. For
-example, a wheel built against a UCS-4 CPython might have a name
-like::
+An earlier version of this PEP included a requirement that
+``manylinux1`` wheels targeting these older CPython versions should
+always use the ``ucs4`` ABI. But then, in between the PEP's initial
+acceptance and its implementation, ``pip`` and ``wheel`` gained
+first-class support for tracking and checking this aspect of ABI
+compatibility for the relevant CPython versions, which is a better
+solution. So we now allow the ``manylinux1`` platform tags to be used
+in combination with any ABI tag. However, to maintain compatibility it
+is crucial to ensure that all ``manylinux1`` wheels include a
+non-trivial abi tag. For example, a wheel built against a ``ucs4``
+CPython might have a name like::
 
   PKG-VERSION-cp27-cp27mu-manylinux1_x86_64.whl
                    ^^^^^^ Good!
 
-While a wheel built against the UCS-2 ABI might have a name like::
+While a wheel built against the ``ucs2`` ABI might have a name like::
 
   PKG-VERSION-cp27-cp27m-manylinux1_x86_64.whl
                    ^^^^^ Okay!
@@ -280,7 +282,7 @@ But you should never have a wheel with a name like::
   PKG-VERSION-cp27-none-manylinux1_x86_64.whl
                    ^^^^ BAD! Don't do this!
 
-We note for information that the UCS-4 ABI appears to be much more
+We note for information that the ``ucs4`` ABI appears to be much more
 widespread among Linux CPython distributors.
 
 
