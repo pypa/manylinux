@@ -9,8 +9,8 @@ PY_VERS="2.6.9 2.7.11 3.3.6 3.4.4 3.5.1"
 
 # openssl version to build, with expected sha256 hash of .tar.gz
 # archive
-OPENSSL_ROOT=openssl-1.0.2f
-OPENSSL_HASH=932b4ee4def2b434f85435d9e3e19ca8ba99ce9a065a61524b429a9d5e9b2e9c
+OPENSSL_ROOT=openssl-1.0.2g
+OPENSSL_HASH=b784b1b3907ce39abf4098702dade6365522a253ad1552e267a9a0e89594aa33
 
 # Dependencies for compiling Python that we want to remove from
 # the final image after compiling Python
