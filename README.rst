@@ -1,18 +1,22 @@
 manylinux
 =========
 
-Email: manylinux-discuss@googlegroups.com
+Email: wheel-builders@python.org
 
-Archives: https://groups.google.com/forum/#!forum/manylinux-discuss
+Archives: https://mail.python.org/mailman/listinfo/wheel-builders
+
+Older archives: https://groups.google.com/forum/#!forum/manylinux-discuss
 
 The goal of the manylinux project is to provide a convenient way to
 distribute binary Python extensions as wheels on Linux. So far our
 main accomplishment is `PEP 513
 <https://www.python.org/dev/peps/pep-0513/>`_, which defines the
-``manylinux1_x86_64`` and ``manylinux1_i686`` platform tags. These
-tags will soon be allowed on PyPI and supported by pip, and will allow
-projects to distribute wheels that are automatically installed (and
-work!) on the vast majority of desktop and server Linux distributions.
+``manylinux1_x86_64`` and ``manylinux1_i686`` platform tags.
+
+These tags are **supported by pip 8.1 and later** and will soon be allowed
+on PyPI. They and will allow projects to distribute wheels that are
+automatically installed (and work!) on the vast majority of desktop and
+server Linux distributions.
 
 This repository hosts several manylinux-related things:
 
