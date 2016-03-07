@@ -65,12 +65,7 @@ yum -y install ${MANYLINUX1_DEPS}
 yum -y clean all > /dev/null 2>&1
 yum list installed
 
-for PYVER in $PY_VERS; do
-    soabi_flags_list="m"
-    if [ $(lex_pyver $PYVER) -lt $(lex_pyver 3.3) ]; then
-        soabi_flags_list="mu m"
-    fi
-    for soabi_flags in $soabi_flags_list; do
-        /opt/${PYVER}${soabi_flags}/bin/python $MY_DIR/manylinux1-check.py
-    done
+# Checks the same interpreters repeatedly, but is more thorough
+for PYTHON in /opt/*/bin/python; do
+    $PYTHON $MY_DIR/manylinux1-check.py
 done

@@ -37,7 +37,7 @@ function do_python_build {
         fi
     fi
     # -Wformat added for https://bugs.python.org/issue17547 on Python 2.6
-    CFLAGS="-Wformat" LDFLAGS="-Wl,-rpath /opt/${py_ver}${soabi_flags}/lib" ./configure --prefix=/opt/${py_ver}${soabi_flags} --disable-shared $unicode_flags > /dev/null
+    CFLAGS="-Wformat" ./configure --prefix=/opt/${py_ver}${soabi_flags} --disable-shared $unicode_flags > /dev/null
     make -j2 > /dev/null
     make install > /dev/null
 }
