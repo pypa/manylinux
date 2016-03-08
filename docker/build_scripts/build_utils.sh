@@ -28,7 +28,7 @@ function do_python_build {
     check_var $py_ver
     local soabi_flags=$2
     check_var $soabi_flags
-    mkdir -p /opt/${py_ver}${soabi_flags}/lib
+    mkdir -p /opt/python/${py_ver}${soabi_flags}/lib
     if [ $(lex_pyver $py_ver) -lt $(lex_pyver 3.3) ]; then
         if [ $soabi_flags = "mu" ]; then
             local unicode_flags="--enable-unicode=ucs4"
@@ -37,7 +37,7 @@ function do_python_build {
         fi
     fi
     # -Wformat added for https://bugs.python.org/issue17547 on Python 2.6
-    CFLAGS="-Wformat" ./configure --prefix=/opt/${py_ver}${soabi_flags} --disable-shared $unicode_flags > /dev/null
+    CFLAGS="-Wformat" ./configure --prefix=/opt/python/${py_ver}${soabi_flags} --disable-shared $unicode_flags > /dev/null
     make -j2 > /dev/null
     make install > /dev/null
 }
@@ -56,12 +56,11 @@ function build_python {
         tar -xzf Python-$py_ver.tgz
         (cd Python-$py_ver && do_python_build $py_ver $soabi_flags)
         if [ $(lex_pyver $py_ver) -ge $(lex_pyver 3) ]; then \
-            ln -s /opt/${py_ver}${soabi_flags}/bin/python3 /opt/${py_ver}${soabi_flags}/bin/python;
+            ln -s /opt/python/${py_ver}${soabi_flags}/bin/python3 /opt/python/${py_ver}${soabi_flags}/bin/python;
         fi;
-        ln -s /opt/${py_ver}${soabi_flags}/ /opt/${py_ver2}${soabi_flags}
-        [ ! -h /opt/${py_ver2} ] && ln -s /opt/${py_ver}${soabi_flags}/ /opt/$py_ver2
-        /opt/${py_ver}${soabi_flags}/bin/python get-pip.py
-        /opt/${py_ver}${soabi_flags}/bin/pip install wheel
+        ln -s /opt/python/${py_ver}${soabi_flags}/ /opt/${py_ver2}${soabi_flags}
+        /opt/python/${py_ver}${soabi_flags}/bin/python get-pip.py
+        /opt/python/${py_ver}${soabi_flags}/bin/pip install wheel
         rm -rf Python-$py_ver
     done
     rm -f Python-$py_ver.tgz
