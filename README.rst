@@ -51,14 +51,25 @@ directory for source code.
 The images currently contain:
 
 - CPython 2.6, 2.7, 3.3, 3.4, and 3.5, installed in ``/opt/<version
-  number>``
+  number><soabi flags>``
 - Devel packages for all the libraries that PEP 513 allows you to
   assume are present on the host system
 - The `auditwheel <https://pypi.python.org/pypi/auditwheel>`_ tool
 
+The "soabi flags" used in naming CPython version directories under ``/opt`` are
+`PEP 3149 <https://www.python.org/dev/peps/pep-3149/>`_ ABI flags. Because
+wheels created using a CPython (older than 3.3) built with
+``--enable-unicode=ucs2`` are not compatible with ``--enable-unicode=ucs4``
+interpreters, CPython 2.X builds of both UCS-2 (flags ``m``) and UCS-4 (flags
+``mu``) are provided in ``/opt`` since both are commonly found "in the wild."
+Other less common or virtually unheard of flag combinations (such as
+``--with-pydebug`` (``d``) and ``--without-pymalloc`` (absence of ``m``)) are
+not provided.
+
 It'd be good to put an example of how to use these images here, but
 that isn't written yet. If you want to know, then bug us on the
-mailing list to fill in this section :-).
+mailing list to fill in this section :-). However, one useful tip is that a
+list of all interpreters can be obtained with ``/opt/python/*/bin/python``.
 
 
 The PEP itself
