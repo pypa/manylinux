@@ -53,8 +53,8 @@ tar -xzf patchelf-0.8.tar.gz
 (cd patchelf-0.8 && ./configure && make && make install)
 rm -rf patchelf-0.8.tar.gz patchelf-0.8
 
-/opt/3.5/bin/pip install git+git://github.com/manylinux/auditwheel.git && \
-ln -s /opt/3.5/bin/auditwheel /usr/local/bin/auditwheel
+/opt/3.5m/bin/pip install git+git://github.com/manylinux/auditwheel.git && \
+ln -s /opt/3.5m/bin/auditwheel /usr/local/bin/auditwheel
 
 # Clean up development headers and other unnecessary stuff for
 # final image
@@ -65,6 +65,6 @@ yum -y install ${MANYLINUX1_DEPS}
 yum -y clean all > /dev/null 2>&1
 yum list installed
 
-for PYVER in $PY_VERS; do
-    /opt/$PYVER/bin/python $MY_DIR/manylinux1-check.py
+for PYTHON in /opt/*/bin/python; do
+    $PYTHON $MY_DIR/manylinux1-check.py
 done
