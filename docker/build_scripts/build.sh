@@ -5,7 +5,7 @@
 set -ex
 
 # Python versions to be installed in /opt/$VERSION_NO
-PY_VERS="2.6.9 2.7.11 3.3.6 3.4.4 3.5.1"
+CPYTHON_VERSIONS="2.6.9 2.7.11 3.3.6 3.4.4 3.5.1"
 
 # openssl version to build, with expected sha256 hash of .tar.gz
 # archive
@@ -44,7 +44,8 @@ yum -y install bzip2 make git patch unzip bison yasm diffutils \
 # against a recent openssl [see env vars above], which is linked
 # statically. We delete openssl afterwards.)
 build_openssl $OPENSSL_ROOT $OPENSSL_HASH
-build_pythons $PY_VERS
+mkdir -p /opt/python
+build_cpythons $CPYTHON_VERSIONS
 rm -rf /usr/local/ssl
 
 # Install patchelf and auditwheel (latest)
@@ -65,6 +66,6 @@ yum -y install ${MANYLINUX1_DEPS}
 yum -y clean all > /dev/null 2>&1
 yum list installed
 
-for PYTHON in /opt/*/bin/python; do
+for PYTHON in /opt/python/*/bin/python; do
     $PYTHON $MY_DIR/manylinux1-check.py
 done
