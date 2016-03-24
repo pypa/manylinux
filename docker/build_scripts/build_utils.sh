@@ -23,55 +23,60 @@ function lex_pyver {
 }
 
 
-function do_python_build {
+function do_cpython_build {
     local py_ver=$1
     check_var $py_ver
-    local soabi_flags=$2
-    check_var $soabi_flags
-    mkdir -p /opt/python/${py_ver}${soabi_flags}/lib
-    if [ $(lex_pyver $py_ver) -lt $(lex_pyver 3.3) ]; then
-        if [ $soabi_flags = "mu" ]; then
-            local unicode_flags="--enable-unicode=ucs4"
-        else
-            local unicode_flags="--enable-unicode=ucs2"
-        fi
+    local ucs_setting=$2
+    check_var $ucs_setting
+    tar -xzf Python-$py_ver.tgz
+    pushd Python-$py_ver
+    if [ "$ucs_setting" = "none" ]; then
+        unicode_flags=""
+        dir_suffix=""
+    else
+        local unicode_flags="--enable-unicode=$ucs_setting"
+        local dir_suffix="-$ucs_setting"
     fi
+    local prefix="/opt/_internal/cpython-${py_ver}${dir_suffix}"
+    mkdir -p ${prefix}/lib
     # -Wformat added for https://bugs.python.org/issue17547 on Python 2.6
-    CFLAGS="-Wformat" ./configure --prefix=/opt/python/${py_ver}${soabi_flags} --disable-shared $unicode_flags > /dev/null
+    CFLAGS="-Wformat" ./configure --prefix=${prefix} --disable-shared $unicode_flags > /dev/null
     make -j2 > /dev/null
     make install > /dev/null
+    popd
+    rm -rf Python-$py_ver
+    # Some python's install as bin/python3. Make them available as
+    # bin/python.
+    if [ -e ${prefix}/bin/python3 ]; then
+        ln -s python3 ${prefix}/bin/python
+    fi
+    ${prefix}/bin/python get-pip.py
+    ${prefix}/bin/pip install wheel
+    local abi_tag=$(${prefix}/bin/python ${MY_DIR}/python-tag-abi-tag.py)
+    ln -s ${prefix} /opt/python/${abi_tag}
 }
 
 
-function build_python {
+function build_cpython {
     local py_ver=$1
     check_var $py_ver
-    local py_ver2="$(echo $py_ver | cut -d. -f 1,2)"
     check_var $PYTHON_DOWNLOAD_URL
     wget -q $PYTHON_DOWNLOAD_URL/$py_ver/Python-$py_ver.tgz
     if [ $(lex_pyver $py_ver) -lt $(lex_pyver 3.3) ]; then
-        local soabi_flags_list="mu m"
+        do_cpython_build $py_ver ucs2
+        do_cpython_build $py_ver ucs4
+    else
+        do_cpython_build $py_ver none
     fi
-    for soabi_flags in ${soabi_flags_list:-m}; do
-        tar -xzf Python-$py_ver.tgz
-        (cd Python-$py_ver && do_python_build $py_ver $soabi_flags)
-        if [ $(lex_pyver $py_ver) -ge $(lex_pyver 3) ]; then \
-            ln -s /opt/python/${py_ver}${soabi_flags}/bin/python3 /opt/python/${py_ver}${soabi_flags}/bin/python;
-        fi;
-        ln -s /opt/python/${py_ver}${soabi_flags}/ /opt/${py_ver2}${soabi_flags}
-        /opt/python/${py_ver}${soabi_flags}/bin/python get-pip.py
-        /opt/python/${py_ver}${soabi_flags}/bin/pip install wheel
-        rm -rf Python-$py_ver
-    done
     rm -f Python-$py_ver.tgz
 }
 
 
-function build_pythons {
+function build_cpythons {
     check_var $GET_PIP_URL
     curl -sLO $GET_PIP_URL
     for py_ver in $@; do
-        build_python $py_ver
+        build_cpython $py_ver
     done
     rm get-pip.py
 }
