@@ -59,10 +59,11 @@ directory for source code.
 The images currently contain:
 
 - CPython 2.6, 2.7, 3.3, 3.4, and 3.5, installed in
-  ``/opt/python/<abi-tag>``. The directories are named after the ABI
-  tag for the resulting wheels -- e.g. ``/opt/python/cp27mu`` contains
-  a wide-unicode CPython 2.7 build, and can be used to produce wheels
-  named like ``<pkg>-<version>-py27-cp27mu-manylinux1_<arch>.whl``.
+  ``/opt/python/<python tag>-<abi tag>``. The directories are named
+  after the PEP 425 tags for each environment --
+  e.g. ``/opt/python/cp27-cp27mu`` contains a wide-unicode CPython 2.7
+  build, and can be used to produce wheels named like
+  ``<pkg>-<version>-cp27-cp27mu-<arch>.whl``.
 
 - Devel packages for all the libraries that PEP 513 allows you to
   assume are present on the host system
@@ -72,13 +73,13 @@ The images currently contain:
 Note that prior to CPython 3.3, there were two ABI-incompatible ways
 of building CPython: ``--enable-unicode=ucs2`` and
 ``--enable-unicode=ucs4``. We provide both versions
-(e.g. ``/opt/python/cp27m`` for narrow-unicode, ``/opt/python/cp27mu``
-for wide-unicode). NB: essentially all Linux distributions configure
-CPython in ``mu`` (``--enable-unicode=ucs4``) mode, but
-``--enable-unicode=ucs2`` builds are also encountered in the
-wild. Other less common or virtually unheard of flag combinations
-(such as ``--with-pydebug`` (``d``) and ``--without-pymalloc``
-(absence of ``m``)) are not provided.
+(e.g. ``/opt/python/cp27-cp27m`` for narrow-unicode,
+``/opt/python/cp27-cp27mu`` for wide-unicode). NB: essentially all
+Linux distributions configure CPython in ``mu``
+(``--enable-unicode=ucs4``) mode, but ``--enable-unicode=ucs2`` builds
+are also encountered in the wild. Other less common or virtually
+unheard of flag combinations (such as ``--with-pydebug`` (``d``) and
+``--without-pymalloc`` (absence of ``m``)) are not provided.
 
 It'd be good to put an example of how to use these images here, but
 that isn't written yet. If you want to know, then bug us on the

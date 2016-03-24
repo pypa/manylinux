@@ -52,8 +52,7 @@ function do_cpython_build {
     fi
     ${prefix}/bin/python get-pip.py
     ${prefix}/bin/pip install wheel
-    local abi_tag=$(${prefix}/bin/python -c \
-        "import wheel.pep425tags; print(wheel.pep425tags.get_abi_tag())")
+    local abi_tag=$(${prefix}/bin/python ${MY_DIR}/python-tag-abi-tag.py)
     ln -s ${prefix} /opt/python/${abi_tag}
 }
 
