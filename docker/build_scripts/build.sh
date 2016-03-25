@@ -54,8 +54,9 @@ tar -xzf patchelf-0.8.tar.gz
 (cd patchelf-0.8 && ./configure && make && make install)
 rm -rf patchelf-0.8.tar.gz patchelf-0.8
 
-/opt/3.5m/bin/pip install git+git://github.com/manylinux/auditwheel.git && \
-ln -s /opt/3.5m/bin/auditwheel /usr/local/bin/auditwheel
+PY35_BIN=/opt/python/cp35-cp35m/bin
+$PY35_BIN/pip install auditwheel
+ln -s $PY35_BIN/auditwheel /usr/local/bin/auditwheel
 
 # Clean up development headers and other unnecessary stuff for
 # final image
