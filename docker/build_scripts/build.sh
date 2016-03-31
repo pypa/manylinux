@@ -48,10 +48,10 @@ build_pythons $PY_VERS
 rm -rf /usr/local/ssl
 
 # Install patchelf and auditwheel (latest)
-curl -sLO http://nixos.org/releases/patchelf/patchelf-0.8/patchelf-0.8.tar.gz
-tar -xzf patchelf-0.8.tar.gz
-(cd patchelf-0.8 && ./configure && make && make install)
-rm -rf patchelf-0.8.tar.gz patchelf-0.8
+curl -sLO http://nixos.org/releases/patchelf/patchelf-0.9/patchelf-0.9.tar.gz
+tar -xzf patchelf-0.9.tar.gz
+(cd patchelf-0.9 && ./configure && make && make install)
+rm -rf patchelf-0.9.tar.gz patchelf-0.9
 
 /opt/3.5/bin/pip install git+git://github.com/manylinux/auditwheel.git && \
 ln -s /opt/3.5/bin/auditwheel /usr/local/bin/auditwheel
