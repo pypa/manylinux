@@ -49,10 +49,10 @@ build_cpythons $CPYTHON_VERSIONS
 rm -rf /usr/local/ssl
 
 # Install patchelf and auditwheel (latest)
-curl -sLO http://nixos.org/releases/patchelf/patchelf-0.8/patchelf-0.8.tar.gz
-tar -xzf patchelf-0.8.tar.gz
-(cd patchelf-0.8 && ./configure && make && make install)
-rm -rf patchelf-0.8.tar.gz patchelf-0.8
+curl -sLO http://nixos.org/releases/patchelf/patchelf-0.9/patchelf-0.9.tar.gz
+tar -xzf patchelf-0.9.tar.gz
+(cd patchelf-0.9 && ./configure && make && make install)
+rm -rf patchelf-0.9.tar.gz patchelf-0.9
 
 PY35_BIN=/opt/python/cp35-cp35m/bin
 $PY35_BIN/pip install auditwheel
