@@ -49,7 +49,7 @@ build_cpythons $CPYTHON_VERSIONS
 rm -rf /usr/local/ssl
 
 # Install patchelf and auditwheel (latest with unreleased bug fixes)
-curl -sLO http://nipy.bic.berkeley.edu/manylinux/patchelf-0.9njs2.tar.gz
+curl -sLO https://nipy.bic.berkeley.edu/manylinux/patchelf-0.9njs2.tar.gz
 tar -xzf patchelf-0.9njs2.tar.gz
 (cd patchelf-0.9njs2 && ./configure && make && make install)
 rm -rf patchelf-0.9njs2.tar.gz patchelf-0.9njs2
