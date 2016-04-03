@@ -20,7 +20,7 @@ PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-
 MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
 
 # Get build utilities
-MY_DIR=$(dirname "$BASH_SOURCE[0]}")
+MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source $MY_DIR/build_utils.sh
 
 # EPEL support
