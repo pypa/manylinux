@@ -91,9 +91,9 @@ function do_openssl_build {
 
 function check_sha256sum {
     local fname=$1
-    check_var $fname
+    check_var ${fname}
     local sha256=$2
-    check_var $sha256
+    check_var ${sha256}
 
     echo "${sha256}  ${fname}" > ${fname}.sha256
     sha256sum -c ${fname}.sha256
@@ -103,12 +103,12 @@ function check_sha256sum {
 
 function build_openssl {
     local openssl_fname=$1
-    check_var $openssl_fname
+    check_var ${openssl_fname}
     local openssl_sha256=$2
-    check_var $openssl_sha256
-    check_var $OPENSSL_DOWNLOAD_URL
-    curl -sLO $OPENSSL_DOWNLOAD_URL/${openssl_fname}.tar.gz
-    check_sha256sum $openssl_fname.tar.gz $openssl_sha256
+    check_var ${openssl_sha256}
+    check_var ${OPENSSL_DOWNLOAD_URL}
+    curl -sLO ${OPENSSL_DOWNLOAD_URL}/${openssl_fname}.tar.gz
+    check_sha256sum ${openssl_fname}.tar.gz ${openssl_sha256}
     tar -xzf ${openssl_fname}.tar.gz
     (cd ${openssl_fname} && do_openssl_build)
     rm -rf ${openssl_fname} ${openssl_fname}.tar.gz
