@@ -1,0 +1,12 @@
+A note for next time we're updating the manylinux definitions:
+
+Distrowatch has an amazing set of tables showing which versions of
+which distros ship which libraries. So if you want to know the answer
+to questions like "which versions of debian have a glibc that is newer
+than the one in RHEL 7", then here you go:
+
+https://distrowatch.com/table.php?distribution=redhat
+https://distrowatch.com/table.php?distribution=debian
+https://distrowatch.com/table.php?distribution=ubuntu
+
+etc.
