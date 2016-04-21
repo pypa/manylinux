@@ -55,6 +55,19 @@ mkdir -p /opt/python
 build_cpythons $CPYTHON_VERSIONS
 rm -rf /usr/local/ssl
 
+PY35_BIN=/opt/python/cp35-cp35m/bin
+
+# Our openssl doesn't know how to find the system CA trust store
+#   (https://github.com/pypa/manylinux/issues/53)
+# And it's not clear how up-to-date that is anyway
+# So let's just use the same one pip and everyone uses
+$PY35_BIN/pip install certifi
+ln -s $($PY35_BIN/python -c 'import certifi; print(certifi.where())') \
+      /opt/_internal/certs.pem
+# If you modify this line you also have to modify the versions in the
+# Dockerfiles:
+export SSL_CERT_FILE=/opt/_internal/certs.pem
+
 # Install patchelf and auditwheel (latest with unreleased bug fixes)
 curl -sLO https://nipy.bic.berkeley.edu/manylinux/patchelf-0.9njs2.tar.gz
 check_sha256sum patchelf-0.9njs2.tar.gz $PATCHELF_HASH
@@ -62,7 +75,6 @@ tar -xzf patchelf-0.9njs2.tar.gz
 (cd patchelf-0.9njs2 && ./configure && make && make install)
 rm -rf patchelf-0.9njs2.tar.gz patchelf-0.9njs2
 
-PY35_BIN=/opt/python/cp35-cp35m/bin
 $PY35_BIN/pip install auditwheel
 ln -s $PY35_BIN/auditwheel /usr/local/bin/auditwheel
 
@@ -89,5 +101,9 @@ find /opt/_internal \
   -print0 | xargs -0 rm -f
 
 for PYTHON in /opt/python/*/bin/python; do
+    # Smoke test to make sure that our Pythons work, and do indeed detect as
+    # being manylinux compatible:
     $PYTHON $MY_DIR/manylinux1-check.py
+    # Make sure that SSL cert checking works
+    $PYTHON $MY_DIR/ssl-check.py
 done
