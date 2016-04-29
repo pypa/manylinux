@@ -20,7 +20,7 @@ PATCHELF_HASH=d9afdff4baeacfbc64861454f368b7f2c15c44d245293f7587bbf726bfe722fb
 PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel"
 
 # Libraries that are allowed as part of the manylinux1 profile
-MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel cmake28"
+MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
 
 # Get build utilities
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
@@ -40,7 +40,7 @@ rm -f epel-release-5*.rpm
 
 # Development tools and libraries
 yum -y install bzip2 make git patch unzip bison yasm diffutils \
-    autoconf automake which file \
+    autoconf automake which file cmake28 \
     kernel-devel-`uname -r` \
     devtoolset-2-binutils devtoolset-2-gcc \
     devtoolset-2-gcc-c++ devtoolset-2-gcc-gfortran \
@@ -72,8 +72,6 @@ yum -y erase wireless-tools gtk2 libX11 hicolor-icon-theme \
     avahi freetype bitstream-vera-fonts \
     ${PYTHON_COMPILE_DEPS}  > /dev/null 2>&1
 yum -y install ${MANYLINUX1_DEPS}
-# Add a soft-link from cmake28 to cmake
-ln -s `which cmake28` /usr/local/bin/cmake
 yum -y clean all > /dev/null 2>&1
 yum list installed
 # we don't need libpython*.a, and they're many megabytes
