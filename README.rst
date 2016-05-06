@@ -51,7 +51,7 @@ done the work for you:
 .. image:: https://quay.io/repository/pypa/manylinux1_i686/status
    :target: https://quay.io/repository/pypa/manylinux1_i686
 
-This images are rebuilt using Travis-CI on every commit to this
+These images are rebuilt using Travis-CI on every commit to this
 repository; see the
 `docker/ <https://github.com/pypa/manylinux/tree/master/docker>`_
 directory for source code.
