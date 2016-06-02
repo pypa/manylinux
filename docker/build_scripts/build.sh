@@ -14,6 +14,8 @@ OPENSSL_HASH=1d4007e53aad94a5b2002fe045ee7bb0b3d98f1a47f8b2bc851dcd1c74332919
 EPEL_RPM_HASH=0dcc89f9bf67a2a515bad64569b7a9615edc5e018f676a578d5fd0f17d3c81d4
 DEVTOOLS_HASH=a8ebeb4bed624700f727179e6ef771dafe47651131a00a78b342251415646acc
 PATCHELF_HASH=d9afdff4baeacfbc64861454f368b7f2c15c44d245293f7587bbf726bfe722fb
+CURL_ROOT=curl-7.49.1
+CURL_HASH=eb63cec4bef692eab9db459033f409533e6d10e20942f4b060b32819e81885f1
 
 # Dependencies for compiling Python that we want to remove from
 # the final image after compiling Python
@@ -53,7 +55,6 @@ yum -y install bzip2 make git patch unzip bison yasm diffutils \
 build_openssl $OPENSSL_ROOT $OPENSSL_HASH
 mkdir -p /opt/python
 build_cpythons $CPYTHON_VERSIONS
-rm -rf /usr/local/ssl
 
 PY35_BIN=/opt/python/cp35-cp35m/bin
 
@@ -68,13 +69,24 @@ ln -s $($PY35_BIN/python -c 'import certifi; print(certifi.where())') \
 # Dockerfiles:
 export SSL_CERT_FILE=/opt/_internal/certs.pem
 
-# Install patchelf and auditwheel (latest with unreleased bug fixes)
+# Install newest curl
+build_curl $CURL_ROOT $CURL_HASH
+rm -rf /usr/local/include/curl /usr/local/lib/libcurl* /usr/local/lib/pkgconfig/libcurl.pc
+hash -r
+curl --version
+curl-config --features
+
+# Now we can delete our built SSL
+rm -rf /usr/local/ssl
+
+# Install patchelf (latest with unreleased bug fixes)
 curl -sLO https://nipy.bic.berkeley.edu/manylinux/patchelf-0.9njs2.tar.gz
 check_sha256sum patchelf-0.9njs2.tar.gz $PATCHELF_HASH
 tar -xzf patchelf-0.9njs2.tar.gz
 (cd patchelf-0.9njs2 && ./configure && make && make install)
 rm -rf patchelf-0.9njs2.tar.gz patchelf-0.9njs2
 
+# Install latest pypi release of auditwheel
 $PY35_BIN/pip install auditwheel
 ln -s $PY35_BIN/auditwheel /usr/local/bin/auditwheel
 
