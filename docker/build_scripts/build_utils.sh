@@ -6,6 +6,9 @@ PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 # with the old versions of openssl and curl in Centos 5.11 hence the fallback
 # to the ftp mirror:
 OPENSSL_DOWNLOAD_URL=ftp://ftp.openssl.org/source
+# Ditto the curl sources
+CURL_DOWNLOAD_URL=http://curl.askapache.com/download
+
 GET_PIP_URL=https://bootstrap.pypa.io/get-pip.py
 
 
@@ -115,4 +118,25 @@ function build_openssl {
     tar -xzf ${openssl_fname}.tar.gz
     (cd ${openssl_fname} && do_openssl_build)
     rm -rf ${openssl_fname} ${openssl_fname}.tar.gz
+}
+
+
+function do_curl_build {
+    LIBS=-ldl ./configure --with-ssl --disable-shared > /dev/null
+    make > /dev/null
+    make install > /dev/null
+}
+
+
+function build_curl {
+    local curl_fname=$1
+    check_var ${curl_fname}
+    local curl_sha256=$2
+    check_var ${curl_sha256}
+    check_var ${CURL_DOWNLOAD_URL}
+    curl -sLO ${CURL_DOWNLOAD_URL}/${curl_fname}.tar.bz2
+    check_sha256sum ${curl_fname}.tar.bz2 ${curl_sha256}
+    tar -jxf ${curl_fname}.tar.bz2
+    (cd ${curl_fname} && do_curl_build)
+    rm -rf ${curl_fname} ${curl_fname}.tar.bz2
 }
