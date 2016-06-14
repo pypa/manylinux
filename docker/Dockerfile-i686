@@ -12,3 +12,6 @@ COPY ./build_scripts /build_scripts
 RUN linux32 bash build_scripts/build.sh && rm -r build_scripts
 
 ENV SSL_CERT_FILE=/opt/_internal/certs.pem
+
+# Run 32-bit uname selection on way into image
+ENTRYPOINT ["linux32"]
