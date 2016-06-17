@@ -44,11 +44,15 @@ rm -f epel-release-5*.rpm
 
 # Development tools and libraries
 yum -y install bzip2 make git patch unzip bison yasm diffutils \
-    autoconf automake which file cmake28 \
+    automake which file cmake28 \
     kernel-devel-`uname -r` \
     devtoolset-2-binutils devtoolset-2-gcc \
     devtoolset-2-gcc-c++ devtoolset-2-gcc-gfortran \
     ${PYTHON_COMPILE_DEPS}
+
+# Install newest autoconf
+build_autoconf $AUTOCONF_ROOT $AUTOCONF_HASH
+autoconf --version
 
 # Compile the latest Python releases.
 # (In order to have a proper SSL module, Python is compiled
@@ -77,10 +81,6 @@ rm -rf /usr/local/include/curl /usr/local/lib/libcurl* /usr/local/lib/pkgconfig/
 hash -r
 curl --version
 curl-config --features
-
-# Install newest autoconf
-build_autoconf $AUTOCONF_ROOT $AUTOCONF_HASH
-autoconf --version
 
 # Now we can delete our built SSL
 rm -rf /usr/local/ssl
