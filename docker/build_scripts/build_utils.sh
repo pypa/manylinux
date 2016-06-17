@@ -144,7 +144,7 @@ function build_curl {
 }
 
 
-function do_autoconf_build {
+function do_standard_install {
     ./configure > /dev/null
     make > /dev/null
     make install > /dev/null
@@ -160,6 +160,6 @@ function build_autoconf {
     curl -sLO ${AUTOCONF_DOWNLOAD_URL}/${autoconf_fname}.tar.gz
     check_sha256sum ${autoconf_fname}.tar.gz ${autoconf_sha256}
     tar -zxf ${autoconf_fname}.tar.gz
-    (cd ${autoconf_fname} && do_autoconf_build)
+    (cd ${autoconf_fname} && do_standard_install)
     rm -rf ${autoconf_fname} ${autoconf_fname}.tar.gz
 }
