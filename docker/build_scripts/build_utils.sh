@@ -156,7 +156,7 @@ function build_autoconf {
     check_var ${autoconf_fname}
     local autoconf_sha256=$2
     check_var ${autoconf_sha256}
-    check_var ${CURL_DOWNLOAD_URL}
+    check_var ${AUTOCONF_DOWNLOAD_URL}
     curl -sLO ${AUTOCONF_DOWNLOAD_URL}/${autoconf_fname}.tar.gz
     check_sha256sum ${autoconf_fname}.tar.gz ${autoconf_sha256}
     tar -zxf ${autoconf_fname}.tar.gz
