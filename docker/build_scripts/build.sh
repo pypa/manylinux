@@ -66,7 +66,7 @@ autoconf --version
 # Compile the latest Python releases.
 # (In order to have a proper SSL module, Python is compiled
 # against a recent openssl [see env vars above], which is linked
-# statically. We delete openssl afterwards.)
+# statically.)
 build_openssl $OPENSSL_ROOT $OPENSSL_HASH
 mkdir -p /opt/python
 build_cpythons $CPYTHON_VERSIONS
@@ -90,9 +90,6 @@ rm -rf /usr/local/include/curl /usr/local/lib/libcurl* /usr/local/lib/pkgconfig/
 hash -r
 curl --version
 curl-config --features
-
-# Now we can delete our built SSL
-rm -rf /usr/local/ssl
 
 # Install patchelf (latest with unreleased bug fixes)
 curl -sLO https://nipy.bic.berkeley.edu/manylinux/patchelf-0.9njs2.tar.gz
