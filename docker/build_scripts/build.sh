@@ -143,9 +143,6 @@ ln -s $($PY36_BIN/python -c 'import certifi; print(certifi.where())') \
 # Dockerfiles:
 export SSL_CERT_FILE=/opt/_internal/certs.pem
 
-# Now we can delete our built OpenSSL headers/static libs since we've linked everything we need
-rm -rf /usr/local/ssl
-
 # Install patchelf (latest with unreleased bug fixes)
 curl -fsSL -o patchelf.tar.gz https://github.com/NixOS/patchelf/archive/$PATCHELF_VERSION.tar.gz
 check_sha256sum patchelf.tar.gz $PATCHELF_HASH
