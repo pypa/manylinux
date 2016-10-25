@@ -1,0 +1,7 @@
+[home_fengshuo_zeromq]
+name=The latest stable of zeromq builds (CentOS_CentOS-5)
+type=rpm-md
+baseurl=http://download.opensuse.org/repositories/home:/fengshuo:/zeromq/CentOS_CentOS-5/
+gpgcheck=1
+gpgkey=http://download.opensuse.org/repositories/home:/fengshuo:/zeromq/CentOS_CentOS-5/repodata/repomd.xml.key
+enabled=1
