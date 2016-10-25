@@ -5,7 +5,7 @@
 set -ex
 
 # Python versions to be installed in /opt/$VERSION_NO
-CPYTHON_VERSIONS="2.6.9 2.7.13 3.3.6 3.4.5 3.5.2 3.6.0"
+CPYTHON_VERSIONS="2.7.13 3.5.2 3.6.0"
 
 # openssl version to build, with expected sha256 hash of .tar.gz
 # archive
@@ -21,7 +21,13 @@ AUTOCONF_HASH=954bd69b391edc12d6a4a51a2dd1476543da5c6bbf05a95b59dc0dd6fd4c2969
 
 # Dependencies for compiling Python that we want to remove from
 # the final image after compiling Python
-PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel"
+PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel \
+                     readline-devel tk-devel gdbm-devel db4-devel libpcap-devel\
+                     xz-devel atlas-devel libevdev snappy-devel python-imaging \
+                     openjpeg-devel freetype-devel libpng-devel libffi-devel \
+                     python-lxml postgresql-libs postgresql-devel lapack-devel \
+                     python-psycopg2 zeromq-devel python python-devel libxml2 \
+                     libxml2-devel python-setuptools pcre pcre-devel"
 
 # Libraries that are allowed as part of the manylinux1 profile
 MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
@@ -41,6 +47,9 @@ check_sha256sum devtools-2.repo $DEVTOOLS_HASH
 mv devtools-2.repo /etc/yum.repos.d/devtools-2.repo
 rpm -Uvh --replacepkgs epel-release-5*.rpm
 rm -f epel-release-5*.rpm
+
+# zeromq repo
+cp $MY_DIR/zeromq.repo /etc/yum.repos.d/
 
 # Development tools and libraries
 yum -y install bzip2 make git patch unzip bison yasm diffutils \
