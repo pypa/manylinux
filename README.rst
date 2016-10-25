@@ -28,102 +28,12 @@ This repository hosts several manylinux-related things:
 Docker images
 -------------
 
-.. image:: https://travis-ci.org/pypa/manylinux.svg?branch=master
-   :target: https://travis-ci.org/pypa/manylinux
+We create Docker Images to be hosted on parsely/manylinux via DockerHub
 
-Building manylinux-compatible wheels is not trivial; as a general
-rule, binaries built on one Linux distro will only work on other Linux
-distros that are the same age or newer. Therefore, if we want to make
-binaries that run on most Linux distros, we have to use a very old
-distro -- CentOS 5.
+TravisCI should build and push the docker image to DockerHub
 
-Rather than forcing you to install CentOS 5 yourself, install Python,
-etc., we provide two `Docker <https://docker.com/>`_ images where we've
-done the work for you:
+dev-requirements
+----------------
+Update dev-requirements with the list of packages that we need wheels built for
 
-64-bit image (x86-64): ``quay.io/pypa/manylinux1_x86_64``
-
-.. image:: https://quay.io/repository/pypa/manylinux1_x86_64/status
-   :target: https://quay.io/repository/pypa/manylinux1_x86_64
-
-32-bit image (i686): ``quay.io/pypa/manylinux1_i686``
-
-.. image:: https://quay.io/repository/pypa/manylinux1_i686/status
-   :target: https://quay.io/repository/pypa/manylinux1_i686
-
-These images are rebuilt using Travis-CI on every commit to this
-repository; see the
-`docker/ <https://github.com/pypa/manylinux/tree/master/docker>`_
-directory for source code.
-
-The images currently contain:
-
-- CPython 2.6, 2.7, 3.3, 3.4, and 3.5, installed in
-  ``/opt/python/<python tag>-<abi tag>``. The directories are named
-  after the PEP 425 tags for each environment --
-  e.g. ``/opt/python/cp27-cp27mu`` contains a wide-unicode CPython 2.7
-  build, and can be used to produce wheels named like
-  ``<pkg>-<version>-cp27-cp27mu-<arch>.whl``.
-
-- Devel packages for all the libraries that PEP 513 allows you to
-  assume are present on the host system
-
-- The `auditwheel <https://pypi.python.org/pypi/auditwheel>`_ tool
-
-Note that prior to CPython 3.3, there were two ABI-incompatible ways
-of building CPython: ``--enable-unicode=ucs2`` and
-``--enable-unicode=ucs4``. We provide both versions
-(e.g. ``/opt/python/cp27-cp27m`` for narrow-unicode,
-``/opt/python/cp27-cp27mu`` for wide-unicode). NB: essentially all
-Linux distributions configure CPython in ``mu``
-(``--enable-unicode=ucs4``) mode, but ``--enable-unicode=ucs2`` builds
-are also encountered in the wild. Other less common or virtually
-unheard of flag combinations (such as ``--with-pydebug`` (``d``) and
-``--without-pymalloc`` (absence of ``m``)) are not provided.
-
-Example
--------
-An example project which builds 32- and 64-bit wheels for each Python interpreter
-version can be found here: https://github.com/pypa/python-manylinux-demo.
-
-This demonstrates how to use these docker images in conjunction with auditwheel
-to build manylinux-compatible wheels using the free `travis ci <https://travis-ci.org/>`_
-continuous integration service. 
-
-(NB: for the 32-bit images running on a 64-bit host machine, it's necessary to run 
-everything under the command line program `linux32`, which changes reported architecture
-in new program environment. See `this example invocation <https://github.com/pypa/python-manylinux-demo/blob/master/.travis.yml#L14>`_)
-
-The PEP itself
---------------
-
-The official version of `PEP 513
-<https://www.python.org/dev/peps/pep-0513/>`_ is stored in the `PEP
-repository <https://github.com/python/peps>`_, but we also have our
-`own copy here
-<https://github.com/pypa/manylinux/tree/master/pep-513.rst>`_. This is
-where the PEP was originally written, so if for some reason you really
-want to see the full history of edits it went through, then this is
-the place to look.
-
-This repo also has some analysis code that was used when putting
-together the original proposal in the ``policy-info/`` directory
-(might be useful someday in the future for writing a ``manylinux2``
-policy).
-
-If you want to read the full discussion that led to the original
-policy, then lots of that is here:
-https://groups.google.com/forum/#!forum/manylinux-discuss
-
-The distutils-sig archives for January 2016 also contain several
-threads.
-
-
-Code of Conduct
-===============
-
-Everyone interacting in the manylinux project's codebases, issue
-trackers, chat rooms, and mailing lists is expected to follow the
-`PyPA Code of Conduct`_.
-
-.. _PyPA Code of Conduct: https://www.pypa.io/en/latest/code-of-conduct/
+Our server will periodically update from this repo and build the list of packages for our pypi mirror.
