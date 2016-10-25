@@ -1,5 +1,5 @@
 #!/bin/bash
-docker login -e noemail -u $QUAY_USERNAME -p $QUAY_PASSWORD quay.io
-tag="quay.io/pypa/manylinux1_$PLATFORM"
-docker tag ${tag}:${TRAVIS_COMMIT} ${tag}:latest
-docker push ${tag}:latest
+docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD 
+docker tag $REPO:$COMMIT $REPO:$TAG
+docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+docker push $REPO
