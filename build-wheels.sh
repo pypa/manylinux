@@ -10,7 +10,7 @@ for PYBIN in /opt/python/*/bin; do
     elif [[ "$PYBIN" =~ cp34 ]]; then
         echo "Skipping 3.4 because we don't use it"
     else
-         CFLAGS="-I/usr/lib/openssl/include" LDFLAGS="-L/usr/lib/openssl/lib" ${PYBIN}/pip wheel cryptography -w /io/wheelhouse/ -f /io/wheelhouse
+         CFLAGS="-I/usr/local/ssl/include" LDFLAGS="-L/usr/local/ssl/lib" ${PYBIN}/pip wheel cryptography -w /io/wheelhouse/ -f /io/wheelhouse
          ${PYBIN}/pip wheel -r /io/dev-requirements.txt -w /io/wheelhouse/ -f /io/wheelhouse
     fi
 done
