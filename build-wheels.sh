@@ -22,7 +22,7 @@ for whl in /io/wheelhouse/*.whl; do
     elif [[ "$whl" =~ manylinux ]]; then
         echo "Skipping manylinux wheel $whl"
     else
-        auditwheel repair $whl -w /io/wheelhouse/
+        auditwheel repair $whl -w /io/wheelhouse/ || true
     fi
 done
 
