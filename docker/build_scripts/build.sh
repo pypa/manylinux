@@ -23,11 +23,12 @@ AUTOCONF_HASH=954bd69b391edc12d6a4a51a2dd1476543da5c6bbf05a95b59dc0dd6fd4c2969
 # the final image after compiling Python
 PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel \
                      readline-devel tk-devel gdbm-devel db4-devel libpcap-devel\
-                     xz-devel atlas-devel libevdev snappy-devel python-imaging \
-                     openjpeg-devel freetype-devel libpng-devel libffi-devel \
-                     python-lxml postgresql-libs postgresql-devel lapack-devel \
-                     python-psycopg2 zeromq-devel python python-devel libxml2 \
-                     libxml2-devel python-setuptools pcre pcre-devel"
+                     xz-devel atlas-devel libev-devel libev snappy-devel 
+                     python-imaging openjpeg-devel freetype-devel libpng-devel \
+                     libffi-devel python-lxml postgresql-libs postgresql-devel \
+                     lapack-devel python-psycopg2 zeromq-devel python \
+                     python-devel libxml2 libxml2-devel python-setuptools pcre \
+                     pcre-devel"
 
 # Libraries that are allowed as part of the manylinux1 profile
 MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
