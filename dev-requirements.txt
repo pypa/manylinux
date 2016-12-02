@@ -52,7 +52,7 @@ idna
 invoke
 ipaddress
 iso3166
-Jinja2
+jinja2
 jsonschema
 langdetect
 libthumbor
@@ -79,7 +79,7 @@ patsy
 pip
 prettytable
 probably
-psycopg2==2.5.4
+psycopg2
 pyasn1
 pycparser
 pycrypto
@@ -113,8 +113,8 @@ scrapy
 serpextract
 service_identity
 setuptools
-simple_salesforce
 simplejson
+simple_salesforce
 six
 smhasher
 sphinx
