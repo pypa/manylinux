@@ -25,7 +25,7 @@ PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel \
                      readline-devel tk-devel gdbm-devel db4-devel libpcap-devel\
                      xz-devel atlas-devel libev-devel libev snappy-devel 
                      python-imaging openjpeg-devel freetype-devel libpng-devel \
-                     libffi-devel python-lxml postgresql-libs postgresql-devel \
+                     libffi-devel python-lxml postgresql95-libs postgresql95-devel \
                      lapack-devel zeromq-devel python python-devel libxml2 \
                      libxml2-devel python-setuptools pcre pcre-devel"
 
@@ -56,6 +56,7 @@ sed -r -i 's/\[(base|update)\]/[\1]\nexclude=postgresql*\n/g' /etc/yum.repos.d/C
 curl -SLO https://download.postgresql.org/pub/repos/yum/9.5/redhat/rhel-5-x86_64/pgdg-centos95-9.5-3.noarch.rpm
 rpm -Uvh --replacepkgs pgdg-centos*.rpm
 rm -f pgdg-centos*.rpm
+yum list postgres*
 
 # Development tools and libraries
 yum -y install bzip2 make git patch unzip bison yasm diffutils \
