@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+# psycopg2 won't build without this
+export PG_HOME=/usr/pgsql-9.5
+export PATH=/usr/pgsql-9.5/bin:$PATH
+
 # Compile wheels
 for PYBIN in /opt/python/*/bin; do
     if [[ "$PYBIN" =~ cp26 ]]; then
