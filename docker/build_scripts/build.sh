@@ -54,7 +54,9 @@ cp $MY_DIR/zeromq.repo /etc/yum.repos.d/
 
 # Setup postgresql repo
 sed -r -i 's/\[(base|update)\]/[\1]\nexclude=postgresql*\n/g' /etc/yum.repos.d/CentOS-Base.repo
-yum install https://download.postgresql.org/pub/repos/yum/9.5/redhat/rhel-5-x86_64/pgdg-centos95-9.5-3.noarch.rpm
+curl -SLO https://download.postgresql.org/pub/repos/yum/9.5/redhat/rhel-5-x86_64/pgdg-centos95-9.5-3.noarch.rpm
+rpm -Uvh --replacepkgs pgdg-centos*.rpm
+rm -f pgdg-centos*.rpm
 
 # Development tools and libraries
 yum -y install bzip2 make git patch unzip bison yasm diffutils \
