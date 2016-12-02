@@ -1,144 +1,36 @@
-awesome-slugify
-bitarray
-blinker
-blist
-boto
-boto3
-botocore
-brace-tags
-braintree
-cairocffi
-cassandra-driver
-cffi
-click
-closure
-contextlib2
-contexttimer
-coverage
-Cython
-datadog
-Django
-django-assets
-django-redis
-django-tagging
-django-timezones
-docopt
-ecdsa
-elasticsearch
-elasticsearch-dsl
-enum34
-Fabric
-fabric3
-Flask
-Flask-Assets
-Flask-Script
-Flask-Slack
-formic
-Frozen-Flask
-futures
-fuzzywuzzy
-geoip2
-gevent
-gnippy
-google-api-python-client
-greenlet
-grequests
-gunicorn
-hiredis
-hll
-httplib2
-hypothesis
-idna
-invoke
-ipaddress
-iso3166
-Jinja2
-jsonschema
-langdetect
-libthumbor
-livereload
-locustio
-lxml
-Markdown
-MarkupSafe
-marshmallow
-mmh3
-mock
-more-itertools
-msgpack-python
-ndg-httpsclient
-newrelic
-nose
-numpy
-oauth2client
-optimizely
-pandas
-paramiko
-parsely_raw_data
-patsy
-pip
-prettytable
-probably
-psycopg2==2.5.4
-pyasn1
-pycparser
-pycrypto
-Pygments
-pykafka
-pylru
-pymongo
-pyopenssl
-pyparsing
-pystorm
-pytest
-pytest-ordering
-python-dateutil
-python-Levenshtein
-python-memcached
-python-snappy
-python-twitter
-pytz
-PyYAML
-pyzmq
-raven
-readability-lxml
-redis
-regex
-requests
-requests-futures
-retrying
-rq
-ruamel.yaml
-scrapy
-serpextract
-service_identity
-setuptools
-simple_salesforce
-simplejson
-six
-smhasher
-sphinx
-sphinx-http-domain
-sphinx_rtd_theme
-sst
-statsd
-statsmodels
-streamparse
-suds-jurko
-tablib
-tabulate
-testinstances
-texttable
-thriftpy
-tldextract
-tornado
-Twisted
-txAMQP
-tzlocal
-ua-parser
-ujson
-user-agents
-webargs
-webassets
-wrapt
-xlsxwriter
+awesome-slugify==1.6.5 # for language-smart slugs
+boto==2.35.1 # to push site configs to s3
+boto3==1.1.0 # fu:cha boto
+braintree==3.8.0 # payments
+cassandra-driver==3.7.0  # to connect to cassandra, pull shares data
+closure==20140110 # for minifying js on push
+Django==1.9.8
+django-assets==0.10 # new kid on the block
+django-redis==4.3.0 # all kinds of cache
+django-timezones==0.2
+elasticsearch==1.3.0 # elasticsearch-py
+Fabric3==1.12.post1  # so that we can easily update servers
+google-api-python-client==1.2 # dash engagement in admin
+hiredis==0.1.5  # for faster redis, automagically used by redis-py if present
+httplib2==0.9
+jinja2==2.7.3  # our preferred templating system
+libthumbor==1.3.1 # for the new-style thumbnail url generation
+locustio==0.7.3 # cache warmer and locust tests
+mmh3==2.3.1 # murmurhash that putils.url_utils depends on for the new post ids
+newrelic==2.50.0.39  # perf tracking
+optimizely>=0.3
+pylru==1.0.9 # required by putils
+psycopg2==2.5.4  # postgres wrappers
+pytz==2014.10
+pyzmq>2.2.0.1,<14.0.0 # 14.0.0 causes problems
+raven==5.27.1 # for complaining about errors, prod only
+redis==2.10.1 # for realtime
+requests==2.5.3 # http requests at it's best
+rq==0.4.6 # for talking to dash-assist
+simplejson==3.6.5 # jinja is using it outside django so dies otherwise
+simple_salesforce==0.68.1 # dash admin uses to fetch sales information
+suds-jurko # marketo dependency
+tablib==0.10.0 # conversion between csv, json, xlsx
+tldextract==1.7.1
+uwsgi==2.0.11.2
+webassets==0.10
