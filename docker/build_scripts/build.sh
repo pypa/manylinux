@@ -27,8 +27,7 @@ PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel \
                      python-imaging openjpeg-devel freetype-devel libpng-devel \
                      libffi-devel python-lxml postgresql95-libs \
                      postgresql95-devel lapack-devel zeromq-devel python \
-                     python-devel libxml2 libxml2-devel libxslt-devel \
-                     python-setuptools pcre pcre-devel"
+                     python-devel python-setuptools pcre pcre-devel"
 
 # Libraries that are allowed as part of the manylinux1 profile
 MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
@@ -105,6 +104,15 @@ check_sha256sum patchelf-0.9njs2.tar.gz $PATCHELF_HASH
 tar -xzf patchelf-0.9njs2.tar.gz
 (cd patchelf-0.9njs2 && ./configure && make && make install)
 rm -rf patchelf-0.9njs2.tar.gz patchelf-0.9njs2
+
+# Build/install latest libxml and libxsl
+wget http://xmlsoft.org/sources/libxml2-2.9.4-1.fc23.src.rpm
+wget http://xmlsoft.org/sources/libxslt-1.1.29-1.fc23.src.rpm
+rpm -ivh libxml2-2.9.4-1.fc23.src.rpm --nomd5
+rpmbuild -ba /usr/src/redhat/SPECS/libxml2.spec
+rpm -ivh libxslt-1.1.29-1.fc23.src.rpm --nomd5
+rpmbuild -ba /usr/src/redhat/SPECS/libxslt.spec
+yum localinstall --nogpgcheck libxml2 libxml2-devel libxslt libxslt-devel
 
 # Install latest pypi release of auditwheel
 $PY36_BIN/pip install auditwheel
