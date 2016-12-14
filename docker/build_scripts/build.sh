@@ -13,11 +13,12 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 # GPG installed to verify signatures on Python source tarballs.
 PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel \
                      readline-devel tk-devel gdbm-devel db4-devel libpcap-devel\
-                     xz-devel atlas-devel libev-devel libev snappy-devel 
+                     xz-devel atlas-devel libev-devel libev snappy-devel
                      python-imaging openjpeg-devel freetype-devel libpng-devel \
-                     libffi-devel python-lxml postgresql95-libs postgresql95-devel \
-                     lapack-devel zeromq-devel python python-devel libxml2 \
-                     libxml2-devel python-setuptools pcre pcre-devel"
+                     libffi-devel python-lxml postgresql95-libs \
+                     postgresql95-devel lapack-devel zeromq-devel python \
+                     python-devel libxml2 libxml2-devel libxslt-devel \
+                     python-setuptools pcre pcre-devel"
 
 # Libraries that are allowed as part of the manylinux1 profile
 MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel \
