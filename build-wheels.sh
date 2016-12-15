@@ -19,7 +19,7 @@ for PYBIN in /opt/python/*/bin; do
          # Do another run allowing dev builds, and do it with a separate run per
          # requirement so that one broken prerelease doesn't stop the rest from
          # being build---I'm looking at *you* statsmodel 0.8.0rc1
-         cat /io/dev-requirements.txt | tr '\n' '\0' | xargs -0 ${PYBIN}/pip wheel --pre -w /io/wheelhouse/ -f /io/wheelhouse || true
+         cat /io/dev-requirements.txt | tr '\n' '\0' | xargs -0 -n 1 bash -c "${PYBIN}/pip wheel --pre -w /io/wheelhouse/ -f /io/wheelhouse || true"
     fi
 done
 
