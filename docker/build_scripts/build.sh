@@ -106,13 +106,15 @@ tar -xzf patchelf-0.9njs2.tar.gz
 rm -rf patchelf-0.9njs2.tar.gz patchelf-0.9njs2
 
 # Build/install latest libxml and libxsl
-wget http://xmlsoft.org/sources/libxml2-2.9.4-1.fc23.src.rpm
-wget http://xmlsoft.org/sources/libxslt-1.1.29-1.fc23.src.rpm
-rpm -ivh libxml2-2.9.4-1.fc23.src.rpm --nomd5
-rpmbuild -ba /usr/src/redhat/SPECS/libxml2.spec
-rpm -ivh libxslt-1.1.29-1.fc23.src.rpm --nomd5
-rpmbuild -ba /usr/src/redhat/SPECS/libxslt.spec
-yum localinstall --nogpgcheck libxml2 libxml2-devel libxslt libxslt-devel
+wget http://xmlsoft.org/sources/libxml2-2.9.4.tar.gz
+wget http://xmlsoft.org/sources/libxslt-1.1.29.tar.gz
+echo 'ae249165c173b1ff386ee8ad676815f5  libxml2-2.9.4.tar.gz' > md5sums
+echo 'a129d3c44c022de3b9dcf6d6f288d72e  libxslt-1.1.29.tar.gz' >> md5sums
+md5sum -c md5sums
+tar -xzf libxml2-2.9.4.tar.gz
+tar -xzf libxslt-1.1.29.tar.gz
+(cd libxml2-2.9.4 && sed -i "/seems to be moved/s/^/#/" ltmain.sh && ./configure --prefix=/usr --with-history --with-python=$PY35_BIN/python && make && make install)
+(cd libxslt-1.1.29 && sed -i "/seems to be moved/s/^/#/" ltmain.sh && ./configure --prefix=/usr --with-history && make && make install)
 
 # Install latest pypi release of auditwheel
 $PY36_BIN/pip install auditwheel
