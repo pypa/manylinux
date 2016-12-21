@@ -57,6 +57,13 @@ function do_cpython_build {
     # bin/python.
     if [ -e ${prefix}/bin/python3 ]; then
         ln -s python3 ${prefix}/bin/python
+        ln -s python3-config ${prefix}/bin/python-config
+    fi
+    # Remove -lpython from the python-config script.
+    if [ $(lex_pyver $py_ver) -lt $(lex_pyver 3.4) ]; then
+        sed -i "s/'-lpython' *+ *pyver\( *+ *sys.abiflags\)\?/''/" $(readlink -e ${prefix}/bin/python-config)
+    else
+        sed -i 's/-lpython${VERSION}${ABIFLAGS}//' $(readlink -e ${prefix}/bin/python-config)
     fi
     ${prefix}/bin/python get-pip.py
     ${prefix}/bin/pip install wheel
