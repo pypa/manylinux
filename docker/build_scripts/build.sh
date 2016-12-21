@@ -125,3 +125,6 @@ for PYTHON in /opt/python/*/bin/python; do
     # Make sure that SSL cert checking works
     $PYTHON $MY_DIR/ssl-check.py
 done
+
+# Fix libc headers to remain compatible with C99 compilers.
+find /usr/include/ -type f -exec sed -i 's/\bextern _*inline_*\b/extern __inline __attribute__ ((__gnu_inline__))/g' {} +
