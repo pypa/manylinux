@@ -165,7 +165,7 @@ echo 'a129d3c44c022de3b9dcf6d6f288d72e  libxslt-1.1.29.tar.gz' >> md5sums
 md5sum -c md5sums
 tar -xzf libxml2-2.9.4.tar.gz
 tar -xzf libxslt-1.1.29.tar.gz
-(cd libxml2-2.9.4 && sed -i "/seems to be moved/s/^/#/" ltmain.sh && ./configure --prefix=/usr --with-history --with-python=$PY35_BIN/python && make && make install)
+(cd libxml2-2.9.4 && sed -i "/seems to be moved/s/^/#/" ltmain.sh && ./configure --prefix=/usr --with-history --with-python=$PY36_BIN/python && make && make install)
 (cd libxslt-1.1.29 && sed -i "/seems to be moved/s/^/#/" ltmain.sh && ./configure --prefix=/usr --with-history && make && make install)
 
 ln -s $PY36_BIN/auditwheel /usr/local/bin/auditwheel
