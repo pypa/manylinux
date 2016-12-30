@@ -5,7 +5,7 @@
 set -ex
 
 # Python versions to be installed in /opt/$VERSION_NO
-CPYTHON_VERSIONS="2.6.9 2.7.11 3.3.6 3.4.4 3.5.1"
+CPYTHON_VERSIONS="2.6.9 2.7.11 3.3.6 3.4.4 3.5.1 3.6.0"
 
 # openssl version to build, with expected sha256 hash of .tar.gz
 # archive
