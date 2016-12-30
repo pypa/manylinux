@@ -59,6 +59,9 @@ function do_cpython_build {
         ln -s python3 ${prefix}/bin/python
     fi
     ${prefix}/bin/python get-pip.py
+    if [ -e ${prefix}/bin/pip3 ] && [ ! -e ${prefix}/bin/pip ]; then
+        ln -s pip3 ${prefix}/bin/pip
+    fi
     ${prefix}/bin/pip install wheel
     local abi_tag=$(${prefix}/bin/python ${MY_DIR}/python-tag-abi-tag.py)
     ln -s ${prefix} /opt/python/${abi_tag}
@@ -86,7 +89,7 @@ function build_cpythons {
     for py_ver in $@; do
         build_cpython $py_ver
     done
-    rm get-pip.py
+    rm -f get-pip.py
 }
 
 
@@ -105,7 +108,7 @@ function check_sha256sum {
 
     echo "${sha256}  ${fname}" > ${fname}.sha256
     sha256sum -c ${fname}.sha256
-    rm ${fname}.sha256
+    rm -f ${fname}.sha256
 }
 
 
