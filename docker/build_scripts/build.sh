@@ -5,7 +5,7 @@
 set -ex
 
 # Python versions to be installed in /opt/$VERSION_NO
-CPYTHON_VERSIONS="2.6.9 2.7.11 3.3.6 3.4.4 3.5.1"
+CPYTHON_VERSIONS="2.6.9 2.7.13 3.3.6 3.4.5 3.5.2 3.6.0"
 
 # openssl version to build, with expected sha256 hash of .tar.gz
 # archive
@@ -62,14 +62,14 @@ build_openssl $OPENSSL_ROOT $OPENSSL_HASH
 mkdir -p /opt/python
 build_cpythons $CPYTHON_VERSIONS
 
-PY35_BIN=/opt/python/cp35-cp35m/bin
+PY36_BIN=/opt/python/cp36-cp36m/bin
 
 # Our openssl doesn't know how to find the system CA trust store
 #   (https://github.com/pypa/manylinux/issues/53)
 # And it's not clear how up-to-date that is anyway
 # So let's just use the same one pip and everyone uses
-$PY35_BIN/pip install certifi
-ln -s $($PY35_BIN/python -c 'import certifi; print(certifi.where())') \
+$PY36_BIN/pip install certifi
+ln -s $($PY36_BIN/python -c 'import certifi; print(certifi.where())') \
       /opt/_internal/certs.pem
 # If you modify this line you also have to modify the versions in the
 # Dockerfiles:
@@ -93,8 +93,8 @@ tar -xzf patchelf-0.9njs2.tar.gz
 rm -rf patchelf-0.9njs2.tar.gz patchelf-0.9njs2
 
 # Install latest pypi release of auditwheel
-$PY35_BIN/pip install auditwheel
-ln -s $PY35_BIN/auditwheel /usr/local/bin/auditwheel
+$PY36_BIN/pip install auditwheel
+ln -s $PY36_BIN/auditwheel /usr/local/bin/auditwheel
 
 # Clean up development headers and other unnecessary stuff for
 # final image
