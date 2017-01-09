@@ -110,6 +110,7 @@ retrying
 rq
 ruamel.yaml
 scrapy
+scrapyd
 serpextract
 service_identity
 setuptools
