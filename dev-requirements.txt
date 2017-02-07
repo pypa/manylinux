@@ -10,6 +10,7 @@ braintree
 cairocffi
 cassandra-driver
 cffi
+ciso8601
 click
 closure
 contextlib2
@@ -83,6 +84,7 @@ psycopg2
 pyasn1
 pycparser
 pycrypto
+pygerduty
 Pygments
 pykafka
 pylru
