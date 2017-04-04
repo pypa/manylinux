@@ -99,12 +99,9 @@ The PEP itself
 
 The official version of `PEP 513
 <https://www.python.org/dev/peps/pep-0513/>`_ is stored in the `PEP
-repository <https://github.com/python/peps>`_, but we also have our
-`own copy here
-<https://github.com/pypa/manylinux/tree/master/pep-513.rst>`_. This is
-where the PEP was originally written, so if for some reason you really
-want to see the full history of edits it went through, then this is
-the place to look.
+repository <https://github.com/python/peps>`_, but if you want to 
+see the full history of edits, we have the original copy here
+<https://github.com/pypa/manylinux/tree/master/pep-513.rst>`_. 
 
 This repo also has some analysis code that was used when putting
 together the original proposal in the ``policy-info/`` directory
