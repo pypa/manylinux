@@ -26,6 +26,14 @@ PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-
 # Libraries that are allowed as part of the manylinux1 profile
 MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
 
+# Centos 5 is EOL and is no longer available from the usual mirrors, so switch
+# to http://vault.centos.org
+# From: https://github.com/rust-lang/rust/pull/41045
+# IP 107.158.252.35 is one of several DNS resolutions for vault.centos.org.
+sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf
+sed -i 's/mirrorlist/#mirrorlist/' /etc/yum.repos.d/*.repo
+sed -i 's/#\(baseurl.*\)mirror.centos.org/\1107.158.252.35/' /etc/yum.repos.d/*.repo
+
 # Get build utilities
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source $MY_DIR/build_utils.sh
