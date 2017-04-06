@@ -44,10 +44,11 @@ sed -i 's/#\(baseurl.*\)mirror.centos.org\/centos\/$releasever/\1vault.centos.or
 # Centos 5 is EOL and is no longer available from the usual mirrors, so switch
 # to http://vault.centos.org
 # From: https://github.com/rust-lang/rust/pull/41045
-# IP 107.158.252.35 is one of several DNS resolutions for vault.centos.org.
+# The location for version 5 was also removed, so now only the specific release
+# (5.11) can be referenced.
 sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf
 sed -i 's/mirrorlist/#mirrorlist/' /etc/yum.repos.d/*.repo
-sed -i 's/#\(baseurl.*\)mirror.centos.org/\1107.158.252.35/' /etc/yum.repos.d/*.repo
+sed -i 's/#\(baseurl.*\)mirror.centos.org\/centos\/$releasever/\1vault.centos.org\/5.11/' /etc/yum.repos.d/*.repo
 
 # Get build utilities
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
