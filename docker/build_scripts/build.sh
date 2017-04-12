@@ -63,6 +63,15 @@ yum -y install bzip2 make git patch unzip bison yasm diffutils \
 build_autoconf $AUTOCONF_ROOT $AUTOCONF_HASH
 autoconf --version
 
+# Install a more recent SQLite3
+curl -sO https://sqlite.org/2017/sqlite-autoconf-3160200.tar.gz
+tar xfz sqlite-autoconf-3160200.tar.gz
+cd sqlite-autoconf-3160200
+./configure
+make install
+cd ..
+rm -rf sqlite-autoconf-3160200*
+
 # Compile the latest Python releases.
 # (In order to have a proper SSL module, Python is compiled
 # against a recent openssl [see env vars above], which is linked
