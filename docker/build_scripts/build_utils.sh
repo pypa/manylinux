@@ -2,6 +2,7 @@
 # Helper utilities for build
 
 PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
+PYPY_DOWNLOAD_URL=https://bitbucket.org/squeaky/portable-pypy/downloads
 # XXX: the official https server at www.openssl.org cannot be reached
 # with the old versions of openssl and curl in Centos 5.11 hence the fallback
 # to the ftp mirror:
@@ -88,6 +89,49 @@ function build_cpythons {
     curl -sLO $GET_PIP_URL
     for py_ver in $@; do
         build_cpython $py_ver
+    done
+    rm -f get-pip.py
+}
+
+function setup_pypy {
+    local pypy_tag=$1
+    check_var $pypy_tag
+    local archive_name=$2
+    check_var $archive_name
+    local dir_name=$3
+    check_var $dir_name
+    local prefix="/opt/_internal/pypy${pypy_tag}"
+    tar -jxf $archive_name
+    mv $dir_name $prefix
+    # Make pypy available as bin/python.
+    ln -s pypy ${prefix}/bin/python
+    ${prefix}/bin/python get-pip.py
+    if [ -e ${prefix}/bin/pip3 ] && [ ! -e ${prefix}/bin/pip ]; then
+        ln -s pip3 ${prefix}/bin/pip
+    fi
+    ${prefix}/bin/pip install wheel
+    local abi_tag=$(${prefix}/bin/python ${MY_DIR}/python-tag-abi-tag.py)
+    ln -s ${prefix} /opt/python/${abi_tag}
+}
+
+
+function download_pypy {
+    local pypy_tag=$1
+    check_var $pypy_tag
+    check_var $PYPY_DOWNLOAD_URL
+    local dir_name=pypy$pypy_tag-linux_x86_64-portable
+    local archive_name=$dir_name.tar.bz2
+    wget -q $PYPY_DOWNLOAD_URL/$archive_name
+    setup_pypy $pypy_tag $archive_name $dir_name
+    rm -f $archive_name
+}
+
+
+function get_pypys {
+    check_var $GET_PIP_URL
+    curl -sLO $GET_PIP_URL
+    for pypy_tag in $@; do
+        download_pypy $pypy_tag
     done
     rm -f get-pip.py
 }
