@@ -102,6 +102,7 @@ function setup_pypy {
     check_var $dir_name
     local install_dir="/opt/python/pypy${pypy_tag}"
     tar -jxf $archive_name
+    mkdir -p $install_dir
     mv -f $dir_name $install_dir
     # Make pypy available as bin/python.
     ln -s pypy ${install_dir}/bin/python
