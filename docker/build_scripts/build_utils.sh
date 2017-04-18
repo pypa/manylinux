@@ -100,19 +100,18 @@ function setup_pypy {
     check_var $archive_name
     local dir_name=$3
     check_var $dir_name
-    local prefix="/opt/_internal/pypy${pypy_tag}"
+    local install_dir="/opt/python/pypy${pypy_tag}"
     tar -jxf $archive_name
-    mkdir $prefix
-    mv -f $dir_name $prefix
+    mv -f $dir_name $install_dir
     # Make pypy available as bin/python.
-    ln -s pypy ${prefix}/bin/python
-    ${prefix}/bin/python get-pip.py
-    if [ -e ${prefix}/bin/pip3 ] && [ ! -e ${prefix}/bin/pip ]; then
-        ln -s pip3 ${prefix}/bin/pip
+    ln -s pypy ${install_dir}/bin/python
+    ${install_dir}/bin/python get-pip.py
+    if [ -e ${install_dir}/bin/pip3 ] && [ ! -e ${install_dir}/bin/pip ]; then
+        ln -s pip3 ${install_dir}/bin/pip
     fi
-    ${prefix}/bin/pip install wheel
-    local abi_tag=$(${prefix}/bin/python ${MY_DIR}/python-tag-abi-tag.py)
-    ln -s ${prefix} /opt/python/${abi_tag}
+    ${install_dir}/bin/pip install wheel
+    local abi_tag=$(${install_dir}/bin/python ${MY_DIR}/python-tag-abi-tag.py)
+    ln -s ${install_dir} /opt/python/${abi_tag}
 }
 
 
