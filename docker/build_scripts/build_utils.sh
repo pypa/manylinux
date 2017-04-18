@@ -102,7 +102,8 @@ function setup_pypy {
     check_var $dir_name
     local prefix="/opt/_internal/pypy${pypy_tag}"
     tar -jxf $archive_name
-    mv $dir_name $prefix
+    mkdir $prefix
+    mv -f $dir_name $prefix
     # Make pypy available as bin/python.
     ln -s pypy ${prefix}/bin/python
     ${prefix}/bin/python get-pip.py
