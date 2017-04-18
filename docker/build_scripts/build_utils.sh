@@ -121,7 +121,7 @@ function download_pypy {
     check_var $PYPY_DOWNLOAD_URL
     local dir_name=pypy$pypy_tag-linux_x86_64-portable
     local archive_name=$dir_name.tar.bz2
-    wget $PYPY_DOWNLOAD_URL/$archive_name
+    wget -q $PYPY_DOWNLOAD_URL/$archive_name -O $archive_name
     setup_pypy $pypy_tag $archive_name $dir_name
     rm -f $archive_name
 }
