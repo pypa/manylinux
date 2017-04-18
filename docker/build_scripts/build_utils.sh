@@ -101,9 +101,8 @@ function setup_pypy {
     local dir_name=$3
     check_var $dir_name
     local install_dir="/opt/_internal/pypy${pypy_tag}"
-    tar -jxf $archive_name
     mkdir -p $install_dir
-    mv -f $dir_name/* $install_dir/
+    tar -jxf $archive_name -C $install_dir --strip-components=1
     # Make pypy available as bin/python.
     ln -s pypy ${install_dir}/bin/python
     ${install_dir}/bin/python get-pip.py
