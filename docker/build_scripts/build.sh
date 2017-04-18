@@ -74,6 +74,10 @@ make install
 cd ..
 rm -rf sqlite-autoconf-3160200*
 
+if [ `arch` == "x86_64" ]; then
+    get_pypys $PYPY_VERSION_TAGS
+fi
+
 # Compile the latest Python releases.
 # (In order to have a proper SSL module, Python is compiled
 # against a recent openssl [see env vars above], which is linked
@@ -81,10 +85,6 @@ rm -rf sqlite-autoconf-3160200*
 build_openssl $OPENSSL_ROOT $OPENSSL_HASH
 mkdir -p /opt/python
 build_cpythons $CPYTHON_VERSIONS
-
-if [ `arch` == "x86_64" ]; then
-    get_pypys $PYPY_VERSION_TAGS
-fi
 
 PY36_BIN=/opt/python/cp36-cp36m/bin
 
