@@ -100,12 +100,12 @@ function setup_pypy {
     check_var $archive_name
     local dir_name=$3
     check_var $dir_name
-    local install_dir="/opt/python/pypy${pypy_tag}"
+    local install_dir="/opt/_internal/pypy${pypy_tag}"
     tar -jxf $archive_name
     mkdir -p $install_dir
     mv -f $dir_name $install_dir
     # Make pypy available as bin/python.
-    ln -s python ${install_dir}/bin/pypy
+    ln -s pypy ${install_dir}/bin/python
     ${install_dir}/bin/python get-pip.py
     if [ -e ${install_dir}/bin/pip3 ] && [ ! -e ${install_dir}/bin/pip ]; then
         ln -s pip3 ${install_dir}/bin/pip
