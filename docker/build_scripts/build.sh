@@ -86,6 +86,10 @@ get_pypys $PYPY_VERSION_TAGS
 #    get_pypys $PYPY_VERSION_TAGS
 #fi
 
+if [ arch == "x86_64" ]; then
+    get_pypys $PYPY_VERSION_TAGS
+fi
+
 PY36_BIN=/opt/python/cp36-cp36m/bin
 
 # Our openssl doesn't know how to find the system CA trust store
