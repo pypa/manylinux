@@ -12,6 +12,7 @@ CURL_DOWNLOAD_URL=http://curl.askapache.com/download
 GET_PIP_URL=https://bootstrap.pypa.io/get-pip.py
 
 AUTOCONF_DOWNLOAD_URL=http://ftp.gnu.org/gnu/autoconf
+AUTOMAKE_DOWNLOAD_URL=http://ftp.gnu.org/gnu/automake
 
 
 function check_var {
@@ -165,4 +166,17 @@ function build_autoconf {
     tar -zxf ${autoconf_fname}.tar.gz
     (cd ${autoconf_fname} && do_standard_install)
     rm -rf ${autoconf_fname} ${autoconf_fname}.tar.gz
+}
+
+function build_automake {
+    local automake_fname=$1
+    check_var ${automake_fname}
+    local automake_sha256=$2
+    check_var ${automake_sha256}
+    check_var ${AUTOMAKE_DOWNLOAD_URL}
+    curl -sLO ${AUTOMAKE_DOWNLOAD_URL}/${automake_fname}.tar.gz
+    check_sha256sum ${automake_fname}.tar.gz ${automake_sha256}
+    tar -zxf ${automake_fname}.tar.gz
+    (cd ${automake_fname} && do_standard_install)
+    rm -rf ${automake_fname} ${automake_fname}.tar.gz
 }
