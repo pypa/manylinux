@@ -26,7 +26,7 @@ PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel \
                      xz-devel atlas-devel libev-devel libev snappy-devel
                      python-imaging openjpeg-devel freetype-devel libpng-devel \
                      libffi-devel python-lxml postgresql95-libs \
-                     postgresql95-devel lapack-devel zeromq-devel python \
+                     postgresql95-devel lapack-devel python \
                      python-devel python-setuptools pcre pcre-devel"
 
 # Libraries that are allowed as part of the manylinux1 profile
@@ -56,9 +56,6 @@ check_sha256sum devtools-2.repo $DEVTOOLS_HASH
 mv devtools-2.repo /etc/yum.repos.d/devtools-2.repo
 rpm -Uvh --replacepkgs epel-release-5*.rpm
 rm -f epel-release-5*.rpm
-
-# zeromq repo
-cp $MY_DIR/zeromq.repo /etc/yum.repos.d/
 
 # Setup postgresql repo
 sed -r -i 's/\[(base|update)\]/[\1]\nexclude=postgresql*\n/g' /etc/yum.repos.d/CentOS-Base.repo
