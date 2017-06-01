@@ -30,7 +30,7 @@ PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel \
                      python-devel python-setuptools pcre pcre-devel"
 
 # Libraries that are allowed as part of the manylinux1 profile
-MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
+MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel libxmlsec1-devel"
 
 # Get build utilities
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
