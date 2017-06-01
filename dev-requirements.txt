@@ -23,7 +23,6 @@ django-assets
 django-redis
 django-tagging
 django-timezones
-dm.xmlsec.binding
 docopt
 ecdsa
 elasticsearch
@@ -98,6 +97,7 @@ pytest-ordering
 python-dateutil
 python-Levenshtein
 python-memcached
+python-saml
 python-snappy
 python-twitter
 pytz
