@@ -38,7 +38,7 @@ MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-de
 # IP 107.158.252.35 is one of several DNS resolutions for vault.centos.org.
 sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf
 sed -i 's/mirrorlist/#mirrorlist/' /etc/yum.repos.d/*.repo
-sed -i 's/#\(baseurl.*\)mirror.centos.org\/centos\/\$releasever/\1vault.centos.org\/5.11/' /etc/yum.repos.d/*.repo
+sed -i 's/#\(baseurl.*\)mirror.centos.org\/centos\/$releasever/\1vault.centos.org\/5.11/' /etc/yum.repos.d/*.repo
 
 # Get build utilities
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
@@ -46,7 +46,8 @@ source $MY_DIR/build_utils.sh
 
 # EPEL support
 yum -y install wget curl
-curl -sLO https://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
+#curl -sLO https://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
+cp $MY_DIR/epel-release-5-4.noarch.rpm .
 check_sha256sum epel-release-5-4.noarch.rpm $EPEL_RPM_HASH
 
 # Dev toolset (for LLVM and other projects requiring C++11 support)
