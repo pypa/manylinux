@@ -38,7 +38,7 @@ MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-de
 # IP 107.158.252.35 is one of several DNS resolutions for vault.centos.org.
 sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf
 sed -i 's/mirrorlist/#mirrorlist/' /etc/yum.repos.d/*.repo
-sed -i 's/#\(baseurl.*\)mirror.centos.org/\1107.158.252.35/' /etc/yum.repos.d/*.repo
+sed -i 's/#\(baseurl.*\)mirror.centos.org\/centos\/\$releasever/\1vault.centos.org\/5.11/' /etc/yum.repos.d/*.repo
 
 # Get build utilities
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
