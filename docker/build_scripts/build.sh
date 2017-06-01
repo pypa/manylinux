@@ -21,8 +21,8 @@ PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel \
 
 # Libraries that are allowed as part of the manylinux1 profile
 MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel \
-                 libXext-devel libXrender-devel  mesa-libGL-devel \
-                 libICE-devel libSM-devel ncurses-devel"
+                 libXext-devel libXrender-devel mesa-libGL-devel \
+                 libICE-devel libSM-devel ncurses-devel libxmlsec1-devel"
 
 # Centos 5 is EOL and is no longer available from the usual mirrors, so switch
 # to http://vault.centos.org
