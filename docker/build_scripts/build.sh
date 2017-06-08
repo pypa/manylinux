@@ -22,7 +22,7 @@ PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel \
 # Libraries that are allowed as part of the manylinux1 profile
 MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel \
                  libXext-devel libXrender-devel mesa-libGL-devel \
-                 libICE-devel libSM-devel ncurses-devel libxmlsec1-devel"
+                 libICE-devel libSM-devel ncurses-devel"
 
 # Centos 5 is EOL and is no longer available from the usual mirrors, so switch
 # to http://vault.centos.org
@@ -162,16 +162,20 @@ tar -xzf patchelf.tar.gz
 (cd patchelf-$PATCHELF_VERSION && ./bootstrap.sh && do_standard_install)
 rm -rf patchelf.tar.gz patchelf-$PATCHELF_VERSION
 
-# Build/install latest libxml and libxsl
+# Build/install latest libxml, libxsl, and libxmlsec1
 wget http://xmlsoft.org/sources/libxml2-2.9.4.tar.gz
 wget http://xmlsoft.org/sources/libxslt-1.1.29.tar.gz
+wget https://github.com/lsh123/xmlsec/archive/xmlsec-1_2_24.tar.gz
 echo 'ae249165c173b1ff386ee8ad676815f5  libxml2-2.9.4.tar.gz' > md5sums
 echo 'a129d3c44c022de3b9dcf6d6f288d72e  libxslt-1.1.29.tar.gz' >> md5sums
+echo 'bdb38e4d18fb49f991c3e7586a561c5a  xmlsec-1_2_24.tar.gz' >> md5sums
 md5sum -c md5sums
 tar -xzf libxml2-2.9.4.tar.gz
 tar -xzf libxslt-1.1.29.tar.gz
+tar -xzf xmlsec-1_2_24.tar.gz
 (cd libxml2-2.9.4 && sed -i "/seems to be moved/s/^/#/" ltmain.sh && ./configure --prefix=/usr --with-history --with-python=$PY36_BIN/python && make && make install)
 (cd libxslt-1.1.29 && sed -i "/seems to be moved/s/^/#/" ltmain.sh && ./configure --prefix=/usr --with-history && make && make install)
+(cd xmlsec-xmlsec-1_2_24 && ./autogen.sh --prefix=/usr && make && make install)
 
 ln -s $PY36_BIN/auditwheel /usr/local/bin/auditwheel
 
