@@ -8,7 +8,7 @@ botocore
 brace-tags
 braintree
 cairocffi
-cassandra-driver
+cassandra-driver==3.7.0
 cffi
 ciso8601
 click
@@ -16,7 +16,7 @@ closure
 contextlib2
 contexttimer
 coverage
-Cython
+Cython==0.24
 datadog
 Django
 django-assets
@@ -67,14 +67,14 @@ marshmallow
 mmh3
 mock
 more-itertools
-msgpack-python
+msgpack-python==0.4.7
 ndg-httpsclient
 newrelic
 nose
-numpy
+numpy==1.11.0
 oauth2client
 optimizely
-pandas
+pandas==0.18.0
 paramiko
 parsely_raw_data
 patsy
