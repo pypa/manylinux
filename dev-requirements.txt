@@ -51,6 +51,7 @@ httplib2
 hypothesis
 idna
 invoke
+ipaddr
 ipaddress
 iso3166
 jinja2
@@ -80,6 +81,7 @@ patsy
 pip
 prettytable
 probably
+psutil
 psycopg2
 pyasn1
 pycparser
