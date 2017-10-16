@@ -1,4 +1,4 @@
-Cython==0.24
+Cython
 awesome-slugify
 bitarray
 blinker
@@ -9,7 +9,7 @@ botocore
 brace-tags
 braintree
 cairocffi
-cassandra-driver==3.7.0
+cassandra-driver
 cffi
 ciso8601
 click
@@ -67,14 +67,14 @@ marshmallow
 mmh3
 mock
 more-itertools
-msgpack-python==0.4.7
+msgpack-python
 ndg-httpsclient
 newrelic
 nose
-numpy==1.11.0
+numpy
 oauth2client
 optimizely
-pandas==0.18.0
+pandas
 paramiko
 parsely_raw_data
 patsy
@@ -108,7 +108,7 @@ PyYAML
 raven
 readability-lxml
 redis
-regex==2016.04.25
+regex
 requests
 requests-futures
 retrying
@@ -119,7 +119,7 @@ scrapyd
 serpextract
 service_identity
 setuptools
-simplejson==3.8.2
+simplejson
 simple_salesforce
 six
 smhasher
@@ -135,7 +135,7 @@ tablib
 tabulate
 testinstances
 texttable
-thriftpy==0.3.7
+thriftpy
 tldextract
 tornado
 Twisted
