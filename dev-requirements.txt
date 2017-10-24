@@ -93,6 +93,7 @@ pylru
 pymongo
 pyopenssl
 pyparsing
+pyspark
 pystorm
 pytest
 pytest-ordering
