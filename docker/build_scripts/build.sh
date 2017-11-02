@@ -17,7 +17,8 @@ PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel \
                      python-imaging openjpeg-devel freetype-devel libpng-devel \
                      libffi-devel python-lxml postgresql95-libs \
                      postgresql95-devel lapack-devel python \
-                     python-devel python-setuptools pcre pcre-devel"
+                     python-devel python-setuptools pcre pcre-devel \
+                     pandoc"
 
 # Libraries that are allowed as part of the manylinux1 profile
 MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel \
