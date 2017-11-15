@@ -63,6 +63,10 @@ yum -y install bzip2 make git patch unzip bison yasm diffutils \
     devtoolset-2-gcc-c++ devtoolset-2-gcc-gfortran \
     ${PYTHON_COMPILE_DEPS}
 
+# Add cmake28 symlinks
+ln -s /usr/bin/cmake28 /usr/bin/cmake
+ln -s /usr/bin/ctest28 /usr/bin/ctest
+
 # Install newest autoconf
 build_autoconf $AUTOCONF_ROOT $AUTOCONF_HASH
 autoconf --version
