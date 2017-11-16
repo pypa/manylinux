@@ -86,7 +86,7 @@ function build_cpython {
 
 function build_cpythons {
     check_var $GET_PIP_URL
-    curl -sLO $GET_PIP_URL
+    curl -sSLO $GET_PIP_URL
     for py_ver in $@; do
         build_cpython $py_ver
     done
@@ -119,7 +119,7 @@ function build_openssl {
     local openssl_sha256=$2
     check_var ${openssl_sha256}
     check_var ${OPENSSL_DOWNLOAD_URL}
-    curl -sLO ${OPENSSL_DOWNLOAD_URL}/${openssl_fname}.tar.gz
+    curl -sSLO ${OPENSSL_DOWNLOAD_URL}/${openssl_fname}.tar.gz
     check_sha256sum ${openssl_fname}.tar.gz ${openssl_sha256}
     tar -xzf ${openssl_fname}.tar.gz
     (cd ${openssl_fname} && do_openssl_build)
@@ -140,7 +140,7 @@ function build_curl {
     local curl_sha256=$2
     check_var ${curl_sha256}
     check_var ${CURL_DOWNLOAD_URL}
-    curl -sLO ${CURL_DOWNLOAD_URL}/${curl_fname}.tar.bz2
+    curl -sSLO ${CURL_DOWNLOAD_URL}/${curl_fname}.tar.bz2
     check_sha256sum ${curl_fname}.tar.bz2 ${curl_sha256}
     tar -jxf ${curl_fname}.tar.bz2
     (cd ${curl_fname} && do_curl_build)
@@ -161,7 +161,7 @@ function build_autoconf {
     local autoconf_sha256=$2
     check_var ${autoconf_sha256}
     check_var ${AUTOCONF_DOWNLOAD_URL}
-    curl -sLO ${AUTOCONF_DOWNLOAD_URL}/${autoconf_fname}.tar.gz
+    curl -sSLO ${AUTOCONF_DOWNLOAD_URL}/${autoconf_fname}.tar.gz
     check_sha256sum ${autoconf_fname}.tar.gz ${autoconf_sha256}
     tar -zxf ${autoconf_fname}.tar.gz
     (cd ${autoconf_fname} && do_standard_install)
@@ -174,7 +174,7 @@ function build_automake {
     local automake_sha256=$2
     check_var ${automake_sha256}
     check_var ${AUTOMAKE_DOWNLOAD_URL}
-    curl -sLO ${AUTOMAKE_DOWNLOAD_URL}/${automake_fname}.tar.gz
+    curl -sSLO ${AUTOMAKE_DOWNLOAD_URL}/${automake_fname}.tar.gz
     check_sha256sum ${automake_fname}.tar.gz ${automake_sha256}
     tar -zxf ${automake_fname}.tar.gz
     (cd ${automake_fname} && do_standard_install)
