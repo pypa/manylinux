@@ -86,7 +86,7 @@ function build_cpython {
 
 function build_cpythons {
     check_var $GET_PIP_URL
-    curl -sSLO $GET_PIP_URL
+    curl -sSLO $GET_PIP_URL || cp ${MY_DIR}/get-pip.py .
     for py_ver in $@; do
         build_cpython $py_ver
     done
