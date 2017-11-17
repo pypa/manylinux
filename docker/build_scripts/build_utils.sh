@@ -63,7 +63,9 @@ function do_cpython_build {
     if [ -e ${prefix}/bin/pip3 ] && [ ! -e ${prefix}/bin/pip ]; then
         ln -s pip3 ${prefix}/bin/pip
     fi
-    ${prefix}/bin/pip install wheel
+    # Since we fall back on a canned copy of get-pip.py, we might not have
+    # the latest pip and friends. Upgrade them to make sure.
+    ${prefix}/bin/pip install -U pip wheel setuptools
     local abi_tag=$(${prefix}/bin/python ${MY_DIR}/python-tag-abi-tag.py)
     ln -s ${prefix} /opt/python/${abi_tag}
 }
@@ -86,6 +88,9 @@ function build_cpython {
 
 function build_cpythons {
     check_var $GET_PIP_URL
+    # CentOS 5 curl uses such an old OpenSSL that it doesn't support the TLS
+    # versions used by the get-pip server. Keep trying though, because we'll
+    # want to go back using $GET_PIP_URL when we upgrade to a newer CentOS...
     curl -sSLO $GET_PIP_URL || cp ${MY_DIR}/get-pip.py .
     for py_ver in $@; do
         build_cpython $py_ver
