@@ -63,7 +63,9 @@ function do_cpython_build {
     if [ -e ${prefix}/bin/pip3 ] && [ ! -e ${prefix}/bin/pip ]; then
         ln -s pip3 ${prefix}/bin/pip
     fi
-    ${prefix}/bin/pip install wheel
+    # Since we fall back on a canned copy of get-pip.py, we might not have
+    # the latest pip and friends. Upgrade them to make sure.
+    ${prefix}/bin/pip install -U pip wheel setuptools
     local abi_tag=$(${prefix}/bin/python ${MY_DIR}/python-tag-abi-tag.py)
     ln -s ${prefix} /opt/python/${abi_tag}
 }
@@ -86,7 +88,10 @@ function build_cpython {
 
 function build_cpythons {
     check_var $GET_PIP_URL
-    curl -sLO $GET_PIP_URL
+    # CentOS 5 curl uses such an old OpenSSL that it doesn't support the TLS
+    # versions used by the get-pip server. Keep trying though, because we'll
+    # want to go back using $GET_PIP_URL when we upgrade to a newer CentOS...
+    curl -sSLO $GET_PIP_URL || cp ${MY_DIR}/get-pip.py .
     for py_ver in $@; do
         build_cpython $py_ver
     done
@@ -119,7 +124,7 @@ function build_openssl {
     local openssl_sha256=$2
     check_var ${openssl_sha256}
     check_var ${OPENSSL_DOWNLOAD_URL}
-    curl -sLO ${OPENSSL_DOWNLOAD_URL}/${openssl_fname}.tar.gz
+    curl -sSLO ${OPENSSL_DOWNLOAD_URL}/${openssl_fname}.tar.gz
     check_sha256sum ${openssl_fname}.tar.gz ${openssl_sha256}
     tar -xzf ${openssl_fname}.tar.gz
     (cd ${openssl_fname} && do_openssl_build)
@@ -140,7 +145,7 @@ function build_curl {
     local curl_sha256=$2
     check_var ${curl_sha256}
     check_var ${CURL_DOWNLOAD_URL}
-    curl -sLO ${CURL_DOWNLOAD_URL}/${curl_fname}.tar.bz2
+    curl -sSLO ${CURL_DOWNLOAD_URL}/${curl_fname}.tar.bz2
     check_sha256sum ${curl_fname}.tar.bz2 ${curl_sha256}
     tar -jxf ${curl_fname}.tar.bz2
     (cd ${curl_fname} && do_curl_build)
@@ -161,7 +166,7 @@ function build_autoconf {
     local autoconf_sha256=$2
     check_var ${autoconf_sha256}
     check_var ${AUTOCONF_DOWNLOAD_URL}
-    curl -sLO ${AUTOCONF_DOWNLOAD_URL}/${autoconf_fname}.tar.gz
+    curl -sSLO ${AUTOCONF_DOWNLOAD_URL}/${autoconf_fname}.tar.gz
     check_sha256sum ${autoconf_fname}.tar.gz ${autoconf_sha256}
     tar -zxf ${autoconf_fname}.tar.gz
     (cd ${autoconf_fname} && do_standard_install)
@@ -174,7 +179,7 @@ function build_automake {
     local automake_sha256=$2
     check_var ${automake_sha256}
     check_var ${AUTOMAKE_DOWNLOAD_URL}
-    curl -sLO ${AUTOMAKE_DOWNLOAD_URL}/${automake_fname}.tar.gz
+    curl -sSLO ${AUTOMAKE_DOWNLOAD_URL}/${automake_fname}.tar.gz
     check_sha256sum ${automake_fname}.tar.gz ${automake_sha256}
     tar -zxf ${automake_fname}.tar.gz
     (cd ${automake_fname} && do_standard_install)
