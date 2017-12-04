@@ -21,6 +21,9 @@ AUTOCONF_ROOT=autoconf-2.69
 AUTOCONF_HASH=954bd69b391edc12d6a4a51a2dd1476543da5c6bbf05a95b59dc0dd6fd4c2969
 AUTOMAKE_ROOT=automake-1.15
 AUTOMAKE_HASH=7946e945a96e28152ba5a6beb0625ca715c6e32ac55f2e353ef54def0c8ed924
+SQLITE_AUTOCONF_VERSION=sqlite-autoconf-3210000
+# Homebrew saw the same hash: https://github.com/Homebrew/homebrew-core/blob/e3a8622111ecefe444194cade5cca3c69165e26c/Formula/sqlite.rb#L6
+SQLITE_AUTOCONF_HASH=d7dd516775005ad87a57f428b6f86afd206cb341722927f104d3f0cf65fbbbe3
 
 # Dependencies for compiling Python that we want to remove from
 # the final image after compiling Python
@@ -81,13 +84,14 @@ build_automake $AUTOMAKE_ROOT $AUTOMAKE_HASH
 automake --version
 
 # Install a more recent SQLite3
-curl -sO https://sqlite.org/2017/sqlite-autoconf-3160200.tar.gz
-tar xfz sqlite-autoconf-3160200.tar.gz
-cd sqlite-autoconf-3160200
+curl -sO https://sqlite.org/2017/$SQLITE_AUTOCONF_VERSION.tar.gz
+check_sha256sum $SQLITE_AUTOCONF_VERSION.tar.gz $SQLITE_AUTOCONF_HASH
+tar xfz $SQLITE_AUTOCONF_VERSION.tar.gz
+cd $SQLITE_AUTOCONF_VERSION
 ./configure
 make install
 cd ..
-rm -rf sqlite-autoconf-3160200*
+rm -rf $SQLITE_AUTOCONF_VERSION*
 
 # Compile the latest Python releases.
 # (In order to have a proper SSL module, Python is compiled
