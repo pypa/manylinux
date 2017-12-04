@@ -54,12 +54,11 @@ yum -y update && yum clean all
 
 # EPEL support
 yum -y install wget curl
-# curl -sLO https://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
 cp $MY_DIR/epel-release-5-4.noarch.rpm .
 check_sha256sum epel-release-5-4.noarch.rpm $EPEL_RPM_HASH
 
 # Dev toolset (for LLVM and other projects requiring C++11 support)
-curl -sLO http://people.centos.org/tru/devtools-2/devtools-2.repo
+curl -fsSLO http://people.centos.org/tru/devtools-2/devtools-2.repo
 check_sha256sum devtools-2.repo $DEVTOOLS_HASH
 mv devtools-2.repo /etc/yum.repos.d/devtools-2.repo
 rpm -Uvh --replacepkgs epel-release-5*.rpm
@@ -82,7 +81,7 @@ build_automake $AUTOMAKE_ROOT $AUTOMAKE_HASH
 automake --version
 
 # Install a more recent SQLite3
-curl -sO https://sqlite.org/2017/sqlite-autoconf-3160200.tar.gz
+curl -fsSLO https://sqlite.org/2017/sqlite-autoconf-3160200.tar.gz
 tar xfz sqlite-autoconf-3160200.tar.gz
 cd sqlite-autoconf-3160200
 ./configure
@@ -122,7 +121,7 @@ curl-config --features
 rm -rf /usr/local/ssl
 
 # Install patchelf (latest with unreleased bug fixes)
-curl -sL -o patchelf.tar.gz https://github.com/NixOS/patchelf/archive/$PATCHELF_VERSION.tar.gz
+curl -fsSL -o patchelf.tar.gz https://github.com/NixOS/patchelf/archive/$PATCHELF_VERSION.tar.gz
 tar -xzf patchelf.tar.gz
 (cd patchelf-$PATCHELF_VERSION && ./bootstrap.sh && ./configure && make && make install)
 rm -rf patchelf.tar.gz patchelf-$PATCHELF_VERSION
