@@ -52,7 +52,7 @@ source $MY_DIR/build_utils.sh
 yum -y update && yum clean all
 
 # EPEL support
-yum -y install wget curl
+yum -y install curl
 # curl -sLO https://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
 cp $MY_DIR/epel-release-5-4.noarch.rpm .
 check_sha256sum epel-release-5-4.noarch.rpm $EPEL_RPM_HASH
@@ -95,6 +95,10 @@ rm -rf sqlite-autoconf-3160200*
 # statically. We delete openssl afterwards.)
 build_openssl $OPENSSL_ROOT $OPENSSL_HASH
 mkdir -p /opt/python
+# Need to install GPG to verify signatures on Python source tarballs.
+yum -y install gpg
+# Import public keys used to verify these signatures.
+gpg --import $MY_DIR/cpython-pubkeys.txt
 build_cpythons $CPYTHON_VERSIONS
 
 PY36_BIN=/opt/python/cp36-cp36m/bin

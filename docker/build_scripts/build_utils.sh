@@ -75,7 +75,9 @@ function build_cpython {
     local py_ver=$1
     check_var $py_ver
     check_var $PYTHON_DOWNLOAD_URL
-    wget -q $PYTHON_DOWNLOAD_URL/$py_ver/Python-$py_ver.tgz
+    curl -fsSLO $PYTHON_DOWNLOAD_URL/$py_ver/Python-$py_ver.tgz
+    curl -fsSLO $PYTHON_DOWNLOAD_URL/$py_ver/Python-$py_ver.tgz.asc
+    gpg --verify Python-$py_ver.tgz.asc
     if [ $(lex_pyver $py_ver) -lt $(lex_pyver 3.3) ]; then
         do_cpython_build $py_ver ucs2
         do_cpython_build $py_ver ucs4
@@ -83,6 +85,7 @@ function build_cpython {
         do_cpython_build $py_ver none
     fi
     rm -f Python-$py_ver.tgz
+    rm -f Python-$py_ver.tgz.asc
 }
 
 
