@@ -50,7 +50,8 @@ source $MY_DIR/build_utils.sh
 # images it is highly recommended that you include RUN yum -y update && yum
 # clean all in your Dockerfile, or otherwise address any potential security
 # concerns."
-yum -y update && yum clean all
+# Decided not to clean at this point: https://github.com/pypa/manylinux/pull/129
+yum -y update
 
 # EPEL support
 yum -y install wget curl

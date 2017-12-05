@@ -12,3 +12,5 @@ COPY build_scripts /build_scripts
 RUN bash build_scripts/build.sh && rm -r build_scripts
 
 ENV SSL_CERT_FILE=/opt/_internal/certs.pem
+
+CMD ["/bin/bash"]
