@@ -24,7 +24,8 @@ AUTOMAKE_HASH=7946e945a96e28152ba5a6beb0625ca715c6e32ac55f2e353ef54def0c8ed924
 
 # Dependencies for compiling Python that we want to remove from
 # the final image after compiling Python
-PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel"
+# GPG installed to verify signatures on Python source tarballs.
+PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel gpg"
 
 # Libraries that are allowed as part of the manylinux1 profile
 MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
@@ -96,8 +97,6 @@ rm -rf sqlite-autoconf-3160200*
 # statically. We delete openssl afterwards.)
 build_openssl $OPENSSL_ROOT $OPENSSL_HASH
 mkdir -p /opt/python
-# Need to install GPG to verify signatures on Python source tarballs.
-yum -y install gpg
 # Import public keys used to verify these signatures.
 gpg --import $MY_DIR/cpython-pubkeys.txt
 build_cpythons $CPYTHON_VERSIONS
