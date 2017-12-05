@@ -15,3 +15,5 @@ ENV SSL_CERT_FILE=/opt/_internal/certs.pem
 
 # Run 32-bit uname selection on way into image
 ENTRYPOINT ["linux32"]
+
+CMD ["/bin/bash"]
