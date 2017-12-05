@@ -95,9 +95,14 @@ function build_cpythons {
     # versions used by the get-pip server. Keep trying though, because we'll
     # want to go back using $GET_PIP_URL when we upgrade to a newer CentOS...
     curl -sSLO $GET_PIP_URL || cp ${MY_DIR}/get-pip.py .
+    # Import public keys used to verify downloaded Python source tarballs.
+    # https://www.python.org/static/files/pubkeys.txt
+    gpg --import ${MY_DIR}/cpython-pubkeys.txt
     for py_ver in $@; do
         build_cpython $py_ver
     done
+    # Remove GPG hidden directory.
+    rm -rf /root/.gnupg/
     rm -f get-pip.py
 }
 

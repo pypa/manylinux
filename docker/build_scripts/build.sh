@@ -97,8 +97,6 @@ rm -rf sqlite-autoconf-3160200*
 # statically. We delete openssl afterwards.)
 build_openssl $OPENSSL_ROOT $OPENSSL_HASH
 mkdir -p /opt/python
-# Import public keys used to verify these signatures.
-gpg --import $MY_DIR/cpython-pubkeys.txt
 build_cpythons $CPYTHON_VERSIONS
 
 PY36_BIN=/opt/python/cp36-cp36m/bin
