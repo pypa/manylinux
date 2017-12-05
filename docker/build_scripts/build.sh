@@ -42,6 +42,16 @@ sed -i 's/#\(baseurl.*\)mirror.centos.org\/centos\/$releasever/\1vault.centos.or
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source $MY_DIR/build_utils.sh
 
+# https://hub.docker.com/_/centos/
+# "Additionally, images with minor version tags that correspond to install
+# media are also offered. These images DO NOT recieve updates as they are
+# intended to match installation iso contents. If you choose to use these
+# images it is highly recommended that you include RUN yum -y update && yum
+# clean all in your Dockerfile, or otherwise address any potential security
+# concerns."
+# Decided not to clean at this point: https://github.com/pypa/manylinux/pull/129
+yum -y update
+
 # EPEL support
 yum -y install wget curl
 # curl -sLO https://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
