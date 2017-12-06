@@ -54,7 +54,7 @@ source $MY_DIR/build_utils.sh
 yum -y update
 
 # EPEL support
-yum -y install curl
+yum -y install wget curl
 # curl -sLO https://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
 cp $MY_DIR/epel-release-5-4.noarch.rpm .
 check_sha256sum epel-release-5-4.noarch.rpm $EPEL_RPM_HASH
