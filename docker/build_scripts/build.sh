@@ -24,7 +24,8 @@ AUTOMAKE_HASH=7946e945a96e28152ba5a6beb0625ca715c6e32ac55f2e353ef54def0c8ed924
 
 # Dependencies for compiling Python that we want to remove from
 # the final image after compiling Python
-PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel"
+# GPG installed to verify signatures on Python source tarballs.
+PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel gpg"
 
 # Libraries that are allowed as part of the manylinux1 profile
 MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
@@ -53,7 +54,7 @@ source $MY_DIR/build_utils.sh
 yum -y update
 
 # EPEL support
-yum -y install wget curl
+yum -y install curl
 # curl -sLO https://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
 cp $MY_DIR/epel-release-5-4.noarch.rpm .
 check_sha256sum epel-release-5-4.noarch.rpm $EPEL_RPM_HASH

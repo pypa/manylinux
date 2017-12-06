@@ -75,7 +75,9 @@ function build_cpython {
     local py_ver=$1
     check_var $py_ver
     check_var $PYTHON_DOWNLOAD_URL
-    wget -q $PYTHON_DOWNLOAD_URL/$py_ver/Python-$py_ver.tgz
+    curl -fsSLO $PYTHON_DOWNLOAD_URL/$py_ver/Python-$py_ver.tgz
+    curl -fsSLO $PYTHON_DOWNLOAD_URL/$py_ver/Python-$py_ver.tgz.asc
+    gpg --verify Python-$py_ver.tgz.asc
     if [ $(lex_pyver $py_ver) -lt $(lex_pyver 3.3) ]; then
         do_cpython_build $py_ver ucs2
         do_cpython_build $py_ver ucs4
@@ -83,6 +85,7 @@ function build_cpython {
         do_cpython_build $py_ver none
     fi
     rm -f Python-$py_ver.tgz
+    rm -f Python-$py_ver.tgz.asc
 }
 
 
@@ -92,9 +95,14 @@ function build_cpythons {
     # versions used by the get-pip server. Keep trying though, because we'll
     # want to go back using $GET_PIP_URL when we upgrade to a newer CentOS...
     curl -sSLO $GET_PIP_URL || cp ${MY_DIR}/get-pip.py .
+    # Import public keys used to verify downloaded Python source tarballs.
+    # https://www.python.org/static/files/pubkeys.txt
+    gpg --import ${MY_DIR}/cpython-pubkeys.txt
     for py_ver in $@; do
         build_cpython $py_ver
     done
+    # Remove GPG hidden directory.
+    rm -rf /root/.gnupg/
     rm -f get-pip.py
 }
 
