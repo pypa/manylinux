@@ -10,7 +10,8 @@ CPYTHON_VERSIONS="2.6.9 2.7.13 3.3.6 3.4.6 3.5.3 3.6.0"
 # openssl version to build, with expected sha256 hash of .tar.gz
 # archive
 OPENSSL_ROOT=openssl-1.0.2n
-# Hash from https://github.com/Homebrew/homebrew-core/blob/99b8ea3594d1f1f78b0fff1fd8ca7d782aa07e13/Formula/openssl.rb#L11
+# Hash from https://www.openssl.org/source/openssl-1.0.2n.tar.gz.sha256
+# Matches hash at https://github.com/Homebrew/homebrew-core/blob/99b8ea3594d1f1f78b0fff1fd8ca7d782aa07e13/Formula/openssl.rb#L11
 OPENSSL_HASH=370babb75f278c39e0c50e8c4e7493bc0f18db6867478341a832a982fd15a8fe
 EPEL_RPM_HASH=0dcc89f9bf67a2a515bad64569b7a9615edc5e018f676a578d5fd0f17d3c81d4
 DEVTOOLS_HASH=a8ebeb4bed624700f727179e6ef771dafe47651131a00a78b342251415646acc
