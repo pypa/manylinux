@@ -15,13 +15,19 @@ OPENSSL_ROOT=openssl-1.0.2n
 OPENSSL_HASH=370babb75f278c39e0c50e8c4e7493bc0f18db6867478341a832a982fd15a8fe
 EPEL_RPM_HASH=0dcc89f9bf67a2a515bad64569b7a9615edc5e018f676a578d5fd0f17d3c81d4
 DEVTOOLS_HASH=a8ebeb4bed624700f727179e6ef771dafe47651131a00a78b342251415646acc
-PATCHELF_VERSION=6bfcafbba8d89e44f9ac9582493b4f27d9d8c369
+# Update to slightly newer, verified Git commit:
+# https://github.com/NixOS/patchelf/commit/2a9cefd7d637d160d12dc7946393778fa8abbc58
+PATCHELF_VERSION=2a9cefd7d637d160d12dc7946393778fa8abbc58
+PATCHELF_HASH=12da4727f09be42ae0b54878e1b8e86d85cb7a5b595731cdc1a0a170c4873c6d
 CURL_ROOT=curl-7.49.1
 CURL_HASH=eb63cec4bef692eab9db459033f409533e6d10e20942f4b060b32819e81885f1
 AUTOCONF_ROOT=autoconf-2.69
 AUTOCONF_HASH=954bd69b391edc12d6a4a51a2dd1476543da5c6bbf05a95b59dc0dd6fd4c2969
 AUTOMAKE_ROOT=automake-1.15
 AUTOMAKE_HASH=7946e945a96e28152ba5a6beb0625ca715c6e32ac55f2e353ef54def0c8ed924
+SQLITE_AUTOCONF_VERSION=sqlite-autoconf-3210000
+# Homebrew saw the same hash: https://github.com/Homebrew/homebrew-core/blob/e3a8622111ecefe444194cade5cca3c69165e26c/Formula/sqlite.rb#L6
+SQLITE_AUTOCONF_HASH=d7dd516775005ad87a57f428b6f86afd206cb341722927f104d3f0cf65fbbbe3
 
 # Dependencies for compiling Python that we want to remove from
 # the final image after compiling Python
@@ -84,13 +90,14 @@ build_automake $AUTOMAKE_ROOT $AUTOMAKE_HASH
 automake --version
 
 # Install a more recent SQLite3
-curl -sO https://sqlite.org/2017/sqlite-autoconf-3160200.tar.gz
-tar xfz sqlite-autoconf-3160200.tar.gz
-cd sqlite-autoconf-3160200
+curl -sO https://sqlite.org/2017/$SQLITE_AUTOCONF_VERSION.tar.gz
+check_sha256sum $SQLITE_AUTOCONF_VERSION.tar.gz $SQLITE_AUTOCONF_HASH
+tar xfz $SQLITE_AUTOCONF_VERSION.tar.gz
+cd $SQLITE_AUTOCONF_VERSION
 ./configure
 make install
 cd ..
-rm -rf sqlite-autoconf-3160200*
+rm -rf $SQLITE_AUTOCONF_VERSION*
 
 # Compile the latest Python releases.
 # (In order to have a proper SSL module, Python is compiled
@@ -125,6 +132,7 @@ rm -rf /usr/local/ssl
 
 # Install patchelf (latest with unreleased bug fixes)
 curl -sL -o patchelf.tar.gz https://github.com/NixOS/patchelf/archive/$PATCHELF_VERSION.tar.gz
+check_sha256sum patchelf.tar.gz $PATCHELF_HASH
 tar -xzf patchelf.tar.gz
 (cd patchelf-$PATCHELF_VERSION && ./bootstrap.sh && ./configure && make && make install)
 rm -rf patchelf.tar.gz patchelf-$PATCHELF_VERSION
