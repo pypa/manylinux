@@ -13,6 +13,7 @@ GET_PIP_URL=https://bootstrap.pypa.io/get-pip.py
 
 AUTOCONF_DOWNLOAD_URL=http://ftp.gnu.org/gnu/autoconf
 AUTOMAKE_DOWNLOAD_URL=http://ftp.gnu.org/gnu/automake
+LIBTOOL_DOWNLOAD_URL=http://ftp.gnu.org/gnu/libtool
 
 
 function check_var {
@@ -75,7 +76,9 @@ function build_cpython {
     local py_ver=$1
     check_var $py_ver
     check_var $PYTHON_DOWNLOAD_URL
-    wget -q $PYTHON_DOWNLOAD_URL/$py_ver/Python-$py_ver.tgz
+    curl -fsSLO $PYTHON_DOWNLOAD_URL/$py_ver/Python-$py_ver.tgz
+    curl -fsSLO $PYTHON_DOWNLOAD_URL/$py_ver/Python-$py_ver.tgz.asc
+    gpg --verify Python-$py_ver.tgz.asc
     if [ $(lex_pyver $py_ver) -lt $(lex_pyver 3.3) ]; then
         do_cpython_build $py_ver ucs2
         do_cpython_build $py_ver ucs4
@@ -83,6 +86,7 @@ function build_cpython {
         do_cpython_build $py_ver none
     fi
     rm -f Python-$py_ver.tgz
+    rm -f Python-$py_ver.tgz.asc
 }
 
 
@@ -92,9 +96,14 @@ function build_cpythons {
     # versions used by the get-pip server. Keep trying though, because we'll
     # want to go back using $GET_PIP_URL when we upgrade to a newer CentOS...
     curl -sSLO $GET_PIP_URL || cp ${MY_DIR}/get-pip.py .
+    # Import public keys used to verify downloaded Python source tarballs.
+    # https://www.python.org/static/files/pubkeys.txt
+    gpg --import ${MY_DIR}/cpython-pubkeys.txt
     for py_ver in $@; do
         build_cpython $py_ver
     done
+    # Remove GPG hidden directory.
+    rm -rf /root/.gnupg/
     rm -f get-pip.py
 }
 
@@ -173,6 +182,7 @@ function build_autoconf {
     rm -rf ${autoconf_fname} ${autoconf_fname}.tar.gz
 }
 
+
 function build_automake {
     local automake_fname=$1
     check_var ${automake_fname}
@@ -184,4 +194,18 @@ function build_automake {
     tar -zxf ${automake_fname}.tar.gz
     (cd ${automake_fname} && do_standard_install)
     rm -rf ${automake_fname} ${automake_fname}.tar.gz
+}
+
+
+function build_libtool {
+    local libtool_fname=$1
+    check_var ${libtool_fname}
+    local libtool_sha256=$2
+    check_var ${libtool_sha256}
+    check_var ${LIBTOOL_DOWNLOAD_URL}
+    curl -sSLO ${LIBTOOL_DOWNLOAD_URL}/${libtool_fname}.tar.gz
+    check_sha256sum ${libtool_fname}.tar.gz ${libtool_sha256}
+    tar -zxf ${libtool_fname}.tar.gz
+    (cd ${libtool_fname} && do_standard_install)
+    rm -rf ${libtool_fname} ${libtool_fname}.tar.gz
 }
