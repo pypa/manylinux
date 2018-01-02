@@ -49,7 +49,7 @@ function do_cpython_build {
     fi
     local prefix="/opt/_internal/cpython-${py_ver}${dir_suffix}"
     mkdir -p ${prefix}/lib
-    CFLAGS="" ./configure --prefix=${prefix} --disable-shared $unicode_flags > /dev/null
+    ./configure --prefix=${prefix} --disable-shared $unicode_flags > /dev/null
     make -j2 > /dev/null
     make install > /dev/null
     popd
