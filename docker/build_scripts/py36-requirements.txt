@@ -1,0 +1,16 @@
+# pip requirements for cpython 3.6
+# NOTE: certifi has GPG signatures; could download and verify independently.
+certifi==2017.11.5 \
+    --hash=sha256:244be0d93b71e93fc0a0a479862051414d0e00e16435707e5bf5000f92e04694 \
+    --hash=sha256:5ec74291ca1136b40f0379e1128ff80e866597e4e2c1e755739a913bbc3613c0
+auditwheel==1.8.0 \
+    --hash=sha256:63468bf62d82b27b1635ffe1c3f1c4e54ef67d0a6d38bedccc38ce6965d56db7 \
+    --hash=sha256:829ec26097f6ca9a239ebfb4d3c6dc093742141423268cb7ba1d8b15fb0c20a2
+# this package required for auditwheel
+pyelftools==0.24 \
+    --hash=sha256:e9dd97d685a5b96b88a988dabadb88e5a539b64cd7d7927fac9a7368dc4c459c
+# this package required for auditwheel
+typing==3.6.2 \
+    --hash=sha256:349b1f9c109c84b53ac79ac1d822eaa68fc91d63b321bd9392df15098f746f53 \
+    --hash=sha256:63a8255fe7c6269916baa440eb9b6a67139b0b97a01af632e7bd2842e1e02f15 \
+    --hash=sha256:d514bd84b284dd3e844f0305ac07511f097e325171f6cc4a20878d11ad771849
