@@ -4,6 +4,12 @@ dist: trusty
 services:
   - docker
 
+# Don't build the pyup- branches that pyup.io creates; it's redundant
+# with the PR builds that Travis also does.
+branches:
+  except:
+    - /^pyup-/
+
 env:
   global:
     # QUAY_USERNAME and QUAY_PASSWORD for docker image upload
