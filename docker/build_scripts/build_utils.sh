@@ -65,7 +65,7 @@ function do_cpython_build {
     fi
     # Since we fall back on a canned copy of get-pip.py, we might not have
     # the latest pip and friends. Upgrade them to make sure.
-    ${prefix}/bin/pip install -U pip wheel setuptools
+    ${prefix}/bin/pip install -U --require-hashes -r ${MY_DIR}/requirements.txt
     local abi_tag=$(${prefix}/bin/python ${MY_DIR}/python-tag-abi-tag.py)
     ln -s ${prefix} /opt/python/${abi_tag}
 }
