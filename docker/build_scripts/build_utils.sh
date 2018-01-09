@@ -7,6 +7,9 @@ PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 # to the ftp mirror:
 OPENSSL_DOWNLOAD_URL=ftp://ftp.openssl.org/source
 # Ditto the curl sources
+# FIXME: This is about the only mirror that supports bootstrapping over a
+# broken version of curl. Unfortunately, we are hardcoding the directory used
+# to download the new version of curl.
 CURL_DOWNLOAD_URL=https://github.com/curl/curl/releases/download/curl-7_57_0
 
 GET_PIP_URL=https://bootstrap.pypa.io/get-pip.py
@@ -153,11 +156,7 @@ function build_curl {
     local curl_sha256=$2
     check_var ${curl_sha256}
     check_var ${CURL_DOWNLOAD_URL}
-    # FIXME: Unfortunately, this old version of curl fails on the official curl
-    # site as well as its mirrors due to random SSL / TLS verification errors.
-    # Therefore, we skips these checks for now. In any case, we do check the
-    # hash of the updated curl out-of-band anyway.
-    curl -kLO ${CURL_DOWNLOAD_URL}/${curl_fname}.tar.bz2
+    curl -sSLO ${CURL_DOWNLOAD_URL}/${curl_fname}.tar.bz2
     check_sha256sum ${curl_fname}.tar.bz2 ${curl_sha256}
     tar -jxf ${curl_fname}.tar.bz2
     (cd ${curl_fname} && do_curl_build)
