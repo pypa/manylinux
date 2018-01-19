@@ -2,12 +2,17 @@
 # Helper utilities for build
 
 PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
-# XXX: the official https server at www.openssl.org cannot be reached
-# with the old versions of openssl and curl in Centos 5.11 hence the fallback
-# to the ftp mirror:
+# The openssl in Centos 5.11 doesn't support SNI, which means that until we've
+# bootstrapped by fetching a new openssl+curl, we can't download anything from
+# https:// hosts that use SNI. We don't care about security for the actual
+# transport, because after downloading we check against our saved hashes, but
+# we do need to do the download.
+#
+# ftp:// doesn't need SNI
 OPENSSL_DOWNLOAD_URL=ftp://ftp.openssl.org/source
-# Ditto the curl sources
-CURL_DOWNLOAD_URL=http://curl.askapache.com/download
+# Currently github's release downloads redirect to S3, and it looks like so
+# far neither of those require SNI:
+CURL_DOWNLOAD_URL=https://github.com/curl/curl/releases/download/curl-7_57_0/curl-7.57.0.tar.bz2
 
 GET_PIP_URL=https://bootstrap.pypa.io/get-pip.py
 
