@@ -7,7 +7,10 @@ PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 # to the ftp mirror:
 OPENSSL_DOWNLOAD_URL=ftp://ftp.openssl.org/source
 # Ditto the curl sources
-CURL_DOWNLOAD_URL=http://curl.askapache.com/download
+# FIXME: This is about the only mirror that supports bootstrapping over a
+# broken version of curl. Unfortunately, we are hardcoding the directory used
+# to download the new version of curl.
+CURL_DOWNLOAD_URL=https://github.com/curl/curl/releases/download/curl-7_57_0
 
 GET_PIP_URL=https://bootstrap.pypa.io/get-pip.py
 
