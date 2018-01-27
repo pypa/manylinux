@@ -8,6 +8,9 @@ ENV PATH /opt/rh/devtoolset-2/root/usr/bin:$PATH
 ENV LD_LIBRARY_PATH /opt/rh/devtoolset-2/root/usr/lib64:/opt/rh/devtoolset-2/root/usr/lib:/usr/local/lib64:/usr/local/lib
 ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 
+COPY prep /prep
+RUN bash prep/rebuild-glibc-without-vsyscall.sh && rm -r /prep
+
 COPY build_scripts /build_scripts
 RUN bash build_scripts/build.sh && rm -r build_scripts
 
