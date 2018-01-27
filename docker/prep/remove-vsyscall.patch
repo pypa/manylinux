@@ -1,0 +1,401 @@
+diff --git a/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/lowlevellock.S b/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
+index 22beaec..d1e29da 100644
+--- a/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
++++ b/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
+@@ -68,10 +68,6 @@
+ #endif
+ 
+ 
+-/* For the calculation see asm/vsyscall.h.  */
+-#define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000
+-
+-
+ 	.globl	__lll_lock_wait_private
+ 	.type	__lll_lock_wait_private,@function
+ 	.hidden	__lll_lock_wait_private
+@@ -250,10 +246,9 @@ __lll_timedlock_wait:
+ 	/* Get current time.  */
+ 	movq	%rsp, %rdi
+ 	xorl	%esi, %esi
+-	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
+-	/* This is a regular function call, all caller-save registers
+-	   might be clobbered.  */
+-	callq	*%rax
++	/* This call works because we directly jump to a system call entry
++	   which preserves all the registers.  */
++	call	JUMPTARGET(__gettimeofday)
+ 
+ 	/* Compute relative timeout.  */
+ 	movq	8(%rsp), %rax
+@@ -402,8 +397,9 @@ __lll_timedwait_tid:
+ 	/* Get current time.  */
+ 2:	movq	%rsp, %rdi
+ 	xorl	%esi, %esi
+-	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
+-	callq	*%rax
++	/* This call works because we directly jump to a system call entry
++	   which preserves all the registers.  */
++	call	JUMPTARGET(__gettimeofday)
+ 
+ 	/* Compute relative timeout.  */
+ 	movq	8(%rsp), %rax
+diff --git a/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/lowlevelrobustlock.S b/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/lowlevelrobustlock.S
+index b6537f9..cf9121d 100644
+--- a/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/lowlevelrobustlock.S
++++ b/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/lowlevelrobustlock.S
+@@ -51,9 +51,6 @@
+ 	orl	$FUTEX_WAIT_BITSET | FUTEX_CLOCK_REALTIME, reg
+ #endif
+ 
+-/* For the calculation see asm/vsyscall.h.  */
+-#define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000
+-
+ 
+ 	.globl	__lll_robust_lock_wait
+ 	.type	__lll_robust_lock_wait,@function
+@@ -220,10 +217,9 @@ __lll_robust_timedlock_wait:
+ 	/* Get current time.  */
+ 	movq	%rsp, %rdi
+ 	xorl	%esi, %esi
+-	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
+-	/* This is a regular function call, all caller-save registers
+-	   might be clobbered.  */
+-	callq	*%rax
++	/* This call works because we directly jump to a system call entry
++	   which preserves all the registers.  */
++	call	JUMPTARGET(__gettimeofday)
+ 
+ 	/* Compute relative timeout.  */
+ 	movq	8(%rsp), %rax
+diff --git a/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S b/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
+index fecaa50..9ea8353 100644
+--- a/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
++++ b/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S
+@@ -26,9 +26,6 @@
+ 
+ #include <kernel-features.h>
+ 
+-/* For the calculation see asm/vsyscall.h.  */
+-#define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000
+-
+ 
+ 	.text
+ 
+@@ -490,13 +487,11 @@ __pthread_cond_timedwait:
+ 	movq	__vdso_clock_gettime@GOTPCREL(%rip), %rax
+ 	movq	(%rax), %rax
+ 	PTR_DEMANGLE (%rax)
+-	jz	26f
+ 	call	*%rax
+-	jmp	27f
+-#  endif
+-26:	movl	$__NR_clock_gettime, %eax
++#  else
++	movl	$__NR_clock_gettime, %eax
+ 	syscall
+-27:
++#  endif
+ #  ifndef __ASSUME_POSIX_TIMERS
+ 	cmpq	$-ENOSYS, %rax
+ 	je	19f
+@@ -510,8 +505,9 @@ __pthread_cond_timedwait:
+ # else
+ 	leaq	24(%rsp), %rdi
+ 	xorl	%esi, %esi
+-	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
+-	callq	*%rax
++	/* This call works because we directly jump to a system call entry
++	   which preserves all the registers.  */
++	call	JUMPTARGET(__gettimeofday)
+ 
+ 	/* Compute relative timeout.  */
+ 	movq	40(%rsp), %rax
+@@ -648,8 +644,9 @@ __pthread_cond_timedwait:
+ 	/* clock_gettime not available.  */
+ 19:	leaq	32(%rsp), %rdi
+ 	xorl	%esi, %esi
+-	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
+-	callq	*%rax
++	/* This call works because we directly jump to a system call entry
++	   which preserves all the registers.  */
++	call	JUMPTARGET(__gettimeofday)
+ 
+ 	/* Compute relative timeout.  */
+ 	movq	40(%rsp), %rax
+diff --git a/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedrdlock.S b/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedrdlock.S
+index 22a4744..f65d976 100644
+--- a/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedrdlock.S
++++ b/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedrdlock.S
+@@ -23,10 +23,6 @@
+ #include <pthread-errnos.h>
+ #include <kernel-features.h>
+ 
+-
+-/* For the calculation see asm/vsyscall.h.  */
+-#define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000
+-
+ 	.text
+ 
+ 	.globl	pthread_rwlock_timedrdlock
+@@ -123,8 +119,9 @@ pthread_rwlock_timedrdlock:
+ 	/* Get current time.  */
+ 	movq	%rsp, %rdi
+ 	xorl	%esi, %esi
+-	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
+-	callq	*%rax
++	/* This call works because we directly jump to a system call entry
++	   which preserves all the registers.  */
++	call	JUMPTARGET(__gettimeofday)
+ 
+ 	/* Compute relative timeout.  */
+ 	movq	8(%rsp), %rax
+diff --git a/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedwrlock.S b/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedwrlock.S
+index 20a9c00..4338e02 100644
+--- a/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedwrlock.S
++++ b/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timedwrlock.S
+@@ -23,10 +23,6 @@
+ #include <pthread-errnos.h>
+ #include <kernel-features.h>
+ 
+-
+-/* For the calculation see asm/vsyscall.h.  */
+-#define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000
+-
+ 	.text
+ 
+ 	.globl	pthread_rwlock_timedwrlock
+@@ -120,8 +116,9 @@ pthread_rwlock_timedwrlock:
+ 	/* Get current time.  */
+ 	movq	%rsp, %rdi
+ 	xorl	%esi, %esi
+-	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
+-	callq	*%rax
++	/* This call works because we directly jump to a system call entry
++	   which preserves all the registers.  */
++	call	JUMPTARGET(__gettimeofday)
+ 
+ 	/* Compute relative timeout.  */
+ 	movq	8(%rsp), %rax
+diff --git a/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S b/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S
+index c339494..30e67e2 100644
+--- a/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S
++++ b/BUILD/glibc-2.12-2-gc4ccff1/nptl/sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S
+@@ -24,10 +24,6 @@
+ #include <pthread-errnos.h>
+ #include <structsem.h>
+ 
+-
+-/* For the calculation see asm/vsyscall.h.  */
+-#define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000
+-
+ 	.text
+ 
+ 	.globl	sem_timedwait
+@@ -212,9 +208,10 @@ sem_timedwait:
+ 	addq	$1, NWAITERS(%r12)
+ 
+ 7:	xorl	%esi, %esi
+-	movq	%rsp, %rdi
+-	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
+-	callq	*%rax
++	movq	%rsp,%rdi
++	/* This call works because we directly jump to a system call entry
++	   which preserves all the registers.  */
++	call	JUMPTARGET(__gettimeofday)
+ 
+ 	/* Compute relative timeout.  */
+ 	movq	8(%rsp), %rax
+diff --git a/BUILD/glibc-2.12-2-gc4ccff1/sysdeps/unix/sysv/linux/x86_64/gettimeofday.S b/BUILD/glibc-2.12-2-gc4ccff1/sysdeps/unix/sysv/linux/x86_64/gettimeofday.S
+deleted file mode 100644
+index 18ec6db..0000000
+--- a/BUILD/glibc-2.12-2-gc4ccff1/sysdeps/unix/sysv/linux/x86_64/gettimeofday.S
++++ /dev/null
+@@ -1,50 +0,0 @@
+-/* Copyright (C) 2002, 2003, 2007 Free Software Foundation, Inc.
+-   This file is part of the GNU C Library.
+-
+-   The GNU C Library is free software; you can redistribute it and/or
+-   modify it under the terms of the GNU Lesser General Public
+-   License as published by the Free Software Foundation; either
+-   version 2.1 of the License, or (at your option) any later version.
+-
+-   The GNU C Library is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+-   Lesser General Public License for more details.
+-
+-   You should have received a copy of the GNU Lesser General Public
+-   License along with the GNU C Library; if not, write to the Free
+-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+-   02111-1307 USA.  */
+-
+-#include <sysdep.h>
+-#define _ERRNO_H	1
+-#include <bits/errno.h>
+-
+-/* For the calculation see asm/vsyscall.h.  */
+-#define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000
+-
+-
+-ENTRY (__gettimeofday)
+-	/* Align stack.  */
+-	sub	$0x8, %rsp
+-	cfi_adjust_cfa_offset(8)
+-#ifdef SHARED
+-	movq	__vdso_gettimeofday(%rip), %rax
+-	PTR_DEMANGLE (%rax)
+-#else
+-	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
+-#endif
+-	callq	*%rax
+-	/* Check error return.  */
+-	cmpl	$-4095, %eax
+-	jae	SYSCALL_ERROR_LABEL
+-
+-L(pseudo_end):
+-	add	$0x8, %rsp
+-	cfi_adjust_cfa_offset(-8)
+-	ret
+-PSEUDO_END(__gettimeofday)
+-
+-libc_hidden_def (__gettimeofday)
+-weak_alias (__gettimeofday, gettimeofday)
+-libc_hidden_weak (gettimeofday)
+diff --git a/BUILD/glibc-2.12-2-gc4ccff1/sysdeps/unix/sysv/linux/x86_64/init-first.c b/BUILD/glibc-2.12-2-gc4ccff1/sysdeps/unix/sysv/linux/x86_64/init-first.c
+index ead7dbc..08c1ef7 100644
+--- a/BUILD/glibc-2.12-2-gc4ccff1/sysdeps/unix/sysv/linux/x86_64/init-first.c
++++ b/BUILD/glibc-2.12-2-gc4ccff1/sysdeps/unix/sysv/linux/x86_64/init-first.c
+@@ -17,6 +17,7 @@
+    02111-1307 USA.  */
+ 
+ #ifdef SHARED
++# include <sysdep.h>
+ # include <dl-vdso.h>
+ # include <bits/libc-vdso.h>
+ 
+@@ -26,6 +27,8 @@ long int (*__vdso_clock_gettime) (clockid_t, struct timespec *)
+   __attribute__ ((nocommon));
+ strong_alias (__vdso_clock_gettime, __GI___vdso_clock_gettime attribute_hidden)
+ 
++extern int __gettimeofday (struct timeval *__tv, struct timezone *__tz);
++
+ 
+ static inline void
+ _libc_vdso_platform_setup (void)
+@@ -33,10 +36,9 @@ _libc_vdso_platform_setup (void)
+   PREPARE_VERSION (linux26, "LINUX_2.6", 61765110);
+ 
+   void *p = _dl_vdso_vsym ("gettimeofday", &linux26);
+-  /* If the vDSO is not available we fall back on the old vsyscall.  */
+-#define VSYSCALL_ADDR_vgettimeofday	0xffffffffff600000ul
++  /* If the vDSO is not available we fall back on the syscall.  */
+   if (p == NULL)
+-    p = (void *) VSYSCALL_ADDR_vgettimeofday;
++    p = __gettimeofday;
+   PTR_MANGLE (p);
+   __vdso_gettimeofday = p;
+ 
+diff --git a/BUILD/glibc-2.12-2-gc4ccff1/sysdeps/unix/sysv/linux/x86_64/sched_getcpu.S b/BUILD/glibc-2.12-2-gc4ccff1/sysdeps/unix/sysv/linux/x86_64/sched_getcpu.S
+deleted file mode 100644
+index a950990..0000000
+--- a/BUILD/glibc-2.12-2-gc4ccff1/sysdeps/unix/sysv/linux/x86_64/sched_getcpu.S
++++ /dev/null
+@@ -1,50 +0,0 @@
+-/* Copyright (C) 2007 Free Software Foundation, Inc.
+-   This file is part of the GNU C Library.
+-
+-   The GNU C Library is free software; you can redistribute it and/or
+-   modify it under the terms of the GNU Lesser General Public
+-   License as published by the Free Software Foundation; either
+-   version 2.1 of the License, or (at your option) any later version.
+-
+-   The GNU C Library is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+-   Lesser General Public License for more details.
+-
+-   You should have received a copy of the GNU Lesser General Public
+-   License along with the GNU C Library; if not, write to the Free
+-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+-   02111-1307 USA.  */
+-
+-#include <sysdep.h>
+-#include <tls.h>
+-#define _ERRNO_H	1
+-#include <bits/errno.h>
+-
+-/* For the calculation see asm/vsyscall.h.  */
+-#define VSYSCALL_ADDR_vgetcpu	0xffffffffff600800
+-
+-
+-ENTRY (sched_getcpu)
+-	/* Align stack and create local variable for result.  */
+-	sub	$0x8, %rsp
+-	cfi_adjust_cfa_offset(8)
+-
+-	movq	%rsp, %rdi
+-	xorl	%esi, %esi
+-	movl	$VGETCPU_CACHE_OFFSET, %edx
+-	addq	%fs:0, %rdx
+-
+-	movq	$VSYSCALL_ADDR_vgetcpu, %rax
+-	callq	*%rax
+-
+-	cmpq	$-4095, %rax
+-	jae	SYSCALL_ERROR_LABEL
+-
+-	movl	(%rsp), %eax
+-
+-L(pseudo_end):
+-	add	$0x8, %rsp
+-	cfi_adjust_cfa_offset(-8)
+-	ret
+-PSEUDO_END(sched_getcpu)
+diff --git a/BUILD/glibc-2.12-2-gc4ccff1/sysdeps/unix/sysv/linux/x86_64/time.S b/BUILD/glibc-2.12-2-gc4ccff1/sysdeps/unix/sysv/linux/x86_64/time.S
+deleted file mode 100644
+index e3f3268..0000000
+--- a/BUILD/glibc-2.12-2-gc4ccff1/sysdeps/unix/sysv/linux/x86_64/time.S
++++ /dev/null
+@@ -1,42 +0,0 @@
+-/* Copyright (C) 2001,02, 2003 Free Software Foundation, Inc.
+-   This file is part of the GNU C Library.
+-
+-   The GNU C Library is free software; you can redistribute it and/or
+-   modify it under the terms of the GNU Lesser General Public
+-   License as published by the Free Software Foundation; either
+-   version 2.1 of the License, or (at your option) any later version.
+-
+-   The GNU C Library is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+-   Lesser General Public License for more details.
+-
+-   You should have received a copy of the GNU Lesser General Public
+-   License along with the GNU C Library; if not, write to the Free
+-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+-   02111-1307 USA.  */
+-
+-#include <sysdep.h>
+-#define _ERRNO_H	1
+-#include <bits/errno.h>
+-
+-/* For the calculation see asm/vsyscall.h.  */
+-#define VSYSCALL_ADDR_vtime	0xffffffffff600400
+-
+-
+-/* Return the current time as a `time_t' and also put it in *T if T is
+-   not NULL.  Time is represented as seconds from Jan 1 00:00:00 1970.  */
+-
+-ENTRY (time)
+-	/* Align stack.  */
+-	sub	$0x8, %rsp
+-	cfi_adjust_cfa_offset(8)
+-
+-	movq	$VSYSCALL_ADDR_vtime, %rax
+-	callq	*%rax
+-
+-	add	$0x8, %rsp
+-	cfi_adjust_cfa_offset(-8)
+-	ret
+-PSEUDO_END_NOERRNO(time)
+-libc_hidden_def (time)

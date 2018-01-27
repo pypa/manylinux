@@ -1,0 +1,7 @@
+[base-source]
+name=CentOS-6.9 - Base SRPMS
+baseurl=http://vault.centos.org/6.9/os/Source/
+gpgcheck=1
+gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-6
+priority=1
+enabled=1
