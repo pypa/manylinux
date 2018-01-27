@@ -16,15 +16,6 @@ PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-
 # Libraries that are allowed as part of the manylinux1 profile
 MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
 
-# Centos 5 is EOL and is no longer available from the usual mirrors, so switch
-# to http://vault.centos.org
-# From: https://github.com/rust-lang/rust/pull/41045
-# The location for version 5 was also removed, so now only the specific release
-# (5.11) can be referenced.
-sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf
-sed -i 's/mirrorlist/#mirrorlist/' /etc/yum.repos.d/*.repo
-sed -i 's/#\(baseurl.*\)mirror.centos.org\/centos\/$releasever/\1vault.centos.org\/5.11/' /etc/yum.repos.d/*.repo
-
 # Get build utilities
 source $MY_DIR/build_utils.sh
 
@@ -43,16 +34,16 @@ yum -y update
 
 # EPEL support
 yum -y install wget
-# https://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
-cp $MY_DIR/epel-release-5-4.noarch.rpm .
-check_sha256sum epel-release-5-4.noarch.rpm $EPEL_RPM_HASH
+# https://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+cp $MY_DIR/epel-release-6-8.noarch.rpm .
+check_sha256sum epel-release-6-8.noarch.rpm $EPEL_RPM_HASH
 
 # Dev toolset (for LLVM and other projects requiring C++11 support)
 wget -q http://people.centos.org/tru/devtools-2/devtools-2.repo
 check_sha256sum devtools-2.repo $DEVTOOLS_HASH
 mv devtools-2.repo /etc/yum.repos.d/devtools-2.repo
-rpm -Uvh --replacepkgs epel-release-5*.rpm
-rm -f epel-release-5*.rpm
+rpm -Uvh --replacepkgs epel-release-6*.rpm
+rm -f epel-release-6*.rpm
 
 # from now on, we shall only use curl to retrieve files
 yum -y erase wget
@@ -77,6 +68,7 @@ yum -y install \
     unzip \
     which \
     yasm \
+    gpg \
     ${PYTHON_COMPILE_DEPS}
 
 # Build an OpenSSL for both curl and the Pythons. We'll delete this at the end.
@@ -157,7 +149,7 @@ yum -y erase \
     hicolor-icon-theme \
     libX11 \
     wireless-tools \
-    ${PYTHON_COMPILE_DEPS}  > /dev/null 2>&1
+    ${PYTHON_COMPILE_DEPS}  #> /dev/null 2>&1
 yum -y install ${MANYLINUX1_DEPS}
 yum -y clean all > /dev/null 2>&1
 yum list installed
