@@ -13,15 +13,15 @@ OPENSSL_ROOT=openssl-1.0.2n
 # Hash from https://www.openssl.org/source/openssl-1.0.2n.tar.gz.sha256
 # Matches hash at https://github.com/Homebrew/homebrew-core/blob/99b8ea3594d1f1f78b0fff1fd8ca7d782aa07e13/Formula/openssl.rb#L11
 OPENSSL_HASH=370babb75f278c39e0c50e8c4e7493bc0f18db6867478341a832a982fd15a8fe
-EPEL_RPM_HASH=0dcc89f9bf67a2a515bad64569b7a9615edc5e018f676a578d5fd0f17d3c81d4
+EPEL_RPM_HASH=e5ed9ecf22d0c4279e92075a64c757ad2b38049bcf5c16c4f2b75d5f6860dc0d
 DEVTOOLS_HASH=a8ebeb4bed624700f727179e6ef771dafe47651131a00a78b342251415646acc
 # Update to slightly newer, verified Git commit:
 # https://github.com/NixOS/patchelf/commit/2a9cefd7d637d160d12dc7946393778fa8abbc58
 PATCHELF_VERSION=2a9cefd7d637d160d12dc7946393778fa8abbc58
 PATCHELF_HASH=12da4727f09be42ae0b54878e1b8e86d85cb7a5b595731cdc1a0a170c4873c6d
-CURL_ROOT=curl-7.57.0
-# https://github.com/Homebrew/homebrew-core/blob/e3a8622111ecefe444194cade5cca3c69165e26c/Formula/curl.rb#L6
-CURL_HASH=c92fe31a348eae079121b73884065e600c533493eb50f1f6cee9c48a3f454826
+CURL_ROOT=curl-7.58.0
+# https://github.com/Homebrew/homebrew-core/blob/b44c24272efdef9a3b2a54d8d8ab72dacfcd580f/Formula/curl.rb#L6
+CURL_HASH=1cb081f97807c01e3ed747b6e1c9fee7a01cb10048f1cd0b5f56cfe0209de731
 AUTOCONF_ROOT=autoconf-2.69
 AUTOCONF_HASH=954bd69b391edc12d6a4a51a2dd1476543da5c6bbf05a95b59dc0dd6fd4c2969
 AUTOMAKE_ROOT=automake-1.15
@@ -35,19 +35,10 @@ SQLITE_AUTOCONF_HASH=d7dd516775005ad87a57f428b6f86afd206cb341722927f104d3f0cf65f
 # Dependencies for compiling Python that we want to remove from
 # the final image after compiling Python
 # GPG installed to verify signatures on Python source tarballs.
-PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel gpg"
+PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel"
 
 # Libraries that are allowed as part of the manylinux1 profile
 MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
-
-# Centos 5 is EOL and is no longer available from the usual mirrors, so switch
-# to http://vault.centos.org
-# From: https://github.com/rust-lang/rust/pull/41045
-# The location for version 5 was also removed, so now only the specific release
-# (5.11) can be referenced.
-sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf
-sed -i 's/mirrorlist/#mirrorlist/' /etc/yum.repos.d/*.repo
-sed -i 's/#\(baseurl.*\)mirror.centos.org\/centos\/$releasever/\1vault.centos.org\/5.11/' /etc/yum.repos.d/*.repo
 
 # Get build utilities
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
@@ -65,16 +56,16 @@ yum -y update
 
 # EPEL support
 yum -y install wget curl
-# https://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
-cp $MY_DIR/epel-release-5-4.noarch.rpm .
-check_sha256sum epel-release-5-4.noarch.rpm $EPEL_RPM_HASH
+# https://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+cp $MY_DIR/epel-release-6-8.noarch.rpm .
+check_sha256sum epel-release-6-8.noarch.rpm $EPEL_RPM_HASH
 
 # Dev toolset (for LLVM and other projects requiring C++11 support)
 curl -fsSLO http://people.centos.org/tru/devtools-2/devtools-2.repo
 check_sha256sum devtools-2.repo $DEVTOOLS_HASH
 mv devtools-2.repo /etc/yum.repos.d/devtools-2.repo
-rpm -Uvh --replacepkgs epel-release-5*.rpm
-rm -f epel-release-5*.rpm
+rpm -Uvh --replacepkgs epel-release-6*.rpm
+rm -f epel-release-6*.rpm
 
 # Development tools and libraries
 yum -y install bzip2 make git patch unzip bison yasm diffutils \
@@ -82,6 +73,7 @@ yum -y install bzip2 make git patch unzip bison yasm diffutils \
     kernel-devel-`uname -r` \
     devtoolset-2-binutils devtoolset-2-gcc \
     devtoolset-2-gcc-c++ devtoolset-2-gcc-gfortran \
+    gpg \
     ${PYTHON_COMPILE_DEPS}
 
 # Install newest autoconf
@@ -152,7 +144,7 @@ ln -s $PY36_BIN/auditwheel /usr/local/bin/auditwheel
 # final image
 yum -y erase wireless-tools gtk2 libX11 hicolor-icon-theme \
     avahi freetype bitstream-vera-fonts \
-    ${PYTHON_COMPILE_DEPS}  > /dev/null 2>&1
+    ${PYTHON_COMPILE_DEPS}  #> /dev/null 2>&1
 yum -y install ${MANYLINUX1_DEPS}
 yum -y clean all > /dev/null 2>&1
 yum list installed

@@ -2,15 +2,8 @@
 # Helper utilities for build
 
 PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
-# XXX: the official https server at www.openssl.org cannot be reached
-# with the old versions of openssl and curl in Centos 5.11 hence the fallback
-# to the ftp mirror:
-OPENSSL_DOWNLOAD_URL=ftp://ftp.openssl.org/source
-# Ditto the curl sources
-# FIXME: This is about the only mirror that supports bootstrapping over a
-# broken version of curl. Unfortunately, we are hardcoding the directory used
-# to download the new version of curl.
-CURL_DOWNLOAD_URL=https://github.com/curl/curl/releases/download/curl-7_57_0
+OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source
+CURL_DOWNLOAD_URL=https://curl.haxx.se/download
 
 GET_PIP_URL=https://bootstrap.pypa.io/get-pip.py
 
