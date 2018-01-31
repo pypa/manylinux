@@ -79,8 +79,9 @@ set -ex
 # Locate the prep directory
 MY_DIR=/$(dirname "${BASH_SOURCE[0]}")
 
-# glibc version
-GLIBC_VERSION=glibc-2.12-1.209
+# glibc versions
+ORIGINAL_GLIBC_VERSION=2.12-1.209
+PATCHED_GLIBC_VERSION=2.12-1.209.1
 
 # Source RPM topdir
 SRPM_TOPDIR=/root/rpmbuild
@@ -102,7 +103,7 @@ mkdir $DOWNLOADED_SRPMS
 adduser mockbuild
 # yumdownloader assumes the current working directory
 (cd $DOWNLOADED_SRPMS && yumdownloader --source glibc)
-rpm -ivh $DOWNLOADED_SRPMS/$GLIBC_VERSION.el6.src.rpm
+rpm -ivh $DOWNLOADED_SRPMS/glibc-$ORIGINAL_GLIBC_VERSION.el6.src.rpm
 # Prepare the source by applying Red Hat and CentOS patches
 rpmbuild -bp $SRPM_TOPDIR/SPECS/glibc.spec
 
@@ -115,7 +116,19 @@ cp $MY_DIR/remove-vsyscall.patch $SRPM_TOPDIR/SOURCES
 rpmbuild -ba $SRPM_TOPDIR/SPECS/glibc.spec
 
 # Install the replacement glibc
-rpm --install --force --nodeps $SRPM_TOPDIR/RPMS/x86_64/$GLIBC_VERSION.el6.x86_64.rpm
+yum -y install \
+   $SRPM_TOPDIR/RPMS/x86_64/glibc-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm \
+   $SRPM_TOPDIR/RPMS/x86_64/glibc-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm \
+   $SRPM_TOPDIR/RPMS/x86_64/glibc-debuginfo-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm \
+   $SRPM_TOPDIR/RPMS/x86_64/glibc-devel-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm \
+   $SRPM_TOPDIR/RPMS/x86_64/glibc-static-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm \
+   $SRPM_TOPDIR/RPMS/x86_64/nscd-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm \
+   $SRPM_TOPDIR/RPMS/x86_64/glibc-common-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm \
+   $SRPM_TOPDIR/RPMS/x86_64/glibc-debuginfo-common-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm \
+   $SRPM_TOPDIR/RPMS/x86_64/glibc-headers-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm \
+   $SRPM_TOPDIR/RPMS/x86_64/glibc-utils-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm
 
-# XXX: Remove all unneeded dependencies
+## XXX: Remove all unneeded dependencies
 yum -y erase yum-utils rpm-build
+rm -rf $DOWNLOADED_SRPMS
+rm -rf $SRPM_TOPDIR
