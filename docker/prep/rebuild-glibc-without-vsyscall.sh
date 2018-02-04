@@ -113,22 +113,4 @@ cp $MY_DIR/remove-vsyscall.patch $SRPM_TOPDIR/SOURCES
 (cd $SRPM_TOPDIR/SPECS && patch -p2 < $MY_DIR/glibc.spec.patch)
 
 # Build the RPMS
-rpmbuild -ba $SRPM_TOPDIR/SPECS/glibc.spec
-
-# Install the replacement glibc
-yum -y install \
-   $SRPM_TOPDIR/RPMS/x86_64/glibc-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm \
-   $SRPM_TOPDIR/RPMS/x86_64/glibc-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm \
-   $SRPM_TOPDIR/RPMS/x86_64/glibc-debuginfo-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm \
-   $SRPM_TOPDIR/RPMS/x86_64/glibc-devel-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm \
-   $SRPM_TOPDIR/RPMS/x86_64/glibc-static-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm \
-   $SRPM_TOPDIR/RPMS/x86_64/nscd-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm \
-   $SRPM_TOPDIR/RPMS/x86_64/glibc-common-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm \
-   $SRPM_TOPDIR/RPMS/x86_64/glibc-debuginfo-common-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm \
-   $SRPM_TOPDIR/RPMS/x86_64/glibc-headers-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm \
-   $SRPM_TOPDIR/RPMS/x86_64/glibc-utils-$PATCHED_GLIBC_VERSION.el6.x86_64.rpm
-
-## XXX: Remove all unneeded dependencies
-yum -y erase yum-utils rpm-build
-rm -rf $DOWNLOADED_SRPMS
-rm -rf $SRPM_TOPDIR
+rpmbuild -ba $SRPM_TOPDIR/SPECS/glibc.spec >/dev/null 2>&1
