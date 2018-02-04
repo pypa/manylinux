@@ -149,7 +149,7 @@ yum -y erase \
     hicolor-icon-theme \
     libX11 \
     wireless-tools \
-    ${PYTHON_COMPILE_DEPS}  #> /dev/null 2>&1
+    ${PYTHON_COMPILE_DEPS}  > /dev/null 2>&1
 yum -y install ${MANYLINUX1_DEPS}
 yum -y clean all > /dev/null 2>&1
 yum list installed
