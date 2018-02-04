@@ -144,7 +144,7 @@ ln -s $PY36_BIN/auditwheel /usr/local/bin/auditwheel
 # final image
 yum -y erase wireless-tools gtk2 libX11 hicolor-icon-theme \
     avahi freetype bitstream-vera-fonts \
-    ${PYTHON_COMPILE_DEPS}  #> /dev/null 2>&1
+    ${PYTHON_COMPILE_DEPS}  > /dev/null 2>&1
 yum -y install ${MANYLINUX1_DEPS}
 yum -y clean all > /dev/null 2>&1
 yum list installed
