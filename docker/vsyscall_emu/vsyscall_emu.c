@@ -1,10 +1,7 @@
 #define _GNU_SOURCE
 #include <sys/syscall.h>
 #include <dlfcn.h>
-#include <errno.h>
 #include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <ucontext.h>
 #include <unistd.h>
 
@@ -122,26 +119,20 @@ init(void)
 {
 	real_sigaction = dlsym(RTLD_NEXT, "sigaction");
 	if (!real_sigaction) {
-		fprintf(stderr, "dlsym(\"sigaction\"): %s", dlerror());
-		abort();
+		return;
 	}
 
 	real_sigprocmask = dlsym(RTLD_NEXT, "sigprocmask");
 	if (!real_sigprocmask) {
-		fprintf(stderr, "dlsym(\"sigprocmask\"): %s", dlerror());
-		abort();
+		return;
 	}
 	if (real_sigprocmask(SIG_BLOCK, NULL, &visible_oldset) == -1) {
-		perror("sigprocmask");
-		abort();
+		return;
 	}
 
 	struct sigaction sa = {
 		.sa_sigaction = handler,
 		.sa_flags = SA_RESTART | SA_SIGINFO,
 	};
-	if (real_sigaction(SIGSEGV, &sa, NULL) != 0) {
-		perror("sigaction");
-		abort();
-	}
+	real_sigaction(SIGSEGV, &sa, NULL);
 }
