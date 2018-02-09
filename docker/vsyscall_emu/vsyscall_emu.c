@@ -36,6 +36,20 @@ sigaction(int signum,
 	return 0;
 }
 
+sighandler_t
+signal(int signum, sighandler_t handler)
+{
+	struct sigaction sa = {
+		.sa_handler = handler,
+		.sa_flags = SA_RESETHAND | SA_NODEFER,
+	}, oldsa;
+	if (sigaction(signum, &sa, &oldsa) == 0) {
+		return oldsa.sa_handler;
+	} else {
+		return SIG_ERR;
+	}
+}
+
 int
 sigprocmask (int how, const sigset_t *newset, sigset_t *oldset)
 {
