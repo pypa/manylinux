@@ -1,6 +1,7 @@
 #define _GNU_SOURCE
 #include <sys/syscall.h>
 #include <dlfcn.h>
+#include <errno.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,6 +13,10 @@ static struct sigaction next_handler = {
 };
 
 static int (*real_sigaction)(int, const struct sigaction *, struct sigaction *);
+
+static sigset_t visible_oldset;
+
+static int (*real_sigprocmask)(int, const sigset_t *, sigset_t *);
 
 int
 sigaction(int signum,
@@ -31,6 +36,30 @@ sigaction(int signum,
 	return 0;
 }
 
+int
+sigprocmask (int how, const sigset_t *newset, sigset_t *oldset)
+{
+	sigset_t newset_without_sigsegv;
+	const sigset_t *to_install;
+	int result;
+
+	if (newset && how == SIG_BLOCK && sigismember(newset, SIGSEGV)) {
+		newset_without_sigsegv = *newset;
+		sigdelset(&newset_without_sigsegv, SIGSEGV);
+		to_install = &newset_without_sigsegv;
+	} else {
+		to_install = newset;
+	}
+
+	result = real_sigprocmask(how, to_install, oldset);
+	if (oldset) {
+		*oldset = visible_oldset;
+	}
+	if (newset) {
+		visible_oldset = *newset;
+	}
+	return result;
+}
 
 static greg_t VSYS_gettimeofday = 0xffffffffff600000;
 static long
@@ -80,6 +109,16 @@ init(void)
 	real_sigaction = dlsym(RTLD_NEXT, "sigaction");
 	if (!real_sigaction) {
 		fprintf(stderr, "dlsym(\"sigaction\"): %s", dlerror());
+		abort();
+	}
+
+	real_sigprocmask = dlsym(RTLD_NEXT, "sigprocmask");
+	if (!real_sigprocmask) {
+		fprintf(stderr, "dlsym(\"sigprocmask\"): %s", dlerror());
+		abort();
+	}
+	if (real_sigprocmask(SIG_BLOCK, NULL, &visible_oldset) == -1) {
+		perror("sigprocmask");
 		abort();
 	}
 
