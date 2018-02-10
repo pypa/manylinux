@@ -8,9 +8,13 @@ ENV PATH /opt/rh/devtoolset-2/root/usr/bin:$PATH
 ENV LD_LIBRARY_PATH /opt/rh/devtoolset-2/root/usr/lib64:/opt/rh/devtoolset-2/root/usr/lib:/usr/local/lib64:/usr/local/lib
 ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 
+COPY vsyscall_emu/vsyscall_trace /usr/local/sbin/vsyscall_trace
+
 COPY build_scripts /build_scripts
 RUN bash build_scripts/build.sh && rm -r build_scripts
 
 ENV SSL_CERT_FILE=/opt/_internal/certs.pem
+
+ENTRYPOINT ["/usr/local/sbin/vsyscall_trace"]
 
 CMD ["/bin/bash"]
