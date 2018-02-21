@@ -23,7 +23,7 @@ matrix:
     - env: PLATFORM="x86_64"
 
 script:
-  - docker build --rm -t quay.io/pypa/manylinux1_$PLATFORM:$TRAVIS_COMMIT -f docker/Dockerfile-$PLATFORM docker/
+  - travis_wait 40 docker build --rm -t quay.io/pypa/manylinux1_$PLATFORM:$TRAVIS_COMMIT -f docker/Dockerfile-$PLATFORM docker/
 
 
 deploy:
