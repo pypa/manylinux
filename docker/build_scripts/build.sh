@@ -19,9 +19,8 @@ DEVTOOLS_HASH=a8ebeb4bed624700f727179e6ef771dafe47651131a00a78b342251415646acc
 # https://github.com/NixOS/patchelf/commit/2a9cefd7d637d160d12dc7946393778fa8abbc58
 PATCHELF_VERSION=2a9cefd7d637d160d12dc7946393778fa8abbc58
 PATCHELF_HASH=12da4727f09be42ae0b54878e1b8e86d85cb7a5b595731cdc1a0a170c4873c6d
-CURL_ROOT=curl-7.57.0
-# https://github.com/Homebrew/homebrew-core/blob/e3a8622111ecefe444194cade5cca3c69165e26c/Formula/curl.rb#L6
-CURL_HASH=c92fe31a348eae079121b73884065e600c533493eb50f1f6cee9c48a3f454826
+CURL_ROOT=curl_7.52.1
+CURL_HASH=a8984e8b20880b621f61a62d95ff3c0763a3152093a9f9ce4287cfd614add6ae
 AUTOCONF_ROOT=autoconf-2.69
 AUTOCONF_HASH=954bd69b391edc12d6a4a51a2dd1476543da5c6bbf05a95b59dc0dd6fd4c2969
 AUTOMAKE_ROOT=automake-1.15
@@ -31,6 +30,8 @@ LIBTOOL_HASH=e3bd4d5d3d025a36c21dd6af7ea818a2afcd4dfc1ea5a17b39d7854bcd0c06e3
 SQLITE_AUTOCONF_VERSION=sqlite-autoconf-3210000
 # Homebrew saw the same hash: https://github.com/Homebrew/homebrew-core/blob/e3a8622111ecefe444194cade5cca3c69165e26c/Formula/sqlite.rb#L6
 SQLITE_AUTOCONF_HASH=d7dd516775005ad87a57f428b6f86afd206cb341722927f104d3f0cf65fbbbe3
+GIT_ROOT=2.16.2
+GIT_HASH=cbdc2398204c7b7bed64f28265870aabe40dd3cd5c0455f7d315570ad7f7f5c8
 
 # Dependencies for compiling Python that we want to remove from
 # the final image after compiling Python
@@ -64,25 +65,37 @@ source $MY_DIR/build_utils.sh
 yum -y update
 
 # EPEL support
-yum -y install wget curl
+yum -y install wget
 # https://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
 cp $MY_DIR/epel-release-5-4.noarch.rpm .
 check_sha256sum epel-release-5-4.noarch.rpm $EPEL_RPM_HASH
 
 # Dev toolset (for LLVM and other projects requiring C++11 support)
-curl -fsSLO http://people.centos.org/tru/devtools-2/devtools-2.repo
+wget -q http://people.centos.org/tru/devtools-2/devtools-2.repo
 check_sha256sum devtools-2.repo $DEVTOOLS_HASH
 mv devtools-2.repo /etc/yum.repos.d/devtools-2.repo
 rpm -Uvh --replacepkgs epel-release-5*.rpm
 rm -f epel-release-5*.rpm
 
 # Development tools and libraries
-yum -y install bzip2 make git patch unzip bison yasm diffutils \
+yum -y install bzip2 make patch unzip bison yasm diffutils \
     automake which file cmake28 \
     kernel-devel-`uname -r` \
+    expat-devel gettext \
     devtoolset-2-binutils devtoolset-2-gcc \
     devtoolset-2-gcc-c++ devtoolset-2-gcc-gfortran \
     ${PYTHON_COMPILE_DEPS}
+
+# Build an OpenSSL for both curl and the Pythons. We'll delete this at the end.
+build_openssl $OPENSSL_ROOT $OPENSSL_HASH
+# Install curl so we can have TLS 1.2 in this ancient container.
+build_curl $CURL_ROOT $CURL_HASH
+hash -r
+curl --version
+curl-config --features
+
+# Install a git we link against OpenSSL so that we can use TLS 1.2
+build_git $GIT_ROOT $GIT_HASH
 
 # Install newest autoconf
 build_autoconf $AUTOCONF_ROOT $AUTOCONF_HASH
@@ -109,8 +122,7 @@ rm -rf $SQLITE_AUTOCONF_VERSION*
 # Compile the latest Python releases.
 # (In order to have a proper SSL module, Python is compiled
 # against a recent openssl [see env vars above], which is linked
-# statically. We delete openssl afterwards.)
-build_openssl $OPENSSL_ROOT $OPENSSL_HASH
+# statically.
 mkdir -p /opt/python
 build_cpythons $CPYTHON_VERSIONS
 
@@ -129,14 +141,7 @@ ln -s $($PY36_BIN/python -c 'import certifi; print(certifi.where())') \
 # Dockerfiles:
 export SSL_CERT_FILE=/opt/_internal/certs.pem
 
-# Install newest curl
-build_curl $CURL_ROOT $CURL_HASH
-rm -rf /usr/local/include/curl /usr/local/lib/libcurl* /usr/local/lib/pkgconfig/libcurl.pc
-hash -r
-curl --version
-curl-config --features
-
-# Now we can delete our built SSL
+# Now we can delete our built OpenSSL headers/static libs since we've linked everything we need
 rm -rf /usr/local/ssl
 
 # Install patchelf (latest with unreleased bug fixes)
@@ -152,6 +157,7 @@ ln -s $PY36_BIN/auditwheel /usr/local/bin/auditwheel
 # final image
 yum -y erase wireless-tools gtk2 libX11 hicolor-icon-theme \
     avahi freetype bitstream-vera-fonts \
+    expat-devel gettext \
     ${PYTHON_COMPILE_DEPS}  > /dev/null 2>&1
 yum -y install ${MANYLINUX1_DEPS}
 yum -y clean all > /dev/null 2>&1
