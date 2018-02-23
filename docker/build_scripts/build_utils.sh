@@ -153,7 +153,7 @@ function build_git {
     curl -sSLO ${GIT_DOWNLOAD_URL}/v${git_fname}.tar.gz
     check_sha256sum v${git_fname}.tar.gz ${git_sha256}
     tar -xzf v${git_fname}.tar.gz
-    (cd git-${git_fname} && make install LDFLAGS="-L/usr/local/ssl/lib -ldl" CFLAGS="-I/usr/local/ssl/include" > /dev/null)
+    (cd git-${git_fname} && make install prefix=/usr/local LDFLAGS="-L/usr/local/ssl/lib -ldl" CFLAGS="-I/usr/local/ssl/include")
     rm -rf git-${git_fname} v${git_fname}.tar.gz
 }
 
