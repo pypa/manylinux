@@ -157,8 +157,8 @@ function build_git {
 }
 
 function do_git_build {
-    make LDFLAGS="-L/usr/local/ssl/lib -ldl" CFLAGS="-I/usr/local/ssl/include" > /dev/null
-    make install > /dev/null
+    make LDFLAGS="-L/usr/local/ssl/lib -ldl" CFLAGS="-I/usr/local/ssl/include"
+    make install
 }
 
 
