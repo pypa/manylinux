@@ -143,6 +143,7 @@ function build_openssl {
     rm -rf ${openssl_fname} ${openssl_fname}.tar.gz
 }
 
+
 function build_git {
     local git_fname=$1
     check_var ${git_fname}
@@ -152,13 +153,8 @@ function build_git {
     curl -sSLO ${GIT_DOWNLOAD_URL}/v${git_fname}.tar.gz
     check_sha256sum v${git_fname}.tar.gz ${git_sha256}
     tar -xzf v${git_fname}.tar.gz
-    (cd git-${git_fname} && do_git_build)
+    (cd git-${git_fname} && make install LDFLAGS="-L/usr/local/ssl/lib -ldl" CFLAGS="-I/usr/local/ssl/include" > /dev/null)
     rm -rf git-${git_fname} v${git_fname}.tar.gz
-}
-
-function do_git_build {
-    make LDFLAGS="-L/usr/local/ssl/lib -ldl" CFLAGS="-I/usr/local/ssl/include"
-    make install
 }
 
 
