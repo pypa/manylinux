@@ -6,17 +6,17 @@ PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 # with the old versions of openssl and curl in Centos 5.11 hence the fallback
 # to the ftp mirror:
 OPENSSL_DOWNLOAD_URL=ftp://ftp.openssl.org/source
-# Ditto the curl sources
-# FIXME: This is about the only mirror that supports bootstrapping over a
-# broken version of curl. Unfortunately, we are hardcoding the directory used
-# to download the new version of curl.
-CURL_DOWNLOAD_URL=https://github.com/curl/curl/releases/download/curl-7_57_0
+# We had to switch to a debian mirror because we can't use TLS until we
+# bootstrap it with this curl + openssl
+CURL_DOWNLOAD_URL=http://deb.debian.org/debian/pool/main/c/curl
 
 GET_PIP_URL=https://bootstrap.pypa.io/get-pip.py
 
 AUTOCONF_DOWNLOAD_URL=http://ftp.gnu.org/gnu/autoconf
 AUTOMAKE_DOWNLOAD_URL=http://ftp.gnu.org/gnu/automake
 LIBTOOL_DOWNLOAD_URL=http://ftp.gnu.org/gnu/libtool
+
+GIT_DOWNLOAD_URL=https://github.com/git/git/archive
 
 
 function check_var {
@@ -113,7 +113,7 @@ function build_cpythons {
 function do_openssl_build {
     ./config no-ssl2 no-shared -fPIC --prefix=/usr/local/ssl > /dev/null
     make > /dev/null
-    make install > /dev/null
+    make install_sw > /dev/null
 }
 
 
@@ -135,7 +135,8 @@ function build_openssl {
     local openssl_sha256=$2
     check_var ${openssl_sha256}
     check_var ${OPENSSL_DOWNLOAD_URL}
-    curl -sSLO ${OPENSSL_DOWNLOAD_URL}/${openssl_fname}.tar.gz
+    # Can't use curl here because we don't have it yet
+    wget -q ${OPENSSL_DOWNLOAD_URL}/${openssl_fname}.tar.gz
     check_sha256sum ${openssl_fname}.tar.gz ${openssl_sha256}
     tar -xzf ${openssl_fname}.tar.gz
     (cd ${openssl_fname} && do_openssl_build)
@@ -143,8 +144,24 @@ function build_openssl {
 }
 
 
+function build_git {
+    local git_fname=$1
+    check_var ${git_fname}
+    local git_sha256=$2
+    check_var ${git_sha256}
+    check_var ${GIT_DOWNLOAD_URL}
+    curl -sSLO ${GIT_DOWNLOAD_URL}/v${git_fname}.tar.gz
+    check_sha256sum v${git_fname}.tar.gz ${git_sha256}
+    tar -xzf v${git_fname}.tar.gz
+    (cd git-${git_fname} && make install prefix=/usr/local LDFLAGS="-L/usr/local/ssl/lib -ldl" CFLAGS="-I/usr/local/ssl/include" > /dev/null)
+    rm -rf git-${git_fname} v${git_fname}.tar.gz
+}
+
+
 function do_curl_build {
-    LIBS=-ldl ./configure --with-ssl --disable-shared > /dev/null
+    # We do this shared to avoid obnoxious linker issues where git couldn't
+    # link properly. If anyone wants to make this build statically go for it.
+    LIBS=-ldl CFLAGS=-Wl,--exclude-libs,ALL ./configure --with-ssl --disable-static > /dev/null
     make > /dev/null
     make install > /dev/null
 }
@@ -156,11 +173,12 @@ function build_curl {
     local curl_sha256=$2
     check_var ${curl_sha256}
     check_var ${CURL_DOWNLOAD_URL}
-    curl -sSLO ${CURL_DOWNLOAD_URL}/${curl_fname}.tar.bz2
-    check_sha256sum ${curl_fname}.tar.bz2 ${curl_sha256}
-    tar -jxf ${curl_fname}.tar.bz2
-    (cd ${curl_fname} && do_curl_build)
-    rm -rf ${curl_fname} ${curl_fname}.tar.bz2
+    # Can't use curl here because we don't have it yet...we are building it.
+    wget -q ${CURL_DOWNLOAD_URL}/${curl_fname}.orig.tar.gz
+    check_sha256sum ${curl_fname}.orig.tar.gz ${curl_sha256}
+    tar -zxf ${curl_fname}.orig.tar.gz
+    (cd curl-* && do_curl_build)
+    rm -rf curl-*
 }
 
 
