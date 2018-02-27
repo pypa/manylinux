@@ -1,4 +1,5 @@
 Cython
+aiocassandra
 awesome-slugify
 bitarray
 blinker
@@ -42,6 +43,7 @@ geoip2
 gevent
 gnippy
 google-api-python-client
+google-cloud
 greenlet
 grequests
 gunicorn
@@ -137,6 +139,7 @@ suds-jurko
 tablib
 tabulate
 testinstances
+textrazor
 texttable
 thriftpy
 tldextract
