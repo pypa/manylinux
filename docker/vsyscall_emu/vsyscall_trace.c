@@ -107,11 +107,11 @@ int handle_vsyscall(pid_t pid) {
 		debug_printf("vdso address is %p\n", vdso);
 
 		if (regs.rip == VSYS_gettimeofday) {
-			regs.rip = vdso | VDSO_gettimeofday;
+			regs.rip = vdso + VDSO_gettimeofday;
 		} else if (regs.rip == VSYS_time) {
-			regs.rip = vdso | VDSO_time;
+			regs.rip = vdso + VDSO_time;
 		} else if (regs.rip == VSYS_getcpu) {
-			regs.rip = vdso | VDSO_getcpu;
+			regs.rip = vdso + VDSO_getcpu;
 		} else {
 			debug_printf("invalid vsyscall %x\n", regs.rip);
 			return 0;
@@ -211,9 +211,10 @@ int main(int argc, char *argv[]) {
 	/* The vDSO shows up as an object in our address space naemd
 	 * "linux-vdso.so.1" that's already been loaded. */
 	void *vdso = dlopen("linux-vdso.so.1", RTLD_LAZY | RTLD_NOLOAD);
-	VDSO_gettimeofday = (unsigned long)dlsym(vdso, "__vdso_gettimeofday") & 0xfff;
-	VDSO_time = (unsigned long)dlsym(vdso, "__vdso_time") & 0xfff;
-	VDSO_getcpu = (unsigned long)dlsym(vdso, "__vdso_getcpu") & 0xfff;
+	unsigned long my_vdso_base = vdso_address(getpid());
+	VDSO_gettimeofday = (unsigned long)dlsym(vdso, "__vdso_gettimeofday") - my_vdso_base;
+	VDSO_time = (unsigned long)dlsym(vdso, "__vdso_time") - my_vdso_base;
+	VDSO_getcpu = (unsigned long)dlsym(vdso, "__vdso_getcpu") - my_vdso_base;
 
 	while ((pid = waitpid(-1, &wstatus, 0)) != -1) {
 		if (WIFSTOPPED(wstatus)) {
