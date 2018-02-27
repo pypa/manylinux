@@ -25,6 +25,7 @@ matrix:
 script:
   - make -C docker/vsyscall_emu
   - docker build --rm -t quay.io/pypa/manylinux1_$PLATFORM:$TRAVIS_COMMIT -f docker/Dockerfile-$PLATFORM docker/
+  - docker/vsyscall_emu/test.sh quay.io/pypa/manylinux1_$PLATFORM:$TRAVIS_COMMIT
 
 
 deploy:

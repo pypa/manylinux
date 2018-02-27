@@ -1,13 +1,20 @@
+PLATFORM ?= $(shell uname -m)
+
 ifeq ($(PLATFORM),x86_64)
-  all: vsyscall_trace
+  TARGETS = vsyscall_trace vsyscall_trace_test
 else
-  all:
+  TARGETS =
 endif
+
+all: $(TARGETS)
 
 vsyscall_trace: vsyscall_trace.c
 	$(CC) -o $@ $< -ldl
 
+vsyscall_trace_test: vsyscall_trace.c
+	$(CC) -o $@ $< -ldl -DVSYSCALL_BASE=0xfffffffffe600000 -DDEBUG
+
 clean:
-	$(RM) -f vsyscall_trace
+	$(RM) $(TARGETS)
 
 .PHONY: clean

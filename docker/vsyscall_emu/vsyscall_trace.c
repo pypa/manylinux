@@ -41,11 +41,16 @@
 
 /* These are ABI constants: see arch/x86/include/uapi/asm/vsyscall.h
  * in the kernel source (probably installed on your system as
- * <asm/vsyscall.h>). They start at VSYSCALL_ADDR, and
- * increase by 1024 for each call. */
-const unsigned long VSYS_gettimeofday = 0xffffffffff600000,
-                    VSYS_time = 0xffffffffff600400,
-                    VSYS_getcpu = 0xffffffffff600800;
+ * <asm/vsyscall.h> - we don't directly use this header so that this
+ * program continues to compile when it is removed). They start at
+ * VSYSCALL_ADDR, and increase by 1024 for each call. */
+
+#ifndef VSYSCALL_BASE
+#define VSYSCALL_BASE 0xffffffffff600000
+#endif
+const unsigned long VSYS_gettimeofday = VSYSCALL_BASE + 0,
+                    VSYS_time = VSYSCALL_BASE + 0x400,
+                    VSYS_getcpu = VSYSCALL_BASE + 0x800;
 
 /* The vDSO is an area of memory that looks like a normal relocatable
  * dynamic library, magically placed in your address space by the
@@ -91,13 +96,15 @@ unsigned long vdso_address(pid_t pid) {
 int handle_vsyscall(pid_t pid) {
 	struct user_regs_struct regs;
 	ptrace(PTRACE_GETREGS, pid, 0, &regs);
-	if ((regs.rip & 0xfffffffffffff0ff) == 0xffffffffff600000) {
+	debug_printf("got a segfault at %p\n", regs.rip);
+	if ((regs.rip & 0xfffffffffffff0ff) == VSYSCALL_BASE) {
 		debug_printf("handling vsyscall for %d\n", pid);
 		unsigned long vdso = vdso_address(pid);
 		if (vdso_address == 0) {
 			debug_printf("couldn't find vdso\n");
 			return 0;
 		}
+		debug_printf("vdso address is %p\n", vdso);
 
 		if (regs.rip == VSYS_gettimeofday) {
 			regs.rip = vdso | VDSO_gettimeofday;
@@ -109,6 +116,7 @@ int handle_vsyscall(pid_t pid) {
 			debug_printf("invalid vsyscall %x\n", regs.rip);
 			return 0;
 		}
+		debug_printf("fixing up rip to %p\n", regs.rip);
 		ptrace(PTRACE_SETREGS, pid, 0, &regs);
 		return 1;
 	}
