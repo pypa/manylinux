@@ -147,9 +147,7 @@ ln -s $PY36_BIN/auditwheel /usr/local/bin/auditwheel
 yum -y erase \
     avahi \
     bitstream-vera-fonts \
-    expat-devel \
     freetype \
-    gettext \
     gtk2 \
     hicolor-icon-theme \
     libX11 \
