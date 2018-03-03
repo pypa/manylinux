@@ -28,6 +28,9 @@ sed -i 's/#\(baseurl.*\)mirror.centos.org\/centos\/$releasever/\1vault.centos.or
 # Get build utilities
 source $MY_DIR/build_utils.sh
 
+# See https://unix.stackexchange.com/questions/41784/can-yum-express-a-preference-for-x86-64-over-i386-packages
+echo "multilib_policy=best" >> /etc/yum.conf
+
 # https://hub.docker.com/_/centos/
 # "Additionally, images with minor version tags that correspond to install
 # media are also offered. These images DO NOT recieve updates as they are
