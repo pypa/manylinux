@@ -103,8 +103,7 @@ curl -fsSLO https://sqlite.org/2017/$SQLITE_AUTOCONF_VERSION.tar.gz
 check_sha256sum $SQLITE_AUTOCONF_VERSION.tar.gz $SQLITE_AUTOCONF_HASH
 tar xfz $SQLITE_AUTOCONF_VERSION.tar.gz
 cd $SQLITE_AUTOCONF_VERSION
-./configure
-make install
+do_standard_install
 cd ..
 rm -rf $SQLITE_AUTOCONF_VERSION*
 
@@ -137,7 +136,7 @@ rm -rf /usr/local/ssl
 curl -fsSL -o patchelf.tar.gz https://github.com/NixOS/patchelf/archive/$PATCHELF_VERSION.tar.gz
 check_sha256sum patchelf.tar.gz $PATCHELF_HASH
 tar -xzf patchelf.tar.gz
-(cd patchelf-$PATCHELF_VERSION && ./bootstrap.sh && ./configure && make && make install)
+(cd patchelf-$PATCHELF_VERSION && ./bootstrap.sh && do_standard_install)
 rm -rf patchelf.tar.gz patchelf-$PATCHELF_VERSION
 
 ln -s $PY36_BIN/auditwheel /usr/local/bin/auditwheel
