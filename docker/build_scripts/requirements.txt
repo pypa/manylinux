@@ -6,6 +6,6 @@ pip==9.0.1 \
 wheel==0.30.0 \
     --hash=sha256:e721e53864f084f956f40f96124a74da0631ac13fbbd1ba99e8e2b5e9cafdf64 \
     --hash=sha256:9515fe0a94e823fd90b08d22de45d7bde57c90edce705b22f5e1ecf7e1b653c8
-setuptools==38.5.2 \
-    --hash=sha256:a69c829c65d733197ab410accbc9f6817bfda52b092217a5e873850e536c6b6b \
-    --hash=sha256:8246123e984cadf687163bdcd1bb58eb325e2891b066e1f0224728a41c8d9064
+setuptools==38.7.0 \
+    --hash=sha256:e39b4b7c772dc94d3037c002db21ffc429e47059a133e060d5eaa9d613b466df \
+    --hash=sha256:5fd3dae560dd6c4f15b39ef2a7b2ca5f024f10d5b8defcdcdec909f7c9b10c0e
