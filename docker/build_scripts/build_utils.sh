@@ -136,7 +136,7 @@ function build_openssl {
     check_var ${openssl_sha256}
     check_var ${OPENSSL_DOWNLOAD_URL}
     # Can't use curl here because we don't have it yet
-    wget -q ${OPENSSL_DOWNLOAD_URL}/${openssl_fname}.tar.gz
+    wget ${OPENSSL_DOWNLOAD_URL}/${openssl_fname}.tar.gz
     check_sha256sum ${openssl_fname}.tar.gz ${openssl_sha256}
     tar -xzf ${openssl_fname}.tar.gz
     (cd ${openssl_fname} && do_openssl_build)
