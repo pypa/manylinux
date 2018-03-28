@@ -8,7 +8,9 @@ set -ex
 CPYTHON_VERSIONS="2.7.14 3.3.7 3.4.7 3.5.4 3.6.4"
 
 # openssl version to build, with expected sha256 hash of .tar.gz
-# archive
+# archive.
+# XXX Until travis issue #9391 is addressed. Make sure to update the version in .travis.yml.
+#     See also function build_openssl in build_utils.sh
 OPENSSL_ROOT=openssl-1.0.2o
 # Hash from https://www.openssl.org/source/openssl-1.0.2o.tar.gz.sha256
 # Matches hash at https://github.com/Homebrew/homebrew-core/blob/1766321103d9780f6e38d3ac7681b8fa42cdca86/Formula/openssl.rb#L11
