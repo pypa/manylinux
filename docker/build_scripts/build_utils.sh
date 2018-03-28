@@ -139,14 +139,9 @@ function build_openssl {
     # XXX Workaround Travis issue #9391 (FTP connections on GCE (a.k.a. `sudo`-required) infrastructure are unreliable)
     #     by downloading the archive outside of the container using https. See .travis.yml
     #
-    if [ -f ${MY_DIR}/${openssl_fname}.tar.gz ]; then
-        cp ${MY_DIR}/${openssl_fname}.tar.gz .
-    fi
-    if [ ! -f ${MY_DIR}/${openssl_fname}.tar.gz ]; then
-        # Can't use curl here because we don't have it yet
-        wget ${OPENSSL_DOWNLOAD_URL}/${openssl_fname}.tar.gz
-    fi
-
+    [ -f ${MY_DIR}/${openssl_fname}.tar.gz ] && cp ${MY_DIR}/${openssl_fname}.tar.gz .
+    # Can't use curl here because we don't have it yet
+    [ -f ${openssl_fname}.tar.gz ] || wget -q ${OPENSSL_DOWNLOAD_URL}/${openssl_fname}.tar.gz
     check_sha256sum ${openssl_fname}.tar.gz ${openssl_sha256}
     tar -xzf ${openssl_fname}.tar.gz
     (cd ${openssl_fname} && do_openssl_build)
