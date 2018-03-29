@@ -100,29 +100,28 @@ function do_openssl_build {
 }
 
 
-function _fetch_source {
-    local with=$1
-    check_var ${with}
-    local file=$2
+function check_required_source {
+    local file=$1
     check_var ${file}
-    local url=$3
-    check_var ${url}
-    local dir=$4/  # so you can get dir=/ by not passing a 4th arg
-    [ -d $dir ] || mkdir $dir
-    if [ -f ${dir}${file} ]; then
-        echo "${dir}${file} exists, skipping fetch"
-    elif [ "$with" = "wget" ]; then
-        wget -q -O ${dir}${file} ${url}/${file}
-    else
-        curl -fsSL -o ${dir}${file} ${url}/${file}
+    if [ ! -f $file ]; then
+        echo "Required source archive must be prefetched to docker/sources/ with prefetch.sh: $file"
+        return 1
     fi
 }
 
 
 function fetch_source {
-    # This is called outside the build context (e.g. in Travis) to prefetch
+    # This is called both inside and outside the build context (e.g. in Travis) to prefetch
     # source tarballs, where curl exists (and works)
-    _fetch_source curl "$@"
+    local file=$1
+    check_var ${file}
+    local url=$2
+    check_var ${url}
+    if [ -f ${file} ]; then
+        echo "${file} exists, skipping fetch"
+    else
+        curl -fsSL -o ${file} ${url}/${file}
+    fi
 }
 
 
@@ -143,9 +142,8 @@ function build_openssl {
     check_var ${openssl_fname}
     local openssl_sha256=$2
     check_var ${openssl_sha256}
-    check_var ${OPENSSL_DOWNLOAD_URL}
-    # Can't use curl here because we don't have it yet
-    _fetch_source wget ${openssl_fname}.tar.gz ${OPENSSL_DOWNLOAD_URL}
+    # Can't use curl here because we don't have it yet, OpenSSL must be prefetched
+    check_required_source ${openssl_fname}.tar.gz
     check_sha256sum ${openssl_fname}.tar.gz ${openssl_sha256}
     tar -xzf ${openssl_fname}.tar.gz
     (cd ${openssl_fname} && do_openssl_build)
@@ -182,10 +180,10 @@ function build_curl {
     local curl_sha256=$2
     check_var ${curl_sha256}
     check_var ${CURL_DOWNLOAD_URL}
-    # Can't use curl here because we don't have it yet...we are building it.
-    _fetch_source wget ${curl_fname}.orig.tar.gz ${CURL_DOWNLOAD_URL}
-    check_sha256sum ${curl_fname}.orig.tar.gz ${curl_sha256}
-    tar -zxf ${curl_fname}.orig.tar.gz
+    # Can't use curl here because we don't have it yet...we are building it. It must be prefetched
+    check_required_source ${curl_fname}.tar.gz
+    check_sha256sum ${curl_fname}.tar.gz ${curl_sha256}
+    tar -zxf ${curl_fname}.tar.gz
     (cd curl-* && do_curl_build)
     rm -rf curl-*
 }

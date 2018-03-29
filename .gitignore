@@ -57,5 +57,4 @@ docs/_build/
 target/
 
 # Prefetched source
-docker/sources/*
-!docker/sources/.empty
+docker/sources

@@ -7,9 +7,6 @@ CPYTHON_VERSIONS="2.7.14 3.3.7 3.4.7 3.5.4 3.6.4"
 # archive.
 OPENSSL_ROOT=openssl-1.0.2o
 OPENSSL_HASH=ec3f5c9714ba0fd45cb4e087301eb1336c317e0d20b575a125050470e8089e4d
-# XXX: the official https server at www.openssl.org cannot be reached
-# with the old versions of openssl and curl in Centos 5.11 hence this is
-# overridden in build_utils.sh to the ftp mirror:
 OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source
 
 # Update to slightly newer, verified Git commit:
@@ -17,12 +14,9 @@ OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source
 PATCHELF_VERSION=2a9cefd7d637d160d12dc7946393778fa8abbc58
 PATCHELF_HASH=12da4727f09be42ae0b54878e1b8e86d85cb7a5b595731cdc1a0a170c4873c6d
 
-CURL_ROOT=curl_7.52.1
-CURL_HASH=a8984e8b20880b621f61a62d95ff3c0763a3152093a9f9ce4287cfd614add6ae
-# We had to switch to a debian mirror because we can't use TLS until we
-# bootstrap it with this curl + openssl
-CURL_DOWNLOAD_URL=http://deb.debian.org/debian/pool/main/c/curl
-CURL_EXTENSION=.orig.tar.gz
+CURL_ROOT=curl-7.59.0
+CURL_HASH=099d9c32dc7b8958ca592597c9fabccdf4c08cfb7c114ff1afbbc4c6f13c9e9e
+CURL_DOWNLOAD_URL=https://curl.haxx.se/download
 
 AUTOCONF_ROOT=autoconf-2.69
 AUTOCONF_HASH=954bd69b391edc12d6a4a51a2dd1476543da5c6bbf05a95b59dc0dd6fd4c2969
