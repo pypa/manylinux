@@ -1,0 +1,2 @@
+This directory exists for prefetching source tarballs with Travis (but to avoid failing `COPY` in the Dockerfile if
+prefetching isn't used).

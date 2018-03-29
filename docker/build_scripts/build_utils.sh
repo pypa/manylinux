@@ -1,23 +1,6 @@
 #!/bin/bash
 # Helper utilities for build
 
-PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
-# XXX: the official https server at www.openssl.org cannot be reached
-# with the old versions of openssl and curl in Centos 5.11 hence the fallback
-# to the ftp mirror:
-OPENSSL_DOWNLOAD_URL=ftp://ftp.openssl.org/source
-# We had to switch to a debian mirror because we can't use TLS until we
-# bootstrap it with this curl + openssl
-CURL_DOWNLOAD_URL=http://deb.debian.org/debian/pool/main/c/curl
-
-GET_PIP_URL=https://bootstrap.pypa.io/get-pip.py
-
-AUTOCONF_DOWNLOAD_URL=http://ftp.gnu.org/gnu/autoconf
-AUTOMAKE_DOWNLOAD_URL=http://ftp.gnu.org/gnu/automake
-LIBTOOL_DOWNLOAD_URL=http://ftp.gnu.org/gnu/libtool
-
-GIT_DOWNLOAD_URL=https://github.com/git/git/archive
-
 
 function check_var {
     if [ -z "$1" ]; then
@@ -117,6 +100,32 @@ function do_openssl_build {
 }
 
 
+function _fetch_source {
+    local with=$1
+    check_var ${with}
+    local file=$2
+    check_var ${file}
+    local url=$3
+    check_var ${url}
+    local dir=$4/  # so you can get dir=/ by not passing a 4th arg
+    [ -d $dir ] || mkdir $dir
+    if [ -f ${dir}${file} ]; then
+        echo "${dir}${file} exists, skipping fetch"
+    elif [ "$with" = "wget" ]; then
+        wget -q -O ${dir}${file} ${url}/${file}
+    else
+        curl -fsSL -o ${dir}${file} ${url}/${file}
+    fi
+}
+
+
+function fetch_source {
+    # This is called outside the build context (e.g. in Travis) to prefetch
+    # source tarballs, where curl exists (and works)
+    _fetch_source curl "$@"
+}
+
+
 function check_sha256sum {
     local fname=$1
     check_var ${fname}
@@ -135,13 +144,8 @@ function build_openssl {
     local openssl_sha256=$2
     check_var ${openssl_sha256}
     check_var ${OPENSSL_DOWNLOAD_URL}
-    #
-    # XXX Workaround Travis issue #9391 (FTP connections on GCE (a.k.a. `sudo`-required) infrastructure are unreliable)
-    #     by downloading the archive outside of the container using https. See .travis.yml
-    #
-    [ -f ${MY_DIR}/${openssl_fname}.tar.gz ] && cp ${MY_DIR}/${openssl_fname}.tar.gz .
     # Can't use curl here because we don't have it yet
-    [ -f ${openssl_fname}.tar.gz ] || wget -q ${OPENSSL_DOWNLOAD_URL}/${openssl_fname}.tar.gz
+    _fetch_source wget ${openssl_fname}.tar.gz ${OPENSSL_DOWNLOAD_URL}
     check_sha256sum ${openssl_fname}.tar.gz ${openssl_sha256}
     tar -xzf ${openssl_fname}.tar.gz
     (cd ${openssl_fname} && do_openssl_build)
@@ -155,7 +159,7 @@ function build_git {
     local git_sha256=$2
     check_var ${git_sha256}
     check_var ${GIT_DOWNLOAD_URL}
-    curl -sSLO ${GIT_DOWNLOAD_URL}/v${git_fname}.tar.gz
+    fetch_source v${git_fname}.tar.gz ${GIT_DOWNLOAD_URL}
     check_sha256sum v${git_fname}.tar.gz ${git_sha256}
     tar -xzf v${git_fname}.tar.gz
     (cd git-${git_fname} && make install prefix=/usr/local LDFLAGS="-L/usr/local/ssl/lib -ldl" CFLAGS="-I/usr/local/ssl/include" > /dev/null)
@@ -179,7 +183,7 @@ function build_curl {
     check_var ${curl_sha256}
     check_var ${CURL_DOWNLOAD_URL}
     # Can't use curl here because we don't have it yet...we are building it.
-    wget -q ${CURL_DOWNLOAD_URL}/${curl_fname}.orig.tar.gz
+    _fetch_source wget ${curl_fname}.orig.tar.gz ${CURL_DOWNLOAD_URL}
     check_sha256sum ${curl_fname}.orig.tar.gz ${curl_sha256}
     tar -zxf ${curl_fname}.orig.tar.gz
     (cd curl-* && do_curl_build)
@@ -200,7 +204,7 @@ function build_autoconf {
     local autoconf_sha256=$2
     check_var ${autoconf_sha256}
     check_var ${AUTOCONF_DOWNLOAD_URL}
-    curl -sSLO ${AUTOCONF_DOWNLOAD_URL}/${autoconf_fname}.tar.gz
+    fetch_source ${autoconf_fname}.tar.gz ${AUTOCONF_DOWNLOAD_URL}
     check_sha256sum ${autoconf_fname}.tar.gz ${autoconf_sha256}
     tar -zxf ${autoconf_fname}.tar.gz
     (cd ${autoconf_fname} && do_standard_install)
@@ -214,7 +218,7 @@ function build_automake {
     local automake_sha256=$2
     check_var ${automake_sha256}
     check_var ${AUTOMAKE_DOWNLOAD_URL}
-    curl -sSLO ${AUTOMAKE_DOWNLOAD_URL}/${automake_fname}.tar.gz
+    fetch_source ${automake_fname}.tar.gz ${AUTOMAKE_DOWNLOAD_URL}
     check_sha256sum ${automake_fname}.tar.gz ${automake_sha256}
     tar -zxf ${automake_fname}.tar.gz
     (cd ${automake_fname} && do_standard_install)
@@ -228,7 +232,7 @@ function build_libtool {
     local libtool_sha256=$2
     check_var ${libtool_sha256}
     check_var ${LIBTOOL_DOWNLOAD_URL}
-    curl -sSLO ${LIBTOOL_DOWNLOAD_URL}/${libtool_fname}.tar.gz
+    fetch_source ${libtool_fname}.tar.gz ${LIBTOOL_DOWNLOAD_URL}
     check_sha256sum ${libtool_fname}.tar.gz ${libtool_sha256}
     tar -zxf ${libtool_fname}.tar.gz
     (cd ${libtool_fname} && do_standard_install)

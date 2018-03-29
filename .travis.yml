@@ -23,8 +23,7 @@ matrix:
     - env: PLATFORM="x86_64"
 
 script:
-  # Workaround Travis issue #9391 (see build_scripts/build_utils.sh - function build_openssl)
-  - curl -fsS -o docker/build_scripts/openssl-1.0.2o.tar.gz https://www.openssl.org/source/openssl-1.0.2o.tar.gz
+  - bash ./docker/build_scripts/prefetch.sh docker/sources openssl curl
   - docker build --rm -t quay.io/pypa/manylinux1_$PLATFORM:$TRAVIS_COMMIT -f docker/Dockerfile-$PLATFORM docker/
 
 
