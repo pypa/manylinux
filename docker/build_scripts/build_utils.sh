@@ -2,13 +2,6 @@
 # Helper utilities for build
 
 PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
-# XXX: the official https server at www.openssl.org cannot be reached
-# with the old versions of openssl and curl in Centos 5.11 hence the fallback
-# to the ftp mirror:
-OPENSSL_DOWNLOAD_URL=ftp://ftp.openssl.org/source
-# We had to switch to a debian mirror because we can't use TLS until we
-# bootstrap it with this curl + openssl
-CURL_DOWNLOAD_URL=http://deb.debian.org/debian/pool/main/c/curl
 
 GET_PIP_URL=https://bootstrap.pypa.io/get-pip.py
 
@@ -134,14 +127,8 @@ function build_openssl {
     check_var ${openssl_fname}
     local openssl_sha256=$2
     check_var ${openssl_sha256}
-    check_var ${OPENSSL_DOWNLOAD_URL}
-    #
-    # XXX Workaround Travis issue #9391 (FTP connections on GCE (a.k.a. `sudo`-required) infrastructure are unreliable)
-    #     by downloading the archive outside of the container using https. See .travis.yml
-    #
-    [ -f ${MY_DIR}/${openssl_fname}.tar.gz ] && cp ${MY_DIR}/${openssl_fname}.tar.gz .
-    # Can't use curl here because we don't have it yet
-    [ -f ${openssl_fname}.tar.gz ] || wget -q ${OPENSSL_DOWNLOAD_URL}/${openssl_fname}.tar.gz
+    # Archive is downloaded outside the container (see .travis.yml)
+    cp ${MY_DIR}/${openssl_fname}.tar.gz .
     check_sha256sum ${openssl_fname}.tar.gz ${openssl_sha256}
     tar -xzf ${openssl_fname}.tar.gz
     (cd ${openssl_fname} && do_openssl_build)
@@ -177,11 +164,10 @@ function build_curl {
     check_var ${curl_fname}
     local curl_sha256=$2
     check_var ${curl_sha256}
-    check_var ${CURL_DOWNLOAD_URL}
-    # Can't use curl here because we don't have it yet...we are building it.
-    wget -q ${CURL_DOWNLOAD_URL}/${curl_fname}.orig.tar.gz
-    check_sha256sum ${curl_fname}.orig.tar.gz ${curl_sha256}
-    tar -zxf ${curl_fname}.orig.tar.gz
+    # Archive is downloaded outside the container (see .travis.yml)
+    cp ${MY_DIR}/${curl_fname}.tar.gz .
+    check_sha256sum ${curl_fname}.tar.gz ${curl_sha256}
+    tar -zxf ${curl_fname}.tar.gz
     (cd curl-* && do_curl_build)
     rm -rf curl-*
 }

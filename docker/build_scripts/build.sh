@@ -7,21 +7,16 @@ set -ex
 # Python versions to be installed in /opt/$VERSION_NO
 CPYTHON_VERSIONS="2.7.14 3.3.7 3.4.7 3.5.4 3.6.4"
 
-# openssl version to build, with expected sha256 hash of .tar.gz
-# archive.
-# XXX Until travis issue #9391 is addressed. Make sure to update the version in .travis.yml.
-#     See also function build_openssl in build_utils.sh
-OPENSSL_ROOT=openssl-1.0.2o
 # Hash from https://www.openssl.org/source/openssl-1.0.2o.tar.gz.sha256
 # Matches hash at https://github.com/Homebrew/homebrew-core/blob/1766321103d9780f6e38d3ac7681b8fa42cdca86/Formula/openssl.rb#L11
 OPENSSL_HASH=ec3f5c9714ba0fd45cb4e087301eb1336c317e0d20b575a125050470e8089e4d
+
 EPEL_RPM_HASH=0dcc89f9bf67a2a515bad64569b7a9615edc5e018f676a578d5fd0f17d3c81d4
 DEVTOOLS_HASH=a8ebeb4bed624700f727179e6ef771dafe47651131a00a78b342251415646acc
 # Update to slightly newer, verified Git commit:
 # https://github.com/NixOS/patchelf/commit/2a9cefd7d637d160d12dc7946393778fa8abbc58
 PATCHELF_VERSION=2a9cefd7d637d160d12dc7946393778fa8abbc58
 PATCHELF_HASH=12da4727f09be42ae0b54878e1b8e86d85cb7a5b595731cdc1a0a170c4873c6d
-CURL_ROOT=curl_7.52.1
 CURL_HASH=a8984e8b20880b621f61a62d95ff3c0763a3152093a9f9ce4287cfd614add6ae
 AUTOCONF_ROOT=autoconf-2.69
 AUTOCONF_HASH=954bd69b391edc12d6a4a51a2dd1476543da5c6bbf05a95b59dc0dd6fd4c2969
