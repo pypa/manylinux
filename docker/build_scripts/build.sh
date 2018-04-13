@@ -10,11 +10,10 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
 # Dependencies for compiling Python that we want to remove from
 # the final image after compiling Python
-# GPG installed to verify signatures on Python source tarballs.
 PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel"
 
-# Libraries that are allowed as part of the manylinux1 profile
-MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
+# Libraries that are allowed as part of the manylinux2010 profile
+MANYLINUX2010_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel mesa-libGL-devel libICE-devel libSM-devel"
 
 # Get build utilities
 source $MY_DIR/build_utils.sh
@@ -53,7 +52,6 @@ yum -y install bzip2 make patch unzip bison yasm diffutils \
     perl-devel \
     devtoolset-2-binutils devtoolset-2-gcc \
     devtoolset-2-gcc-c++ devtoolset-2-gcc-gfortran \
-    gpg \
     ${PYTHON_COMPILE_DEPS}
 
 # Build an OpenSSL for both curl and the Pythons. We'll delete this at the end.
@@ -148,9 +146,9 @@ hash yum
 yum -y erase wireless-tools gtk2 libX11 hicolor-icon-theme \
     avahi freetype bitstream-vera-fonts \
     expat-devel gettext \
-    ${PYTHON_COMPILE_DEPS}  > /dev/null 2>&1
-yum -y install ${MANYLINUX1_DEPS}
-yum -y clean all > /dev/null 2>&1
+    ${PYTHON_COMPILE_DEPS}
+yum -y install ${MANYLINUX2010_DEPS}
+yum -y clean all
 yum list installed
 # we don't need libpython*.a, and they're many megabytes
 find /opt/_internal -name '*.a' -print0 | xargs -0 rm -f
@@ -169,7 +167,7 @@ find /opt/_internal \
 for PYTHON in /opt/python/*/bin/python; do
     # Smoke test to make sure that our Pythons work, and do indeed detect as
     # being manylinux compatible:
-    $PYTHON $MY_DIR/manylinux1-check.py
+    $PYTHON $MY_DIR/manylinux-check.py
     # Make sure that SSL cert checking works
     $PYTHON $MY_DIR/ssl-check.py
 done
