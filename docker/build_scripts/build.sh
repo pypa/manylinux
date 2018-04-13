@@ -11,19 +11,10 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 # Dependencies for compiling Python that we want to remove from
 # the final image after compiling Python
 # GPG installed to verify signatures on Python source tarballs.
-PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel gpg"
+PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel"
 
 # Libraries that are allowed as part of the manylinux1 profile
 MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
-
-# Centos 5 is EOL and is no longer available from the usual mirrors, so switch
-# to http://vault.centos.org
-# From: https://github.com/rust-lang/rust/pull/41045
-# The location for version 5 was also removed, so now only the specific release
-# (5.11) can be referenced.
-sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf
-sed -i 's/mirrorlist/#mirrorlist/' /etc/yum.repos.d/*.repo
-sed -i 's/#\(baseurl.*\)mirror.centos.org\/centos\/$releasever/\1vault.centos.org\/5.11/' /etc/yum.repos.d/*.repo
 
 # Get build utilities
 source $MY_DIR/build_utils.sh
@@ -43,24 +34,26 @@ yum -y update
 
 # EPEL support
 yum -y install wget
-# https://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
-cp $MY_DIR/epel-release-5-4.noarch.rpm .
-check_sha256sum epel-release-5-4.noarch.rpm $EPEL_RPM_HASH
+# https://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+cp $MY_DIR/epel-release-6-8.noarch.rpm .
+check_sha256sum epel-release-6-8.noarch.rpm $EPEL_RPM_HASH
 
 # Dev toolset (for LLVM and other projects requiring C++11 support)
 wget -q http://people.centos.org/tru/devtools-2/devtools-2.repo
 check_sha256sum devtools-2.repo $DEVTOOLS_HASH
 mv devtools-2.repo /etc/yum.repos.d/devtools-2.repo
-rpm -Uvh --replacepkgs epel-release-5*.rpm
-rm -f epel-release-5*.rpm
+rpm -Uvh --replacepkgs epel-release-6*.rpm
+rm -f epel-release-6*.rpm
 
 # Development tools and libraries
 yum -y install bzip2 make patch unzip bison yasm diffutils \
     automake which file cmake28 \
     kernel-devel-`uname -r` \
     expat-devel gettext \
+    perl-devel \
     devtoolset-2-binutils devtoolset-2-gcc \
     devtoolset-2-gcc-c++ devtoolset-2-gcc-gfortran \
+    gpg \
     ${PYTHON_COMPILE_DEPS}
 
 # Build an OpenSSL for both curl and the Pythons. We'll delete this at the end.
@@ -130,6 +123,25 @@ tar -xzf patchelf.tar.gz
 rm -rf patchelf.tar.gz patchelf-$PATCHELF_VERSION
 
 ln -s $PY36_BIN/auditwheel /usr/local/bin/auditwheel
+
+# HACK: The newly compiled and installed curl messes with the system's
+# py2.6 installation, on which yum depends.  Work around it by
+# rewiring libcurl.so specifically for yum.  /usr/local/bin/ has higher
+# priority on the PATH than /usr/bin/
+cat <<'EOF' > /usr/local/bin/yum && chmod +x /usr/local/bin/yum
+#!/bin/bash
+if [ "x$(arch)" != xi686 ]; then
+  LD_PRELOAD=/usr/lib64/libcurl.so.4
+else
+  LD_PRELOAD=/usr/lib/libcurl.so.4 
+fi
+export LD_PRELOAD
+/usr/bin/yum "$@"
+EOF
+# the above might not shadow the real yum just yet, so call hash to be
+# sure:
+type yum
+hash yum
 
 # Clean up development headers and other unnecessary stuff for
 # final image

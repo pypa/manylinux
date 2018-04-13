@@ -1,5 +1,5 @@
-FROM phusion/centos-5-32
-MAINTAINER The ManyLinux project
+FROM i386/centos:6
+LABEL maintainer="The ManyLinux project"
 
 ENV LC_ALL=en_US.UTF-8
 ENV LANG=en_US.UTF-8
@@ -10,6 +10,8 @@ ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 
 COPY build_scripts /build_scripts
 COPY sources /
+COPY /build_scripts/linux32 /usr/bin/linux32
+RUN chmod +x /usr/bin/linux32
 RUN linux32 bash build_scripts/build.sh && rm -r build_scripts
 
 ENV SSL_CERT_FILE=/opt/_internal/certs.pem

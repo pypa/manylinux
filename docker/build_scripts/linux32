@@ -1,0 +1,50 @@
+#!/usr/bin/python
+"""
+Emulate linux32, i.e. setarch(8).
+"""
+import os
+import ctypes
+import sys
+
+# Retrieved from a 32-bit CentOS 6.9 installation's
+# /usr/include/sys/personality.h header.
+LINUX_32 = 0x0008
+
+# Grab libc from our process
+process_namespace = ctypes.CDLL(None, use_errno=True)
+# int personality(unsigned long persona);
+__syscall_personality = process_namespace.personality
+__syscall_personality.argtypes = [ctypes.c_ulong]
+__syscall_personality.restype = ctypes.c_int
+
+
+def personality(persona):
+    """
+    Wrap behavior of personality(2).
+    """
+    set_persona = __syscall_personality(persona)
+    if set_persona == -1:
+        errno = ctypes.get_errno()
+        OSError(errno, os.strerror(errno))
+
+    return set_persona
+
+
+personality(LINUX_32)
+
+argv = sys.argv[1:]
+if not argv:
+    os.execlp("/bin/sh", "-sh")
+elif argv[0] in ('-h', '--h', '-help', '--help'):
+    print("""Usage:
+linux32 [<program> [<argument>...]]
+
+Change the reported architecture to 32 bits.
+THIS IS JUST A STUB FOR BOOTSTRAPPING!
+Please install utils-linux-ng for the real executable.
+""")
+elif argv[0].startswith('-'):
+    print("linux32: Unknown option")
+    print("linux32: Try `linux32 --help' for more information.")
+else:
+    os.execvp(argv[0], argv)
