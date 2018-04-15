@@ -45,7 +45,9 @@ function do_cpython_build {
     if [ -e ${prefix}/bin/python3 ]; then
         ln -s python3 ${prefix}/bin/python
     fi
-    ${prefix}/bin/python get-pip.py
+    # HACK: pip v10 was released on 2018-04-14 and breaks this script.
+    # Use latest 9.x version instead.
+    ${prefix}/bin/python get-pip.py 'pip<10'
     if [ -e ${prefix}/bin/pip3 ] && [ ! -e ${prefix}/bin/pip ]; then
         ln -s pip3 ${prefix}/bin/pip
     fi
