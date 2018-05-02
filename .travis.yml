@@ -23,8 +23,7 @@ matrix:
     - env: PLATFORM="x86_64"
 
 script:
-  - bash ./docker/build_scripts/prefetch.sh openssl curl
-  - travis_wait 40 docker build --rm -t quay.io/pypa/manylinux2010_$PLATFORM:$TRAVIS_COMMIT -f docker/Dockerfile-$PLATFORM docker/
+  - PLATFORM=$(uname -m) TRAVIS_COMMIT=$TRAVIS_COMMIT travis_wait 40 ./build.sh
 
 
 deploy:
