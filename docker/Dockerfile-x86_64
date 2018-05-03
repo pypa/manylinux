@@ -1,5 +1,5 @@
 # See docker/glibc/
-FROM pypa/manylinux2010_centos-6.9-no-vsyscall
+FROM quay.io/pypa/manylinux2010_centos-6.9-no-vsyscall
 LABEL maintainer="The ManyLinux project"
 
 ENV LC_ALL en_US.UTF-8
