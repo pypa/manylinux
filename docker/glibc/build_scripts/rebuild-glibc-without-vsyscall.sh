@@ -41,6 +41,12 @@ cp $MY_DIR/remove-vsyscall.patch $SRPM_TOPDIR/SOURCES
 (cd $SRPM_TOPDIR/SPECS && patch -p2 < $MY_DIR/glibc.spec.patch)
 
 # Build the RPMS
-rpmbuild -ba $SRPM_TOPDIR/SPECS/glibc.spec
+# In case of error, you can `docker commit` to inspect the build.log
+rpmbuild -ba $SRPM_TOPDIR/SPECS/glibc.spec >> /var/log/build.log
 
 mv $SRPM_TOPDIR/RPMS/* /rpms/
+
+# Show us what happened last before cleaning up the log
+echo ~~~~~~~~~~~~~~~~~~~~~ final lines of the build log ~~~~~~~~~~~~~~~~~~~~~ >/dev/null
+tail -n30 /var/log/build.log
+rm /var/log/build.log
