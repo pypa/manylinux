@@ -58,7 +58,7 @@ directory for source code.
 
 The images currently contain:
 
-- CPython 2.7, 3.3, 3.4, 3.5 and 3.6, installed in
+- CPython 2.7, 3.4, 3.5 and 3.6, installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
   e.g. ``/opt/python/cp27-cp27mu`` contains a wide-unicode CPython 2.7
