@@ -94,7 +94,7 @@ build_libtool $LIBTOOL_ROOT $LIBTOOL_HASH
 libtool --version
 
 # Install a more recent SQLite3
-curl -fsSLO https://sqlite.org/2017/$SQLITE_AUTOCONF_VERSION.tar.gz
+curl -fsSLO $SQLITE_AUTOCONF_DOWNLOAD_URL/$SQLITE_AUTOCONF_VERSION.tar.gz
 check_sha256sum $SQLITE_AUTOCONF_VERSION.tar.gz $SQLITE_AUTOCONF_HASH
 tar xfz $SQLITE_AUTOCONF_VERSION.tar.gz
 cd $SQLITE_AUTOCONF_VERSION
