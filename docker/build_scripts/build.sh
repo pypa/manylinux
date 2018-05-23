@@ -54,6 +54,9 @@ mv devtools-2.repo /etc/yum.repos.d/devtools-2.repo
 rpm -Uvh --replacepkgs epel-release-5*.rpm
 rm -f epel-release-5*.rpm
 
+# from now on, we shall only use curl to retrieve files
+yum -y erase wget
+
 # Development tools and libraries
 yum -y install \
     automake \
