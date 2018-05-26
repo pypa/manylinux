@@ -168,13 +168,6 @@ find /opt/_internal -name '*.a' -print0 | xargs -0 rm -f
 find /opt/_internal -type f -print0 \
     | xargs -0 -n1 strip --strip-unneeded 2>/dev/null || true
 
-# We do not need the Python test suites, or indeed the precompiled .pyc and
-# .pyo files. Partially cribbed from:
-#    https://github.com/docker-library/python/blob/master/3.4/slim/Dockerfile
-find /opt/_internal -depth \
-     \( -type d -a -name test -o -name tests \) \
-  -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) | xargs rm -rf
-
 for PYTHON in /opt/python/*/bin/python; do
     # Smoke test to make sure that our Pythons work, and do indeed detect as
     # being manylinux compatible:
@@ -182,6 +175,13 @@ for PYTHON in /opt/python/*/bin/python; do
     # Make sure that SSL cert checking works
     $PYTHON $MY_DIR/ssl-check.py
 done
+
+# We do not need the Python test suites, or indeed the precompiled .pyc and
+# .pyo files. Partially cribbed from:
+#    https://github.com/docker-library/python/blob/master/3.4/slim/Dockerfile
+find /opt/_internal -depth \
+     \( -type d -a -name test -o -name tests \) \
+  -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) | xargs rm -rf
 
 # Fix libc headers to remain compatible with C99 compilers.
 find /usr/include/ -type f -exec sed -i 's/\bextern _*inline_*\b/extern __inline __attribute__ ((__gnu_inline__))/g' {} +
