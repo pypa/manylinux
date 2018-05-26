@@ -86,10 +86,6 @@ hash -r
 curl --version
 curl-config --features
 
-# Install a git we link against OpenSSL so that we can use TLS 1.2
-build_git $GIT_ROOT $GIT_HASH
-git version
-
 # Install newest autoconf
 build_autoconf $AUTOCONF_ROOT $AUTOCONF_HASH
 autoconf --version
@@ -102,6 +98,45 @@ automake --version
 build_libtool $LIBTOOL_ROOT $LIBTOOL_HASH
 libtool --version
 
+# Install patchelf (latest with unreleased bug fixes)
+curl -fsSL -o patchelf.tar.gz https://github.com/NixOS/patchelf/archive/$PATCHELF_VERSION.tar.gz
+check_sha256sum patchelf.tar.gz $PATCHELF_HASH
+tar -xzf patchelf.tar.gz
+(cd patchelf-$PATCHELF_VERSION && ./bootstrap.sh && do_standard_install)
+rm -rf patchelf.tar.gz patchelf-$PATCHELF_VERSION
+
+# We strip curl now because stripping after patchelf breaks it
+strip --strip-unneeded /opt/_internal/_vendor/lib/libcurl.so.4
+strip --strip-unneeded /usr/local/bin/curl
+
+# Let's patch curl & openssl:
+CHECKSUM=$(sha256sum /opt/_internal/_vendor/lib/libcrypto.so.1.0.0)
+CHECKSUM=${CHECKSUM:0:8}
+patchelf --set-soname /opt/_internal/_vendor/lib/libcrypto.so.1.0.0-${CHECKSUM} /opt/_internal/_vendor/lib/libcrypto.so.1.0.0
+mv /opt/_internal/_vendor/lib/libcrypto.so.1.0.0 /opt/_internal/_vendor/lib/libcrypto.so.1.0.0-${CHECKSUM}
+ln -sf libcrypto.so.1.0.0-${CHECKSUM} /opt/_internal/_vendor/lib/libcrypto.so
+patchelf --replace-needed libcrypto.so.1.0.0 /opt/_internal/_vendor/lib/libcrypto.so.1.0.0-${CHECKSUM} /opt/_internal/_vendor/lib/libssl.so.1.0.0
+patchelf --replace-needed libcrypto.so.1.0.0 /opt/_internal/_vendor/lib/libcrypto.so.1.0.0-${CHECKSUM} /opt/_internal/_vendor/lib/libcurl.so.4
+patchelf --replace-needed libcrypto.so.1.0.0 /opt/_internal/_vendor/lib/libcrypto.so.1.0.0-${CHECKSUM} /usr/local/bin/curl
+
+CHECKSUM=$(sha256sum /opt/_internal/_vendor/lib/libssl.so.1.0.0)
+CHECKSUM=${CHECKSUM:0:8}
+patchelf --set-soname /opt/_internal/_vendor/lib/libssl.so.1.0.0-${CHECKSUM} /opt/_internal/_vendor/lib/libssl.so.1.0.0
+mv /opt/_internal/_vendor/lib/libssl.so.1.0.0 /opt/_internal/_vendor/lib/libssl.so.1.0.0-${CHECKSUM}
+ln -sf libssl.so.1.0.0-${CHECKSUM} /opt/_internal/_vendor/lib/libssl.so
+patchelf --replace-needed libssl.so.1.0.0 /opt/_internal/_vendor/lib/libssl.so.1.0.0-${CHECKSUM} /opt/_internal/_vendor/lib/libcurl.so.4
+patchelf --replace-needed libssl.so.1.0.0 /opt/_internal/_vendor/lib/libssl.so.1.0.0-${CHECKSUM} /usr/local/bin/curl
+
+CHECKSUM=$(sha256sum /opt/_internal/_vendor/lib/libcurl.so.4)
+CHECKSUM=${CHECKSUM:0:8}
+patchelf --set-soname /opt/_internal/_vendor/lib/libcurl.so.4-${CHECKSUM} /opt/_internal/_vendor/lib/libcurl.so.4
+mv /opt/_internal/_vendor/lib/libcurl.so.4 /opt/_internal/_vendor/lib/libcurl.so.4-${CHECKSUM}
+patchelf --replace-needed libcurl.so.4 /opt/_internal/_vendor/lib/libcurl.so.4-${CHECKSUM} /usr/local/bin/curl
+
+# Install a git we link against OpenSSL so that we can use TLS 1.2
+build_git $GIT_ROOT $GIT_HASH
+git version
+
 # Install a more recent SQLite3
 curl -fsSLO $SQLITE_AUTOCONF_DOWNLOAD_URL/$SQLITE_AUTOCONF_VERSION.tar.gz
 check_sha256sum $SQLITE_AUTOCONF_VERSION.tar.gz $SQLITE_AUTOCONF_HASH
@@ -110,11 +145,14 @@ cd $SQLITE_AUTOCONF_VERSION
 do_standard_install
 cd ..
 rm -rf $SQLITE_AUTOCONF_VERSION*
+rm -f /usr/local/lib/libsqlite3.a
+
+# Create a symbolic link for python to find openssl
+ln -s /opt/_internal/_vendor /usr/local/ssl
 
 # Compile the latest Python releases.
 # (In order to have a proper SSL module, Python is compiled
-# against a recent openssl [see env vars above], which is linked
-# statically.
+# against a recent openssl [see env vars above])
 mkdir -p /opt/python
 build_cpythons $CPYTHON_VERSIONS
 
@@ -134,14 +172,8 @@ ln -s $($PY36_BIN/python -c 'import certifi; print(certifi.where())') \
 export SSL_CERT_FILE=/opt/_internal/certs.pem
 
 # Now we can delete our built OpenSSL headers/static libs since we've linked everything we need
-rm -rf /usr/local/ssl
-
-# Install patchelf (latest with unreleased bug fixes)
-curl -fsSL -o patchelf.tar.gz https://github.com/NixOS/patchelf/archive/$PATCHELF_VERSION.tar.gz
-check_sha256sum patchelf.tar.gz $PATCHELF_HASH
-tar -xzf patchelf.tar.gz
-(cd patchelf-$PATCHELF_VERSION && ./bootstrap.sh && do_standard_install)
-rm -rf patchelf.tar.gz patchelf-$PATCHELF_VERSION
+unlink /usr/local/ssl
+find /opt/_internal/_vendor -mindepth 1 -maxdepth 1 -not -path '/opt/_internal/_vendor/lib*' | xargs rm -rf
 
 ln -s $PY36_BIN/auditwheel /usr/local/bin/auditwheel
 
@@ -164,9 +196,17 @@ yum list installed
 find /opt/_internal -name '*.a' -print0 | xargs -0 rm -f
 
 # Strip what we can -- and ignore errors, because this just attempts to strip
-# *everything*, including non-ELF files:
-find /opt/_internal -type f -print0 \
+# *everything*, including non-ELF files.
+# We ignore curl which was stripped before patching it with patchelf
+find /opt/_internal -type f -not -name 'libcurl.so*' -print0 \
     | xargs -0 -n1 strip --strip-unneeded 2>/dev/null || true
+find /usr/local -type f -not -name 'curl' -print0 \
+    | xargs -0 -n1 strip --strip-unneeded 2>/dev/null || true
+
+# Make sure curl is still working after stripping, patchelf can break things
+# libcurl is in exceptions for stripping and this will help catch errors if openssl gets broken after an update
+curl -fsSLO $GET_PIP_URL
+rm -f get-pip.py
 
 for PYTHON in /opt/python/*/bin/python; do
     # Smoke test to make sure that our Pythons work, and do indeed detect as
