@@ -11,7 +11,7 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 # Dependencies for compiling Python that we want to remove from
 # the final image after compiling Python
 # GPG installed to verify signatures on Python source tarballs.
-PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel gpg libffi-devel"
+PYTHON_COMPILE_DEPS="expat-devel gettext tcl-devel libtermcap-devel zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel gpg libffi-devel"
 
 # Libraries that are allowed as part of the manylinux1 profile
 MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
@@ -68,8 +68,6 @@ yum -y install \
     devtoolset-2-gcc-c++ \
     devtoolset-2-gcc-gfortran \
     diffutils \
-    expat-devel \
-    gettext \
     kernel-devel-`uname -r` \
     file \
     make \
