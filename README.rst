@@ -58,7 +58,7 @@ directory for source code.
 
 The images currently contain:
 
-- CPython 2.7, 3.4, 3.5 and 3.6, installed in
+- CPython 2.7, 3.4, 3.5, 3.6 and 3.7, installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
   e.g. ``/opt/python/cp27-cp27mu`` contains a wide-unicode CPython 2.7
@@ -99,16 +99,18 @@ $ PLATFORM=$(uname -m) TRAVIS_COMMIT=latest ./build.sh
 
 Example
 -------
+
 An example project which builds 32- and 64-bit wheels for each Python interpreter
 version can be found here: https://github.com/pypa/python-manylinux-demo.
 
 This demonstrates how to use these docker images in conjunction with auditwheel
 to build manylinux-compatible wheels using the free `travis ci <https://travis-ci.org/>`_
-continuous integration service. 
+continuous integration service.
 
-(NB: for the 32-bit images running on a 64-bit host machine, it's necessary to run 
+(NB: for the 32-bit images running on a 64-bit host machine, it's necessary to run
 everything under the command line program `linux32`, which changes reported architecture
-in new program environment. See `this example invocation <https://github.com/pypa/python-manylinux-demo/blob/master/.travis.yml#L14>`_)
+in new program environment. See `this example invocation
+<https://github.com/pypa/python-manylinux-demo/blob/master/.travis.yml#L14>`_)
 
 The PEP itself
 --------------

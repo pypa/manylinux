@@ -60,6 +60,7 @@ yum -y install \
     gettext \
     file \
     kernel-devel-`uname -r` \
+    libffi-devel \
     make \
     patch \
     perl-devel \
