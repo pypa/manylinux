@@ -31,3 +31,4 @@ deploy:
   script: docker/deploy.sh
   on:
     branch: master
+    repo: pypa/manylinux
