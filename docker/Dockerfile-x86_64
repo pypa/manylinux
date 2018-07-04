@@ -1,4 +1,4 @@
-FROM centos:5.11
+FROM centos:5
 MAINTAINER The ManyLinux project
 
 ENV LC_ALL en_US.UTF-8
