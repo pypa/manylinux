@@ -19,6 +19,7 @@ contextlib2
 contexttimer
 coverage
 datadog
+ddtrace
 Django
 django-assets
 django-redis
