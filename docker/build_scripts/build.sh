@@ -11,10 +11,19 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 # Dependencies for compiling Python that we want to remove from
 # the final image after compiling Python
 # GPG installed to verify signatures on Python source tarballs.
-PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel gpg libffi-devel"
+PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel \
+                     readline-devel tk-devel gdbm-devel db4-devel libpcap-devel\
+                     xz-devel atlas-devel libev-devel libev snappy-devel
+                     python-imaging openjpeg-devel freetype-devel libpng-devel \
+                     libffi-devel python-lxml postgresql95-libs \
+                     postgresql95-devel lapack-devel python \
+                     python-devel python-setuptools pcre pcre-devel \
+                     pandoc"
 
 # Libraries that are allowed as part of the manylinux1 profile
-MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
+MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel \
+                 libXext-devel libXrender-devel mesa-libGL-devel \
+                 libICE-devel libSM-devel ncurses-devel"
 
 # Centos 5 is EOL and is no longer available from the usual mirrors, so switch
 # to http://vault.centos.org
@@ -53,6 +62,13 @@ check_sha256sum devtools-2.repo $DEVTOOLS_HASH
 mv devtools-2.repo /etc/yum.repos.d/devtools-2.repo
 rpm -Uvh --replacepkgs epel-release-5*.rpm
 rm -f epel-release-5*.rpm
+
+# Setup postgresql repo
+sed -r -i 's/\[(base|update)\]/[\1]\nexclude=postgresql*\n/g' /etc/yum.repos.d/CentOS-Base.repo
+curl -SLO https://download.postgresql.org/pub/repos/yum/9.5/redhat/rhel-5-x86_64/pgdg-centos95-9.5-3.noarch.rpm
+rpm -Uvh --replacepkgs pgdg-centos*.rpm
+rm -f pgdg-centos*.rpm
+yum list postgres*
 
 # Development tools and libraries
 yum -y install \
@@ -132,15 +148,27 @@ ln -s $($PY36_BIN/python -c 'import certifi; print(certifi.where())') \
 # Dockerfiles:
 export SSL_CERT_FILE=/opt/_internal/certs.pem
 
-# Now we can delete our built OpenSSL headers/static libs since we've linked everything we need
-rm -rf /usr/local/ssl
-
 # Install patchelf (latest with unreleased bug fixes)
 curl -fsSL -o patchelf.tar.gz https://github.com/NixOS/patchelf/archive/$PATCHELF_VERSION.tar.gz
 check_sha256sum patchelf.tar.gz $PATCHELF_HASH
 tar -xzf patchelf.tar.gz
 (cd patchelf-$PATCHELF_VERSION && ./bootstrap.sh && do_standard_install)
 rm -rf patchelf.tar.gz patchelf-$PATCHELF_VERSION
+
+# Build/install latest libxml, libxsl, and libxmlsec1
+wget http://xmlsoft.org/sources/libxml2-2.9.4.tar.gz
+wget http://xmlsoft.org/sources/libxslt-1.1.29.tar.gz
+wget https://github.com/lsh123/xmlsec/archive/xmlsec-1_2_24.tar.gz -O xmlsec-1_2_24.tar.gz
+echo 'ae249165c173b1ff386ee8ad676815f5  libxml2-2.9.4.tar.gz' > md5sums
+echo 'a129d3c44c022de3b9dcf6d6f288d72e  libxslt-1.1.29.tar.gz' >> md5sums
+echo 'bdb38e4d18fb49f991c3e7586a561c5a  xmlsec-1_2_24.tar.gz' >> md5sums
+md5sum -c md5sums
+tar -xzf libxml2-2.9.4.tar.gz
+tar -xzf libxslt-1.1.29.tar.gz
+tar -xzf xmlsec-1_2_24.tar.gz
+(cd libxml2-2.9.4 && sed -i "/seems to be moved/s/^/#/" ltmain.sh && ./configure --prefix=/usr --with-history --with-python=$PY36_BIN/python && make && make install)
+(cd libxslt-1.1.29 && sed -i "/seems to be moved/s/^/#/" ltmain.sh && ./configure --prefix=/usr --with-history && make && make install)
+(export ACLOCAL_PATH=/usr/share/aclocal && cd xmlsec-xmlsec-1_2_24 && ./autogen.sh --prefix=/usr && make && make install)
 
 ln -s $PY36_BIN/auditwheel /usr/local/bin/auditwheel
 
@@ -153,8 +181,7 @@ yum -y erase \
     gtk2 \
     hicolor-icon-theme \
     libX11 \
-    wireless-tools \
-    ${PYTHON_COMPILE_DEPS}  > /dev/null 2>&1
+    wireless-tools  > /dev/null 2>&1
 yum -y install ${MANYLINUX1_DEPS}
 yum -y clean all > /dev/null 2>&1
 yum list installed

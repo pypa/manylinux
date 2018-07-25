@@ -28,18 +28,13 @@ This repository hosts several manylinux-related things:
 Docker images
 -------------
 
-.. image:: https://travis-ci.org/pypa/manylinux.svg?branch=master
-   :target: https://travis-ci.org/pypa/manylinux
+We create Docker Images to be hosted on parsely/manylinux via DockerHub
 
-Building manylinux-compatible wheels is not trivial; as a general
-rule, binaries built on one Linux distro will only work on other Linux
-distros that are the same age or newer. Therefore, if we want to make
-binaries that run on most Linux distros, we have to use a very old
-distro -- CentOS 5.
+TravisCI should build and push the docker image to DockerHub
 
-Rather than forcing you to install CentOS 5 yourself, install Python,
-etc., we provide two `Docker <https://docker.com/>`_ images where we've
-done the work for you:
+dev-requirements
+----------------
+Update dev-requirements with the list of packages that we need wheels built for
 
 64-bit image (x86-64): ``quay.io/pypa/manylinux1_x86_64``
 
@@ -138,10 +133,3 @@ threads.
 
 
 Code of Conduct
-===============
-
-Everyone interacting in the manylinux project's codebases, issue
-trackers, chat rooms, and mailing lists is expected to follow the
-`PyPA Code of Conduct`_.
-
-.. _PyPA Code of Conduct: https://www.pypa.io/en/latest/code-of-conduct/

@@ -4,5 +4,5 @@
 set -ex
 
 docker/build_scripts/prefetch.sh openssl curl
-docker build --rm -t quay.io/pypa/manylinux1_$PLATFORM:$TRAVIS_COMMIT -f docker/Dockerfile-$PLATFORM docker/
+docker build --rm -t $REPO:$TRAVIS_COMMIT -f docker/Dockerfile-x86_64 docker/
 docker system prune -f

@@ -236,7 +236,6 @@ function build_automake {
     rm -rf ${automake_fname} ${automake_fname}.tar.gz
 }
 
-
 function build_libtool {
     local libtool_fname=$1
     check_var ${libtool_fname}
