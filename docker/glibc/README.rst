@@ -1,9 +1,9 @@
-centos-6.9-no-vsyscall
-======================
+centos-6-no-vsyscall
+====================
 
 *Summary*: Because of
 https://mail.python.org/pipermail/wheel-builders/2016-December/000239.html,
-this a CentOS 6.9 Docker image that rebuilds ``glibc`` without
+this a CentOS 6.10 Docker image that rebuilds ``glibc`` without
 *vsyscall* is necessary to reliably run ``manylinux2`` on 64-bit
 hosts.  This requires building the image on a system with
 ``vsyscall=emulate`` but allows the resulting container to run on
