@@ -5,8 +5,8 @@ CPYTHON_VERSIONS="2.7.15 3.4.9 3.5.6 3.6.6 3.7.0"
 
 # openssl version to build, with expected sha256 hash of .tar.gz
 # archive.
-OPENSSL_ROOT=openssl-1.0.2o
-OPENSSL_HASH=ec3f5c9714ba0fd45cb4e087301eb1336c317e0d20b575a125050470e8089e4d
+OPENSSL_ROOT=openssl-1.0.2p
+OPENSSL_HASH=50a98e07b1a89eb8f6a99477f262df71c6fa7bef77df4dc83025a2845c827d00
 OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source
 
 # Update to slightly newer, verified Git commit:
