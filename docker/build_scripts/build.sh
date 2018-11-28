@@ -76,6 +76,7 @@ build_openssl $OPENSSL_ROOT $OPENSSL_HASH
 
 # Install curl so we can have TLS 1.2 in this ancient container.
 build_curl $CURL_ROOT $CURL_HASH
+export PATH="/opt/curl/bin:$PATH"
 hash -r
 curl --version
 curl-config --features
@@ -149,7 +150,7 @@ yum -y erase \
     hicolor-icon-theme \
     libX11 \
     wireless-tools \
-    ${PYTHON_COMPILE_DEPS}  > /dev/null 2>&1
+    ${PYTHON_COMPILE_DEPS} # > /dev/null 2>&1
 yum -y install ${MANYLINUX1_DEPS}
 yum -y clean all > /dev/null 2>&1
 yum list installed

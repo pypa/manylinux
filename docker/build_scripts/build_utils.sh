@@ -170,7 +170,7 @@ function build_git {
     fetch_source v${git_fname}.tar.gz ${GIT_DOWNLOAD_URL}
     check_sha256sum v${git_fname}.tar.gz ${git_sha256}
     tar -xzf v${git_fname}.tar.gz
-    (cd git-${git_fname} && make install prefix=/usr/local LDFLAGS="-L/usr/local/ssl/lib -ldl" CFLAGS="-I/usr/local/ssl/include" > /dev/null)
+    (cd git-${git_fname} && make install prefix=/usr/local LDFLAGS="-L/opt/curl/lib -L/usr/local/ssl/lib -ldl" CFLAGS="-I/opt/curl/include -I/usr/local/ssl/include" > /dev/null)
     rm -rf git-${git_fname} v${git_fname}.tar.gz
 }
 
@@ -178,7 +178,7 @@ function build_git {
 function do_curl_build {
     # We do this shared to avoid obnoxious linker issues where git couldn't
     # link properly. If anyone wants to make this build statically go for it.
-    LIBS=-ldl CFLAGS=-Wl,--exclude-libs,ALL ./configure --with-ssl --disable-static > /dev/null
+    LIBS=-ldl CFLAGS=-Wl,--exclude-libs,ALL ./configure --with-ssl --disable-static --prefix=/opt/curl > /dev/null
     make > /dev/null
     make install > /dev/null
 }
