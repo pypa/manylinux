@@ -150,7 +150,9 @@ yum -y erase \
     hicolor-icon-theme \
     libX11 \
     wireless-tools \
-    ${PYTHON_COMPILE_DEPS} # > /dev/null 2>&1
+    ${PYTHON_COMPILE_DEPS/libffi-devel/}
+# Not uninstalling libffi-devel since it's failing to uninstall https://bugs.centos.org/view.php?id=10828
+
 yum -y install ${MANYLINUX1_DEPS}
 yum -y clean all > /dev/null 2>&1
 yum list installed
