@@ -194,7 +194,7 @@ function build_curl {
     check_required_source ${curl_fname}.tar.gz
     check_sha256sum ${curl_fname}.tar.gz ${curl_sha256}
     tar -zxf ${curl_fname}.tar.gz
-    (cd curl-* && do_curl_build)
+    (cd curl-*/ && do_curl_build)
     rm -rf curl-*
 }
 
