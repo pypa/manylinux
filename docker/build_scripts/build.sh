@@ -39,9 +39,7 @@ cp $MY_DIR/epel-release-6-8.noarch.rpm .
 check_sha256sum epel-release-6-8.noarch.rpm $EPEL_RPM_HASH
 
 # Dev toolset (for LLVM and other projects requiring C++11 support)
-wget -q http://people.centos.org/tru/devtools-2/devtools-2.repo
-check_sha256sum devtools-2.repo $DEVTOOLS_HASH
-mv devtools-2.repo /etc/yum.repos.d/devtools-2.repo
+yum -y install centos-release-scl
 rpm -Uvh --replacepkgs epel-release-6*.rpm
 rm -f epel-release-6*.rpm
 
@@ -54,10 +52,10 @@ yum -y install \
     bison \
     bzip2 \
     cmake28 \
-    devtoolset-2-binutils \
-    devtoolset-2-gcc \
-    devtoolset-2-gcc-c++ \
-    devtoolset-2-gcc-gfortran \
+    devtoolset-7-binutils \
+    devtoolset-7-gcc \
+    devtoolset-7-gcc-c++ \
+    devtoolset-7-gcc-gfortran \
     diffutils \
     expat-devel \
     gettext \
@@ -70,6 +68,8 @@ yum -y install \
     yasm \
     gpg \
     ${PYTHON_COMPILE_DEPS}
+
+scl enable devtoolset-7 bash
 
 # Build an OpenSSL for both curl and the Pythons. We'll delete this at the end.
 build_openssl $OPENSSL_ROOT $OPENSSL_HASH
