@@ -69,8 +69,6 @@ yum -y install \
     gpg \
     ${PYTHON_COMPILE_DEPS}
 
-scl enable devtoolset-7 bash
-
 # Build an OpenSSL for both curl and the Pythons. We'll delete this at the end.
 build_openssl $OPENSSL_ROOT $OPENSSL_HASH
 
