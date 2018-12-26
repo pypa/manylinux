@@ -173,7 +173,7 @@ find /opt/_internal -depth \
 for PYTHON in /opt/python/*/bin/python; do
     # Smoke test to make sure that our Pythons work, and do indeed detect as
     # being manylinux compatible:
-    $PYTHON $MY_DIR/manylinux1-check.py
+    $PYTHON $MY_DIR/manylinux-check.py
     # Make sure that SSL cert checking works
     $PYTHON $MY_DIR/ssl-check.py
 done
