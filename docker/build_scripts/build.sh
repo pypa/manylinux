@@ -13,8 +13,8 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 # GPG installed to verify signatures on Python source tarballs.
 PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel libffi-devel"
 
-# Libraries that are allowed as part of the manylinux1 profile
-MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
+# Libraries that are allowed as part of the manylinux2010 profile
+MANYLINUX2010_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
 
 # Get build utilities
 source $MY_DIR/build_utils.sh
@@ -151,7 +151,7 @@ yum -y erase \
     ${PYTHON_COMPILE_DEPS/libffi-devel/}
 # Not uninstalling libffi-devel since it's failing to uninstall https://bugs.centos.org/view.php?id=10828
 
-yum -y install ${MANYLINUX1_DEPS}
+yum -y install ${MANYLINUX2010_DEPS}
 yum -y clean all > /dev/null 2>&1
 yum list installed
 
