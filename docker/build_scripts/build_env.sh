@@ -1,12 +1,12 @@
 # source me
 
 PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
-CPYTHON_VERSIONS="2.7.15 3.4.8 3.5.5 3.6.5 3.7.0"
+CPYTHON_VERSIONS="2.7.15 3.4.9 3.5.6 3.6.8 3.7.2"
 
 # openssl version to build, with expected sha256 hash of .tar.gz
 # archive.
-OPENSSL_ROOT=openssl-1.0.2o
-OPENSSL_HASH=ec3f5c9714ba0fd45cb4e087301eb1336c317e0d20b575a125050470e8089e4d
+OPENSSL_ROOT=openssl-1.0.2q
+OPENSSL_HASH=5744cfcbcec2b1b48629f7354203bc1e5e9b5466998bbccc5b5fcde3b18eb684
 OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source
 
 # Update to slightly newer, verified Git commit:
@@ -14,8 +14,8 @@ OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source
 PATCHELF_VERSION=2a9cefd7d637d160d12dc7946393778fa8abbc58
 PATCHELF_HASH=12da4727f09be42ae0b54878e1b8e86d85cb7a5b595731cdc1a0a170c4873c6d
 
-CURL_ROOT=curl-7.60.0
-CURL_HASH=e9c37986337743f37fd14fe8737f246e97aec94b39d1b71e8a5973f72a9fc4f5
+CURL_ROOT=curl-7.61.1
+CURL_HASH=eaa812e9a871ea10dbe8e1d3f8f12a64a8e3e62aeab18cb23742e2f1727458ae
 CURL_DOWNLOAD_URL=https://curl.haxx.se/download
 
 AUTOCONF_ROOT=autoconf-2.69
@@ -32,8 +32,8 @@ SQLITE_AUTOCONF_VERSION=sqlite-autoconf-3230100
 SQLITE_AUTOCONF_HASH=92842b283e5e744eff5da29ed3c69391de7368fccc4d0ee6bf62490ce555ef25
 SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2018
 
-GIT_ROOT=2.17.0
-GIT_HASH=46f3a29c250313276ac747a3a221ca69dbc3218754f8db188841322cf7ab58d3
+GIT_ROOT=2.19.1
+GIT_HASH=ba2fed9d02e424b735e035c4f2b0bdb168ef0df7e35156b5051d900dc7247787
 GIT_DOWNLOAD_URL=https://github.com/git/git/archive
 
 GET_PIP_URL=https://bootstrap.pypa.io/get-pip.py

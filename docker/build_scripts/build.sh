@@ -45,6 +45,9 @@ rpm -Uvh --replacepkgs epel-release-6*.rpm
 rm -f epel-release-6*.rpm
 
 
+# from now on, we shall only use curl to retrieve files
+yum -y erase wget
+
 # Development tools and libraries
 yum -y install \
     automake \
