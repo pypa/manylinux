@@ -19,7 +19,6 @@ env:
 
 matrix:
   include:
-    - env: PLATFORM="i686"
     - env: PLATFORM="x86_64"
 
 script:

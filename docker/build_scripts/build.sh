@@ -31,22 +31,8 @@ echo "multilib_policy=best" >> /etc/yum.conf
 # Decided not to clean at this point: https://github.com/pypa/manylinux/pull/129
 yum -y update
 
-# EPEL support
-yum -y install wget
-# https://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-cp $MY_DIR/epel-release-6-8.noarch.rpm .
-check_sha256sum epel-release-6-8.noarch.rpm $EPEL_RPM_HASH
-
-# Dev toolset (for LLVM and other projects requiring C++11 support)
-wget -q http://people.centos.org/tru/devtools-2/devtools-2.repo
-check_sha256sum devtools-2.repo $DEVTOOLS_HASH
-mv devtools-2.repo /etc/yum.repos.d/devtools-2.repo
-rpm -Uvh --replacepkgs epel-release-6*.rpm
-rm -f epel-release-6*.rpm
-
-
-# from now on, we shall only use curl to retrieve files
-yum -y erase wget
+# Software collection and EPEL support
+yum -y install centos-release-scl https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
 
 # Development tools and libraries
 yum -y install \
@@ -54,10 +40,10 @@ yum -y install \
     bison \
     bzip2 \
     cmake28 \
-    devtoolset-2-binutils \
-    devtoolset-2-gcc \
-    devtoolset-2-gcc-c++ \
-    devtoolset-2-gcc-gfortran \
+    devtoolset-7-binutils \
+    devtoolset-7-gcc \
+    devtoolset-7-gcc-c++ \
+    devtoolset-7-gcc-gfortran \
     diffutils \
     expat-devel \
     gettext \
@@ -149,7 +135,7 @@ cat <<'EOF' > /usr/local/bin/yum && chmod +x /usr/local/bin/yum
 if [ "x$(arch)" != xi686 ]; then
   LD_PRELOAD=/usr/lib64/libcurl.so.4
 else
-  LD_PRELOAD=/usr/lib/libcurl.so.4 
+  LD_PRELOAD=/usr/lib/libcurl.so.4
 fi
 export LD_PRELOAD
 /usr/bin/yum "$@"
