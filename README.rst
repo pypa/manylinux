@@ -91,11 +91,9 @@ order to fetch the remaining sources.
 To build the Docker images, you will need to fetch the tarballs to
 ``docker/sources/`` prior to building. This can be done with the
 provided prefetch script, after which you can proceed with building.
-Please run the following command from the current (root) directory:
+Please run the following command from the current (root) directory::
 
-```bash
-$ PLATFORM=$(uname -m) TRAVIS_COMMIT=latest ./build.sh
-```
+    $ PLATFORM=$(uname -m) TRAVIS_COMMIT=latest ./build.sh
 
 Example
 -------
