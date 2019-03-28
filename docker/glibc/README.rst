@@ -4,7 +4,7 @@ centos-6-no-vsyscall
 *Summary*: Because of
 https://mail.python.org/pipermail/wheel-builders/2016-December/000239.html,
 this a CentOS 6.10 Docker image that rebuilds ``glibc`` without
-*vsyscall* is necessary to reliably run ``manylinux2`` on 64-bit
+*vsyscall* is necessary to reliably run ``manylinux2010`` on 64-bit
 hosts.  This requires building the image on a system with
 ``vsyscall=emulate`` but allows the resulting container to run on
 systems with ``vsyscall=none`` or ``vsyscall=emulate``.
@@ -48,7 +48,7 @@ without ``vsyscall=emulate`` [9]_ [10]_.  CentOS 6, however, is
 supported until 2020.  It is likely that more and more distributions
 will ship with ``CONFIG_LEGACY_VSYSCALL_NONE``; if managed CI services
 like Travis make this switch, developers will be unable to build
-``manylinux2`` wheels with our Docker image.
+``manylinux2010`` wheels with our Docker image.
 
 Fortunately, vsyscall is merely an optimization, and patches that
 remove it can be backported to glibc 2.12 and the library recompiled.
@@ -59,7 +59,7 @@ image are unaffected because:
 
 a) the kernel only maps vsyscall pages into processes;
 b) only glibc used the vsyscall interface directly, and it's
-   included in manylinux2's whitelist policy.
+   included in manylinux2010's whitelist policy.
 
 Developers who build this vsyscall-less Docker image itself, however,
 must do so on a system with ``vsyscall=emulate``.
