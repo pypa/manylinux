@@ -46,7 +46,7 @@ echo "multilib_policy=best" >> /etc/yum.conf
 # Decided not to clean at this point: https://github.com/pypa/manylinux/pull/129
 yum -y update
 
-# Software collection and EPEL support
+# Software collection (for devtoolset-7) and EPEL support (for cmake28 & yasm)
 yum -y install centos-release-scl https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
 
 # Development tools and libraries
