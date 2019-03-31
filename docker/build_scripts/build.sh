@@ -10,7 +10,7 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
 # Dependencies for compiling Python that we want to remove from
 # the final image after compiling Python
-PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel"
+PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel expat-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel"
 
 # Libraries that are allowed as part of the manylinux2010 profile
 # Extract from PEP: https://www.python.org/dev/peps/pep-0571/#the-manylinux2010-policy
@@ -60,7 +60,6 @@ yum -y install \
     devtoolset-7-gcc-c++ \
     devtoolset-7-gcc-gfortran \
     diffutils \
-    expat-devel \
     gettext \
     file \
     kernel-devel-`uname -r` \
@@ -166,7 +165,6 @@ hash yum
 yum -y erase \
     avahi \
     bitstream-vera-fonts \
-    expat-devel \
     freetype \
     gettext \
     gtk2 \
