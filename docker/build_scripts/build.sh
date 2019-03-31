@@ -13,6 +13,21 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel"
 
 # Libraries that are allowed as part of the manylinux2010 profile
+# Extract from PEP: https://www.python.org/dev/peps/pep-0571/#the-manylinux2010-policy
+# On RPM-based systems, they are provided by these packages:
+# Package:    Libraries
+# glib2:      libglib-2.0.so.0, libgthread-2.0.so.0, libgobject-2.0.so.0
+# glibc:      libresolv.so.2, libutil.so.1, libnsl.so.1, librt.so.1, libcrypt.so.1, libpthread.so.0, libdl.so.2, libm.so.6, libc.so.6
+# libICE:     libICE.so.6
+# libX11:     libX11.so.6
+# libXext:    libXext.so.6
+# libXrender: libXrender.so.1
+# libgcc:     libgcc_s.so.1
+# libstdc++:  libstdc++.so.6
+# mesa:       libGL.so.1
+#
+# PEP is missing the package for libSM.so.6 for RPM based system
+# Install development packages (except for libgcc which is provided by gcc install)
 MANYLINUX2010_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel mesa-libGL-devel libICE-devel libSM-devel"
 
 # Get build utilities
