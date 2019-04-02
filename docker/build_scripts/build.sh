@@ -46,7 +46,7 @@ echo "multilib_policy=best" >> /etc/yum.conf
 # Decided not to clean at this point: https://github.com/pypa/manylinux/pull/129
 yum -y update
 
-# Software collection (for devtoolset-7) and EPEL support (for cmake28 & yasm)
+# Software collection (for devtoolset-8) and EPEL support (for cmake28 & yasm)
 yum -y install centos-release-scl https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
 
 # Development tools and libraries
@@ -55,10 +55,10 @@ yum -y install \
     bison \
     bzip2 \
     cmake28 \
-    devtoolset-7-binutils \
-    devtoolset-7-gcc \
-    devtoolset-7-gcc-c++ \
-    devtoolset-7-gcc-gfortran \
+    devtoolset-8-binutils \
+    devtoolset-8-gcc \
+    devtoolset-8-gcc-c++ \
+    devtoolset-8-gcc-gfortran \
     diffutils \
     gettext \
     file \
