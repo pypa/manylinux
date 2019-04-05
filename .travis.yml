@@ -22,7 +22,7 @@ matrix:
     - env: PLATFORM="x86_64"
 
 script:
-  - PLATFORM=$PLATFORM TRAVIS_COMMIT=$TRAVIS_COMMIT travis_wait 60 ./build.sh
+  - PLATFORM=$PLATFORM TRAVIS_COMMIT=$TRAVIS_COMMIT ./build.sh
 
 
 deploy:
