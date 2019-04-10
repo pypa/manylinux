@@ -10,20 +10,25 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
 # Dependencies for compiling Python that we want to remove from
 # the final image after compiling Python
-# GPG installed to verify signatures on Python source tarballs.
-PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel gpg libffi-devel"
+PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel expat-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel"
 
-# Libraries that are allowed as part of the manylinux1 profile
-MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
-
-# Centos 5 is EOL and is no longer available from the usual mirrors, so switch
-# to http://vault.centos.org
-# From: https://github.com/rust-lang/rust/pull/41045
-# The location for version 5 was also removed, so now only the specific release
-# (5.11) can be referenced.
-sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf
-sed -i 's/mirrorlist/#mirrorlist/' /etc/yum.repos.d/*.repo
-sed -i 's/#\(baseurl.*\)mirror.centos.org\/centos\/$releasever/\1vault.centos.org\/5.11/' /etc/yum.repos.d/*.repo
+# Libraries that are allowed as part of the manylinux2010 profile
+# Extract from PEP: https://www.python.org/dev/peps/pep-0571/#the-manylinux2010-policy
+# On RPM-based systems, they are provided by these packages:
+# Package:    Libraries
+# glib2:      libglib-2.0.so.0, libgthread-2.0.so.0, libgobject-2.0.so.0
+# glibc:      libresolv.so.2, libutil.so.1, libnsl.so.1, librt.so.1, libcrypt.so.1, libpthread.so.0, libdl.so.2, libm.so.6, libc.so.6
+# libICE:     libICE.so.6
+# libX11:     libX11.so.6
+# libXext:    libXext.so.6
+# libXrender: libXrender.so.1
+# libgcc:     libgcc_s.so.1
+# libstdc++:  libstdc++.so.6
+# mesa:       libGL.so.1
+#
+# PEP is missing the package for libSM.so.6 for RPM based system
+# Install development packages (except for libgcc which is provided by gcc install)
+MANYLINUX2010_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel mesa-libGL-devel libICE-devel libSM-devel"
 
 # Get build utilities
 source $MY_DIR/build_utils.sh
@@ -41,21 +46,8 @@ echo "multilib_policy=best" >> /etc/yum.conf
 # Decided not to clean at this point: https://github.com/pypa/manylinux/pull/129
 yum -y update
 
-# EPEL support
-yum -y install wget
-# https://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
-cp $MY_DIR/epel-release-5-4.noarch.rpm .
-check_sha256sum epel-release-5-4.noarch.rpm $EPEL_RPM_HASH
-
-# Dev toolset (for LLVM and other projects requiring C++11 support)
-wget -q http://people.centos.org/tru/devtools-2/devtools-2.repo
-check_sha256sum devtools-2.repo $DEVTOOLS_HASH
-mv devtools-2.repo /etc/yum.repos.d/devtools-2.repo
-rpm -Uvh --replacepkgs epel-release-5*.rpm
-rm -f epel-release-5*.rpm
-
-# from now on, we shall only use curl to retrieve files
-yum -y erase wget
+# Software collection (for devtoolset-8) and EPEL support (for cmake28 & yasm)
+yum -y install centos-release-scl https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
 
 # Development tools and libraries
 yum -y install \
@@ -63,17 +55,18 @@ yum -y install \
     bison \
     bzip2 \
     cmake28 \
-    devtoolset-2-binutils \
-    devtoolset-2-gcc \
-    devtoolset-2-gcc-c++ \
-    devtoolset-2-gcc-gfortran \
+    devtoolset-8-binutils \
+    devtoolset-8-gcc \
+    devtoolset-8-gcc-c++ \
+    devtoolset-8-gcc-gfortran \
     diffutils \
-    expat-devel \
     gettext \
-    kernel-devel-`uname -r` \
     file \
+    kernel-devel-`uname -r` \
+    libffi-devel \
     make \
     patch \
+    perl-devel \
     unzip \
     which \
     yasm \
@@ -147,18 +140,39 @@ rm -rf patchelf.tar.gz patchelf-$PATCHELF_VERSION
 
 ln -s $PY36_BIN/auditwheel /usr/local/bin/auditwheel
 
+# HACK: The newly compiled and installed curl messes with the system's
+# py2.6 installation, on which yum depends.  Work around it by
+# rewiring libcurl.so specifically for yum.  /usr/local/bin/ has higher
+# priority on the PATH than /usr/bin/
+cat <<'EOF' > /usr/local/bin/yum && chmod +x /usr/local/bin/yum
+#!/bin/bash
+if [ "x$(arch)" != xi686 ]; then
+  LD_PRELOAD=/usr/lib64/libcurl.so.4
+else
+  LD_PRELOAD=/usr/lib/libcurl.so.4
+fi
+export LD_PRELOAD
+/usr/bin/yum "$@"
+EOF
+# the above might not shadow the real yum just yet, so call hash to be
+# sure:
+type yum
+hash yum
+
+
 # Clean up development headers and other unnecessary stuff for
 # final image
 yum -y erase \
     avahi \
     bitstream-vera-fonts \
     freetype \
+    gettext \
     gtk2 \
     hicolor-icon-theme \
     libX11 \
     wireless-tools \
-    ${PYTHON_COMPILE_DEPS}  > /dev/null 2>&1
-yum -y install ${MANYLINUX1_DEPS}
+    ${PYTHON_COMPILE_DEPS} > /dev/null 2>&1
+yum -y install ${MANYLINUX2010_DEPS}
 yum -y clean all > /dev/null 2>&1
 yum list installed
 
@@ -180,7 +194,7 @@ find /opt/_internal -depth \
 for PYTHON in /opt/python/*/bin/python; do
     # Smoke test to make sure that our Pythons work, and do indeed detect as
     # being manylinux compatible:
-    $PYTHON $MY_DIR/manylinux1-check.py
+    $PYTHON $MY_DIR/manylinux-check.py
     # Make sure that SSL cert checking works
     $PYTHON $MY_DIR/ssl-check.py
 done
