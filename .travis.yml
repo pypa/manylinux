@@ -30,5 +30,5 @@ deploy:
   provider: script
   script: docker/deploy.sh
   on:
-    branch: master
+    branch: manylinux1
     repo: pypa/manylinux
