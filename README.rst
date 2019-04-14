@@ -9,16 +9,23 @@ Older archives: https://groups.google.com/forum/#!forum/manylinux-discuss
 
 The goal of the manylinux project is to provide a convenient way to
 distribute binary Python extensions as wheels on Linux. This effort
-has produced `PEP 513 <https://www.python.org/dev/peps/pep-0513/>`_
-which defines the ``manylinux1_x86_64`` and ``manylinux1_i686`` platform
-tags.
+has produced `PEP 513 <https://www.python.org/dev/peps/pep-0513/>`_ which
+is further enhanced by `PEP 571 <https://www.python.org/dev/peps/pep-0571/>`_
+defining ``manylinux2010_x86_64`` platform tag.
+
+PEP 513 defined ``manylinux1_x86_64`` and ``manylinux1_i686`` platform tags
+and the wheels were built on Centos5. Centos5 reached End of Life (EOL) on 
+March 31st, 2017 and thus PEP 571 was proposed.
+
+Code and details regarding ``manylinux1`` can be found here: 
+`manylinux1 <https://github.com/pypa/manylinux/tree/manylinux1>`_.
 
 Wheel packages compliant with those tags can be uploaded to
 `PyPI <https://pypi.python.org>`_ (for instance with `twine
 <https://pypi.python.org/pypi/twine>`_) and can be installed with
-**pip 8.1 and later**.
+**pip 19.0 and later**.
 
-The manylinux1 tags allow projects to distribute wheels that are
+The manylinux2010 tags allow projects to distribute wheels that are
 automatically installed (and work!) on the vast majority of desktop
 and server Linux distributions.
 
@@ -35,21 +42,18 @@ Building manylinux-compatible wheels is not trivial; as a general
 rule, binaries built on one Linux distro will only work on other Linux
 distros that are the same age or newer. Therefore, if we want to make
 binaries that run on most Linux distros, we have to use a very old
-distro -- CentOS 5.
+distro -- CentOS 6.
 
-Rather than forcing you to install CentOS 5 yourself, install Python,
-etc., we provide two `Docker <https://docker.com/>`_ images where we've
+
+Rather than forcing you to install CentOS 6 yourself, install Python,
+etc., we provide a `Docker <https://docker.com/>`_ image where we've
 done the work for you:
 
-64-bit image (x86-64): ``quay.io/pypa/manylinux1_x86_64``
+64-bit image (x86-64): ``quay.io/pypa/manylinux2010_x86_64``
 
-.. image:: https://quay.io/repository/pypa/manylinux1_x86_64/status
-   :target: https://quay.io/repository/pypa/manylinux1_x86_64
+.. image:: https://quay.io/repository/pypa/manylinux2010_x86_64/status
+   :target: https://quay.io/repository/pypa/manylinux2010_x86_64
 
-32-bit image (i686): ``quay.io/pypa/manylinux1_i686``
-
-.. image:: https://quay.io/repository/pypa/manylinux1_i686/status
-   :target: https://quay.io/repository/pypa/manylinux1_i686
 
 These images are rebuilt using Travis-CI on every commit to this
 repository; see the
@@ -84,10 +88,6 @@ unheard of flag combinations (such as ``--with-pydebug`` (``d``) and
 Building Docker images
 ----------------------
 
-Due to the age of CentOS 5, its version of ``wget`` is unable to fetch
-OpenSSL and curl source tarballs. Modern versions of these are needed in
-order to fetch the remaining sources.
-
 To build the Docker images, you will need to fetch the tarballs to
 ``docker/sources/`` prior to building. This can be done with the
 provided prefetch script, after which you can proceed with building.
@@ -98,8 +98,10 @@ Please run the following command from the current (root) directory::
 Example
 -------
 
-An example project which builds 32- and 64-bit wheels for each Python interpreter
-version can be found here: https://github.com/pypa/python-manylinux-demo.
+An example project which builds 64-bit wheels for each Python interpreter
+version can be found here: https://github.com/pypa/python-manylinux-demo. The
+repository also contains demo to build 32-bit and 64-bit wheels with ``manylinux1``
+tags.
 
 This demonstrates how to use these docker images in conjunction with auditwheel
 to build manylinux-compatible wheels using the free `travis ci <https://travis-ci.org/>`_
@@ -122,10 +124,11 @@ where the PEP was originally written, so if for some reason you really
 want to see the full history of edits it went through, then this is
 the place to look.
 
+The proposal to upgrade ``manylinux1`` to ``manylinux2010`` after Centos5 
+reached EOL was discussed in `PEP 571 <https://www.python.org/dev/peps/pep-0571/>`_.
+
 This repo also has some analysis code that was used when putting
-together the original proposal in the ``policy-info/`` directory
-(might be useful someday in the future for writing a ``manylinux2``
-policy).
+together the original proposal in the ``policy-info/`` directory.
 
 If you want to read the full discussion that led to the original
 policy, then lots of that is here:
@@ -142,4 +145,4 @@ Everyone interacting in the manylinux project's codebases, issue
 trackers, chat rooms, and mailing lists is expected to follow the
 `PyPA Code of Conduct`_.
 
-.. _PyPA Code of Conduct: https://www.pypa.io/en/latest/code-of-conduct/
+.. _PyPA Code of Conduct: https://www.pypa.io/en/latest/code-of-conduct
