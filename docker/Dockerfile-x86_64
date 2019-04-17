@@ -2,6 +2,7 @@
 FROM quay.io/pypa/manylinux2010_centos-6-no-vsyscall
 LABEL maintainer="The ManyLinux project"
 
+ENV AUDITWHEEL_PLAT manylinux2010_x86_64
 ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
