@@ -11,7 +11,7 @@ The goal of the manylinux project is to provide a convenient way to
 distribute binary Python extensions as wheels on Linux. This effort
 has produced `PEP 513 <https://www.python.org/dev/peps/pep-0513/>`_ which
 is further enhanced by `PEP 571 <https://www.python.org/dev/peps/pep-0571/>`_
-defining ``manylinux2010_x86_64`` platform tag.
+defining ``manylinux2010_x86_64`` and ``manylinux2010_i686`` platform tags.
 
 PEP 513 defined ``manylinux1_x86_64`` and ``manylinux1_i686`` platform tags
 and the wheels were built on Centos5. Centos5 reached End of Life (EOL) on 
@@ -69,7 +69,7 @@ The images currently contain:
   build, and can be used to produce wheels named like
   ``<pkg>-<version>-cp27-cp27mu-<arch>.whl``.
 
-- Devel packages for all the libraries that PEP 513 allows you to
+- Devel packages for all the libraries that PEP 571 allows you to
   assume are present on the host system
 
 - The `auditwheel <https://pypi.python.org/pypi/auditwheel>`_ tool
