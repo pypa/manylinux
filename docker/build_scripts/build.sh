@@ -201,3 +201,16 @@ done
 
 # Fix libc headers to remain compatible with C99 compilers.
 find /usr/include/ -type f -exec sed -i 's/\bextern _*inline_*\b/extern __inline __attribute__ ((__gnu_inline__))/g' {} +
+
+# remove useless things that have been installed by devtoolset-8
+rm -rf /opt/rh/devtoolset-8/root/usr/share/man
+find /opt/rh/devtoolset-8/root/usr/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
+rm -rf /usr/share/backgrounds
+# if we updated glibc, we need to strip locales again...
+localedef --list-archive | grep -v -i ^en_US.utf8 | xargs localedef --delete-from-archive
+mv -f /usr/lib/locale/locale-archive /usr/lib/locale/locale-archive.tmpl
+build-locale-archive
+find /usr/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
+find /usr/local/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
+rm -rf /usr/local/share/man
+
