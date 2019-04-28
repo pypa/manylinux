@@ -167,7 +167,7 @@ function build_git {
     fetch_source v${git_fname}.tar.gz ${GIT_DOWNLOAD_URL}
     check_sha256sum v${git_fname}.tar.gz ${git_sha256}
     tar -xzf v${git_fname}.tar.gz
-    (cd git-${git_fname} && make install prefix=/usr/local LDFLAGS="-L/usr/local/ssl/lib -ldl" CFLAGS="-I/usr/local/ssl/include" > /dev/null)
+    (cd git-${git_fname} && make install prefix=/usr/local NO_GETTEXT=1 NO_TCLTK=1 LDFLAGS="-L/usr/local/ssl/lib -ldl" CFLAGS="-I/usr/local/ssl/include" > /dev/null)
     rm -rf git-${git_fname} v${git_fname}.tar.gz
 }
 
