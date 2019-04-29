@@ -105,6 +105,7 @@ cd $SQLITE_AUTOCONF_VERSION
 do_standard_install
 cd ..
 rm -rf $SQLITE_AUTOCONF_VERSION*
+rm /usr/local/lib/libsqlite3.a
 
 # Compile the latest Python releases.
 # (In order to have a proper SSL module, Python is compiled
