@@ -10,7 +10,7 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
 # Dependencies for compiling Python that we want to remove from
 # the final image after compiling Python
-PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel expat-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel"
+PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel expat-devel ncurses-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel"
 
 # Libraries that are allowed as part of the manylinux2010 profile
 # Extract from PEP: https://www.python.org/dev/peps/pep-0571/#the-manylinux2010-policy
@@ -66,24 +66,19 @@ yum -y install \
     libffi-devel \
     make \
     patch \
-    perl-devel \
     unzip \
     which \
     yasm \
     ${PYTHON_COMPILE_DEPS}
 
-# Build an OpenSSL for both curl and the Pythons. We'll delete this at the end.
-build_openssl $OPENSSL_ROOT $OPENSSL_HASH
-
-# Install curl so we can have TLS 1.2 in this ancient container.
-build_curl $CURL_ROOT $CURL_HASH
-hash -r
-curl --version
-curl-config --features
-
-# Install a git we link against OpenSSL so that we can use TLS 1.2
+# Install a git we link against system OpenSSL/Curl
+yum -y install openssl-devel keyutils-libs-devel krb5-devel libcom_err-devel libidn-devel curl-devel perl-devel
 build_git $GIT_ROOT $GIT_HASH
 git version
+yum -y erase openssl-devel keyutils-libs-devel krb5-devel libcom_err-devel libidn-devel curl-devel perl-devel
+
+# Build an OpenSSL for Pythons. We'll delete this at the end.
+build_openssl $OPENSSL_ROOT $OPENSSL_HASH
 
 # Install newest autoconf
 build_autoconf $AUTOCONF_ROOT $AUTOCONF_HASH
@@ -140,26 +135,6 @@ tar -xzf patchelf.tar.gz
 rm -rf patchelf.tar.gz patchelf-$PATCHELF_VERSION
 
 ln -s $PY36_BIN/auditwheel /usr/local/bin/auditwheel
-
-# HACK: The newly compiled and installed curl messes with the system's
-# py2.6 installation, on which yum depends.  Work around it by
-# rewiring libcurl.so specifically for yum.  /usr/local/bin/ has higher
-# priority on the PATH than /usr/bin/
-cat <<'EOF' > /usr/local/bin/yum && chmod +x /usr/local/bin/yum
-#!/bin/bash
-if [ "x$(arch)" != xi686 ]; then
-  LD_PRELOAD=/usr/lib64/libcurl.so.4
-else
-  LD_PRELOAD=/usr/lib/libcurl.so.4
-fi
-export LD_PRELOAD
-/usr/bin/yum "$@"
-EOF
-# the above might not shadow the real yum just yet, so call hash to be
-# sure:
-type yum
-hash yum
-
 
 # Clean up development headers and other unnecessary stuff for
 # final image

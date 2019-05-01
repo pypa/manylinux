@@ -11,7 +11,6 @@ ENV LD_LIBRARY_PATH /opt/rh/devtoolset-8/root/usr/lib64:/opt/rh/devtoolset-8/roo
 ENV PKG_CONFIG_PATH /usr/local/lib/pkgconfig
 
 COPY build_scripts /build_scripts
-COPY sources /
 RUN bash build_scripts/build.sh && rm -r build_scripts
 
 ENV SSL_CERT_FILE=/opt/_internal/certs.pem
