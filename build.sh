@@ -16,5 +16,4 @@ if [ $PLATFORM == x86_64 ] || [ "$1" == "glibc_only" ]; then
     docker build --rm -t quay.io/pypa/manylinux2010_centos-6-no-vsyscall --cache-from quay.io/pypa/manylinux2010_centos-6-no-vsyscall:latest --cache-from centos-with-vsyscall:latest -f docker/glibc/Dockerfile docker/glibc/
 fi
 
-docker/build_scripts/prefetch.sh openssl curl
 docker build --rm -t quay.io/pypa/manylinux2010_$PLATFORM:$TRAVIS_COMMIT -f docker/Dockerfile-$PLATFORM docker/

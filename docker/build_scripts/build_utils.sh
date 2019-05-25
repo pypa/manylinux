@@ -107,16 +107,6 @@ function do_openssl_build {
 }
 
 
-function check_required_source {
-    local file=$1
-    check_var ${file}
-    if [ ! -f $file ]; then
-        echo "Required source archive must be prefetched to docker/sources/ with prefetch.sh: $file"
-        return 1
-    fi
-}
-
-
 function fetch_source {
     # This is called both inside and outside the build context (e.g. in Travis) to prefetch
     # source tarballs, where curl exists (and works)
@@ -149,8 +139,7 @@ function build_openssl {
     check_var ${openssl_fname}
     local openssl_sha256=$2
     check_var ${openssl_sha256}
-    # Can't use curl here because we don't have it yet, OpenSSL must be prefetched
-    check_required_source ${openssl_fname}.tar.gz
+    fetch_source ${openssl_fname}.tar.gz ${OPENSSL_DOWNLOAD_URL}
     check_sha256sum ${openssl_fname}.tar.gz ${openssl_sha256}
     tar -xzf ${openssl_fname}.tar.gz
     (cd ${openssl_fname} && do_openssl_build)
@@ -167,32 +156,8 @@ function build_git {
     fetch_source v${git_fname}.tar.gz ${GIT_DOWNLOAD_URL}
     check_sha256sum v${git_fname}.tar.gz ${git_sha256}
     tar -xzf v${git_fname}.tar.gz
-    (cd git-${git_fname} && make install prefix=/usr/local NO_GETTEXT=1 NO_TCLTK=1 LDFLAGS="-L/usr/local/ssl/lib -ldl" CFLAGS="-I/usr/local/ssl/include" > /dev/null)
+    (cd git-${git_fname} && make install prefix=/usr/local NO_GETTEXT=1 NO_TCLTK=1 > /dev/null)
     rm -rf git-${git_fname} v${git_fname}.tar.gz
-}
-
-
-function do_curl_build {
-    # We do this shared to avoid obnoxious linker issues where git couldn't
-    # link properly. If anyone wants to make this build statically go for it.
-    LIBS=-ldl CFLAGS=-Wl,--exclude-libs,ALL ./configure --with-ssl --disable-static > /dev/null
-    make > /dev/null
-    make install > /dev/null
-}
-
-
-function build_curl {
-    local curl_fname=$1
-    check_var ${curl_fname}
-    local curl_sha256=$2
-    check_var ${curl_sha256}
-    check_var ${CURL_DOWNLOAD_URL}
-    # Can't use curl here because we don't have it yet...we are building it. It must be prefetched
-    check_required_source ${curl_fname}.tar.gz
-    check_sha256sum ${curl_fname}.tar.gz ${curl_sha256}
-    tar -zxf ${curl_fname}.tar.gz
-    (cd curl-*/ && do_curl_build)
-    rm -rf curl-*
 }
 
 
