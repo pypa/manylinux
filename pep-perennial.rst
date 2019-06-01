@@ -114,7 +114,7 @@ the whitelist will need to be bundled into the wheel.
 Building compatible wheels
 --------------------------
 
-For each profile defined in auditwheel, there should be a canonical build
+For each profile defined in auditwheel, we plan to provide a canonical build
 environment, such as a Docker image, available for people to build wheels
 for that profile. People can build in other environments, so long as the
 resulting wheels can be verified by auditwheel, but the canonical environments
@@ -127,11 +127,17 @@ is held up until a corresponding environment is ready to use.
 Verification on upload
 ----------------------
 
-It is proposed that PyPI will validate manylinux wheels on upload using
-auditwheel, and reject non-compliant packages. This means that only tags for
-which there is a defined profile can be distributed publicly. However,
-organisations may choose to use other tags with this pattern internally,
-for instance if they want to build wheels on Debian instead of CentOS.
+In the future, PyPI may begin using auditwheel to automatically validate
+uploaded manylinux wheels, and reject wheels that it can't determine are
+compliant. If PyPI does this, then it will mean that only wheels that have a
+corresponding auditwheel profile can be distributed publicly.
+
+If you need manylinux support for a platform that currently has no profile
+in auditwheel, then you're encouraged to contribute a profile to auditwheel.
+If that's not possible for some reason, then other tools can be used,
+as long as you try to meet the same goal as auditwheel (i.e., the wheel should
+work in all environments with the given glibc version and architecture) –
+though you may not be able to upload these wheels to PyPI.
 
 Platform compatibility
 ======================
