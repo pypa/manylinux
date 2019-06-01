@@ -97,6 +97,17 @@ profiles in auditwheel. At least initially, they will likely be similar to
 the list for manylinux2010 (:pep:`571`), and based on library versions in
 newer versions of CentOS.
 
+The overall goal is to ensure that if a wheel is tagged as
+``manylinux_glibc_2_Y``, then users can be reasonably confident that this wheel
+will work in any real-world linux-based python environment that uses
+``glibc 2.Y`` or later and matches the other wheel compatibility tags.
+For example, this includes making sure that the wheel only uses symbols that
+are available in the oldest supported glibc, and doesn't rely on the system to
+provide any libraries that aren't universally available.
+But the exact details of auditwheel's checks will evolve over time as the Linux
+distribution landscape changes and as we learn more about real-world
+compatibility pitfalls.
+
 As with the previous manylinux tags, required libraries which are not on
 the whitelist will need to be bundled into the wheel.
 
