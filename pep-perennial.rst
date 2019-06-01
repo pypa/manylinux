@@ -6,7 +6,7 @@ Author: Nathaniel J. Smith <njs@pobox.com>
         Thomas Kluyver <thomas@kluyver.me.uk>
 BDFL-Delegate: Paul Moore <p.f.moore@gmail.com>
 Discussions-To: Distutils SIG <distutils-sig@python.org>
-Status: Active
+Status: Draft
 Type: Informational
 Content-Type: text/x-rst
 Created: 3-May-2019
