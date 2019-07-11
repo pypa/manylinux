@@ -93,7 +93,8 @@ linked against another libc implementation.
 
 As with the previous manylinux tags, wheels will be allowed to link against
 a limited set of external libraries and symbols. These will be defined by
-profiles in auditwheel. At least initially, they will likely be similar to
+profiles documented on https://packaging.python.org/ and implemented in
+auditwheel. At least initially, they will likely be similar to
 the list for manylinux2010 (:pep:`571`), and based on library versions in
 newer versions of CentOS.
 
@@ -104,9 +105,17 @@ will work in any real-world linux-based python environment that uses
 For example, this includes making sure that the wheel only uses symbols that
 are available in the oldest supported glibc, and doesn't rely on the system to
 provide any libraries that aren't universally available.
-But the exact details of auditwheel's checks will evolve over time as the Linux
-distribution landscape changes and as we learn more about real-world
-compatibility pitfalls.
+
+One of the central points of this PEP is to move away from defining each
+compatibility profile in its own PEP.
+In part, this is to acknowledge that the details of compatibility profiles
+evolve over time as the Linux distribution landscape changes and as we learn
+more about real-world compatibility pitfalls.
+For instance, Fedora 30 `removed <https://github.com/pypa/manylinux/issues/305>`__
+``libcrypt.so.1``, which both ``manylinux1`` and ``manylinux2010`` previously
+allowed wheels to externally link.
+Auditwheel and the manylinux build images will be updated to avoid new wheels
+relying on this as an external library.
 
 As with the previous manylinux tags, required libraries which are not on
 the whitelist will need to be bundled into the wheel.
@@ -114,9 +123,10 @@ the whitelist will need to be bundled into the wheel.
 Building compatible wheels
 --------------------------
 
-For each profile defined in auditwheel, we plan to provide a canonical build
-environment, such as a Docker image, available for people to build wheels
-for that profile. People can build in other environments, so long as the
+For each profile defined on https://packaging.python.org/, we plan to provide
+a canonical build environment, such as a Docker image, available for people to
+build wheels for that profile.
+People can build in other environments, so long as the
 resulting wheels can be verified by auditwheel, but the canonical environments
 hopefully provide an easy answer for most packages.
 
