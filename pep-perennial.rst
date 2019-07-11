@@ -71,7 +71,8 @@ the platform must have glibc 2.17 or newer. Installer tools should be prepared
 to handle any numeric values here, but building and publishing wheels to PyPI
 will probably be constrained to specific profiles defined by auditwheel.
 
-The existing manylinux tags can also be represented in the new scheme:
+The existing manylinux tags can also be represented in the new scheme,
+for instance:
 
 - ``manylinux1_x86_64`` becomes ``manylinux_glibc_2_5_x86_64``
 - ``manylinux2010_x86_64`` becomes ``manylinux_glibc_2_12_x86_64``
