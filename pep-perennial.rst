@@ -5,7 +5,7 @@ Last-Modified: $Date$
 Author: Nathaniel J. Smith <njs@pobox.com>
         Thomas Kluyver <thomas@kluyver.me.uk>
 BDFL-Delegate: Paul Moore <p.f.moore@gmail.com>
-Discussions-To: Distutils SIG <distutils-sig@python.org>
+Discussions-To: Discourse https://discuss.python.org/t/the-next-manylinux-specification/1043
 Status: Draft
 Type: Informational
 Content-Type: text/x-rst
