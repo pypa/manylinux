@@ -162,7 +162,7 @@ function build_git {
 
 
 function do_standard_install {
-    ./configure > /dev/null
+    ./configure "$@" > /dev/null
     make > /dev/null
     make install > /dev/null
 }
@@ -207,4 +207,19 @@ function build_libtool {
     tar -zxf ${libtool_fname}.tar.gz
     (cd ${libtool_fname} && do_standard_install)
     rm -rf ${libtool_fname} ${libtool_fname}.tar.gz
+}
+
+function build_libxcrypt {
+    curl -fsSLO "$LIBXCRYPT_DOWNLOAD_URL"/v"$LIBXCRYPT_VERSION"
+    check_sha256sum "v$LIBXCRYPT_VERSION" "$LIBXCRYPT_HASH"
+    tar xfz "v$LIBXCRYPT_VERSION"
+    (cd "libxcrypt-$LIBXCRYPT_VERSION" && ./bootstrap && \
+        do_standard_install \
+        --disable-obsolete-api \
+        --enable-hashes=all \
+        --disable-werror)
+
+    # Delete GLIBC version headers and libraries
+    rm -rf /usr/include/crypt.h
+    rm -rf /usr/lib64/libcrypt.a /usr/lib64/libcrypt.so
 }
