@@ -113,6 +113,9 @@ do_standard_install
 cd ..
 rm -rf $SQLITE_AUTOCONF_VERSION*
 
+# Install libcrypt.so.2
+build_libxcrypt "$LIBXCRYPT_DOWNLOAD_URL" "$LIBXCRYPT_VERSION" "$LIBXCRYPT_HASH"
+
 # Compile the latest Python releases.
 # (In order to have a proper SSL module, Python is compiled
 # against a recent openssl [see env vars above], which is linked
