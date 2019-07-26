@@ -218,6 +218,7 @@ function build_libxcrypt {
         --disable-obsolete-api \
         --enable-hashes=all \
         --disable-werror)
+    rm -rf "v$LIBXCRYPT_VERSION" "libxcrypt-$LIBXCRYPT_VERSION"
 
     # Delete GLIBC version headers and libraries
     rm -rf /usr/include/crypt.h
