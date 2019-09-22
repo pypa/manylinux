@@ -34,8 +34,8 @@ LIBXCRYPT_VERSION=4.4.6
 LIBXCRYPT_DOWNLOAD_URL=https://codeload.github.com/besser82/libxcrypt/tar.gz
 LIBXCRYPT_HASH=4c33b80d3e1363c218ec6132bae0ea9eae181af9f9892939e90ec44b246ebe23
 
-GIT_ROOT=2.21.0
-GIT_HASH=7a601275abcc6ff51cc79a6d402e83c90ae37d743b0b8d073aa009dd4b22d432
+GIT_ROOT=2.23.0
+GIT_HASH=7d84f5d6f48e95b467a04a8aa1d474e0d21abc7877998af945568d2634fea46a
 GIT_DOWNLOAD_URL=https://github.com/git/git/archive
 
 GET_PIP_URL=https://bootstrap.pypa.io/get-pip.py
