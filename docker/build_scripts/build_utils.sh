@@ -31,27 +31,18 @@ function pyver_dist_dir {
 function do_cpython_build {
     local py_ver=$1
     check_var $py_ver
-    local ucs_setting=$2
-    check_var $ucs_setting
     tar -xzf Python-$py_ver.tgz
     pushd Python-$py_ver
-    if [ "$ucs_setting" = "none" ]; then
-        unicode_flags=""
-        dir_suffix=""
-    else
-        local unicode_flags="--enable-unicode=$ucs_setting"
-        local dir_suffix="-$ucs_setting"
-    fi
-    local prefix="/opt/_internal/cpython-${py_ver}${dir_suffix}"
+    local prefix="/opt/_internal/cpython-${py_ver}"
     mkdir -p ${prefix}/lib
-    ./configure --prefix=${prefix} --disable-shared $unicode_flags > /dev/null
+    ./configure --prefix=${prefix} --disable-shared > /dev/null
     make -j2 > /dev/null
     make install > /dev/null
     popd
     rm -rf Python-$py_ver
     # Some python's install as bin/python3. Make them available as
     # bin/python.
-    if [ -e ${prefix}/bin/python3 ]; then
+    if [ -e ${prefix}/bin/python3 ] && [ ! -e ${prefix}/bin/python ]; then
         ln -s python3 ${prefix}/bin/python
     fi
     ${prefix}/bin/python get-pip.py
@@ -74,12 +65,7 @@ function build_cpython {
     curl -fsSLO $PYTHON_DOWNLOAD_URL/$py_dist_dir/Python-$py_ver.tgz
     curl -fsSLO $PYTHON_DOWNLOAD_URL/$py_dist_dir/Python-$py_ver.tgz.asc
     gpg --verify Python-$py_ver.tgz.asc
-    if [ $(lex_pyver $py_ver) -lt $(lex_pyver 3.3) ]; then
-        do_cpython_build $py_ver ucs2
-        do_cpython_build $py_ver ucs4
-    else
-        do_cpython_build $py_ver none
-    fi
+    do_cpython_build $py_ver
     rm -f Python-$py_ver.tgz
     rm -f Python-$py_ver.tgz.asc
 }
@@ -99,13 +85,6 @@ function build_cpythons {
     # Remove GPG hidden directory.
     rm -rf /root/.gnupg/
     rm -f get-pip.py
-}
-
-
-function do_openssl_build {
-    ./config no-ssl2 no-shared -fPIC --prefix=/usr/local/ssl > /dev/null
-    make > /dev/null
-    make install_sw > /dev/null
 }
 
 
@@ -133,19 +112,6 @@ function check_sha256sum {
     echo "${sha256}  ${fname}" > ${fname}.sha256
     sha256sum -c ${fname}.sha256
     rm -f ${fname}.sha256
-}
-
-
-function build_openssl {
-    local openssl_fname=$1
-    check_var ${openssl_fname}
-    local openssl_sha256=$2
-    check_var ${openssl_sha256}
-    fetch_source ${openssl_fname}.tar.gz ${OPENSSL_DOWNLOAD_URL}
-    check_sha256sum ${openssl_fname}.tar.gz ${openssl_sha256}
-    tar -xzf ${openssl_fname}.tar.gz
-    (cd ${openssl_fname} && do_openssl_build)
-    rm -rf ${openssl_fname} ${openssl_fname}.tar.gz
 }
 
 

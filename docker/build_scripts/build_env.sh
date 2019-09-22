@@ -1,13 +1,7 @@
 # source me
 
 PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
-CPYTHON_VERSIONS="2.7.16 3.4.10 3.5.7 3.6.9 3.7.4 3.8.0rc1"
-
-# openssl version to build, with expected sha256 hash of .tar.gz
-# archive.
-OPENSSL_ROOT=openssl-1.0.2t
-OPENSSL_HASH=14cb464efe7ac6b54799b34456bd69558a749a4931ecfd9cf9f71d7881cac7bc
-OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source
+CPYTHON_VERSIONS="3.5.7 3.6.9 3.7.4 3.8.0rc1"
 
 PATCHELF_VERSION=0.10
 PATCHELF_HASH=b3cb6bdedcef5607ce34a350cf0b182eb979f8f7bc31eae55a93a70a3f020d13

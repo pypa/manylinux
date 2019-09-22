@@ -22,23 +22,9 @@ env:
 
 jobs:
   include:
-    - stage: "Patch glibc"
-      env:
-        - PLATFORM="x86_64"
-      before_install:
-        # Load cached docker images
-        - if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
-      script:
-        - PLATFORM=$PLATFORM TRAVIS_COMMIT=$TRAVIS_COMMIT ./build.sh glibc_only
-      before_cache:
-        # Save tagged docker images
-        - mkdir -p $HOME/docker && docker images -a --filter='dangling=false' --format '{{.Repository}}:{{.Tag}} {{.ID}}' | grep 'centos-with-vsyscall:latest' | xargs -n 2 -t sh -c 'test -e $HOME/docker/$1.tar.gz || docker save $0 | gzip -2 > $HOME/docker/$1.tar.gz'
     - stage: "Build manylinux images"
       env:
         - PLATFORM="x86_64"
-      before_install:
-        # Load cached docker images
-        - if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
       script:
         - PLATFORM=$PLATFORM TRAVIS_COMMIT=$TRAVIS_COMMIT ./build.sh
       deploy:
