@@ -1,0 +1,27 @@
+FROM i386/centos:6
+LABEL maintainer="The ManyLinux project"
+
+ENV AUDITWHEEL_ARCH i686
+ENV AUDITWHEEL_PLAT manylinux2010_$AUDITWHEEL_ARCH
+ENV LC_ALL en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
+ENV DEVTOOLSET_ROOTPATH /opt/rh/devtoolset-7/root
+ENV PATH $DEVTOOLSET_ROOTPATH/usr/bin:$PATH
+ENV LD_LIBRARY_PATH $DEVTOOLSET_ROOTPATH/usr/lib:$DEVTOOLSET_ROOTPATH/usr/lib:$DEVTOOLSET_ROOTPATH/usr/lib/dyninst:/usr/local/lib
+ENV PKG_CONFIG_PATH /usr/local/lib/pkgconfig
+
+# Set a base architecture of yum package to i386
+RUN echo "i386" > /etc/yum/vars/basearch
+
+# To have linux32 command 
+RUN yum -y update && \
+    yum install -y util-linux-ng
+
+COPY build_scripts /build_scripts
+RUN linux32 bash build_scripts/build.sh && rm -r build_scripts
+
+ENV SSL_CERT_FILE=/opt/_internal/certs.pem
+
+ENTRYPOINT ["linux32"]
+CMD ["/bin/bash"]

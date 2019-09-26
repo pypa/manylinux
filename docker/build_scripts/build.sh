@@ -33,8 +33,13 @@ MANYLINUX2010_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext
 # Get build utilities
 source $MY_DIR/build_utils.sh
 
-# See https://unix.stackexchange.com/questions/41784/can-yum-express-a-preference-for-x86-64-over-i386-packages
-echo "multilib_policy=best" >> /etc/yum.conf
+# Prerequisite for architecture
+case $AUDITWHEEL_ARCH in
+x86_64)
+  # See https://unix.stackexchange.com/questions/41784/can-yum-express-a-preference-for-x86-64-over-i386-packages
+  echo "multilib_policy=best" >> /etc/yum.conf
+  ;;
+esac
 
 # https://hub.docker.com/_/centos/
 # "Additionally, images with minor version tags that correspond to install
@@ -46,8 +51,35 @@ echo "multilib_policy=best" >> /etc/yum.conf
 # Decided not to clean at this point: https://github.com/pypa/manylinux/pull/129
 yum -y update
 
-# Software collection (for devtoolset-8) and EPEL support (for cmake28 & yasm)
-yum -y install centos-release-scl https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+# EPEL support (for cmake28 & yasm)
+yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+
+case $AUDITWHEEL_ARCH in
+x86_64)
+  # Install devtoolset-8
+  yum -y install centos-release-scl
+  yum -y install \
+    devtoolset-8-binutils \
+    devtoolset-8-gcc \
+    devtoolset-8-gcc-c++ \
+    devtoolset-8-gcc-gfortran \
+  ;;
+i686)
+  # Install devtoolset-7 (binutils, gcc, gcc-c++, gcc-gfortran)
+  devtoolset7s=(
+    "devtoolset-7-runtime-7.1-4.el6.i686.rpm"
+    "devtoolset-7-binutils-2.28-11.el6.i686.rpm"
+    "devtoolset-7-gcc-7.3.1-5.10.el6.i686.rpm"
+    "devtoolset-7-libstdc++-devel-7.3.1-5.10.el6.i686.rpm"
+    "devtoolset-7-gcc-c++-7.3.1-5.10.el6.i686.rpm"
+    "devtoolset-7-libquadmath-devel-7.3.1-5.10.el6.i686.rpm"
+    "devtoolset-7-gcc-gfortran-7.3.1-5.10.el6.i686.rpm"
+  )
+  for rpm in "${devtoolset7s[@]}"; do
+	  yum install -y "https://www.repo.cloudlinux.com/cloudlinux/6.10/sclo/devtoolset-7/i386/$rpm"
+  done
+  ;;
+esac
 
 # Development tools and libraries
 yum -y install \
@@ -55,10 +87,6 @@ yum -y install \
     bison \
     bzip2 \
     cmake28 \
-    devtoolset-8-binutils \
-    devtoolset-8-gcc \
-    devtoolset-8-gcc-c++ \
-    devtoolset-8-gcc-gfortran \
     diffutils \
     gettext \
     file \
@@ -183,9 +211,9 @@ find /opt/_internal -depth \
 # Fix libc headers to remain compatible with C99 compilers.
 find /usr/include/ -type f -exec sed -i 's/\bextern _*inline_*\b/extern __inline __attribute__ ((__gnu_inline__))/g' {} +
 
-# remove useless things that have been installed by devtoolset-8
-rm -rf /opt/rh/devtoolset-8/root/usr/share/man
-find /opt/rh/devtoolset-8/root/usr/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
+# remove useless things that have been installed by devtoolset
+rm -rf $DEVTOOLSET_ROOTPATH/usr/share/man
+find $DEVTOOLSET_ROOTPATH/usr/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
 rm -rf /usr/share/backgrounds
 # if we updated glibc, we need to strip locales again...
 localedef --list-archive | grep -v -i ^en_US.utf8 | xargs localedef --delete-from-archive
@@ -194,4 +222,3 @@ build-locale-archive
 find /usr/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
 find /usr/local/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
 rm -rf /usr/local/share/man
-
