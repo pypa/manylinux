@@ -1,0 +1,17 @@
+FROM arm64v8/centos:7
+LABEL maintainer="The ManyLinux project"
+
+ENV AUDITWHEEL_PLAT manylinux2014_aarch64
+ENV LC_ALL C
+ENV LANG C
+ENV LANGUAGE C
+ENV PATH /opt/rh/devtoolset-8/root/usr/bin:$PATH
+ENV LD_LIBRARY_PATH /opt/rh/devtoolset-8/root/usr/lib64:/opt/rh/devtoolset-8/root/usr/lib:/opt/rh/devtoolset-8/root/usr/lib64/dyninst:/opt/rh/devtoolset-8/root/usr/lib/dyninst:/usr/local/lib64:/usr/local/lib
+ENV PKG_CONFIG_PATH /usr/local/lib/pkgconfig
+
+COPY build_scripts /build_scripts
+RUN bash build_scripts/build.sh && rm -r build_scripts
+
+ENV SSL_CERT_FILE=/opt/_internal/certs.pem
+
+CMD ["/bin/bash"]

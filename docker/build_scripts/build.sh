@@ -46,8 +46,15 @@ echo "multilib_policy=best" >> /etc/yum.conf
 # Decided not to clean at this point: https://github.com/pypa/manylinux/pull/129
 yum -y update
 
-# Software collection (for devtoolset-8) and EPEL support (for yasm)
-yum -y install centos-release-scl https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+# Software collection (for devtoolset-8)
+yum -y install centos-release-scl
+
+if [ "$(uname -m)" == "x86_64" ]; then
+    # EPEL support (for yasm)
+    yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+elif [ "$(uname -m)" == "aarch64" ]; then
+    yum -y erase centos-release-scl
+fi
 
 # Development tools and libraries
 yum -y install \
@@ -67,7 +74,7 @@ yum -y install \
     patch \
     unzip \
     which \
-    yasm \
+    ${YASM} \
     ${PYTHON_COMPILE_DEPS}
 
 # Install git
