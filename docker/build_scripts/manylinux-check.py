@@ -1,24 +1,33 @@
-# Logic copied from PEP 513
+# Logic copied from PEP 599
 
 import sys
 
 
-def is_manylinux2010_compatible():
-    # Only Linux, and only x86-64 / i686
+def is_manylinux2014_compatible():
+    # Only Linux, and only supported architectures
     from distutils.util import get_platform
-    if get_platform() not in ["linux-x86_64", "linux-i686"]:
+    if get_platform() not in [
+        "linux-x86_64",
+        "linux-i686",
+        "linux-aarch64",
+        "linux-armv7l",
+        "linux-ppc64",
+        "linux-ppc64le",
+        "linux-s390x",
+    ]:
         return False
 
     # Check for presence of _manylinux module
     try:
         import _manylinux
-        return bool(_manylinux.manylinux1_compatible)
+        return bool(_manylinux.manylinux2014_compatible)
     except (ImportError, AttributeError):
         # Fall through to heuristic check below
         pass
 
-    # Check glibc version. CentOS 6 uses glibc 2.12.
-    return have_compatible_glibc(2, 12)
+    # Check glibc version. CentOS 7 uses glibc 2.17.
+    # PEP 513 contains an implementation of this function.
+    return have_compatible_glibc(2, 17)
 
 
 def have_compatible_glibc(major, minimum_minor):
@@ -49,9 +58,9 @@ def have_compatible_glibc(major, minimum_minor):
     return True
 
 
-if is_manylinux2010_compatible():
-    print("%s is manylinux2010 compatible" % (sys.executable,))
+if is_manylinux2014_compatible():
+    print("%s is manylinux2014 compatible" % (sys.executable,))
     sys.exit(0)
 else:
-    print("%s is NOT manylinux2010 compatible" % (sys.executable,))
+    print("%s is NOT manylinux2014 compatible" % (sys.executable,))
     sys.exit(1)
