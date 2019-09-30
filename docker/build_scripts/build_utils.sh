@@ -36,8 +36,8 @@ function do_cpython_build {
     local prefix="/opt/_internal/cpython-${py_ver}"
     mkdir -p ${prefix}/lib
     ./configure --prefix=${prefix} --disable-shared > /dev/null
-    make -j2 > /dev/null
-    make install > /dev/null
+    make -j$(nproc) > /dev/null
+    make -j$(nproc) install > /dev/null
     popd
     rm -rf Python-$py_ver
     # Some python's install as bin/python3. Make them available as
@@ -124,15 +124,15 @@ function build_git {
     fetch_source v${git_fname}.tar.gz ${GIT_DOWNLOAD_URL}
     check_sha256sum v${git_fname}.tar.gz ${git_sha256}
     tar -xzf v${git_fname}.tar.gz
-    (cd git-${git_fname} && make install prefix=/usr/local NO_GETTEXT=1 NO_TCLTK=1 > /dev/null)
+    (cd git-${git_fname} && make -j$(nproc) install prefix=/usr/local NO_GETTEXT=1 NO_TCLTK=1 > /dev/null)
     rm -rf git-${git_fname} v${git_fname}.tar.gz
 }
 
 
 function do_standard_install {
     ./configure "$@" > /dev/null
-    make > /dev/null
-    make install > /dev/null
+    make -j$(nproc) > /dev/null
+    make -j$(nproc) install > /dev/null
 }
 
 
