@@ -91,6 +91,8 @@ function build_cpythons {
     # Import public keys used to verify downloaded Python source tarballs.
     # https://www.python.org/static/files/pubkeys.txt
     gpg --import ${MY_DIR}/cpython-pubkeys.txt
+    # Add version 3.8 release manager's key
+    gpg --recv-keys "B26995E310250568"
     for py_ver in $@; do
         build_cpython $py_ver
     done
