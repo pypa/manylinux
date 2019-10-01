@@ -1,9 +1,9 @@
 # cf. https://github.com/pypa/manylinux/issues/53
 
+import sys
+
 GOOD_SSL = "https://google.com"
 BAD_SSL = "https://self-signed.badssl.com"
-
-import sys
 
 print("Testing SSL certificate checking for Python:", sys.version)
 
