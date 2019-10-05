@@ -76,7 +76,7 @@ function build_cpython {
     local py_dist_dir=$(pyver_dist_dir $py_ver)
     curl -fsSLO $PYTHON_DOWNLOAD_URL/$py_dist_dir/Python-$py_ver.tgz
     curl -fsSLO $PYTHON_DOWNLOAD_URL/$py_dist_dir/Python-$py_ver.tgz.asc
-    gpg --verify Python-$py_ver.tgz.asc
+    gpg --verify --no-auto-key-locate Python-$py_ver.tgz.asc
     if [ $(lex_pyver $py_ver) -lt $(lex_pyver 3.3) ]; then
         do_cpython_build $py_ver ucs2
         do_cpython_build $py_ver ucs4
@@ -94,7 +94,7 @@ function build_cpythons {
     # Import public keys used to verify downloaded Python source tarballs.
     # https://www.python.org/static/files/pubkeys.txt
     gpg --import ${MY_DIR}/cpython-pubkeys.txt
-    # Add version 3.8 release manager's key
+    # Add version 3.8 release manager's key https://keybase.io/ambv/
     gpg --keyserver keys.gnupg.net --recv-keys E3FF2839C048B25C084DEBE9B26995E310250568
     for py_ver in $@; do
         build_cpython $py_ver
