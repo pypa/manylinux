@@ -24,7 +24,7 @@ matrix:
      env: PLATFORM="aarch64"
 
 script:
-  - PLATFORM=$PLATFORM TRAVIS_COMMIT=$TRAVIS_COMMIT ./build.sh
+  - sudo bash -c "PLATFORM=$PLATFORM TRAVIS_COMMIT=$TRAVIS_COMMIT ./build.sh"
 
 deploy:
   provider: script
