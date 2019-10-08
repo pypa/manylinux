@@ -3,9 +3,9 @@
 certifi==2019.9.11 \
     --hash=sha256:e4f3620cfea4f83eedc95b24abd9cd56f3c4b146dd0177e83a21b4eb49e21e50 \
     --hash=sha256:fd7c7c74727ddcf00e9acd26bba8da604ffec95bf1c2144e67aff7a8b50e6cef
-auditwheel==2.1.0 \
-    --hash=sha256:97f87bdea4ac2399056f308e00e4d76c2ed0be3ace4ad3422a5a4b94d2721e24 \
-    --hash=sha256:e0ebaead434f938cd96e261cc0ad821d5a72d58c17c9622c381c5d4ec0b00800
+auditwheel==2.1.1 \
+    --hash=sha256:d9f0f47c0ecdf4f72316eabfb19223b81aec95f0deba97729e9c09ea4f2c166e \
+    --hash=sha256:f60e265dc168ae7c9d65a814410881c5ca170d88644c178f8e3aa20eecd0fae1
 # this package required for auditwheel
 pyelftools==0.25 \
     --hash=sha256:89c6da6f56280c37a5ff33468591ba9a124e17d71fe42de971818cbff46c1b24
