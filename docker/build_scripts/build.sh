@@ -10,14 +10,14 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
 # Dependencies for compiling Python that we want to remove from
 # the final image after compiling Python
-PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel expat-devel ncurses-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel"
+PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel expat-devel ncurses-devel readline-devel tk-devel gdbm-devel libdb-devel libpcap-devel xz-devel openssl-devel keyutils-libs-devel krb5-devel libcom_err-devel libidn-devel curl-devel perl-devel"
 
-# Libraries that are allowed as part of the manylinux2010 profile
-# Extract from PEP: https://www.python.org/dev/peps/pep-0571/#the-manylinux2010-policy
+# Libraries that are allowed as part of the manylinux2014 profile
+# Extract from PEP: https://www.python.org/dev/peps/pep-0599/#the-manylinux2014-policy
 # On RPM-based systems, they are provided by these packages:
 # Package:    Libraries
 # glib2:      libglib-2.0.so.0, libgthread-2.0.so.0, libgobject-2.0.so.0
-# glibc:      libresolv.so.2, libutil.so.1, libnsl.so.1, librt.so.1, libcrypt.so.1, libpthread.so.0, libdl.so.2, libm.so.6, libc.so.6
+# glibc:      libresolv.so.2, libutil.so.1, libnsl.so.1, librt.so.1, libpthread.so.0, libdl.so.2, libm.so.6, libc.so.6
 # libICE:     libICE.so.6
 # libX11:     libX11.so.6
 # libXext:    libXext.so.6
@@ -28,18 +28,17 @@ PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel expat-devel ncurses-devel readline-d
 #
 # PEP is missing the package for libSM.so.6 for RPM based system
 # Install development packages (except for libgcc which is provided by gcc install)
-MANYLINUX2010_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel mesa-libGL-devel libICE-devel libSM-devel"
+MANYLINUX_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel mesa-libGL-devel libICE-devel libSM-devel"
 
 # Get build utilities
 source $MY_DIR/build_utils.sh
 
-# Prerequisite for architecture
-case $AUDITWHEEL_ARCH in
-x86_64)
-  # See https://unix.stackexchange.com/questions/41784/can-yum-express-a-preference-for-x86-64-over-i386-packages
-  echo "multilib_policy=best" >> /etc/yum.conf
-  ;;
-esac
+# See https://unix.stackexchange.com/questions/41784/can-yum-express-a-preference-for-x86-64-over-i386-packages
+echo "multilib_policy=best" >> /etc/yum.conf
+# Error out if requested packages do not exist
+echo "skip_missing_names_on_install=False" >> /etc/yum.conf
+# Make sure that locale will not be removed
+sed -i '/^override_install_langs=/d' /etc/yum.conf
 
 # https://hub.docker.com/_/centos/
 # "Additionally, images with minor version tags that correspond to install
@@ -51,62 +50,48 @@ esac
 # Decided not to clean at this point: https://github.com/pypa/manylinux/pull/129
 yum -y update
 
-# EPEL support (for cmake28 & yasm)
-yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+# upgrading glibc-common can end with removal on en_US.UTF-8 locale
+localedef -i en_US -f UTF-8 en_US.UTF-8
 
-case $AUDITWHEEL_ARCH in
-x86_64)
-  # Install devtoolset-8
-  yum -y install centos-release-scl
-  yum -y install \
-    devtoolset-8-binutils \
-    devtoolset-8-gcc \
-    devtoolset-8-gcc-c++ \
-    devtoolset-8-gcc-gfortran \
-  ;;
-i686)
-  # Install devtoolset-7 (binutils, gcc, gcc-c++, gcc-gfortran)
-  devtoolset7s=(
-    "devtoolset-7-runtime-7.1-4.el6.i686.rpm"
-    "devtoolset-7-binutils-2.28-11.el6.i686.rpm"
-    "devtoolset-7-gcc-7.3.1-5.10.el6.i686.rpm"
-    "devtoolset-7-libstdc++-devel-7.3.1-5.10.el6.i686.rpm"
-    "devtoolset-7-gcc-c++-7.3.1-5.10.el6.i686.rpm"
-    "devtoolset-7-libquadmath-devel-7.3.1-5.10.el6.i686.rpm"
-    "devtoolset-7-gcc-gfortran-7.3.1-5.10.el6.i686.rpm"
-  )
-  for rpm in "${devtoolset7s[@]}"; do
-	  yum install -y "https://www.repo.cloudlinux.com/cloudlinux/6.10/sclo/devtoolset-7/i386/$rpm"
-  done
-  ;;
-esac
+DEVTOOLSET8_TOOLCHAIN_DEPS="devtoolset-8-binutils devtoolset-8-gcc devtoolset-8-gcc-c++ devtoolset-8-gcc-gfortran"
+DEFAULT_TOOLCHAIN_DEPS="gcc gcc-c++ gcc-gfortran"
+if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
+    # Software collection (for devtoolset-8)
+    yum -y install centos-release-scl-rh
+    # EPEL support (for yasm)
+    yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    YASM=yasm
+    TOOLCHAIN_DEPS=${DEVTOOLSET8_TOOLCHAIN_DEPS}
+elif [ "${AUDITWHEEL_ARCH}" == "aarch64" ]; then
+    # Software collection (for devtoolset-8)
+    yum -y install centos-release-scl-rh
+    TOOLCHAIN_DEPS=${DEVTOOLSET8_TOOLCHAIN_DEPS}
+elif [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
+    # No yasm, no devtoolset-8 on i686
+    TOOLCHAIN_DEPS=${DEFAULT_TOOLCHAIN_DEPS}
+fi
 
 # Development tools and libraries
 yum -y install \
     automake \
     bison \
     bzip2 \
-    cmake28 \
+    ${TOOLCHAIN_DEPS} \
     diffutils \
     gettext \
     file \
-    kernel-devel-`uname -r` \
+    kernel-devel \
     libffi-devel \
     make \
     patch \
     unzip \
     which \
-    yasm \
+    ${YASM} \
     ${PYTHON_COMPILE_DEPS}
 
-# Install a git we link against system OpenSSL/Curl
-yum -y install openssl-devel keyutils-libs-devel krb5-devel libcom_err-devel libidn-devel curl-devel perl-devel
+# Install git
 build_git $GIT_ROOT $GIT_HASH
 git version
-yum -y erase openssl-devel keyutils-libs-devel krb5-devel libcom_err-devel libidn-devel curl-devel perl-devel
-
-# Build an OpenSSL for Pythons. We'll delete this at the end.
-build_openssl $OPENSSL_ROOT $OPENSSL_HASH
 
 # Install newest autoconf
 build_autoconf $AUTOCONF_ROOT $AUTOCONF_HASH
@@ -155,8 +140,6 @@ ln -s $($PY37_BIN/python -c 'import certifi; print(certifi.where())') \
 # Dockerfiles:
 export SSL_CERT_FILE=/opt/_internal/certs.pem
 
-# Now we can delete our built OpenSSL headers/static libs since we've linked everything we need
-rm -rf /usr/local/ssl
 
 # Install patchelf (latest with unreleased bug fixes)
 curl -fsSL -o patchelf.tar.gz https://github.com/NixOS/patchelf/archive/$PATCHELF_VERSION.tar.gz
@@ -179,7 +162,7 @@ yum -y erase \
     libX11 \
     wireless-tools \
     ${PYTHON_COMPILE_DEPS} > /dev/null 2>&1
-yum -y install ${MANYLINUX2010_DEPS}
+yum -y install ${MANYLINUX_DEPS}
 yum -y clean all > /dev/null 2>&1
 yum list installed
 
@@ -211,9 +194,11 @@ find /opt/_internal -depth \
 # Fix libc headers to remain compatible with C99 compilers.
 find /usr/include/ -type f -exec sed -i 's/\bextern _*inline_*\b/extern __inline __attribute__ ((__gnu_inline__))/g' {} +
 
-# remove useless things that have been installed by devtoolset
-rm -rf $DEVTOOLSET_ROOTPATH/usr/share/man
-find $DEVTOOLSET_ROOTPATH/usr/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
+if [ "${DEVTOOLSET_ROOTPATH:-}" != "" ]; then
+    # remove useless things that have been installed by devtoolset
+    rm -rf $DEVTOOLSET_ROOTPATH/usr/share/man
+    find $DEVTOOLSET_ROOTPATH/usr/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
+fi
 rm -rf /usr/share/backgrounds
 # if we updated glibc, we need to strip locales again...
 localedef --list-archive | grep -v -i ^en_US.utf8 | xargs localedef --delete-from-archive
