@@ -91,6 +91,10 @@ aarch64 image: ``quay.io/pypa/manylinux2014_aarch64``
 .. image:: https://quay.io/repository/pypa/manylinux2014_aarch64/status
    :target: https://quay.io/repository/pypa/manylinux2014_aarch64
 
+ppc64le image: ``quay.io/pypa/manylinux2014_ppc64le``
+
+.. image:: https://quay.io/repository/pypa/manylinux2014_ppc64le/status
+   :target: https://quay.io/repository/pypa/manylinux2014_ppc64le
 
 These images are rebuilt using Travis-CI on every commit to this
 repository; see the
