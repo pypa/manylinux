@@ -14,10 +14,10 @@ is further enhanced by `PEP 571 <https://www.python.org/dev/peps/pep-0571/>`_
 defining ``manylinux2010_x86_64`` and ``manylinux2010_i686`` platform tags.
 
 PEP 513 defined ``manylinux1_x86_64`` and ``manylinux1_i686`` platform tags
-and the wheels were built on Centos5. Centos5 reached End of Life (EOL) on 
+and the wheels were built on Centos5. Centos5 reached End of Life (EOL) on
 March 31st, 2017 and thus PEP 571 was proposed.
 
-Code and details regarding ``manylinux1`` can be found here: 
+Code and details regarding ``manylinux1`` can be found here:
 `manylinux1 <https://github.com/pypa/manylinux/tree/manylinux1>`_.
 
 Wheel packages compliant with those tags can be uploaded to
@@ -62,7 +62,7 @@ directory for source code.
 
 The images currently contain:
 
-- CPython 2.7, 3.4, 3.5, 3.6 and 3.7, installed in
+- CPython 2.7, 3.4, 3.5, 3.6, 3.7 & 3.8, installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
   e.g. ``/opt/python/cp27-cp27mu`` contains a wide-unicode CPython 2.7
@@ -124,7 +124,7 @@ where the PEP was originally written, so if for some reason you really
 want to see the full history of edits it went through, then this is
 the place to look.
 
-The proposal to upgrade ``manylinux1`` to ``manylinux2010`` after Centos5 
+The proposal to upgrade ``manylinux1`` to ``manylinux2010`` after Centos5
 reached EOL was discussed in `PEP 571 <https://www.python.org/dev/peps/pep-0571/>`_.
 
 This repo also has some analysis code that was used when putting
