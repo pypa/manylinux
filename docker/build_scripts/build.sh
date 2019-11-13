@@ -62,7 +62,7 @@ if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
     yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
     YASM=yasm
     TOOLCHAIN_DEPS=${DEVTOOLSET8_TOOLCHAIN_DEPS}
-elif [ "${AUDITWHEEL_ARCH}" == "aarch64" ]; then
+elif [ "${AUDITWHEEL_ARCH}" == "aarch64" ] || [ "${AUDITWHEEL_ARCH}" == "ppc64le" ]; then
     # Software collection (for devtoolset-8)
     yum -y install centos-release-scl-rh
     TOOLCHAIN_DEPS=${DEVTOOLSET8_TOOLCHAIN_DEPS}
@@ -73,6 +73,7 @@ fi
 
 # Development tools and libraries
 yum -y install \
+    autoconf \
     automake \
     bison \
     bzip2 \
@@ -92,10 +93,6 @@ yum -y install \
 # Install git
 build_git $GIT_ROOT $GIT_HASH
 git version
-
-# Install newest autoconf
-build_autoconf $AUTOCONF_ROOT $AUTOCONF_HASH
-autoconf --version
 
 # Install newest automake
 build_automake $AUTOMAKE_ROOT $AUTOMAKE_HASH

@@ -25,6 +25,8 @@ matrix:
      env: PLATFORM="i686"
    - arch: arm64
      env: PLATFORM="aarch64"
+   - arch: ppc64le
+     env: PLATFORM="ppc64le"
 
 script:
   - PLATFORM=$PLATFORM TRAVIS_COMMIT=$TRAVIS_COMMIT ./build.sh
