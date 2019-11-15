@@ -96,6 +96,11 @@ ppc64le image: ``quay.io/pypa/manylinux2014_ppc64le``
 .. image:: https://quay.io/repository/pypa/manylinux2014_ppc64le/status
    :target: https://quay.io/repository/pypa/manylinux2014_ppc64le
 
+s390x image: ``quay.io/pypa/manylinux2014_s390x``
+
+.. image:: https://quay.io/repository/pypa/manylinux2014_s390x/status
+   :target: https://quay.io/repository/pypa/manylinux2014_s390x
+
 These images are rebuilt using Travis-CI on every commit to this
 repository; see the
 `docker/ <https://github.com/pypa/manylinux/tree/manylinux2014/docker>`_
