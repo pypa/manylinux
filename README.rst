@@ -121,6 +121,11 @@ The images currently contain:
 - The `auditwheel <https://pypi.python.org/pypi/auditwheel>`_ tool
 
 
+Note that `starting with CPython 3.8 <https://docs.python.org/dev/whatsnew/3.8.html#build-and-c-api-changes>`_,
+default ``sys.abiflags`` became an empty string: the ``m`` flag for pymalloc
+became useless (builds with and without pymalloc are ABI compatible) and so has
+been removed. (e.g. ``/opt/python/cp38-cp38``)
+
 Building Docker images
 ----------------------
 
