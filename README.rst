@@ -36,7 +36,7 @@ Docker images
 -------------
 
 .. image:: https://travis-ci.org/pypa/manylinux.svg?branch=master
-   :target: https://travis-ci.org/pypa/manylinux
+   :target: https://travis-ci.org/organization/pypa
 
 Building manylinux-compatible wheels is not trivial; as a general
 rule, binaries built on one Linux distro will only work on other Linux
@@ -49,11 +49,59 @@ Rather than forcing you to install CentOS 6 yourself, install Python,
 etc., we provide a `Docker <https://docker.com/>`_ image where we've
 done the work for you:
 
-64-bit image (x86-64): ``quay.io/pypa/manylinux2010_x86_64``
+manylinux1
+~~~~~~~~~~
+
+x86-64 image: ``quay.io/pypa/manylinux1_x86_64``
+
+.. image:: https://quay.io/repository/pypa/manylinux1_x86_64/status
+   :target: https://quay.io/repository/pypa/manylinux1_x86_64
+
+i686 image: ``quay.io/pypa/manylinux1_i386``
+
+.. image:: https://quay.io/repository/pypa/manylinux1_i686/status
+   :target: https://quay.io/repository/pypa/manylinux1_i686
+
+manylinux2010
+~~~~~~~~~~~~~
+
+x86-64 image: ``quay.io/pypa/manylinux2010_x86_64``
 
 .. image:: https://quay.io/repository/pypa/manylinux2010_x86_64/status
    :target: https://quay.io/repository/pypa/manylinux2010_x86_64
 
+i686 image: ``quay.io/pypa/manylinux2010_i686``
+
+.. image:: https://quay.io/repository/pypa/manylinux2010_i686/status
+   :target: https://quay.io/repository/pypa/manylinux2010_i686
+
+manylinux2014
+~~~~~~~~~~~~~
+
+x86_64 image: ``quay.io/pypa/manylinux2014_x86_64``
+
+.. image:: https://quay.io/repository/pypa/manylinux2014_x86_64/status
+   :target: https://quay.io/repository/pypa/manylinux2014_x86_64
+
+i686 image: ``quay.io/pypa/manylinux2014_i686``
+
+.. image:: https://quay.io/repository/pypa/manylinux2014_i686/status
+   :target: https://quay.io/repository/pypa/manylinux2014_i686
+
+aarch64 image: ``quay.io/pypa/manylinux2014_aarch64``
+
+.. image:: https://quay.io/repository/pypa/manylinux2014_aarch64/status
+   :target: https://quay.io/repository/pypa/manylinux2014_aarch64
+
+ppc64le image: ``quay.io/pypa/manylinux2014_ppc64le``
+
+.. image:: https://quay.io/repository/pypa/manylinux2014_ppc64le/status
+   :target: https://quay.io/repository/pypa/manylinux2014_ppc64le
+
+s390x image: ``quay.io/pypa/manylinux2014_s390x``
+
+.. image:: https://quay.io/repository/pypa/manylinux2014_s390x/status
+   :target: https://quay.io/repository/pypa/manylinux2014_s390x
 
 These images are rebuilt using Travis-CI on every commit to this
 repository; see the
