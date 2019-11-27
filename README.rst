@@ -70,7 +70,7 @@ x86-64 image: ``quay.io/pypa/manylinux2010_x86_64``
 .. image:: https://quay.io/repository/pypa/manylinux2010_x86_64/status
    :target: https://quay.io/repository/pypa/manylinux2010_x86_64
 
-i686 image: ``quay.io/pypa/manylinux2010_i386``
+i686 image: ``quay.io/pypa/manylinux2010_i686``
 
 .. image:: https://quay.io/repository/pypa/manylinux2010_i686/status
    :target: https://quay.io/repository/pypa/manylinux2010_i686
