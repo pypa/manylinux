@@ -57,7 +57,7 @@ x86-64 image: ``quay.io/pypa/manylinux1_x86_64``
 .. image:: https://quay.io/repository/pypa/manylinux1_x86_64/status
    :target: https://quay.io/repository/pypa/manylinux1_x86_64
 
-i686 image: ``quay.io/pypa/manylinux1_i386``
+i686 image: ``quay.io/pypa/manylinux1_i686``
 
 .. image:: https://quay.io/repository/pypa/manylinux1_i686/status
    :target: https://quay.io/repository/pypa/manylinux1_i686
