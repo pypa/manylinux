@@ -7,5 +7,5 @@ auditwheel==2.1.1 \
     --hash=sha256:d9f0f47c0ecdf4f72316eabfb19223b81aec95f0deba97729e9c09ea4f2c166e \
     --hash=sha256:f60e265dc168ae7c9d65a814410881c5ca170d88644c178f8e3aa20eecd0fae1
 # this package required for auditwheel
-pyelftools==0.25 \
-    --hash=sha256:89c6da6f56280c37a5ff33468591ba9a124e17d71fe42de971818cbff46c1b24
+pyelftools==0.26 \
+    --hash=sha256:cc0ea0de82b240a73ef4056fce44acbb4727dca7d66759371aff2bad457ed711
