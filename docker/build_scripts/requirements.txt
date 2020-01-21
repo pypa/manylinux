@@ -1,8 +1,8 @@
 # pip requirements for all cpythons
 # NOTE: pip has GPG signatures; could download and verify independently.
-pip==19.1.1 \
-    --hash=sha256:44d3d7d3d30a1eb65c7e5ff1173cdf8f7467850605ac7cc3707b6064bddd0958 \
-    --hash=sha256:993134f0475471b91452ca029d4390dc8f298ac63a712814f101cd1b6db46676
+pip==20.0 \
+    --hash=sha256:5128e9a9401f1d16c1d15b2ed766a79d7813db1538428d0b0ce74838249e3a41 \
+    --hash=sha256:eea07b449d969dbc8c062c157852cf8ed2ad1b8b5ac965a6b819e62929e41703
 wheel==0.31.1 \
     --hash=sha256:80044e51ec5bbf6c894ba0bc48d26a8c20a9ba629f4ca19ea26ecfcf87685f5f \
     --hash=sha256:0a2e54558a0628f2145d2fc822137e322412115173e8a2ddbe1c9024338ae83c
