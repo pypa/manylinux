@@ -38,3 +38,4 @@ GIT_HASH=7d84f5d6f48e95b467a04a8aa1d474e0d21abc7877998af945568d2634fea46a
 GIT_DOWNLOAD_URL=https://github.com/git/git/archive
 
 GET_PIP_URL=https://bootstrap.pypa.io/get-pip.py
+GET_PIP_URL_CP34=https://bootstrap.pypa.io/3.4/get-pip.py
