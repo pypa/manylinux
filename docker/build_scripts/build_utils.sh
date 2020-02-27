@@ -54,12 +54,7 @@ function do_cpython_build {
     if [ -e ${prefix}/bin/python3 ]; then
         ln -s python3 ${prefix}/bin/python
     fi
-    if [ $(lex_pyver $py_ver) -ge $(lex_pyver 3.4) ] && [ $(lex_pyver $py_ver) -lt $(lex_pyver 3.5) ]; then
-        check_var $GET_PIP_URL_CP34
-        curl -fsSL $GET_PIP_URL_CP34 | ${prefix}/bin/python
-    else
-        ${prefix}/bin/python get-pip.py
-    fi
+    ${prefix}/bin/python get-pip.py
 
     if [ -e ${prefix}/bin/pip3 ] && [ ! -e ${prefix}/bin/pip ]; then
         ln -s pip3 ${prefix}/bin/pip
