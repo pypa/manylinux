@@ -54,7 +54,7 @@ function do_cpython_build {
     if [ -e ${prefix}/bin/python3 ]; then
         ln -s python3 ${prefix}/bin/python
     fi
-    ${prefix}/bin/python -mensurepip
+    ${prefix}/bin/python -m ensurepip
 
     if [ -e ${prefix}/bin/pip3 ] && [ ! -e ${prefix}/bin/pip ]; then
         ln -s pip3 ${prefix}/bin/pip
