@@ -54,12 +54,12 @@ function do_cpython_build {
     if [ -e ${prefix}/bin/python3 ]; then
         ln -s python3 ${prefix}/bin/python
     fi
-    ${prefix}/bin/python get-pip.py
+    ${prefix}/bin/python -mensurepip
 
     if [ -e ${prefix}/bin/pip3 ] && [ ! -e ${prefix}/bin/pip ]; then
         ln -s pip3 ${prefix}/bin/pip
     fi
-    # Since we fall back on a canned copy of get-pip.py, we might not have
+    # Since we fall back on a canned copy of pip, we might not have
     # the latest pip and friends. Upgrade them to make sure.
     ${prefix}/bin/pip install -U --require-hashes -r ${MY_DIR}/requirements.txt
     local abi_tag=$(${prefix}/bin/python ${MY_DIR}/python-tag-abi-tag.py)
@@ -87,8 +87,6 @@ function build_cpython {
 
 
 function build_cpythons {
-    check_var $GET_PIP_URL
-    curl -fsSLO $GET_PIP_URL
     # Import public keys used to verify downloaded Python source tarballs.
     # https://www.python.org/static/files/pubkeys.txt
     gpg --import ${MY_DIR}/cpython-pubkeys.txt
@@ -99,7 +97,6 @@ function build_cpythons {
     done
     # Remove GPG hidden directory.
     rm -rf /root/.gnupg/
-    rm -f get-pip.py
 }
 
 

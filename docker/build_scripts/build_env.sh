@@ -36,6 +36,3 @@ LIBXCRYPT_HASH=7da15438d93883be434b0b44a8c22f726b5f605c6d88a315e17d4f4e929c20a8
 GIT_ROOT=2.23.0
 GIT_HASH=7d84f5d6f48e95b467a04a8aa1d474e0d21abc7877998af945568d2634fea46a
 GIT_DOWNLOAD_URL=https://github.com/git/git/archive
-
-GET_PIP_URL=https://bootstrap.pypa.io/get-pip.py
-GET_PIP_URL_CP34=https://bootstrap.pypa.io/3.4/get-pip.py

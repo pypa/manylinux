@@ -46,8 +46,9 @@ distro -- CentOS 6.
 
 
 Rather than forcing you to install CentOS 6 yourself, install Python,
-etc., we provide a `Docker <https://docker.com/>`_ image where we've
-done the work for you:
+etc., we provide `Docker <https://docker.com/>`_ images where we've
+done the work for you. The images are uploaded to `quay.io`_ and are tagged
+for repeatable builds.
 
 manylinux1
 ~~~~~~~~~~
@@ -110,7 +111,7 @@ directory for source code.
 
 The images currently contain:
 
-- CPython 2.7, 3.4, 3.5, 3.6, 3.7 & 3.8, installed in
+- CPython 2.7, 3.5, 3.6, 3.7 & 3.8, installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
   e.g. ``/opt/python/cp27-cp27mu`` contains a wide-unicode CPython 2.7
@@ -199,3 +200,4 @@ trackers, chat rooms, and mailing lists is expected to follow the
 `PyPA Code of Conduct`_.
 
 .. _PyPA Code of Conduct: https://www.pypa.io/en/latest/code-of-conduct
+.. _`quay.io`: https://quay.io/organization/pypa
