@@ -2,7 +2,7 @@
 
 PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 # of the form <maj>.<min>.<rev> or <maj>.<min>.<rev>rc<n>
-CPYTHON_VERSIONS="2.7.17 3.4.10 3.5.9 3.6.10 3.7.7 3.8.2"
+CPYTHON_VERSIONS="2.7.17 3.5.9 3.6.10 3.7.7 3.8.2"
 
 # openssl version to build, with expected sha256 hash of .tar.gz
 # archive.
@@ -40,7 +40,6 @@ GIT_HASH=7d84f5d6f48e95b467a04a8aa1d474e0d21abc7877998af945568d2634fea46a
 GIT_DOWNLOAD_URL=https://github.com/git/git/archive
 
 GET_PIP_URL=https://bootstrap.pypa.io/get-pip.py
-GET_PIP_URL_CP34=https://bootstrap.pypa.io/3.4/get-pip.py
 
 EPEL_RPM_HASH=0dcc89f9bf67a2a515bad64569b7a9615edc5e018f676a578d5fd0f17d3c81d4
 DEVTOOLS_HASH=a8ebeb4bed624700f727179e6ef771dafe47651131a00a78b342251415646acc
