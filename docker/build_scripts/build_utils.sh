@@ -54,23 +54,18 @@ function do_cpython_build {
     if [ -e ${prefix}/bin/python3 ]; then
         ln -s python3 ${prefix}/bin/python
     fi
-
-    if [ $(lex_pyver $py_ver) -ge $(lex_pyver 3.4) ] && [ $(lex_pyver $py_ver) -lt $(lex_pyver 3.5) ]; then
-        check_var $GET_PIP_URL_CP34
-        curl -fsSL $GET_PIP_URL_CP34 | ${prefix}/bin/python
-    else
-        # --force-reinstall is to work around:
-        #   https://github.com/pypa/pip/issues/5220
-        #   https://github.com/pypa/get-pip/issues/19
-        ${prefix}/bin/python get-pip.py --force-reinstall
-    fi
+    ${prefix}/bin/python -m ensurepip
 
     if [ -e ${prefix}/bin/pip3 ] && [ ! -e ${prefix}/bin/pip ]; then
         ln -s pip3 ${prefix}/bin/pip
     fi
-    # Since we fall back on a canned copy of get-pip.py, we might not have
+    # Since we fall back on a canned copy of pip, we might not have
     # the latest pip and friends. Upgrade them to make sure.
-    ${prefix}/bin/pip install -U --require-hashes -r ${MY_DIR}/requirements.txt
+    if [ "${py_ver:0:1}" == "2" ]; then
+        ${prefix}/bin/pip install -U --require-hashes -r ${MY_DIR}/py27-requirements.txt
+    else
+        ${prefix}/bin/pip install -U --require-hashes -r ${MY_DIR}/requirements.txt
+    fi
     local abi_tag=$(${prefix}/bin/python ${MY_DIR}/python-tag-abi-tag.py)
     ln -s ${prefix} /opt/python/${abi_tag}
 }
@@ -96,8 +91,6 @@ function build_cpython {
 
 
 function build_cpythons {
-    check_var $GET_PIP_URL
-    curl -fsSLO $GET_PIP_URL
     # Import public keys used to verify downloaded Python source tarballs.
     # https://www.python.org/static/files/pubkeys.txt
     gpg --import ${MY_DIR}/cpython-pubkeys.txt
@@ -108,7 +101,6 @@ function build_cpythons {
     done
     # Remove GPG hidden directory.
     rm -rf /root/.gnupg/
-    rm -f get-pip.py
 }
 
 

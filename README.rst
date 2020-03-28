@@ -39,7 +39,8 @@ distro -- CentOS 5.
 
 Rather than forcing you to install CentOS 5 yourself, install Python,
 etc., we provide two `Docker <https://docker.com/>`_ images where we've
-done the work for you:
+done the work for you. The images are uploaded to `quay.io`_ and are tagged
+ for repeatable builds.
 
 64-bit image (x86-64): ``quay.io/pypa/manylinux1_x86_64``
 
@@ -58,7 +59,7 @@ directory for source code.
 
 The images currently contain:
 
-- CPython 2.7, 3.4, 3.5, 3.6, 3.7 and 3.8, installed in
+- CPython 2.7, 3.5, 3.6, 3.7 and 3.8, installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
   e.g. ``/opt/python/cp27-cp27mu`` contains a wide-unicode CPython 2.7
@@ -148,3 +149,4 @@ trackers, chat rooms, and mailing lists is expected to follow the
 `PyPA Code of Conduct`_.
 
 .. _PyPA Code of Conduct: https://www.pypa.io/en/latest/code-of-conduct/
+.. _`quay.io`: https://quay.io/organization/pypa
