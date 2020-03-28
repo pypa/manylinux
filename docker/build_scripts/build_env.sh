@@ -4,10 +4,15 @@ PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 # of the form <maj>.<min>.<rev> or <maj>.<min>.<rev>rc<n>
 CPYTHON_VERSIONS="2.7.17 3.5.9 3.6.10 3.7.7 3.8.2"
 
+# perl is needed to build openssl
+PERL_ROOT=perl-5.30.2
+PERL_HASH=66db7df8a91979eb576fac91743644da878244cf8ee152f02cd6f5cd7a731689
+PERL_DOWNLOAD_URL=https://www.cpan.org/src/5.0
+
 # openssl version to build, with expected sha256 hash of .tar.gz
 # archive.
-OPENSSL_ROOT=openssl-1.0.2u
-OPENSSL_HASH=ecd0c6ffb493dd06707d38b14bb4d8c2288bb7033735606569d8f90f89669d16
+OPENSSL_ROOT=openssl-1.1.1e
+OPENSSL_HASH=694f61ac11cb51c9bf73f54e771ff6022b0327a43bbdfa1b2f19de1662a6dcbe
 OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source
 
 PATCHELF_VERSION=0.10

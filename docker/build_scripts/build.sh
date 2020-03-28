@@ -80,8 +80,14 @@ yum -y install \
     yasm \
     ${PYTHON_COMPILE_DEPS}
 
+# Build PERL in order to build OpenSSL. We'll delete this after OpenSSL build.
+build_perl $PERL_ROOT $PERL_HASH
+
 # Build an OpenSSL for both curl and the Pythons. We'll delete this at the end.
 build_openssl $OPENSSL_ROOT $OPENSSL_HASH
+
+# Delete PERL
+rm -rf /opt/perl
 
 # Install curl so we can have TLS 1.2 in this ancient container.
 build_curl $CURL_ROOT $CURL_HASH
