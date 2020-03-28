@@ -104,8 +104,15 @@ function build_cpythons {
 }
 
 
+function do_perl_build {
+    sh Configure -des -Dprefix=/opt/perl > /dev/null
+    make > /dev/null
+    make install > /dev/null
+}
+
+
 function do_openssl_build {
-    ./config no-ssl2 no-shared -fPIC --prefix=/usr/local/ssl > /dev/null
+    ./config no-shared -fPIC --prefix=/usr/local/ssl > /dev/null
     make > /dev/null
     make install_sw > /dev/null
 }
@@ -148,6 +155,20 @@ function check_sha256sum {
 }
 
 
+function build_perl {
+    local perl_fname=$1
+    check_var ${perl_fname}
+    local perl_sha256=$2
+    check_var ${perl_sha256}
+    # Can't use curl here because we don't have it yet, perl must be prefetched
+    check_required_source ${perl_fname}.tar.gz
+    check_sha256sum ${perl_fname}.tar.gz ${perl_sha256}
+    tar -xzf ${perl_fname}.tar.gz
+    (cd ${perl_fname} && do_perl_build)
+    rm -rf ${perl_fname} ${perl_fname}.tar.gz
+}
+
+
 function build_openssl {
     local openssl_fname=$1
     check_var ${openssl_fname}
@@ -157,7 +178,7 @@ function build_openssl {
     check_required_source ${openssl_fname}.tar.gz
     check_sha256sum ${openssl_fname}.tar.gz ${openssl_sha256}
     tar -xzf ${openssl_fname}.tar.gz
-    (cd ${openssl_fname} && do_openssl_build)
+    (cd ${openssl_fname} && PATH=/opt/perl/bin:$PATH do_openssl_build)
     rm -rf ${openssl_fname} ${openssl_fname}.tar.gz
 }
 
