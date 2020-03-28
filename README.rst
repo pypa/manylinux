@@ -39,7 +39,8 @@ distro -- CentOS 5.
 
 Rather than forcing you to install CentOS 5 yourself, install Python,
 etc., we provide two `Docker <https://docker.com/>`_ images where we've
-done the work for you:
+done the work for you. The images are uploaded to `quay.io`_ and are tagged
+ for repeatable builds.
 
 64-bit image (x86-64): ``quay.io/pypa/manylinux1_x86_64``
 
@@ -148,3 +149,4 @@ trackers, chat rooms, and mailing lists is expected to follow the
 `PyPA Code of Conduct`_.
 
 .. _PyPA Code of Conduct: https://www.pypa.io/en/latest/code-of-conduct/
+.. _`quay.io`: https://quay.io/organization/pypa
