@@ -217,7 +217,7 @@ function build_libxcrypt {
     curl -fsSLO "$LIBXCRYPT_DOWNLOAD_URL"/v"$LIBXCRYPT_VERSION"
     check_sha256sum "v$LIBXCRYPT_VERSION" "$LIBXCRYPT_HASH"
     tar xfz "v$LIBXCRYPT_VERSION"
-    (cd "libxcrypt-$LIBXCRYPT_VERSION" && ./bootstrap && \
+    (cd "libxcrypt-$LIBXCRYPT_VERSION" && ./autogen.sh && \
         do_standard_install \
         --disable-obsolete-api \
         --enable-hashes=all \
