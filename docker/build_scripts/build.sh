@@ -196,4 +196,7 @@ for PYTHON in /opt/python/*/bin/python; do
 done
 
 # Fix libc headers to remain compatible with C99 compilers.
-find /usr/include/ -type f -exec sed -i 's/\bextern _*inline_*\b/extern __inline __attribute__ ((__gnu_inline__))/g' {} +
+find /usr/include/ -type f -exec sed -i \
+    -e 's/\bextern _*inline_*\b/extern __inline __attribute__ ((__gnu_inline__))/g' \
+    -e 's/\bextern __always_inline\b/extern __always_inline __attribute__ ((__gnu_inline__))/g' \
+    {} +
