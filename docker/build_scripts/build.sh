@@ -191,7 +191,10 @@ find /opt/_internal -depth \
   -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) | xargs rm -rf
 
 # Fix libc headers to remain compatible with C99 compilers.
-find /usr/include/ -type f -exec sed -i 's/\bextern _*inline_*\b/extern __inline __attribute__ ((__gnu_inline__))/g' {} +
+find /usr/include/ -type f -exec sed -i \
+    -e 's/\bextern _*inline_*\b/extern __inline __attribute__ ((__gnu_inline__))/g' \
+    -e 's/\bextern __always_inline\b/extern __always_inline __attribute__ ((__gnu_inline__))/g' \
+    {} +
 
 if [ "${DEVTOOLSET_ROOTPATH:-}" != "" ]; then
     # remove useless things that have been installed by devtoolset
