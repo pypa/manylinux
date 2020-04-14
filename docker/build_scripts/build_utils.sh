@@ -222,7 +222,7 @@ function build_curl {
 
 
 function do_standard_install {
-    ./configure "$@" > /dev/null
+    ./configure --prefix=/opt/devtools "$@" > /dev/null
     make > /dev/null
     make install > /dev/null
 }
