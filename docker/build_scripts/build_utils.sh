@@ -228,3 +228,14 @@ function build_libxcrypt {
     rm -rf /usr/include/crypt.h
     rm -rf /usr/lib64/libcrypt.a /usr/lib64/libcrypt.so
 }
+
+function build_patchelf {
+    local patchelf_version=$1
+    local patchelf_hash=$2
+    local src_dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
+    curl -fsSL -o patchelf.tar.gz https://github.com/NixOS/patchelf/archive/$patchelf_version.tar.gz
+    check_sha256sum patchelf.tar.gz $patchelf_hash
+    tar -xzf patchelf.tar.gz
+    (cd patchelf-$patchelf_version && patch -p1 -i "$src_dir"/patches/patchelf-remove-zeroing.diff && ./bootstrap.sh && do_standard_install)
+    rm -rf patchelf.tar.gz patchelf-$patchelf_version
+}
