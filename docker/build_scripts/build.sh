@@ -158,12 +158,8 @@ export SSL_CERT_FILE=/opt/_internal/certs.pem
 # Now we can delete our built OpenSSL headers/static libs since we've linked everything we need
 rm -rf /usr/local/ssl
 
-# Install patchelf (latest with unreleased bug fixes)
-curl -fsSL -o patchelf.tar.gz https://github.com/NixOS/patchelf/archive/$PATCHELF_VERSION.tar.gz
-check_sha256sum patchelf.tar.gz $PATCHELF_HASH
-tar -xzf patchelf.tar.gz
-(cd patchelf-$PATCHELF_VERSION && ./bootstrap.sh && do_standard_install)
-rm -rf patchelf.tar.gz patchelf-$PATCHELF_VERSION
+# Install patchelf (latest with unreleased bug fixes) and apply our patches
+build_patchelf $PATCHELF_VERSION $PATCHELF_HASH
 
 ln -s $PY37_BIN/auditwheel /usr/local/bin/auditwheel
 
