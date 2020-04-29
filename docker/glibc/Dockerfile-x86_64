@@ -1,0 +1,4 @@
+FROM centos:6
+
+COPY ./build_scripts /build_scripts
+RUN bash /build_scripts/rebuild-glibc-without-vsyscall.sh

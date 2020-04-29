@@ -1,0 +1,7 @@
+FROM i386/centos:6
+
+RUN echo "i386" > /etc/yum/vars/basearch
+RUN yum -y update && \
+    yum install -y util-linux-ng
+COPY ./build_scripts /build_scripts
+RUN linux32 bash /build_scripts/rebuild-glibc-without-vsyscall.sh
