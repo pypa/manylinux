@@ -21,4 +21,5 @@ RUN linux32 bash build_scripts/build.sh && rm -r build_scripts
 
 ENV SSL_CERT_FILE=/opt/_internal/certs.pem
 
+ENTRYPOINT ["linux32"]
 CMD ["/bin/bash"]
