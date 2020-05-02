@@ -55,21 +55,21 @@ yum-config-manager --enable extras
 # upgrading glibc-common can end with removal on en_US.UTF-8 locale
 localedef -i en_US -f UTF-8 en_US.UTF-8
 
-DEVTOOLSET8_TOOLCHAIN_DEPS="devtoolset-8-binutils devtoolset-8-gcc devtoolset-8-gcc-c++ devtoolset-8-gcc-gfortran"
+DEVTOOLSET9_TOOLCHAIN_DEPS="devtoolset-9-binutils devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-gcc-gfortran"
 DEFAULT_TOOLCHAIN_DEPS="gcc gcc-c++ gcc-gfortran"
 if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
-    # Software collection (for devtoolset-8)
+    # Software collection (for devtoolset-9)
     yum -y install centos-release-scl-rh
     # EPEL support (for yasm)
     yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
     YASM=yasm
-    TOOLCHAIN_DEPS=${DEVTOOLSET8_TOOLCHAIN_DEPS}
+    TOOLCHAIN_DEPS=${DEVTOOLSET9_TOOLCHAIN_DEPS}
 elif [ "${AUDITWHEEL_ARCH}" == "aarch64" ] || [ "${AUDITWHEEL_ARCH}" == "ppc64le" ] || [ "${AUDITWHEEL_ARCH}" == "s390x" ]; then
-    # Software collection (for devtoolset-8)
+    # Software collection (for devtoolset-9)
     yum -y install centos-release-scl-rh
-    TOOLCHAIN_DEPS=${DEVTOOLSET8_TOOLCHAIN_DEPS}
+    TOOLCHAIN_DEPS=${DEVTOOLSET9_TOOLCHAIN_DEPS}
 elif [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
-    # No yasm, no devtoolset-8 on i686
+    # No yasm, no devtoolset-9 on i686
     TOOLCHAIN_DEPS=${DEFAULT_TOOLCHAIN_DEPS}
 fi
 
