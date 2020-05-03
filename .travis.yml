@@ -1,6 +1,6 @@
 language: c
-sudo: required
-dist: trusty
+os: linux
+dist: bionic
 services:
   - docker
 
@@ -18,7 +18,7 @@ env:
     - secure: "w1614pomHLltkBhqWM2bOvbymFWIWKqSqqIBDvaNn9tbQScioItJoELBT7g7+cD7nyU7OvpQ1U2fk0xVkCeNvYU0xS1vP4o/VnZRpup7f7Tkiq+2rf4fjwYr3HHnJjwak1l9bsw6FkgzKaVvSdiUJHMVxiIuLd3fVozR7qjBBhTDxSlWGOpSgd+ttpgMZwU5zQjdaVQr1D7E8M0979ZnWMrNRyLiAUeHaPILS815b+ijgqR+i5nmu0/FTCGM9Ik4KIzIfWq8AdfPdbRiq8c+LrrTPfyKcIQJaHmfduYRM4LycGWwzkXFBNtLrJ7uFLG9RDVemOHuHOWIJX8qCUIV4XuESXxH3fUQr6r+yxquTJbzXxNtoaLa6tBOTQWKDrRjT4z9Mf9Im14F2V59EUDoQowHx5bjunOH5wg3ruYNKYYBFRYra5kx0CkKrqFBzyl8fTUEQLyx1HWTVUC1WTXEeD/aFKOSIxW5DxZr5W4LLlW2+Raa52ZzY28Q6AdueFQCRzoJ70/GsJRlSsBdWNOHN4gSp1cZuToLWY15y64QhAMVDpikB+V4hmkbceLiTqeWzTStNL1sa32RHr6i/9zeFZw1pMD1+eOg9x6fgODfh2sqr/zPbu2oONsHnc4D2jwsEax4o+Dv5QHLvK7jdyWUmu47a9QReoexXK60jZXs3CA="
 
 
-matrix:
+jobs:
   include:
     - env: PLATFORM="i686"
     - env: PLATFORM="x86_64"
