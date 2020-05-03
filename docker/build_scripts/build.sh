@@ -52,32 +52,16 @@ esac
 yum -y update
 
 # EPEL support (for cmake28 & yasm)
-yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm curl
 
 case $AUDITWHEEL_ARCH in
 x86_64)
-  # Install devtoolset-8
+  # Install centos-release-scl to get devtoolset-8
   yum -y install centos-release-scl
-  yum -y install \
-    devtoolset-8-binutils \
-    devtoolset-8-gcc \
-    devtoolset-8-gcc-c++ \
-    devtoolset-8-gcc-gfortran \
   ;;
 i686)
-  # Install devtoolset-7 (binutils, gcc, gcc-c++, gcc-gfortran)
-  devtoolset7s=(
-    "devtoolset-7-runtime-7.1-4.el6.i686.rpm"
-    "devtoolset-7-binutils-2.28-11.el6.i686.rpm"
-    "devtoolset-7-gcc-7.3.1-5.10.el6.i686.rpm"
-    "devtoolset-7-libstdc++-devel-7.3.1-5.10.el6.i686.rpm"
-    "devtoolset-7-gcc-c++-7.3.1-5.10.el6.i686.rpm"
-    "devtoolset-7-libquadmath-devel-7.3.1-5.10.el6.i686.rpm"
-    "devtoolset-7-gcc-gfortran-7.3.1-5.10.el6.i686.rpm"
-  )
-  for rpm in "${devtoolset7s[@]}"; do
-	  yum install -y "https://www.repo.cloudlinux.com/cloudlinux/6.10/sclo/devtoolset-7/i386/$rpm"
-  done
+  # Install mayeut/devtoolset-8 repo to get devtoolset-8
+  curl -fsSLo /etc/yum.repos.d/mayeut-devtoolset-8.repo https://copr.fedorainfracloud.org/coprs/mayeut/devtoolset-8/repo/epel-6/mayeut-devtoolset-8-epel-6.repo
   ;;
 esac
 
@@ -87,6 +71,10 @@ yum -y install \
     bison \
     bzip2 \
     cmake28 \
+    devtoolset-8-binutils \
+    devtoolset-8-gcc \
+    devtoolset-8-gcc-c++ \
+    devtoolset-8-gcc-gfortran \
     diffutils \
     gettext \
     file \
