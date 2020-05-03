@@ -1,6 +1,6 @@
 language: c
-sudo: required
-dist: trusty
+os: linux
+dist: bionic
 services:
   - docker
 
@@ -23,7 +23,7 @@ env:
 
 # use YAML aliases and anchors to avoid duplication in stages
 # c.f. https://github.com/travis-ci/travis-ci/issues/8295#issuecomment-454457787
-manylinux-build: &manylinux-build
+_manylinux-build: &manylinux-build
       stage: "Build manylinux images"
       before_install:
         # Load cached docker images
