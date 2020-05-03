@@ -49,28 +49,26 @@ sed -i '/^override_install_langs=/d' /etc/yum.conf
 # concerns."
 # Decided not to clean at this point: https://github.com/pypa/manylinux/pull/129
 yum -y update
-yum -y install yum-utils
+yum -y install yum-utils curl
 yum-config-manager --enable extras
 
 # upgrading glibc-common can end with removal on en_US.UTF-8 locale
 localedef -i en_US -f UTF-8 en_US.UTF-8
 
-DEVTOOLSET9_TOOLCHAIN_DEPS="devtoolset-9-binutils devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-gcc-gfortran"
-DEFAULT_TOOLCHAIN_DEPS="gcc gcc-c++ gcc-gfortran"
+TOOLCHAIN_DEPS="devtoolset-9-binutils devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-gcc-gfortran"
 if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
     # Software collection (for devtoolset-9)
     yum -y install centos-release-scl-rh
     # EPEL support (for yasm)
     yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
     YASM=yasm
-    TOOLCHAIN_DEPS=${DEVTOOLSET9_TOOLCHAIN_DEPS}
 elif [ "${AUDITWHEEL_ARCH}" == "aarch64" ] || [ "${AUDITWHEEL_ARCH}" == "ppc64le" ] || [ "${AUDITWHEEL_ARCH}" == "s390x" ]; then
     # Software collection (for devtoolset-9)
     yum -y install centos-release-scl-rh
-    TOOLCHAIN_DEPS=${DEVTOOLSET9_TOOLCHAIN_DEPS}
 elif [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
-    # No yasm, no devtoolset-9 on i686
-    TOOLCHAIN_DEPS=${DEFAULT_TOOLCHAIN_DEPS}
+    # No yasm on i686
+    # Install mayeut/devtoolset-9 repo to get devtoolset-9
+    curl -fsSLo /etc/yum.repos.d/mayeut-devtoolset-9.repo https://copr.fedorainfracloud.org/coprs/mayeut/devtoolset-9/repo/custom-1/mayeut-devtoolset-9-custom-1.repo
 fi
 
 # Development tools and libraries
