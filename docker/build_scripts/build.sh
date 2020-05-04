@@ -60,6 +60,8 @@ x86_64)
   yum -y install centos-release-scl
   ;;
 i686)
+  # Add libgfortran4 for devtoolset-7 compat
+  yum -y install libgfortran4
   # Install mayeut/devtoolset-8 repo to get devtoolset-8
   curl -fsSLo /etc/yum.repos.d/mayeut-devtoolset-8.repo https://copr.fedorainfracloud.org/coprs/mayeut/devtoolset-8/repo/epel-6/mayeut-devtoolset-8-epel-6.repo
   ;;
