@@ -18,8 +18,8 @@ OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source
 PATCHELF_VERSION=0.10
 PATCHELF_HASH=b3cb6bdedcef5607ce34a350cf0b182eb979f8f7bc31eae55a93a70a3f020d13
 
-CURL_ROOT=curl-7.69.1
-CURL_HASH=01ae0c123dee45b01bbaef94c0bc00ed2aec89cb2ee0fd598e0d302a6b5e0a98
+CURL_ROOT=curl-7.70.0
+CURL_HASH=ca2feeb8ef13368ce5d5e5849a5fd5e2dd4755fecf7d8f0cc94000a4206fb8e7
 CURL_DOWNLOAD_URL=https://curl.haxx.se/download
 
 AUTOCONF_ROOT=autoconf-2.69
