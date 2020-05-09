@@ -120,7 +120,7 @@ cd ..
 rm -rf $SQLITE_AUTOCONF_VERSION*
 rm /usr/local/lib/libsqlite3.a
 
-# Install libcrypt.so.2
+# Install libcrypt.so.1 and libcrypt.so.2
 build_libxcrypt "$LIBXCRYPT_DOWNLOAD_URL" "$LIBXCRYPT_VERSION" "$LIBXCRYPT_HASH"
 
 # Compile the latest Python releases.
