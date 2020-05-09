@@ -120,7 +120,7 @@ do_standard_install
 cd ..
 rm -rf $SQLITE_AUTOCONF_VERSION*
 
-# Install libcrypt.so.2
+# Install libcrypt.so.1 and libcrypt.so.2
 build_libxcrypt "$LIBXCRYPT_DOWNLOAD_URL" "$LIBXCRYPT_VERSION" "$LIBXCRYPT_HASH"
 
 # Compile the latest Python releases.
