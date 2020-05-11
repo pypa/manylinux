@@ -23,7 +23,17 @@ Code and details regarding ``manylinux1`` can be found here:
 Wheel packages compliant with those tags can be uploaded to
 `PyPI <https://pypi.python.org>`_ (for instance with `twine
 <https://pypi.python.org/pypi/twine>`_) and can be installed with
-**pip 19.0 and later**.
+pip:
+
++-------------------+----------------------------------+
+| ``manylinux`` tag | Client-side pip version required |
++===================+==================================+
+| ``manylinux2014`` | pip >= 19.3                      |
++-------------------+----------------------------------+
+| ``manylinux2010`` | pip >= 19.0                      |
++-------------------+----------------------------------+
+| ``manylinux1``    | pip >= 8.1.0                     |
++-------------------+----------------------------------+
 
 The manylinux2010 tags allow projects to distribute wheels that are
 automatically installed (and work!) on the vast majority of desktop
