@@ -2,7 +2,7 @@
 
 PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 # of the form <maj>.<min>.<rev> or <maj>.<min>.<rev>rc<n>
-CPYTHON_VERSIONS="2.7.18 3.5.9 3.6.10 3.7.7 3.8.2"
+CPYTHON_VERSIONS="2.7.18 3.5.9 3.6.10 3.7.7 3.8.3"
 
 # openssl version to build, with expected sha256 hash of .tar.gz
 # archive.
