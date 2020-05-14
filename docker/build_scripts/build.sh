@@ -52,6 +52,11 @@ yum -y update
 yum -y install yum-utils curl
 yum-config-manager --enable extras
 
+if ! which localedef &> /dev/null; then
+    # somebody messed up glibc-common package to squeeze image size, reinstall the package
+    yum -y reinstall glibc-common
+fi
+
 # upgrading glibc-common can end with removal on en_US.UTF-8 locale
 localedef -i en_US -f UTF-8 en_US.UTF-8
 
