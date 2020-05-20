@@ -1,6 +1,6 @@
 # pip requirements for python2.7
 # NOTE: pip has GPG signatures; could download and verify independently.
-pip==20.1 ; python_version=='2.7' \
+pip==20.1.1 ; python_version=='2.7' \
     --hash=sha256:4fdc7fd2db7636777d28d2e1432e2876e30c2b790d461f135716577f73104369 \
     --hash=sha256:572c0f25eca7c87217b21f6945b7192744103b18f4e4b16b8a83b227a811e192
 wheel==0.34.2 ; python_version=='2.7' \
