@@ -26,10 +26,9 @@ env:
 _manylinux-build: &manylinux-build
       stage: "Build manylinux images"
       before_install:
-        # Load cached docker images
-        - if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
+        - travis-ci/load_cached_images.sh combined
       script:
-        - PLATFORM=$PLATFORM TRAVIS_COMMIT=$TRAVIS_COMMIT ./build.sh
+        - PLATFORM=$PLATFORM TRAVIS_COMMIT=$TRAVIS_COMMIT ./build.sh glibc_skip
       deploy:
         provider: script
         script: docker/deploy.sh
@@ -39,17 +38,33 @@ _manylinux-build: &manylinux-build
 
 jobs:
   include:
-    - stage: "Patch glibc"
+    - stage: "Build patched i686 glibc for x86_64 image"
       env:
         - PLATFORM="x86_64"
       before_install:
-        # Load cached docker images
-        - if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
+        - travis-ci/load_cached_images.sh 32
       script:
-        - PLATFORM=$PLATFORM TRAVIS_COMMIT=$TRAVIS_COMMIT ./build.sh glibc_only
+        - PLATFORM=$PLATFORM docker/glibc/build.sh 32
       before_cache:
-        # Save tagged docker images
-        - mkdir -p $HOME/docker && docker images -a --filter='dangling=false' --format '{{.Repository}}:{{.Tag}} {{.ID}}' | grep 'centos-with-vsyscall:latest' | xargs -n 2 -t sh -c 'test -e $HOME/docker/$1.tar.gz || docker save $0 | gzip -2 > $HOME/docker/$1.tar.gz'
+        - travis-ci/cache_images.sh 32
+    - stage: "Build patched x86_64 glibc for x86_64 image"
+      env:
+        - PLATFORM="x86_64"
+      before_install:
+        - travis-ci/load_cached_images.sh 64
+      script:
+        - PLATFORM=$PLATFORM docker/glibc/build.sh 64
+      before_cache:
+        - travis-ci/cache_images.sh 64
+    - stage: "Add patched glibcs to x86_64 image"
+      env:
+        - PLATFORM="x86_64"
+      before_install:
+        - travis-ci/load_cached_images.sh all
+      script:
+        - PLATFORM=$PLATFORM docker/glibc/build.sh all
+      before_cache:
+        - travis-ci/cache_images.sh combined
     - <<: *manylinux-build
       env:
         - PLATFORM="x86_64"
