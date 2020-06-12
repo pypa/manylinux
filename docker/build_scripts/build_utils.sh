@@ -248,6 +248,6 @@ function build_patchelf {
     curl -fsSL -o patchelf.tar.gz https://github.com/NixOS/patchelf/archive/$patchelf_version.tar.gz
     check_sha256sum patchelf.tar.gz $patchelf_hash
     tar -xzf patchelf.tar.gz
-    (cd patchelf-$patchelf_version && patch -p1 -i "$src_dir"/patches/patchelf-remove-zeroing.diff && ./bootstrap.sh && do_standard_install)
+    (cd patchelf-$patchelf_version && ./bootstrap.sh && do_standard_install)
     rm -rf patchelf.tar.gz patchelf-$patchelf_version
 }
