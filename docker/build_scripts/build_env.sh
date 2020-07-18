@@ -4,8 +4,8 @@ PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 # of the form <maj>.<min>.<rev> or <maj>.<min>.<rev>rc<n>
 CPYTHON_VERSIONS="3.5.9 3.6.11 3.7.8 3.8.4 3.9.0b3"
 
-PATCHELF_VERSION=0.10
-PATCHELF_HASH=b3cb6bdedcef5607ce34a350cf0b182eb979f8f7bc31eae55a93a70a3f020d13
+PATCHELF_VERSION=0.11
+PATCHELF_HASH=e9dc4dbed842e475176ef60531c2805ed37a71c34cc6dc5d1b9ad68d889aeb6b
 
 AUTOMAKE_ROOT=automake-1.16.2
 AUTOMAKE_HASH=b2f361094b410b4acbf4efba7337bdb786335ca09eb2518635a09fb7319ca5c1
