@@ -2,7 +2,7 @@
 
 PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 # of the form <maj>.<min>.<rev> or <maj>.<min>.<rev>rc<n>
-CPYTHON_VERSIONS="3.5.9 3.6.11 3.7.8 3.8.4 3.9.0b3"
+CPYTHON_VERSIONS="3.5.9 3.6.11 3.7.8 3.8.5 3.9.0b5"
 
 PATCHELF_VERSION=0.11
 PATCHELF_HASH=e9dc4dbed842e475176ef60531c2805ed37a71c34cc6dc5d1b9ad68d889aeb6b
