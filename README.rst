@@ -45,8 +45,8 @@ This repository hosts several manylinux-related things:
 Docker images
 -------------
 
-.. image:: https://travis-ci.org/pypa/manylinux.svg?branch=master
-   :target: https://travis-ci.org/organization/pypa
+.. image:: https://travis-ci.com/pypa/manylinux.svg?branch=master
+   :target: https://travis-ci.com/github/pypa/manylinux
 
 Building manylinux-compatible wheels is not trivial; as a general
 rule, binaries built on one Linux distro will only work on other Linux
