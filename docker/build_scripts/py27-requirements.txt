@@ -6,6 +6,6 @@ pip==20.2.2; python_version=='2.7' \
 wheel==0.34.2 ; python_version=='2.7' \
     --hash=sha256:df277cb51e61359aba502208d680f90c0493adec6f0e848af94948778aed386e \
     --hash=sha256:8788e9155fe14f54164c1b9eb0a319d98ef02c160725587ad60f14ddc57b6f96
-setuptools==44.1.1 ; python_version=='2.7' \
-    --hash=sha256:27a714c09253134e60a6fa68130f78c7037e5562c4f21f8f318f2ae900d152d5 \
-    --hash=sha256:c67aa55db532a0dadc4d2e20ba9961cbd3ccc84d544e9029699822542b5a476b
+setuptools==50.2.0; python_version=='2.7' \
+    --hash=sha256:b4936e805c5cdf13b8b8494a7ce803f030898e1e02ca6f10a062b1e5e6563c10 \
+    --hash=sha256:f9e49bed35a9e40d91d903eb30a52a66afbb55b1303713b36777f0ad49cec319
