@@ -1,4 +1,4 @@
-# pip requirements for cpython 3.7
+# pip requirements for tools
 # NOTE: certifi has GPG signatures; could download and verify independently.
 certifi==2020.6.20 \
     --hash=sha256:8fc0819f1f30ba15bdb34cceffb9ef04d99f420f68eb75d901e9560b8749fc41 \
