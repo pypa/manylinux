@@ -130,28 +130,35 @@ build_libxcrypt "$LIBXCRYPT_DOWNLOAD_URL" "$LIBXCRYPT_VERSION" "$LIBXCRYPT_HASH"
 mkdir -p /opt/python
 build_cpythons $CPYTHON_VERSIONS
 
-PY37_BIN=/opt/python/cp37-cp37m/bin
+# Create venv for auditwheel & certifi
+TOOLS_PATH=/opt/_internal/tools
+/opt/python/cp37-cp37m/bin/python -m venv $TOOLS_PATH
+source $TOOLS_PATH/bin/activate
 
+# Install default packages
+pip install -U --require-hashes -r $MY_DIR/requirements.txt
 # Install certifi and auditwheel
-$PY37_BIN/pip install --require-hashes -r $MY_DIR/py37-requirements.txt
+pip install -U --require-hashes -r $MY_DIR/requirements-tools.txt
+
+# Make auditwheel available in PATH
+ln -s $TOOLS_PATH/bin/auditwheel /usr/local/bin/auditwheel
 
 # Our openssl doesn't know how to find the system CA trust store
 #   (https://github.com/pypa/manylinux/issues/53)
 # And it's not clear how up-to-date that is anyway
 # So let's just use the same one pip and everyone uses
-ln -s $($PY37_BIN/python -c 'import certifi; print(certifi.where())') \
-      /opt/_internal/certs.pem
-# If you modify this line you also have to modify the versions in the
-# Dockerfiles:
+ln -s $(python -c 'import certifi; print(certifi.where())') /opt/_internal/certs.pem
+# If you modify this line you also have to modify the versions in the Dockerfiles:
 export SSL_CERT_FILE=/opt/_internal/certs.pem
+
+# Deactivate the tools virtual environment
+deactivate
 
 # Now we can delete our built OpenSSL headers/static libs since we've linked everything we need
 rm -rf /usr/local/ssl
 
 # Install patchelf (latest with unreleased bug fixes) and apply our patches
 build_patchelf $PATCHELF_VERSION $PATCHELF_HASH
-
-ln -s $PY37_BIN/auditwheel /usr/local/bin/auditwheel
 
 # Clean up development headers and other unnecessary stuff for
 # final image
