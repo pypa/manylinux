@@ -109,7 +109,7 @@ directory for source code.
 
 The images currently contain:
 
-- CPython 3.5, 3.6, 3.7 and 3.8, installed in
+- CPython 3.5, 3.6, 3.7, 3.8 and 3.9, installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
   e.g. ``/opt/python/cp35-cp35m`` contains a CPython 3.5 build, and
