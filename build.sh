@@ -4,4 +4,4 @@
 set -ex
 
 
-docker build --rm -t quay.io/pypa/manylinux2014_$PLATFORM:$TRAVIS_COMMIT -f docker/Dockerfile-$PLATFORM docker/
+docker build --rm -t quay.io/pypa/${POLICY}_${PLATFORM}:${TRAVIS_COMMIT} -f docker/Dockerfile-${POLICY}_${PLATFORM} docker/

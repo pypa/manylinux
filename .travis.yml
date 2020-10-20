@@ -20,18 +20,28 @@ env:
 jobs:
   include:
    - arch: amd64
-     env: PLATFORM="x86_64"
+     env: PLATFORM="x86_64" POLICY="manylinux2014"
    - arch: amd64
-     env: PLATFORM="i686"
+     env: PLATFORM="x86_64" POLICY="manylinux_2_24"
+   - arch: amd64
+     env: PLATFORM="i686" POLICY="manylinux2014"
+   - arch: amd64
+     env: PLATFORM="i686" POLICY="manylinux_2_24"
    - arch: arm64
-     env: PLATFORM="aarch64"
+     env: PLATFORM="aarch64" POLICY="manylinux2014"
+   - arch: arm64
+     env: PLATFORM="aarch64" POLICY="manylinux_2_24"
    - arch: ppc64le
-     env: PLATFORM="ppc64le"
+     env: PLATFORM="ppc64le" POLICY="manylinux2014"
+   - arch: ppc64le
+     env: PLATFORM="ppc64le" POLICY="manylinux_2_24"
    - arch: s390x
-     env: PLATFORM="s390x"
+     env: PLATFORM="s390x" POLICY="manylinux2014"
+   - arch: s390x
+     env: PLATFORM="s390x" POLICY="manylinux_2_24"
 
 script:
-  - PLATFORM=$PLATFORM TRAVIS_COMMIT=$TRAVIS_COMMIT ./build.sh
+  - PLATFORM=$PLATFORM POLICY=$POLICY TRAVIS_COMMIT=$TRAVIS_COMMIT ./build.sh
 
 deploy:
   provider: script
