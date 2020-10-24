@@ -2,7 +2,7 @@
 # Top-level build script called from Dockerfile
 
 # Stop at any error, show all commands
-set -ex
+set -exuo pipefail
 
 # Set build environment variables
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
@@ -91,6 +91,7 @@ fi
 # upgrading glibc-common can end with removal on en_US.UTF-8 locale
 localedef -i en_US -f UTF-8 en_US.UTF-8
 
+YASM=
 if [ "${ID}" == "centos" ]; then
     TOOLCHAIN_DEPS="devtoolset-9-binutils devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-gcc-gfortran"
     if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
@@ -275,7 +276,9 @@ if [ "${DEVTOOLSET_ROOTPATH:-}" != "" ]; then
 fi
 rm -rf /usr/share/backgrounds
 # if we updated glibc, we need to strip locales again...
-localedef --list-archive | grep -v -i ^en_US.utf8 | xargs localedef --delete-from-archive
+if localedef --list-archive | grep -sq -v -i ^en_US.utf8; then
+    localedef --list-archive | grep -v -i ^en_US.utf8 | xargs localedef --delete-from-archive
+fi
 if [ "${ID}" == "centos" ]; then
     mv -f /usr/lib/locale/locale-archive /usr/lib/locale/locale-archive.tmpl
     build-locale-archive
@@ -285,5 +288,9 @@ else
     update-locale LANG=en_US.UTF-8
 fi
 find /usr/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
-find /usr/local/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
-rm -rf /usr/local/share/man
+if [ -d /usr/local/share/locale ]; then
+    find /usr/local/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
+fi
+if [ -d /usr/local/share/man ]; then
+    rm -rf /usr/local/share/man
+fi
