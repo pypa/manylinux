@@ -6,8 +6,9 @@ certifi==2020.6.20 \
 auditwheel==3.2.0 \
     --hash=sha256:374a42f5ed95aea02ce9e775bbc4abdf57e84054400bab063616f0ab9bb20ebe
 # this package required for auditwheel
-pyelftools==0.26 \
-    --hash=sha256:cc0ea0de82b240a73ef4056fce44acbb4727dca7d66759371aff2bad457ed711
+pyelftools==0.27 \
+    --hash=sha256:5609aa6da1123fccfae2e8431a67b4146aa7fad5b3889f808df12b110f230937 \
+    --hash=sha256:cde854e662774c5457d688ca41615f6594187ba7067af101232df889a6b7a66b
 wheel==0.35.1 \
     --hash=sha256:497add53525d16c173c2c1c733b8f655510e909ea78cc0e29d374243544b77a2 \
     --hash=sha256:99a22d87add3f634ff917310a3d87e499f19e663413a52eb9232c447aa646c9f
