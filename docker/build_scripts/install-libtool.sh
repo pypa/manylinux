@@ -11,7 +11,8 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source $MY_DIR/build_utils.sh
 
 # Install newest libtool
-LIBTOOL_ROOT=libtool-2.4.6
+LIBTOOL_VERSION=2.4.6
+LIBTOOL_ROOT=libtool-${LIBTOOL_VERSION}
 LIBTOOL_HASH=e3bd4d5d3d025a36c21dd6af7ea818a2afcd4dfc1ea5a17b39d7854bcd0c06e3
 LIBTOOL_DOWNLOAD_URL=http://ftp.gnu.org/gnu/libtool
 
@@ -25,4 +26,5 @@ popd
 rm -rf ${LIBTOOL_ROOT} ${LIBTOOL_ROOT}.tar.gz
 
 
-libtool --version
+hash -r
+libtoolize --version

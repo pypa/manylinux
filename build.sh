@@ -4,6 +4,17 @@
 set -exuo pipefail
 
 
+# rebuild glibc for manylinux2010_x86_64
+if [ "${POLICY}_${PLATFORM}" == "manylinux2010_x86_64" ] && [ "$1" != glibc_skip ] || [ "$1" == glibc_only ]; then
+	manylinux2010_x86_64_glibc/build.sh 32
+	manylinux2010_x86_64_glibc/build.sh 64
+	if [ "$1" == "glibc_only" ]; then
+		exit 0
+	fi
+	manylinux2010_x86_64_glibc/build.sh all
+fi
+
+
 # Export variable needed by 'docker build --build-arg'
 export POLICY
 export PLATFORM
@@ -23,7 +34,24 @@ else
 	echo "Unsupported platform: '${PLATFORM}'"
 	exit 1
 fi
-if [ "${POLICY}" == "manylinux2014" ]; then
+
+if [ "${POLICY}" == "manylinux2010" ]; then
+	if [ "${PLATFORM}" == "x86_64" ]; then
+		BASEIMAGE="quay.io/pypa/manylinux2010_centos-6-no-vsyscall"
+	elif [ "${PLATFORM}" == "i686" ]; then
+		BASEIMAGE="${MULTIARCH_PREFIX}centos:6"
+	else
+		echo "Policy '${POLICY}' does not support platform '${PLATFORM}'"
+		exit 1
+	fi
+	DEVTOOLSET_ROOTPATH="/opt/rh/devtoolset-8/root"
+	PREPEND_PATH="${DEVTOOLSET_ROOTPATH}/usr/bin:"
+	if [ "${PLATFORM}" == "i686" ]; then
+		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst:/usr/local/lib"
+	else
+		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst:/usr/local/lib64:/usr/local/lib"
+	fi
+elif [ "${POLICY}" == "manylinux2014" ]; then
 	if [ "${PLATFORM}" == "s390x" ]; then
 		BASEIMAGE="s390x/clefos:7"
 	else

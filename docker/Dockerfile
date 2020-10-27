@@ -22,6 +22,10 @@ ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH_ARG}
 ENV PATH=${PREPEND_PATH}${PATH}
 ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 
+# first fixup mirrors, keep the script around
+COPY build_scripts/fixup-mirrors.sh /usr/local/sbin/fixup-mirrors
+RUN fixup-mirrors
+
 # setup entrypoint, this will wrap commands with `linux32` with i686 images
 COPY build_scripts/install-entrypoint.sh /build_scripts/install-entrypoint.sh
 RUN /build_scripts/install-entrypoint.sh && rm -rf build_scripts
@@ -32,6 +36,9 @@ COPY build_scripts/install-runtime-packages.sh /build_scripts/install-runtime-pa
 RUN manylinux-entrypoint /build_scripts/install-runtime-packages.sh && rm -rf /build_scripts
 
 COPY build_scripts/build_utils.sh /build_scripts/build_utils.sh
+
+COPY build_scripts/install-autoconf.sh /build_scripts/install-autoconf.sh
+RUN manylinux-entrypoint /build_scripts/install-autoconf.sh
 
 COPY build_scripts/install-automake.sh /build_scripts/install-automake.sh
 RUN manylinux-entrypoint /build_scripts/install-automake.sh
@@ -66,6 +73,9 @@ RUN manylinux-entrypoint /build_scripts/build-cmake.sh
 FROM build_base AS build_cpython
 COPY build_scripts/build-sqlite3.sh /build_scripts/build-sqlite3.sh
 RUN manylinux-entrypoint /build_scripts/build-sqlite3.sh
+
+COPY build_scripts/build-openssl.sh /build_scripts/build-openssl.sh
+RUN manylinux-entrypoint /build_scripts/build-openssl.sh
 
 COPY build_scripts/build-cpython.sh /build_scripts/build-cpython.sh
 

@@ -1,0 +1,29 @@
+diff --git a/SPECS/glibc.spec b/SPECS/glibc.spec
+index 9bd07c9..c389711 100644
+--- a/SPECS/glibc.spec
++++ b/SPECS/glibc.spec
+@@ -1,6 +1,6 @@
+ %define glibcsrcdir glibc-2.12-2-gc4ccff1
+ %define glibcversion 2.12
+-%define glibcrelease 1.212%{?dist}
++%define glibcrelease 1.212.1%{?dist}
+ %define run_glibc_tests 1
+ %define auxarches athlon sparcv9v sparc64v alphaev6
+ %define xenarches i686 athlon
+@@ -279,6 +279,7 @@ 
+ Patch247: glibc-rh1452717-4.patch
+ Patch248: glibc-rh1504810-1.patch
+ Patch249: glibc-rh1504810-2.patch
++Patch250: remove-vsyscall.patch
+ 
+ Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+ Obsoletes: glibc-profile < 2.4
+@@ -731,6 +732,7 @@
+ %patch247 -p1
+ %patch248 -p1
+ %patch249 -p1
++%patch250 -E -p3
+ 
+ # A lot of programs still misuse memcpy when they have to use
+ # memmove. The memcpy implementation below is not tolerant at
+
