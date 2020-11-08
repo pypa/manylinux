@@ -12,6 +12,9 @@ distribute binary Python extensions as wheels on Linux. This effort
 has produced `PEP 513 <https://www.python.org/dev/peps/pep-0513/>`_ which
 is further enhanced by `PEP 571 <https://www.python.org/dev/peps/pep-0571/>`_
 defining ``manylinux2010_x86_64`` and ``manylinux2010_i686`` platform tags.
+`PEP 599 <https://www.python.org/dev/peps/pep-0599/>`_ defined
+``manylinux2014_*`` platform tags, adding support for ARMv7 (``armv7l``),
+ARMv8 (``aarch64``) and PowerPC (``ppc64``, ``ppc64le``) architectures.
 
 PEP 513 defined ``manylinux1_x86_64`` and ``manylinux1_i686`` platform tags
 and the wheels were built on Centos5. Centos5 reached End of Life (EOL) on
