@@ -70,6 +70,11 @@ COPY build_scripts/build-cmake.sh /build_scripts/build-cmake.sh
 RUN manylinux-entrypoint /build_scripts/build-cmake.sh
 
 
+FROM build_base AS build_swig
+COPY build_scripts/build-swig.sh /build_scripts/build-swig.sh
+RUN manylinux-entrypoint /build_scripts/build-swig.sh
+
+
 FROM build_base AS build_cpython
 COPY build_scripts/build-sqlite3.sh /build_scripts/build-sqlite3.sh
 RUN manylinux-entrypoint /build_scripts/build-sqlite3.sh
@@ -119,6 +124,7 @@ RUN manylinux-entrypoint /build_scripts/install-requirements.sh
 FROM runtime_base
 COPY --from=build_git /manylinux/git /
 COPY --from=build_cmake /manylinux/cmake /
+COPY --from=build_swig /manylinux/swig /
 COPY --from=build_cpython /manylinux/sqlite3 /
 COPY --from=all_cpython /opt/_internal /opt/_internal/
 COPY build_scripts/finalize.sh /build_scripts/finalize.sh
