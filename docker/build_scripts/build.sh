@@ -58,6 +58,8 @@ case $AUDITWHEEL_ARCH in
 x86_64)
   # Install centos-release-scl to get devtoolset-8
   yum -y install centos-release-scl
+  sed -i 's/^mirrorlist/#mirrorlist/g' /etc/yum.repos.d/*.repo
+  sed -i 's;^#.*baseurl=http://mirror;baseurl=https://vault;g' /etc/yum.repos.d/*.repo
   ;;
 i686)
   # Add libgfortran4 for devtoolset-7 compat
