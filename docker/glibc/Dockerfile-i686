@@ -1,5 +1,12 @@
 FROM i386/centos:6
 
+# Centos 6 is EOL and is no longer available from the usual mirrors, so switch
+# to http://vault.centos.org
+# From: https://github.com/rust-lang/rust/pull/41045
+RUN sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf &&  \
+    sed -i 's/mirrorlist/#mirrorlist/' /etc/yum.repos.d/*.repo && \
+    sed -i 's/#\(baseurl.*\)mirror.centos.org/\1vault.centos.org/' /etc/yum.repos.d/*.repo
+
 RUN echo "i386" > /etc/yum/vars/basearch
 RUN yum -y update && \
     yum install -y util-linux-ng

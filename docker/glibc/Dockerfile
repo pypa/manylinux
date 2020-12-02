@@ -26,6 +26,13 @@ COPY --from=quay.io/pypa/manylinux2010_centos-6-with-vsyscall64:latest \
     /rpms/nscd-2.12-1.212.1.el6.x86_64.rpm \
     /rpms/
 
+# Centos 6 is EOL and is no longer available from the usual mirrors, so switch
+# to http://vault.centos.org
+# From: https://github.com/rust-lang/rust/pull/41045
+RUN sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf &&  \
+    sed -i 's/mirrorlist/#mirrorlist/' /etc/yum.repos.d/*.repo && \
+    sed -i 's/#\(baseurl.*\)mirror.centos.org/\1vault.centos.org/' /etc/yum.repos.d/*.repo
+
 RUN yum install -y glibc.i686 glibc-devel.i686 glibc-static.i686 glibc.x86_64 glibc-devel.x86_64 glibc-static.x86_64 && \
     yum -y install /rpms/* && rm -rf /rpms && yum -y clean all && rm -rf /var/cache/yum/* && \
     # if we updated glibc, we need to strip locales again...

@@ -12,6 +12,13 @@ ENV PATH $DEVTOOLSET_ROOTPATH/usr/bin:$PATH
 ENV LD_LIBRARY_PATH $DEVTOOLSET_ROOTPATH/usr/lib64:$DEVTOOLSET_ROOTPATH/usr/lib:$DEVTOOLSET_ROOTPATH/usr/lib64/dyninst:$DEVTOOLSET_ROOTPATH/usr/lib/dyninst:/usr/local/lib64:/usr/local/lib
 ENV PKG_CONFIG_PATH /usr/local/lib/pkgconfig
 
+# Centos 6 is EOL and is no longer available from the usual mirrors, so switch
+# to http://vault.centos.org
+# From: https://github.com/rust-lang/rust/pull/41045
+RUN sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf &&  \
+    sed -i 's/mirrorlist/#mirrorlist/' /etc/yum.repos.d/*.repo && \
+    sed -i 's/#\(baseurl.*\)mirror.centos.org/\1vault.centos.org/' /etc/yum.repos.d/*.repo
+
 COPY build_scripts /build_scripts
 RUN bash build_scripts/build.sh && rm -r build_scripts
 
