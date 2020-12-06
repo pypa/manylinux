@@ -52,7 +52,9 @@ esac
 yum -y update
 
 # EPEL support (for cmake28 & yasm)
-yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm curl
+yum -y install https://archives.fedoraproject.org/pub/archive/epel/6/x86_64/epel-release-6-8.noarch.rpm curl
+sed -i 's/^mirrorlist/#mirrorlist/g' /etc/yum.repos.d/*.repo
+sed -i 's;^#.*baseurl=http://download.fedoraproject.org/pub;baseurl=https://archives.fedoraproject.org/pub/archive;g' /etc/yum.repos.d/*.repo
 
 case $AUDITWHEEL_ARCH in
 x86_64)
@@ -64,8 +66,8 @@ x86_64)
 i686)
   # Add libgfortran4 for devtoolset-7 compat
   yum -y install libgfortran4
-  # Install mayeut/devtoolset-8 repo to get devtoolset-8
-  curl -fsSLo /etc/yum.repos.d/mayeut-devtoolset-8.repo https://copr.fedorainfracloud.org/coprs/mayeut/devtoolset-8/repo/epel-6/mayeut-devtoolset-8-epel-6.repo
+  # Install mayeut/devtoolset-8-i386 repo to get devtoolset-8
+  curl -fsSLo /etc/yum.repos.d/mayeut-devtoolset-8.repo https://copr.fedorainfracloud.org/coprs/mayeut/devtoolset-8-i386/repo/custom-1/mayeut-devtoolset-8-i386-custom-1.repo
   ;;
 esac
 
