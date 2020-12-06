@@ -1,8 +1,8 @@
 # pip requirements for tools
 # NOTE: certifi has GPG signatures; could download and verify independently.
-certifi==2020.11.8 \
-    --hash=sha256:1f422849db327d534e3d0c5f02a263458c3955ec0aae4ff09b95f195c59f4edd \
-    --hash=sha256:f05def092c44fbf25834a51509ef6e631dc19765ab8a57b4e7ab85531f0a9cf4
+certifi==2020.12.5 \
+    --hash=sha256:719a74fb9e33b9bd44cc7f3a8d94bc35e4049deebe19ba7d8e108280cfd59830 \
+    --hash=sha256:1a4995114262bffbc2413b159f2a1a480c969de6e6eb13ee966d470af86af59c
 auditwheel==3.2.0 \
     --hash=sha256:374a42f5ed95aea02ce9e775bbc4abdf57e84054400bab063616f0ab9bb20ebe
 # these packages required for auditwheel
