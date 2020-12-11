@@ -31,7 +31,7 @@ mkdir $DOWNLOADED_SRPMS
 adduser mockbuild
 # yumdownloader assumes the current working directory
 (cd $DOWNLOADED_SRPMS && yumdownloader --source glibc)
-rpm -ivh $DOWNLOADED_SRPMS/glibc-$ORIGINAL_GLIBC_VERSION.el6.src.rpm
+rpm -ivh $DOWNLOADED_SRPMS/glibc-$ORIGINAL_GLIBC_VERSION.el6_10.3.src.rpm
 # Prepare the source by applying Red Hat and CentOS patches
 rpmbuild -bp $SRPM_TOPDIR/SPECS/glibc.spec
 
@@ -39,6 +39,9 @@ rpmbuild -bp $SRPM_TOPDIR/SPECS/glibc.spec
 cp $MY_DIR/remove-vsyscall.patch $SRPM_TOPDIR/SOURCES
 # Patch the RPM spec file so that it uses the vsyscall removal patch
 (cd $SRPM_TOPDIR/SPECS && patch -p2 < $MY_DIR/glibc.spec.patch)
+
+# Use dist .el6_10 to mimic replaced glibc
+sed -i 's/.el6$/.el6_10/g' /etc/rpm/macros.dist
 
 # Build the RPMS
 # In case of error, you can `docker commit` to inspect the build.log

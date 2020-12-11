@@ -5,25 +5,25 @@ index 9bd07c9..c389711 100644
 @@ -1,6 +1,6 @@
  %define glibcsrcdir glibc-2.12-2-gc4ccff1
  %define glibcversion 2.12
--%define glibcrelease 1.212%{?dist}
-+%define glibcrelease 1.212.1%{?dist}
+-%define glibcrelease 1.212%{?dist}.3
++%define glibcrelease 1.212.1%{?dist}.3
  %define run_glibc_tests 1
  %define auxarches athlon sparcv9v sparc64v alphaev6
  %define xenarches i686 athlon
-@@ -279,6 +279,7 @@ 
- Patch247: glibc-rh1452717-4.patch
- Patch248: glibc-rh1504810-1.patch
- Patch249: glibc-rh1504810-2.patch
-+Patch250: remove-vsyscall.patch
- 
+@@ -283,6 +283,7 @@
+ Patch251: glibc-rh1555930-1.patch
+ Patch252: glibc-rh1555930-2.patch
+ Patch253: glibc-rh1577437.patch
++Patch254: remove-vsyscall.patch
+
  Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
  Obsoletes: glibc-profile < 2.4
-@@ -731,6 +732,7 @@
- %patch247 -p1
- %patch248 -p1
- %patch249 -p1
-+%patch250 -E -p3
- 
+@@ -739,6 +739,7 @@
+ %patch251 -p1
+ %patch252 -p1
+ %patch253 -p1
++%patch254 -E -p3
+
  # A lot of programs still misuse memcpy when they have to use
  # memmove. The memcpy implementation below is not tolerant at
 

@@ -3,27 +3,27 @@ LABEL maintainer="The Manylinux project"
 
 # do not install debuginfo and what x86_64 already provides
 COPY --from=quay.io/pypa/manylinux2010_centos-6-with-vsyscall32:latest \
-    /rpms/glibc-2.12-1.212.1.el6.i686.rpm \
-    #/rpms/glibc-common-2.12-1.212.1.el6.i686.rpm \
-    #/rpms/glibc-debuginfo-2.12-1.212.1.el6.i686.rpm \
-    #/rpms/glibc-debuginfo-common-2.12-1.212.1.el6.i686.rpm \
-    /rpms/glibc-devel-2.12-1.212.1.el6.i686.rpm \
-    #/rpms/glibc-headers-2.12-1.212.1.el6.i686.rpm \
-    /rpms/glibc-static-2.12-1.212.1.el6.i686.rpm \
-    #/rpms/glibc-utils-2.12-1.212.1.el6.i686.rpm \
-    #/rpms/nscd-2.12-1.212.1.el6.i686.rpm \
+    /rpms/glibc-2.12-1.212.1.el6_10.3.i686.rpm \
+    #/rpms/glibc-common-2.12-1.212.1.el6_10.3.i686.rpm \
+    #/rpms/glibc-debuginfo-2.12-1.212.1.el6_10.3.i686.rpm \
+    #/rpms/glibc-debuginfo-common-2.12-1.212.1.el6_10.3.i686.rpm \
+    /rpms/glibc-devel-2.12-1.212.1.el6_10.3.i686.rpm \
+    #/rpms/glibc-headers-2.12-1.212.1.el6_10.3.i686.rpm \
+    /rpms/glibc-static-2.12-1.212.1.el6_10.3.i686.rpm \
+    #/rpms/glibc-utils-2.12-1.212.1.el6_10.3.i686.rpm \
+    #/rpms/nscd-2.12-1.212.1.el6_10.3.i686.rpm \
     /rpms/
 # do not install debuginfo
 COPY --from=quay.io/pypa/manylinux2010_centos-6-with-vsyscall64:latest \
-    /rpms/glibc-2.12-1.212.1.el6.x86_64.rpm \
-    /rpms/glibc-common-2.12-1.212.1.el6.x86_64.rpm \
-    #/rpms/glibc-debuginfo-2.12-1.212.1.el6.x86_64.rpm \
-    #/rpms/glibc-debuginfo-common-2.12-1.212.1.el6.x86_64.rpm \
-    /rpms/glibc-devel-2.12-1.212.1.el6.x86_64.rpm \
-    /rpms/glibc-headers-2.12-1.212.1.el6.x86_64.rpm \
-    /rpms/glibc-static-2.12-1.212.1.el6.x86_64.rpm \
-    /rpms/glibc-utils-2.12-1.212.1.el6.x86_64.rpm \
-    /rpms/nscd-2.12-1.212.1.el6.x86_64.rpm \
+    /rpms/glibc-2.12-1.212.1.el6_10.3.x86_64.rpm \
+    /rpms/glibc-common-2.12-1.212.1.el6_10.3.x86_64.rpm \
+    #/rpms/glibc-debuginfo-2.12-1.212.1.el6_10.3.x86_64.rpm \
+    #/rpms/glibc-debuginfo-common-2.12-1.212.1.el6_10.3.x86_64.rpm \
+    /rpms/glibc-devel-2.12-1.212.1.el6_10.3.x86_64.rpm \
+    /rpms/glibc-headers-2.12-1.212.1.el6_10.3.x86_64.rpm \
+    /rpms/glibc-static-2.12-1.212.1.el6_10.3.x86_64.rpm \
+    /rpms/glibc-utils-2.12-1.212.1.el6_10.3.x86_64.rpm \
+    /rpms/nscd-2.12-1.212.1.el6_10.3.x86_64.rpm \
     /rpms/
 
 # Centos 6 is EOL and is no longer available from the usual mirrors, so switch
