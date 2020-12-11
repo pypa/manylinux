@@ -54,6 +54,7 @@ mv devtools-2.repo /etc/yum.repos.d/devtools-2.repo
 sed -i 's/\<http\>/https/g' /etc/yum.repos.d/devtools-2.repo
 rpm -Uvh --replacepkgs epel-release-5*.rpm
 rm -f epel-release-5*.rpm
+sed -i 's/\(mirrorlist=.*\)/\1\&protocol=http/g' /etc/yum.repos.d/epel*.repo
 
 # from now on, we shall only use curl to retrieve files
 yum -y erase wget
