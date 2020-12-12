@@ -31,9 +31,14 @@ case "${1-}" in
     ;;
 all)
     docker_build \
-        -t quay.io/pypa/manylinux2010_centos-6-no-vsyscall:latest \
+        --target manylinux2010_centos-6-no-vsyscall-build \
+        -t quay.io/pypa/manylinux2010_centos-6-no-vsyscall-build:latest \
         --cache-from quay.io/pypa/manylinux2010_centos-6-with-vsyscall32:latest \
         --cache-from quay.io/pypa/manylinux2010_centos-6-with-vsyscall64:latest \
+        --cache-from quay.io/pypa/manylinux2010_centos-6-no-vsyscall-build:latest
+    docker_build \
+        -t quay.io/pypa/manylinux2010_centos-6-no-vsyscall:latest \
+        --cache-from quay.io/pypa/manylinux2010_centos-6-no-vsyscall-build:latest \
         --cache-from quay.io/pypa/manylinux2010_centos-6-no-vsyscall:latest
     ;;
 *)
