@@ -1,6 +1,6 @@
 language: c
 os: linux
-dist: bionic
+dist: focal
 services:
   - docker
 
@@ -23,7 +23,9 @@ jobs:
      env: PLATFORM="x86_64"
    - arch: amd64
      env: PLATFORM="i686"
-   - arch: arm64
+   - arch: arm64-graviton2
+     virt: vm
+     group: edge
      env: PLATFORM="aarch64"
    - arch: ppc64le
      env: PLATFORM="ppc64le"
