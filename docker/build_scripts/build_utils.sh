@@ -35,25 +35,11 @@ function do_cpython_build {
     pushd Python-$py_ver
     local prefix="/opt/_internal/cpython-${py_ver}"
     mkdir -p ${prefix}/lib
-    ./configure --prefix=${prefix} --disable-shared > /dev/null
+    ./configure --prefix=${prefix} --disable-shared --with-ensurepip=no > /dev/null
     make -j$(nproc) > /dev/null
     make -j$(nproc) install > /dev/null
     popd
     rm -rf Python-$py_ver
-    # Some python's install as bin/python3. Make them available as
-    # bin/python.
-    if [ -e ${prefix}/bin/python3 ] && [ ! -e ${prefix}/bin/python ]; then
-        ln -s python3 ${prefix}/bin/python
-    fi
-    ${prefix}/bin/python -m ensurepip
-    if [ -e ${prefix}/bin/pip3 ] && [ ! -e ${prefix}/bin/pip ]; then
-        ln -s pip3 ${prefix}/bin/pip
-    fi
-    # Since we fall back on a canned copy of pip, we might not have
-    # the latest pip and friends. Upgrade them to make sure.
-    ${prefix}/bin/pip install -U --require-hashes -r ${MY_DIR}/requirements.txt
-    local abi_tag=$(${prefix}/bin/python ${MY_DIR}/python-tag-abi-tag.py)
-    ln -s ${prefix} /opt/python/${abi_tag}
 }
 
 
@@ -121,7 +107,7 @@ function build_git {
     fetch_source ${git_fname}.tar.gz ${GIT_DOWNLOAD_URL}
     check_sha256sum ${git_fname}.tar.gz ${git_sha256}
     tar -xzf ${git_fname}.tar.gz
-    (cd ${git_fname} && make -j$(nproc) install prefix=/usr/local NO_GETTEXT=1 NO_TCLTK=1 > /dev/null)
+    (cd ${git_fname} && make -j$(nproc) install prefix=/usr/local NO_GETTEXT=1 NO_TCLTK=1 DESTDIR=/manylinux-rootfs > /dev/null)
     rm -rf ${git_fname} ${git_fname}.tar.gz
 }
 
