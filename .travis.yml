@@ -39,7 +39,7 @@ script:
 deploy:
   provider: script
   # The following scripts uses POLICY, PLATFORM and TRAVIS_COMMIT environment variables
-  script: docker/deploy.sh
+  script: ./deploy.sh
   on:
     branch: manylinux2014
     repo: pypa/manylinux
