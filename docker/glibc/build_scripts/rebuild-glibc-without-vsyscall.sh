@@ -52,4 +52,7 @@ mv $SRPM_TOPDIR/RPMS/* /rpms/
 # Show us what happened last before cleaning up the log
 echo ~~~~~~~~~~~~~~~~~~~~~ final lines of the build log ~~~~~~~~~~~~~~~~~~~~~ >/dev/null
 tail -n30 /var/log/build.log
-rm /var/log/build.log
+
+# We don't need to keep anything execept /rpms/*
+rm -rf /root /tmp /var /sbin
+rm -rf /usr /lib*
