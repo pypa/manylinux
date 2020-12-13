@@ -64,7 +64,7 @@ jobs:
       script:
         - PLATFORM=$PLATFORM docker/glibc/build.sh all
       before_cache:
-        - travis-ci/cache_images.sh combined
+        - travis-ci/cache_images.sh combined_build
     - <<: *manylinux-build
       env:
         - PLATFORM="x86_64"
