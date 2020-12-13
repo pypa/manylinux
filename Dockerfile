@@ -1,7 +1,7 @@
-FROM centos:6 AS manylinux2010_centos-6-no-vsyscall-build
+FROM centos:6 AS manylinux2010_x86_64_centos6_no_vsyscall_build
 
 # do not install debuginfo and what x86_64 already provides
-COPY --from=quay.io/pypa/manylinux2010_centos-6-with-vsyscall32:latest \
+COPY --from=quay.io/pypa/manylinux2010_x86_64_centos6_no_vsyscall_build32:latest \
     /rpms/glibc-2.12-1.212.1.el6_10.3.i686.rpm \
     #/rpms/glibc-common-2.12-1.212.1.el6_10.3.i686.rpm \
     #/rpms/glibc-debuginfo-2.12-1.212.1.el6_10.3.i686.rpm \
@@ -13,7 +13,7 @@ COPY --from=quay.io/pypa/manylinux2010_centos-6-with-vsyscall32:latest \
     #/rpms/nscd-2.12-1.212.1.el6_10.3.i686.rpm \
     /rpms/
 # do not install debuginfo
-COPY --from=quay.io/pypa/manylinux2010_centos-6-with-vsyscall64:latest \
+COPY --from=quay.io/pypa/manylinux2010_x86_64_centos6_no_vsyscall_build64:latest \
     /rpms/glibc-2.12-1.212.1.el6_10.3.x86_64.rpm \
     /rpms/glibc-common-2.12-1.212.1.el6_10.3.x86_64.rpm \
     #/rpms/glibc-debuginfo-2.12-1.212.1.el6_10.3.x86_64.rpm \
@@ -48,5 +48,5 @@ RUN ln -sf cracklib-small.pwi /usr/share/cracklib/pw_dict.pwi && \
 
 FROM scratch
 LABEL maintainer="The Manylinux project"
-COPY --from=manylinux2010_centos-6-no-vsyscall-build / /
+COPY --from=manylinux2010_x86_64_centos6_no_vsyscall_build / /
 CMD ["/bin/bash"]
