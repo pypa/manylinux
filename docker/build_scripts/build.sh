@@ -50,15 +50,7 @@ sed -i '/^override_install_langs=/d' /etc/yum.conf
 # clean all in your Dockerfile, or otherwise address any potential security
 # concerns."
 # Decided not to clean at this point: https://github.com/pypa/manylinux/pull/129
-
-if [ "${AUDITWHEEL_ARCH}" == "s390x" ]; then
-    # workaround for https://github.com/nealef/clefos/issues/5
-    # this shall be removed ASAP
-    yum -y install epel-release-7-12
-    yum -y --exclude=epel-release update
-else
-    yum -y update
-fi
+yum -y update
 yum -y install yum-utils curl
 yum-config-manager --enable extras
 
