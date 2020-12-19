@@ -1,5 +1,5 @@
-# See docker/glibc/
-FROM quay.io/pypa/manylinux2010_centos-6-no-vsyscall
+# See branch manylinux2010_x86_64_centos6_no_vsyscall of pypa/manylinux
+FROM quay.io/pypa/manylinux2010_x86_64_centos6_no_vsyscall:2020-12-19-cd3e980
 LABEL maintainer="The ManyLinux project"
 
 ENV AUDITWHEEL_ARCH x86_64
