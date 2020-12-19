@@ -1,0 +1,14 @@
+# git stuff
+.git/
+.gitignore
+
+# travis-ci stuff
+.travis.yml
+travis-ci/
+
+# driver scripts
+build.sh
+deploy.sh
+
+# other
+README.rst

@@ -1,213 +1,79 @@
-manylinux
-=========
+centos-6-no-vsyscall
+====================
 
-Email: wheel-builders@python.org
+*Summary*: Because of
+https://mail.python.org/pipermail/wheel-builders/2016-December/000239.html,
+this a CentOS 6.10 Docker image that rebuilds ``glibc`` without
+*vsyscall* is necessary to reliably run ``manylinux2010`` on 64-bit
+hosts.  This requires building the image on a system with
+``vsyscall=emulate`` but allows the resulting container to run on
+systems with ``vsyscall=none`` or ``vsyscall=emulate``.
 
-Archives: https://mail.python.org/mailman/listinfo/wheel-builders
+*vsyscall* is an antiquated optimization for a small number of
+frequently-used system calls.  A vsyscall-enabled Linux kernel maps a
+read-only page of data and system calls into a process' memory at a
+fixed address.  These system calls can then be invoked by
+dereferencing a function pointers to fixed offsets in that page,
+saving a relatively expensive context switch. [1]_
 
-Older archives: https://groups.google.com/forum/#!forum/manylinux-discuss
+Unfortunately, because the code and its location in memory are fixed
+and well-known, the vsyscall mechanism has become a source of gadgets
+for ROP attacks (specifically, Sigreturn-Oriented Programs). [2]_
+Linux 3.1 introduced vsyscall emulation that prevents attackers from
+jumping into the middle of the system calls' code at the expense of
+speed, as well as the ability to disable it entirely.  [3]_ [4]_ The
+vsyscall mechanism could not be eliminated at the time because
+``glibc`` versions earlier than 2.14 contained hard-coded references
+to the fixed memory address, specifically in ``time(2)``. [5]_ These
+segfault when attempting to issue a vsyscall-optimized system call
+against a kernel that has disabled it.
 
-The goal of the manylinux project is to provide a convenient way to
-distribute binary Python extensions as wheels on Linux. This effort
-has produced `PEP 513 <https://www.python.org/dev/peps/pep-0513/>`_ which
-is further enhanced by `PEP 571 <https://www.python.org/dev/peps/pep-0571/>`_
-defining ``manylinux2010_x86_64`` and ``manylinux2010_i686`` platform tags.
+Linux introduced a "virtual dynamic shared object" (vDSO) that
+achieves the same high-speed, in-process system call mechanism via
+shared objects sometime before the kernel's migration to git.  While
+old itself, vDSO 's presentation as a shared library allows it to
+benefit from ASLR on modern systems, making it no more amenable to ROP
+gadgets than any other shared library.  ``glibc`` only switched over
+completely to vDSO as of glibc 2.25, so until recently vsyscall
+emulation has remained on for most kernels. [6]_ Furthermore, i686
+does not use vsyscall at all, so no version of ``glibc`` requires
+patching on that architecture.
 
-PEP 513 defined ``manylinux1_x86_64`` and ``manylinux1_i686`` platform tags
-and the wheels were built on Centos5. Centos5 reached End of Life (EOL) on
-March 31st, 2017 and thus PEP 571 was proposed.
+At the same time, vsyscall emulation still exposed values useful to
+ROP attacks, so Linux 4.4 added a compilation option to disable
+it. [7]_ [8]_ Distributions are beginning to ship kernels configured
+without vsyscall, and running CentOS 5 (``glibc`` 2.5) or 6 (``glibc``
+2.12) Docker containers on these distributions indeed causes segfaults
+without ``vsyscall=emulate`` [9]_ [10]_.  CentOS 6, however, is
+supported until 2020.  It is likely that more and more distributions
+will ship with ``CONFIG_LEGACY_VSYSCALL_NONE``; if managed CI services
+like Travis make this switch, developers will be unable to build
+``manylinux2010`` wheels with our Docker image.
 
-Code and details regarding ``manylinux1`` can be found here:
-`manylinux1 <https://github.com/pypa/manylinux/tree/manylinux1>`_.
+Fortunately, vsyscall is merely an optimization, and patches that
+remove it can be backported to glibc 2.12 and the library recompiled.
+The result is this Docker image.  It can be run on kernels regardless
+of their vsyscall configuration because executable and libraries on
+CentOS are dynamically linked against glibc.  Libraries built on this
+image are unaffected because:
 
-Wheel packages compliant with those tags can be uploaded to
-`PyPI <https://pypi.python.org>`_ (for instance with `twine
-<https://pypi.python.org/pypi/twine>`_) and can be installed with
-pip:
+a) the kernel only maps vsyscall pages into processes;
+b) only glibc used the vsyscall interface directly, and it's
+   included in manylinux2010's whitelist policy.
 
-+-------------------+----------------------------------+
-| ``manylinux`` tag | Client-side pip version required |
-+===================+==================================+
-| ``manylinux2014`` | pip >= 19.3                      |
-+-------------------+----------------------------------+
-| ``manylinux2010`` | pip >= 19.0                      |
-+-------------------+----------------------------------+
-| ``manylinux1``    | pip >= 8.1.0                     |
-+-------------------+----------------------------------+
+Developers who build this vsyscall-less Docker image itself, however,
+must do so on a system with ``vsyscall=emulate``.
 
-The manylinux2010 tags allow projects to distribute wheels that are
-automatically installed (and work!) on the vast majority of desktop
-and server Linux distributions.
+References:
+===========
 
-This repository hosts several manylinux-related things:
-
-
-Docker images
--------------
-
-.. image:: https://travis-ci.com/pypa/manylinux.svg?branch=master
-   :target: https://travis-ci.com/github/pypa/manylinux
-
-Building manylinux-compatible wheels is not trivial; as a general
-rule, binaries built on one Linux distro will only work on other Linux
-distros that are the same age or newer. Therefore, if we want to make
-binaries that run on most Linux distros, we have to use a very old
-distro -- CentOS 6.
-
-
-Rather than forcing you to install CentOS 6 yourself, install Python,
-etc., we provide `Docker <https://docker.com/>`_ images where we've
-done the work for you. The images are uploaded to `quay.io`_ and are tagged
-for repeatable builds.
-
-manylinux1
-~~~~~~~~~~
-
-x86-64 image: ``quay.io/pypa/manylinux1_x86_64``
-
-.. image:: https://quay.io/repository/pypa/manylinux1_x86_64/status
-   :target: https://quay.io/repository/pypa/manylinux1_x86_64
-
-i686 image: ``quay.io/pypa/manylinux1_i686``
-
-.. image:: https://quay.io/repository/pypa/manylinux1_i686/status
-   :target: https://quay.io/repository/pypa/manylinux1_i686
-
-manylinux2010
-~~~~~~~~~~~~~
-
-x86-64 image: ``quay.io/pypa/manylinux2010_x86_64``
-
-.. image:: https://quay.io/repository/pypa/manylinux2010_x86_64/status
-   :target: https://quay.io/repository/pypa/manylinux2010_x86_64
-
-i686 image: ``quay.io/pypa/manylinux2010_i686``
-
-.. image:: https://quay.io/repository/pypa/manylinux2010_i686/status
-   :target: https://quay.io/repository/pypa/manylinux2010_i686
-
-manylinux2014
-~~~~~~~~~~~~~
-
-x86_64 image: ``quay.io/pypa/manylinux2014_x86_64``
-
-.. image:: https://quay.io/repository/pypa/manylinux2014_x86_64/status
-   :target: https://quay.io/repository/pypa/manylinux2014_x86_64
-
-i686 image: ``quay.io/pypa/manylinux2014_i686``
-
-.. image:: https://quay.io/repository/pypa/manylinux2014_i686/status
-   :target: https://quay.io/repository/pypa/manylinux2014_i686
-
-aarch64 image: ``quay.io/pypa/manylinux2014_aarch64``
-
-.. image:: https://quay.io/repository/pypa/manylinux2014_aarch64/status
-   :target: https://quay.io/repository/pypa/manylinux2014_aarch64
-
-ppc64le image: ``quay.io/pypa/manylinux2014_ppc64le``
-
-.. image:: https://quay.io/repository/pypa/manylinux2014_ppc64le/status
-   :target: https://quay.io/repository/pypa/manylinux2014_ppc64le
-
-s390x image: ``quay.io/pypa/manylinux2014_s390x``
-
-.. image:: https://quay.io/repository/pypa/manylinux2014_s390x/status
-   :target: https://quay.io/repository/pypa/manylinux2014_s390x
-
-These images are rebuilt using Travis-CI on every commit to this
-repository; see the
-`docker/ <https://github.com/pypa/manylinux/tree/master/docker>`_
-directory for source code.
-
-The images currently contain:
-
-- CPython 2.7, 3.5, 3.6, 3.7, 3.8 and 3.9, installed in
-  ``/opt/python/<python tag>-<abi tag>``. The directories are named
-  after the PEP 425 tags for each environment --
-  e.g. ``/opt/python/cp27-cp27mu`` contains a wide-unicode CPython 2.7
-  build, and can be used to produce wheels named like
-  ``<pkg>-<version>-cp27-cp27mu-<arch>.whl``.
-
-- Devel packages for all the libraries that PEP 571 allows you to
-  assume are present on the host system
-
-- The `auditwheel <https://pypi.python.org/pypi/auditwheel>`_ tool
-
-Note that prior to CPython 3.3, there were two ABI-incompatible ways
-of building CPython: ``--enable-unicode=ucs2`` and
-``--enable-unicode=ucs4``. We provide both versions
-(e.g. ``/opt/python/cp27-cp27m`` for narrow-unicode,
-``/opt/python/cp27-cp27mu`` for wide-unicode). NB: essentially all
-Linux distributions configure CPython in ``mu``
-(``--enable-unicode=ucs4``) mode, but ``--enable-unicode=ucs2`` builds
-are also encountered in the wild. Other less common or virtually
-unheard of flag combinations (such as ``--with-pydebug`` (``d``) and
-``--without-pymalloc`` (absence of ``m``)) are not provided.
-
-Note that `starting with CPython 3.8 <https://docs.python.org/dev/whatsnew/3.8.html#build-and-c-api-changes>`_,
-default ``sys.abiflags`` became an empty string: the ``m`` flag for pymalloc
-became useless (builds with and without pymalloc are ABI compatible) and so has
-been removed. (e.g. ``/opt/python/cp38-cp38``)
-
-Building Docker images
-----------------------
-
-To build the Docker images, you will need to fetch the tarballs to
-``docker/sources/`` prior to building. This can be done with the
-provided prefetch script, after which you can proceed with building.
-Please run the following command from the current (root) directory::
-
-    $ PLATFORM=$(uname -m) TRAVIS_COMMIT=latest ./build.sh
-
-Example
--------
-
-An example project which builds 64-bit wheels for each Python interpreter
-version can be found here: https://github.com/pypa/python-manylinux-demo. The
-repository also contains demo to build 32-bit and 64-bit wheels with ``manylinux1``
-tags.
-
-This demonstrates how to use these docker images in conjunction with auditwheel
-to build manylinux-compatible wheels using the free `travis ci <https://travis-ci.org/>`_
-continuous integration service.
-
-(NB: for the 32-bit images running on a 64-bit host machine, it's necessary to run
-everything under the command line program `linux32`, which changes reported architecture
-in new program environment. See `this example invocation
-<https://github.com/pypa/python-manylinux-demo/blob/master/.travis.yml#L14>`_)
-
-The PEP itself
---------------
-
-The official version of `PEP 513
-<https://www.python.org/dev/peps/pep-0513/>`_ is stored in the `PEP
-repository <https://github.com/python/peps>`_, but we also have our
-`own copy here
-<https://github.com/pypa/manylinux/tree/master/pep-513.rst>`_. This is
-where the PEP was originally written, so if for some reason you really
-want to see the full history of edits it went through, then this is
-the place to look.
-
-The proposal to upgrade ``manylinux1`` to ``manylinux2010`` after Centos5
-reached EOL was discussed in `PEP 571 <https://www.python.org/dev/peps/pep-0571/>`_.
-
-This repo also has some analysis code that was used when putting
-together the original proposal in the ``policy-info/`` directory.
-
-If you want to read the full discussion that led to the original
-policy, then lots of that is here:
-https://groups.google.com/forum/#!forum/manylinux-discuss
-
-The distutils-sig archives for January 2016 also contain several
-threads.
-
-
-Code of Conduct
-===============
-
-Everyone interacting in the manylinux project's codebases, issue
-trackers, chat rooms, and mailing lists is expected to follow the
-`PSF Code of Conduct`_.
-
-.. _PSF Code of Conduct: https://github.com/pypa/.github/blob/main/CODE_OF_CONDUCT.md
-.. _`quay.io`: https://quay.io/organization/pypa
+.. [1] https://lwn.net/Articles/446528/
+.. [2] http://www.cs.vu.nl/~herbertb/papers/srop_sp14.pdf
+.. [3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5cec93c216db77c45f7ce970d46283bcb1933884
+.. [4] https://www.kernel.org/pub/linux/kernel/v3.x/ChangeLog-3.1
+.. [5] https://sourceware.org/git/?p=glibc.git;a=blob;f=ChangeLog;h=3a6abda7d07fdaa367c48a9274cc1c08498964dc;hb=356f8bc660a154a07b03da7c536831da5c8f74fe
+.. [6] https://sourceware.org/git/?p=glibc.git;a=blob;f=ChangeLog;h=6037fef737f0338a84c6fb564b3b8dc1b1221087;hb=58557c229319a3b8d2eefdb62e7df95089eabe37
+.. [7] https://googleprojectzero.blogspot.fr/2015/08/three-bypasses-and-fix-for-one-of.html
+.. [8] https://outflux.net/blog/archives/2016/09/27/security-things-in-linux-v4-4/
+.. [9] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=852620#20
+.. [10] https://github.com/CentOS/sig-cloud-instance-images/issues/62
