@@ -12,6 +12,6 @@ setuptools==51.1.0.post20201221; python_version=='2.7' \
 setuptools==51.1.0.post20201221; python_version=='3.5' \
     --hash=sha256:2bb28dd69df43800ed69bc415d6af73eeaf59c5ca3a6d759daf528f72f5b76bf \
     --hash=sha256:b19bdbc197e43337d350cc3806497ab6022802175dfb1abea16c0c3afd233f03
-setuptools==51.0.0; python_version>='3.6' \
-     --hash=sha256:029c49fd713e9230f6a41c0298e6e1f5839f2cde7104c0ad5e053a37777e7688 \
-     --hash=sha256:8c177936215945c9a37ef809ada0fab365191952f7a123618432bbfac353c529
+setuptools==51.1.0.post20201221; python_version>='3.6' \
+    --hash=sha256:2bb28dd69df43800ed69bc415d6af73eeaf59c5ca3a6d759daf528f72f5b76bf \
+    --hash=sha256:b19bdbc197e43337d350cc3806497ab6022802175dfb1abea16c0c3afd233f03
