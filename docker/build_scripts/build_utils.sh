@@ -214,7 +214,7 @@ function build_libxcrypt {
     check_var ${LIBXCRYPT_HASH}
     check_var ${LIBXCRYPT_DOWNLOAD_URL}
     fetch_source v${LIBXCRYPT_VERSION}.tar.gz ${LIBXCRYPT_DOWNLOAD_URL}
-    check_sha256sum "v$LIBXCRYPT_VERSION" "$LIBXCRYPT_HASH"
+    check_sha256sum "v${LIBXCRYPT_VERSION}.tar.gz" "$LIBXCRYPT_HASH"
     tar xfz "v${LIBXCRYPT_VERSION}.tar.gz"
     pushd "libxcrypt-$LIBXCRYPT_VERSION"
     ./autogen.sh > /dev/null
