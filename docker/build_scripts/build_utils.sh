@@ -215,7 +215,7 @@ function build_libxcrypt {
     check_var ${LIBXCRYPT_DOWNLOAD_URL}
     fetch_source v${LIBXCRYPT_VERSION}.tar.gz ${LIBXCRYPT_DOWNLOAD_URL}
     check_sha256sum "v$LIBXCRYPT_VERSION" "$LIBXCRYPT_HASH"
-    tar xfz "v$LIBXCRYPT_VERSION"
+    tar xfz "v${LIBXCRYPT_VERSION}.tar.gz"
     pushd "libxcrypt-$LIBXCRYPT_VERSION"
     ./autogen.sh > /dev/null
     do_standard_install \
@@ -233,7 +233,7 @@ function build_libxcrypt {
         --disable-werror
     cp -P ./so.1/usr/local/lib/libcrypt.so.1* /usr/local/lib/
     popd
-    rm -rf "v$LIBXCRYPT_VERSION" "libxcrypt-$LIBXCRYPT_VERSION"
+    rm -rf "v${LIBXCRYPT_VERSION}.tar.gz" "libxcrypt-$LIBXCRYPT_VERSION"
 
     # Delete GLIBC version headers and libraries
     rm -rf /usr/include/crypt.h
