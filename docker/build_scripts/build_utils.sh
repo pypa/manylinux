@@ -210,7 +210,10 @@ function build_libtool {
 }
 
 function build_libxcrypt {
-    curl -fsSLO "$LIBXCRYPT_DOWNLOAD_URL"/v"$LIBXCRYPT_VERSION"
+    check_var ${LIBXCRYPT_VERSION}
+    check_var ${LIBXCRYPT_HASH}
+    check_var ${LIBXCRYPT_DOWNLOAD_URL}
+    fetch_source v${LIBXCRYPT_VERSION}.tar.gz ${LIBXCRYPT_DOWNLOAD_URL}
     check_sha256sum "v$LIBXCRYPT_VERSION" "$LIBXCRYPT_HASH"
     tar xfz "v$LIBXCRYPT_VERSION"
     pushd "libxcrypt-$LIBXCRYPT_VERSION"
@@ -240,10 +243,12 @@ function build_libxcrypt {
 function build_patchelf {
     local patchelf_version=$1
     local patchelf_hash=$2
-    local src_dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
-    curl -fsSL -o patchelf.tar.gz https://github.com/NixOS/patchelf/archive/$patchelf_version.tar.gz
-    check_sha256sum patchelf.tar.gz $patchelf_hash
-    tar -xzf patchelf.tar.gz
+    check_var ${patchelf_version}
+    check_var ${patchelf_hash}
+    check_var ${PATCHELF_DOWNLOAD_URL}
+    fetch_source ${patchelf_version}.tar.gz ${PATCHELF_DOWNLOAD_URL}
+    check_sha256sum ${patchelf_version}.tar.gz $patchelf_hash
+    tar -xzf ${patchelf_version}.tar.gz
     (cd patchelf-$patchelf_version && ./bootstrap.sh && do_standard_install)
-    rm -rf patchelf.tar.gz patchelf-$patchelf_version
+    rm -rf ${patchelf_version}.tar.gz patchelf-$patchelf_version
 }
