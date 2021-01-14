@@ -94,9 +94,7 @@ function build_cpythons {
     gpg --import ${MY_DIR}/ambv-pubkey.txt
     # Add version 3.10, 3.11 release manager's key
     gpg --import ${MY_DIR}/cpython-pubkey-310-311.txt
-    # Add 3.10.x and 3.11.x Keys (Pablo Galindo Salgado)
-    gpg --keyserver ha.pool.sks-keyservers.net --recv-keys \
-      A035C8C19219BA821ECEA86B64E628F8D684696D
+
     for py_ver in $@; do
         build_cpython $py_ver
     done
