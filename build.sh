@@ -4,4 +4,5 @@
 set -ex
 
 
-docker build --rm -t "quay.io/pypa/manylinux2010_$PLATFORM:$TRAVIS_COMMIT" -f "docker/Dockerfile-$PLATFORM" docker/
+# docker build --rm -t "ryan/manylinux2010" -f "docker/Dockerfile-x86_64" docker/
+docker build --rm -t "ryan/manylinux2010-rust-python" -f "Dockerfile" .
