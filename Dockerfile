@@ -1,5 +1,5 @@
 # See branch manylinux2010_x86_64_centos6_no_vsyscall of pypa/manylinux
-FROM ryan/manylinux2010
+FROM ryanhuanli/manylinux2010
 LABEL maintainer="ryan"
 
 ENV PATH /opt/python/cp36-cp36m/bin:$DEVTOOLSET_ROOTPATH/usr/bin:$PATH
