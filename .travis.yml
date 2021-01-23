@@ -20,24 +20,26 @@ env:
 jobs:
   include:
    - arch: amd64
-     env: PLATFORM="x86_64"
+     env: POLICY="manylinux2014" PLATFORM="x86_64"
    - arch: amd64
-     env: PLATFORM="i686"
+     env: POLICY="manylinux2014" PLATFORM="i686"
    - arch: arm64-graviton2
      virt: vm
      group: edge
-     env: PLATFORM="aarch64"
+     env: POLICY="manylinux2014" PLATFORM="aarch64"
    - arch: ppc64le
-     env: PLATFORM="ppc64le"
+     env: POLICY="manylinux2014" PLATFORM="ppc64le"
    - arch: s390x
-     env: PLATFORM="s390x"
+     env: POLICY="manylinux2014" PLATFORM="s390x"
 
 script:
-  - PLATFORM=$PLATFORM TRAVIS_COMMIT=$TRAVIS_COMMIT ./build.sh
+  # The following scripts uses POLICY, PLATFORM and TRAVIS_COMMIT environment variables
+  - ./build.sh
 
 deploy:
   provider: script
-  script: docker/deploy.sh
+  # The following scripts uses POLICY, PLATFORM and TRAVIS_COMMIT environment variables
+  script: ./deploy.sh
   on:
     branch: manylinux2014
     repo: pypa/manylinux
