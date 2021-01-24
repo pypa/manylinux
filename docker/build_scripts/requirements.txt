@@ -1,6 +1,9 @@
 # pip requirements for all cpythons
 # NOTE: pip has GPG signatures; could download and verify independently.
-pip==21.0 \
+pip==20.3.4; python_version<'3.6' \
+    --hash=sha256:217ae5161a0e08c0fb873858806e3478c9775caffce5168b50ec885e358c199d \
+    --hash=sha256:6773934e5f5fc3eaa8c5a44949b5b924fc122daa0a8aa9f80c835b4ca2a543fc
+pip==21.0; python_version>='3.6' \
     --hash=sha256:cf2410eedf8735fd842e0fecd4117ca79025d7fe7c161e32f8640ed6ebe5ecb9 \
     --hash=sha256:b330cf6467afd5d15f4c1c56f5c95e56a2bfb941c869bed4c1aa517bcb16de25
 wheel==0.36.2 \
