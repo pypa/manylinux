@@ -63,15 +63,26 @@ COPY build_scripts/build.sh /build_scripts/
 COPY build_scripts/build_env.sh /build_scripts/
 RUN manylinux-entrypoint bash build_scripts/build.sh
 
+
+FROM build_base AS build_git
+COPY build_scripts/build-git.sh /build_scripts/
+RUN export GIT_ROOT=git-2.30.0 && \
+    export GIT_HASH=d24c4fa2a658318c2e66e25ab67cc30038a35696d2d39e6b12ceccf024de1e5e && \
+    export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
+    manylinux-entrypoint /build_scripts/build-git.sh
+
+
 FROM build_base AS build_cmake
-COPY build_scripts/build-cmake.sh /build_scripts/build-cmake.sh
+COPY build_scripts/build-cmake.sh /build_scripts/
 RUN export CMAKE_VERSION=3.18.3 && \
     export CMAKE_HASH=2c89f4e30af4914fd6fb5d00f863629812ada848eee4e2d29ec7e456d7fa32e5 && \
     export CMAKE_DOWNLOAD_URL=https://github.com/Kitware/CMake/releases/download && \
     manylinux-entrypoint /build_scripts/build-cmake.sh
 
+
 FROM runtime_base
 COPY --from=build_base /manylinux-rootfs /
+COPY --from=build_git /manylinux-rootfs /
 COPY --from=build_cmake /manylinux-rootfs /
 COPY --from=build_base /opt/_internal /opt/_internal/
 COPY build_scripts/build_utils.sh /build_scripts/build_utils.sh
