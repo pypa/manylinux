@@ -85,17 +85,48 @@ RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3340000 && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2020 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
-COPY build_scripts/*pubkey*.txt /build_scripts/
-COPY build_scripts/build_env.sh /build_scripts/
 COPY build_scripts/build-cpython.sh /build_scripts/
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh
+
+
+FROM build_cpython AS build_cpython35
+COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
+RUN manylinux-entrypoint gpg --import /build_scripts/cpython-pubkeys.txt
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.5.10
+
+
+FROM build_cpython AS build_cpython36
+COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
+RUN manylinux-entrypoint gpg --import /build_scripts/cpython-pubkeys.txt
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.6.12
+
+
+FROM build_cpython AS build_cpython37
+COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
+RUN manylinux-entrypoint gpg --import /build_scripts/cpython-pubkeys.txt
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.9
+
+
+FROM build_cpython AS build_cpython38
+COPY build_scripts/ambv-pubkey.txt /build_scripts/ambv-pubkey.txt
+RUN manylinux-entrypoint gpg --import /build_scripts/ambv-pubkey.txt
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.8.7
+
+
+FROM build_cpython AS build_cpython39
+COPY build_scripts/ambv-pubkey.txt /build_scripts/ambv-pubkey.txt
+RUN manylinux-entrypoint gpg --import /build_scripts/ambv-pubkey.txt
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.9.1
 
 
 FROM runtime_base
 COPY --from=build_git /manylinux-rootfs /
 COPY --from=build_cmake /manylinux-rootfs /
 COPY --from=build_cpython /manylinux-rootfs /
-COPY --from=build_cpython /opt/_internal /opt/_internal/
+COPY --from=build_cpython35 /opt/_internal /opt/_internal/
+COPY --from=build_cpython36 /opt/_internal /opt/_internal/
+COPY --from=build_cpython37 /opt/_internal /opt/_internal/
+COPY --from=build_cpython38 /opt/_internal /opt/_internal/
+COPY --from=build_cpython39 /opt/_internal /opt/_internal/
 COPY build_scripts/finalize.sh /build_scripts/finalize.sh
 COPY build_scripts/python-tag-abi-tag.py /build_scripts/python-tag-abi-tag.py
 COPY build_scripts/ssl-check.py /build_scripts/ssl-check.py
