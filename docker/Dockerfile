@@ -58,10 +58,8 @@ RUN export LIBXCRYPT_VERSION=4.4.17 && \
 
 
 FROM runtime_base AS build_base
-COPY build_scripts/*pubkey*.txt /build_scripts/
-COPY build_scripts/build.sh /build_scripts/
-COPY build_scripts/build_env.sh /build_scripts/
-RUN manylinux-entrypoint bash build_scripts/build.sh
+COPY build_scripts/install-build-packages.sh /build_scripts/
+RUN manylinux-entrypoint /build_scripts/install-build-packages.sh
 
 
 FROM build_base AS build_git
@@ -80,12 +78,18 @@ RUN export CMAKE_VERSION=3.18.3 && \
     manylinux-entrypoint /build_scripts/build-cmake.sh
 
 
+FROM build_base AS build_cpython
+COPY build_scripts/*pubkey*.txt /build_scripts/
+COPY build_scripts/build_env.sh /build_scripts/
+COPY build_scripts/build-cpython.sh /build_scripts/
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh
+
+
 FROM runtime_base
-COPY --from=build_base /manylinux-rootfs /
 COPY --from=build_git /manylinux-rootfs /
 COPY --from=build_cmake /manylinux-rootfs /
-COPY --from=build_base /opt/_internal /opt/_internal/
-COPY build_scripts/build_utils.sh /build_scripts/build_utils.sh
+COPY --from=build_cpython /manylinux-rootfs /
+COPY --from=build_cpython /opt/_internal /opt/_internal/
 COPY build_scripts/finalize.sh /build_scripts/finalize.sh
 COPY build_scripts/python-tag-abi-tag.py /build_scripts/python-tag-abi-tag.py
 COPY build_scripts/ssl-check.py /build_scripts/ssl-check.py
