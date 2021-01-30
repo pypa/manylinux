@@ -19,9 +19,17 @@ check_sha256sum ${PATCHELF_VERSION}.tar.gz ${PATCHELF_HASH}
 tar -xzf ${PATCHELF_VERSION}.tar.gz
 pushd patchelf-${PATCHELF_VERSION}
 ./bootstrap.sh
-do_standard_install
+DESTDIR=/manylinux-rootfs do_standard_install
 popd
 rm -rf ${PATCHELF_VERSION}.tar.gz patchelf-${PATCHELF_VERSION}
 
+# Strip what we can
+strip_ /manylinux-rootfs
+
+# Install
+cp -rf /manylinux-rootfs/* /
+
+# Remove temporary rootfs
+rm -rf /manylinux-rootfs
 
 patchelf --version
