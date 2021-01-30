@@ -66,3 +66,6 @@ clean_pyc /opt/_internal
 
 # remove cache
 rm -rf /root/.cache
+
+hardlink -cv /opt/_internal
+
