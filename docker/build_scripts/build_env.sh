@@ -3,7 +3,3 @@
 PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 # of the form <maj>.<min>.<rev> or <maj>.<min>.<rev>rc<n>
 CPYTHON_VERSIONS="3.5.10 3.6.12 3.7.9 3.8.7 3.9.1"
-
-SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3340000
-SQLITE_AUTOCONF_HASH=bf6db7fae37d51754737747aaaf413b4d6b3b5fbacd52bdb2d0d6e5b2edd9aee
-SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2020
