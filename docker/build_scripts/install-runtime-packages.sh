@@ -6,10 +6,6 @@ set -exuo pipefail
 
 # Set build environment variables
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
-source $MY_DIR/build_env_runtime.sh
-
-# Get build utilities
-source $MY_DIR/build_utils.sh
 
 # Libraries that are allowed as part of the manylinux2014 profile
 # Extract from PEP: https://www.python.org/dev/peps/pep-0599/#the-manylinux2014-policy
@@ -120,12 +116,3 @@ fi
 if [ -d /usr/local/share/man ]; then
 	rm -rf /usr/local/share/man
 fi
-
-
-# Install newest automake
-build_automake $AUTOMAKE_ROOT $AUTOMAKE_HASH
-automake --version
-
-# Strip what we can -- and ignore errors, because this just attempts to strip
-# *everything*, including non-ELF files:
-find /usr/local -type f -print0 | xargs -0 -n1 strip --strip-unneeded 2>/dev/null || true

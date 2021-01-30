@@ -28,9 +28,15 @@ COPY manylinux-entrypoint /usr/local/bin/manylinux-entrypoint
 ENTRYPOINT ["manylinux-entrypoint"]
 
 COPY build_scripts/install-runtime-packages.sh /build_scripts/
+RUN manylinux-entrypoint /build_scripts/install-runtime-packages.sh && rm /build_scripts/install-runtime-packages.sh
+
 COPY build_scripts/build_utils.sh /build_scripts/
-COPY build_scripts/build_env_runtime.sh /build_scripts/
-RUN manylinux-entrypoint /build_scripts/install-runtime-packages.sh
+
+COPY build_scripts/install-automake.sh /build_scripts/
+RUN export AUTOMAKE_ROOT=automake-1.16.2 && \
+    export AUTOMAKE_HASH=b2f361094b410b4acbf4efba7337bdb786335ca09eb2518635a09fb7319ca5c1 && \
+    export AUTOMAKE_DOWNLOAD_URL=http://ftp.gnu.org/gnu/automake && \
+    manylinux-entrypoint /build_scripts/install-automake.sh
 
 COPY build_scripts/install-libtool.sh /build_scripts/
 RUN export LIBTOOL_ROOT=libtool-2.4.6 && \
