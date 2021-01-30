@@ -59,13 +59,20 @@ RUN export LIBXCRYPT_VERSION=4.4.17 && \
 
 FROM runtime_base AS build_base
 COPY build_scripts/*pubkey*.txt /build_scripts/
-COPY build_scripts/build_utils.sh /build_scripts/
 COPY build_scripts/build.sh /build_scripts/
 COPY build_scripts/build_env.sh /build_scripts/
-RUN manylinux-entrypoint bash build_scripts/build.sh && rm -rf build_scripts
+RUN manylinux-entrypoint bash build_scripts/build.sh
+
+FROM build_base AS build_cmake
+COPY build_scripts/build-cmake.sh /build_scripts/build-cmake.sh
+RUN export CMAKE_VERSION=3.18.3 && \
+    export CMAKE_HASH=2c89f4e30af4914fd6fb5d00f863629812ada848eee4e2d29ec7e456d7fa32e5 && \
+    export CMAKE_DOWNLOAD_URL=https://github.com/Kitware/CMake/releases/download && \
+    manylinux-entrypoint /build_scripts/build-cmake.sh
 
 FROM runtime_base
 COPY --from=build_base /manylinux-rootfs /
+COPY --from=build_cmake /manylinux-rootfs /
 COPY --from=build_base /opt/_internal /opt/_internal/
 COPY build_scripts/build_utils.sh /build_scripts/build_utils.sh
 COPY build_scripts/finalize.sh /build_scripts/finalize.sh

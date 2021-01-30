@@ -41,16 +41,6 @@ cp -rf /sqlite3/* /manylinux-rootfs/
 # clean-up
 rm -rf /sqlite3
 
-# Install a recent version of cmake3
-curl -L -O $CMAKE_DOWNLOAD_URL/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz
-check_sha256sum cmake-${CMAKE_VERSION}.tar.gz $CMAKE_HASH
-tar -xzf cmake-${CMAKE_VERSION}.tar.gz
-cd cmake-${CMAKE_VERSION}
-./bootstrap --system-curl --parallel=$(nproc)
-make -j$(nproc)
-make install DESTDIR=/manylinux-rootfs
-cd ..
-rm -rf cmake-${CMAKE_VERSION}*
 
 # Compile the latest Python releases.
 # (In order to have a proper SSL module, Python is compiled
