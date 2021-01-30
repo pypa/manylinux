@@ -27,11 +27,17 @@ RUN bash /build_scripts/install-entrypoint.sh && rm -rf build_scripts
 COPY manylinux-entrypoint /usr/local/bin/manylinux-entrypoint
 ENTRYPOINT ["manylinux-entrypoint"]
 
-
 COPY build_scripts/install-runtime-packages.sh /build_scripts/
 COPY build_scripts/build_utils.sh /build_scripts/
 COPY build_scripts/build_env_runtime.sh /build_scripts/
-RUN manylinux-entrypoint /build_scripts/install-runtime-packages.sh && rm -rf /build_scripts
+RUN manylinux-entrypoint /build_scripts/install-runtime-packages.sh
+
+COPY build_scripts/install-libxcrypt.sh /build_scripts/
+RUN export LIBXCRYPT_VERSION=4.4.17 && \
+    export LIBXCRYPT_HASH=7665168d0409574a03f7b484682e68334764c29c21ca5df438955a381384ca07 && \
+    export LIBXCRYPT_DOWNLOAD_URL=https://github.com/besser82/libxcrypt/archive && \
+    manylinux-entrypoint /build_scripts/install-libxcrypt.sh
+
 
 FROM runtime_base AS build_base
 COPY build_scripts/*pubkey*.txt /build_scripts/
