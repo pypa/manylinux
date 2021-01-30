@@ -130,9 +130,6 @@ automake --version
 build_libtool $LIBTOOL_ROOT $LIBTOOL_HASH
 libtool --version
 
-# Install patchelf (latest with unreleased bug fixes) and apply our patches
-build_patchelf $PATCHELF_VERSION $PATCHELF_HASH
-
 # Strip what we can -- and ignore errors, because this just attempts to strip
 # *everything*, including non-ELF files:
 find /usr/local -type f -print0 | xargs -0 -n1 strip --strip-unneeded 2>/dev/null || true

@@ -159,17 +159,3 @@ function build_libtool {
     (cd ${libtool_fname} && do_standard_install)
     rm -rf ${libtool_fname} ${libtool_fname}.tar.gz
 }
-
-
-function build_patchelf {
-    local patchelf_version=$1
-    local patchelf_hash=$2
-    check_var ${patchelf_version}
-    check_var ${patchelf_hash}
-    check_var ${PATCHELF_DOWNLOAD_URL}
-    fetch_source ${patchelf_version}.tar.gz ${PATCHELF_DOWNLOAD_URL}
-    check_sha256sum ${patchelf_version}.tar.gz $patchelf_hash
-    tar -xzf ${patchelf_version}.tar.gz
-    (cd patchelf-$patchelf_version && ./bootstrap.sh && do_standard_install)
-    rm -rf ${patchelf_version}.tar.gz patchelf-$patchelf_version
-}
