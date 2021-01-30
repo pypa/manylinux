@@ -145,17 +145,3 @@ function build_automake {
     (cd ${automake_fname} && do_standard_install)
     rm -rf ${automake_fname} ${automake_fname}.tar.gz
 }
-
-
-function build_libtool {
-    local libtool_fname=$1
-    check_var ${libtool_fname}
-    local libtool_sha256=$2
-    check_var ${libtool_sha256}
-    check_var ${LIBTOOL_DOWNLOAD_URL}
-    fetch_source ${libtool_fname}.tar.gz ${LIBTOOL_DOWNLOAD_URL}
-    check_sha256sum ${libtool_fname}.tar.gz ${libtool_sha256}
-    tar -zxf ${libtool_fname}.tar.gz
-    (cd ${libtool_fname} && do_standard_install)
-    rm -rf ${libtool_fname} ${libtool_fname}.tar.gz
-}

@@ -32,6 +32,12 @@ COPY build_scripts/build_utils.sh /build_scripts/
 COPY build_scripts/build_env_runtime.sh /build_scripts/
 RUN manylinux-entrypoint /build_scripts/install-runtime-packages.sh
 
+COPY build_scripts/install-libtool.sh /build_scripts/
+RUN export LIBTOOL_ROOT=libtool-2.4.6 && \
+    export LIBTOOL_HASH=e3bd4d5d3d025a36c21dd6af7ea818a2afcd4dfc1ea5a17b39d7854bcd0c06e3 && \
+    export LIBTOOL_DOWNLOAD_URL=http://ftp.gnu.org/gnu/libtool && \
+    manylinux-entrypoint /build_scripts/install-libtool.sh
+
 COPY build_scripts/install-patchelf.sh /build_scripts/
 RUN export PATCHELF_VERSION=0.12 && \
     export PATCHELF_HASH=3dca33fb862213b3541350e1da262249959595903f559eae0fbc68966e9c3f56 && \
