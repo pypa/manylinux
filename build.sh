@@ -62,8 +62,16 @@ export DEVTOOLSET_ROOTPATH
 export PREPEND_PATH
 export LD_LIBRARY_PATH_ARG
 
-docker build \
+docker buildx build \
+	--load \
+	--cache-from=type=local,src=$(pwd)/.buildx-cache-${POLICY}_${PLATFORM} \
+	--cache-to=type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM} \
 	--build-arg POLICY --build-arg PLATFORM --build-arg BASEIMAGE \
 	--build-arg DEVTOOLSET_ROOTPATH --build-arg PREPEND_PATH --build-arg LD_LIBRARY_PATH_ARG \
-	--rm -t quay.io/pypa/${POLICY}_${PLATFORM}:${TRAVIS_COMMIT} \
+	--rm -t quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA} \
 	-f docker/Dockerfile docker/
+
+if [ -d $(pwd)/.buildx-cache-${POLICY}_${PLATFORM} ]; then
+	rm -rf $(pwd)/.buildx-cache-${POLICY}_${PLATFORM}
+fi
+mv $(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM} $(pwd)/.buildx-cache-${POLICY}_${PLATFORM}
