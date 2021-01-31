@@ -32,7 +32,7 @@ rm -rf /manylinux-rootfs/usr/local/share/cmake-*/Help
 strip_ /manylinux-rootfs
 
 # Install
-cp -rf /manylinux-rootfs/* /
+cp -rlf /manylinux-rootfs/* /
 
 
 cmake --version

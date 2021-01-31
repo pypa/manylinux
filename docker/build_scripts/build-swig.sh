@@ -35,6 +35,6 @@ rm -rf ${SWIG_ROOT}*
 strip_ /manylinux-rootfs
 
 # Install
-cp -rf /manylinux-rootfs/* /
+cp -rlf /manylinux-rootfs/* /
 
 swig -version

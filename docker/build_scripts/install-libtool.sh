@@ -26,7 +26,7 @@ rm -rf ${LIBTOOL_ROOT} ${LIBTOOL_ROOT}.tar.gz
 strip_ /manylinux-rootfs
 
 # Install
-cp -rf /manylinux-rootfs/* /
+cp -rlf /manylinux-rootfs/* /
 
 # Remove temporary rootfs
 rm -rf /manylinux-rootfs

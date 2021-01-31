@@ -41,7 +41,7 @@ rm -rf "v${LIBXCRYPT_VERSION}.tar.gz" "libxcrypt-${LIBXCRYPT_VERSION}"
 strip_ /manylinux-rootfs
 
 # Install
-cp -rf /manylinux-rootfs/* /
+cp -rlf /manylinux-rootfs/* /
 
 # Remove temporary rootfs
 rm -rf /manylinux-rootfs

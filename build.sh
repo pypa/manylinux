@@ -24,7 +24,23 @@ else
 fi
 
 # setup BASEIMAGE and its specific properties
-if [ "${POLICY}" == "manylinux2014" ]; then
+if [ "${POLICY}" == "manylinux2010" ]; then
+	if [ "${PLATFORM}" == "x86_64" ]; then
+		BASEIMAGE="quay.io/pypa/manylinux2010_x86_64_centos6_no_vsyscall"
+	elif [ "${PLATFORM}" == "i686" ]; then
+		BASEIMAGE="${MULTIARCH_PREFIX}centos:6"
+	else
+		echo "Policy '${POLICY}' does not support platform '${PLATFORM}'"
+		exit 1
+	fi
+	DEVTOOLSET_ROOTPATH="/opt/rh/devtoolset-8/root"
+	PREPEND_PATH="${DEVTOOLSET_ROOTPATH}/usr/bin:"
+	if [ "${PLATFORM}" == "i686" ]; then
+		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst:/usr/local/lib"
+	else
+		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst:/usr/local/lib64:/usr/local/lib"
+	fi
+elif [ "${POLICY}" == "manylinux2014" ]; then
 	if [ "${PLATFORM}" == "s390x" ]; then
 		BASEIMAGE="s390x/clefos:7"
 	else

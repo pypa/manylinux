@@ -27,7 +27,7 @@ rm -rf ${PATCHELF_VERSION}.tar.gz patchelf-${PATCHELF_VERSION}
 strip_ /manylinux-rootfs
 
 # Install
-cp -rf /manylinux-rootfs/* /
+cp -rlf /manylinux-rootfs/* /
 
 # Remove temporary rootfs
 rm -rf /manylinux-rootfs
