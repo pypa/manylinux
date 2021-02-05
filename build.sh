@@ -4,4 +4,4 @@
 set -ex
 
 
-docker build --rm -t "quay.io/pypa/manylinux2010_$PLATFORM:$TRAVIS_COMMIT" -f "docker/Dockerfile-$PLATFORM" docker/
+docker build --rm -t "quay.io/pypa/manylinux2010_${PLATFORM}:${COMMIT_SHA}" -f "docker/Dockerfile-${PLATFORM}" docker/
