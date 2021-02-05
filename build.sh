@@ -4,4 +4,4 @@
 set -ex
 
 docker/build_scripts/prefetch.sh perl openssl curl
-docker build --rm -t quay.io/pypa/manylinux1_$PLATFORM:$TRAVIS_COMMIT -f docker/Dockerfile-$PLATFORM docker/
+docker build --rm -t quay.io/pypa/manylinux1_${PLATFORM}:${COMMIT_SHA} -f docker/Dockerfile-${PLATFORM} docker/
