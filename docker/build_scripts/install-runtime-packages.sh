@@ -133,9 +133,6 @@ libtool --version
 # Install patchelf (latest with unreleased bug fixes) and apply our patches
 build_patchelf $PATCHELF_VERSION $PATCHELF_HASH
 
-# Install libcrypt.so.1 and libcrypt.so.2
-build_libxcrypt "$LIBXCRYPT_DOWNLOAD_URL" "$LIBXCRYPT_VERSION" "$LIBXCRYPT_HASH"
-
 # Strip what we can -- and ignore errors, because this just attempts to strip
 # *everything*, including non-ELF files:
 find /usr/local -type f -print0 | xargs -0 -n1 strip --strip-unneeded 2>/dev/null || true
