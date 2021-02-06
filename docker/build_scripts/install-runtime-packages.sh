@@ -44,7 +44,7 @@ else
 	exit 1
 fi
 
-BASETOOLS="autoconf automake bison bzip2 diffutils file hardlink make patch unzip"
+BASETOOLS="autoconf automake bison bzip2 diffutils file hardlink hostname make patch unzip"
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
 	PACKAGE_MANAGER=yum
 	BASETOOLS="${BASETOOLS} which"
