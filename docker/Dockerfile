@@ -118,15 +118,20 @@ RUN manylinux-entrypoint gpg --import /build_scripts/ambv-pubkey.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.9.1
 
 
-FROM runtime_base
-COPY --from=build_git /manylinux-rootfs /
-COPY --from=build_cmake /manylinux-rootfs /
-COPY --from=build_cpython /manylinux-rootfs /
+FROM build_cpython AS all_cpython
 COPY --from=build_cpython35 /opt/_internal /opt/_internal/
 COPY --from=build_cpython36 /opt/_internal /opt/_internal/
 COPY --from=build_cpython37 /opt/_internal /opt/_internal/
 COPY --from=build_cpython38 /opt/_internal /opt/_internal/
 COPY --from=build_cpython39 /opt/_internal /opt/_internal/
+RUN hardlink -cv /opt/_internal
+
+
+FROM runtime_base
+COPY --from=build_git /manylinux-rootfs /
+COPY --from=build_cmake /manylinux-rootfs /
+COPY --from=build_cpython /manylinux-rootfs /
+COPY --from=all_cpython /opt/_internal /opt/_internal/
 COPY build_scripts/finalize.sh /build_scripts/finalize.sh
 COPY build_scripts/python-tag-abi-tag.py /build_scripts/python-tag-abi-tag.py
 COPY build_scripts/ssl-check.py /build_scripts/ssl-check.py
