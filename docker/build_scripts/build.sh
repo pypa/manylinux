@@ -19,10 +19,6 @@ CMAKE_DEPS="openssl-devel zlib-devel libcurl-devel"
 # Development tools and libraries
 yum -y install ${PYTHON_COMPILE_DEPS} ${CMAKE_DEPS}
 
-# Install git
-build_git $GIT_ROOT $GIT_HASH
-/manylinux-rootfs/usr/local/bin/git version
-
 # Install a more recent SQLite3
 curl -fsSLO $SQLITE_AUTOCONF_DOWNLOAD_URL/$SQLITE_AUTOCONF_ROOT.tar.gz
 check_sha256sum $SQLITE_AUTOCONF_ROOT.tar.gz $SQLITE_AUTOCONF_HASH
@@ -37,6 +33,7 @@ cp -rf /sqlite3/* /
 # Clean-up for runtime
 rm -rf /sqlite3/usr/local/bin /sqlite3/usr/local/include /sqlite3/usr/local/lib/pkg-config /sqlite3/usr/local/share
 # Install for runtime
+mkdir -p /manylinux-rootfs
 cp -rf /sqlite3/* /manylinux-rootfs/
 # clean-up
 rm -rf /sqlite3
