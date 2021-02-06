@@ -61,9 +61,8 @@ for PYTHON in /opt/python/*/bin/python; do
 	$PYTHON $MY_DIR/ssl-check.py
 done
 
-# We do not need the precompiled .pyc and .pyo files. Partially cribbed from:
-#    https://github.com/docker-library/python/blob/master/3.4/slim/Dockerfile
-find /opt/_internal -type f -a \( -name '*.pyc' -o -name '*.pyo' \) | xargs rm -rf
+# We do not need the precompiled .pyc and .pyo files.
+clean_pyc /opt/_internal
 
 # remove cache
 rm -rf /root/.cache
