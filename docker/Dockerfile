@@ -32,6 +32,12 @@ COPY build_scripts/build_utils.sh /build_scripts/
 COPY build_scripts/build_env_runtime.sh /build_scripts/
 RUN manylinux-entrypoint /build_scripts/install-runtime-packages.sh
 
+COPY build_scripts/install-patchelf.sh /build_scripts/
+RUN export PATCHELF_VERSION=0.12 && \
+    export PATCHELF_HASH=3dca33fb862213b3541350e1da262249959595903f559eae0fbc68966e9c3f56 && \
+    export PATCHELF_DOWNLOAD_URL=https://github.com/NixOS/patchelf/archive && \
+    manylinux-entrypoint /build_scripts/install-patchelf.sh
+
 COPY build_scripts/install-libxcrypt.sh /build_scripts/
 RUN export LIBXCRYPT_VERSION=4.4.17 && \
     export LIBXCRYPT_HASH=7665168d0409574a03f7b484682e68334764c29c21ca5df438955a381384ca07 && \
