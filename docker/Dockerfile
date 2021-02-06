@@ -2,11 +2,11 @@
 ARG BASEIMAGE=amd64/centos:7
 ARG POLICY=manylinux2014
 ARG PLATFORM=x86_64
-ARG DEVTOOLSET_ROOTPATH=
-ARG LD_LIBRARY_PATH_ARG=
-ARG PREPEND_PATH=
+ARG DEVTOOLSET_ROOTPATH=/opt/rh/devtoolset-9/root
+ARG LD_LIBRARY_PATH_ARG=${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst:/usr/local/lib64:/usr/local/lib
+ARG PREPEND_PATH=${DEVTOOLSET_ROOTPATH}/usr/bin:
 
-FROM $BASEIMAGE
+FROM $BASEIMAGE AS runtime_base
 ARG POLICY
 ARG PLATFORM
 ARG DEVTOOLSET_ROOTPATH
@@ -22,13 +22,35 @@ ENV PATH=${PREPEND_PATH}${PATH}
 ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 
 # setup entrypoint, this will wrap commands with `linux32` with i686 images
-COPY build_scripts/install-entrypoint.sh /build_scripts/install-entrypoint.sh
+COPY build_scripts/install-entrypoint.sh /build_scripts/
 RUN bash /build_scripts/install-entrypoint.sh && rm -rf build_scripts
 COPY manylinux-entrypoint /usr/local/bin/manylinux-entrypoint
 ENTRYPOINT ["manylinux-entrypoint"]
 
-COPY build_scripts /build_scripts
+
+COPY build_scripts/install-runtime-packages.sh /build_scripts/
+COPY build_scripts/build_utils.sh /build_scripts/
+COPY build_scripts/build_env_runtime.sh /build_scripts/
+RUN manylinux-entrypoint /build_scripts/install-runtime-packages.sh && rm -rf /build_scripts
+
+FROM runtime_base AS build_base
+COPY build_scripts/*pubkey*.txt /build_scripts/
+COPY build_scripts/build_utils.sh /build_scripts/
+COPY build_scripts/build.sh /build_scripts/
+COPY build_scripts/build_env.sh /build_scripts/
 RUN manylinux-entrypoint bash build_scripts/build.sh && rm -rf build_scripts
+
+FROM runtime_base
+COPY --from=build_base /manylinux-rootfs /
+COPY --from=build_base /opt/_internal /opt/_internal/
+COPY build_scripts/build_utils.sh /build_scripts/build_utils.sh
+COPY build_scripts/finalize.sh /build_scripts/finalize.sh
+COPY build_scripts/python-tag-abi-tag.py /build_scripts/python-tag-abi-tag.py
+COPY build_scripts/ssl-check.py /build_scripts/ssl-check.py
+COPY build_scripts/manylinux-check.py /build_scripts/manylinux-check.py
+COPY build_scripts/requirements.txt /build_scripts/requirements.txt
+COPY build_scripts/requirements-tools.txt /build_scripts/requirements-tools.txt
+RUN manylinux-entrypoint /build_scripts/finalize.sh && rm -rf /build_scripts
 
 ENV SSL_CERT_FILE=/opt/_internal/certs.pem
 
