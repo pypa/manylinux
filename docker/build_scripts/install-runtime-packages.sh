@@ -126,10 +126,6 @@ fi
 build_automake $AUTOMAKE_ROOT $AUTOMAKE_HASH
 automake --version
 
-# Install newest libtool
-build_libtool $LIBTOOL_ROOT $LIBTOOL_HASH
-libtool --version
-
 # Strip what we can -- and ignore errors, because this just attempts to strip
 # *everything*, including non-ELF files:
 find /usr/local -type f -print0 | xargs -0 -n1 strip --strip-unneeded 2>/dev/null || true
