@@ -78,6 +78,17 @@ RUN export CMAKE_VERSION=3.18.3 && \
     manylinux-entrypoint /build_scripts/build-cmake.sh
 
 
+FROM build_base AS build_swig
+COPY build_scripts/build-swig.sh /build_scripts/
+RUN export SWIG_ROOT=swig-4.0.2 && \
+    export SWIG_HASH=d53be9730d8d58a16bf0cbd1f8ac0c0c3e1090573168bfa151b01eb47fa906fc && \
+    export SWIG_DOWNLOAD_URL=https://sourceforge.net/projects/swig/files/swig/${SWIG_ROOT} && \
+    export PCRE_ROOT=pcre-8.44 && \
+    export PCRE_HASH=aecafd4af3bd0f3935721af77b889d9024b2e01d96b58471bd91a3063fb47728 && \
+    export PCRE_DOWNLOAD_URL=https://ftp.pcre.org/pub/pcre && \
+    manylinux-entrypoint /build_scripts/build-swig.sh
+
+
 FROM build_base AS build_cpython
 COPY build_scripts/build-sqlite3.sh /build_scripts/
 RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3340000 && \
@@ -130,6 +141,7 @@ RUN hardlink -cv /opt/_internal
 FROM runtime_base
 COPY --from=build_git /manylinux-rootfs /
 COPY --from=build_cmake /manylinux-rootfs /
+COPY --from=build_swig /manylinux-rootfs /
 COPY --from=build_cpython /manylinux-rootfs /
 COPY --from=all_cpython /opt/_internal /opt/_internal/
 COPY build_scripts/finalize.sh /build_scripts/finalize.sh
