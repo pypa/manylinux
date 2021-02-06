@@ -117,31 +117,3 @@ function do_standard_install {
     make -j$(nproc) > /dev/null
     make -j$(nproc) install > /dev/null
 }
-
-
-function build_autoconf {
-    local autoconf_fname=$1
-    check_var ${autoconf_fname}
-    local autoconf_sha256=$2
-    check_var ${autoconf_sha256}
-    check_var ${AUTOCONF_DOWNLOAD_URL}
-    fetch_source ${autoconf_fname}.tar.gz ${AUTOCONF_DOWNLOAD_URL}
-    check_sha256sum ${autoconf_fname}.tar.gz ${autoconf_sha256}
-    tar -zxf ${autoconf_fname}.tar.gz
-    (cd ${autoconf_fname} && do_standard_install)
-    rm -rf ${autoconf_fname} ${autoconf_fname}.tar.gz
-}
-
-
-function build_automake {
-    local automake_fname=$1
-    check_var ${automake_fname}
-    local automake_sha256=$2
-    check_var ${automake_sha256}
-    check_var ${AUTOMAKE_DOWNLOAD_URL}
-    fetch_source ${automake_fname}.tar.gz ${AUTOMAKE_DOWNLOAD_URL}
-    check_sha256sum ${automake_fname}.tar.gz ${automake_sha256}
-    tar -zxf ${automake_fname}.tar.gz
-    (cd ${automake_fname} && do_standard_install)
-    rm -rf ${automake_fname} ${automake_fname}.tar.gz
-}
