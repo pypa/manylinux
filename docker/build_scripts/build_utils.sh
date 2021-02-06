@@ -117,3 +117,9 @@ function do_standard_install {
     make -j$(nproc) > /dev/null
     make -j$(nproc) install > /dev/null
 }
+
+function strip_ {
+	# Strip what we can -- and ignore errors, because this just attempts to strip
+	# *everything*, including non-ELF files:
+	find $1 -type f -print0 | xargs -0 -n1 strip --strip-unneeded 2>/dev/null || true
+}
