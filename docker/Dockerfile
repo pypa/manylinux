@@ -79,6 +79,12 @@ RUN export CMAKE_VERSION=3.18.3 && \
 
 
 FROM build_base AS build_cpython
+COPY build_scripts/build-sqlite3.sh /build_scripts/
+RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3340000 && \
+    export SQLITE_AUTOCONF_HASH=bf6db7fae37d51754737747aaaf413b4d6b3b5fbacd52bdb2d0d6e5b2edd9aee && \
+    export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2020 && \
+    manylinux-entrypoint /build_scripts/build-sqlite3.sh
+
 COPY build_scripts/*pubkey*.txt /build_scripts/
 COPY build_scripts/build_env.sh /build_scripts/
 COPY build_scripts/build-cpython.sh /build_scripts/

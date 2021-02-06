@@ -11,26 +11,6 @@ source $MY_DIR/build_env.sh
 # Get build utilities
 source $MY_DIR/build_utils.sh
 
-# Install a more recent SQLite3
-curl -fsSLO $SQLITE_AUTOCONF_DOWNLOAD_URL/$SQLITE_AUTOCONF_ROOT.tar.gz
-check_sha256sum $SQLITE_AUTOCONF_ROOT.tar.gz $SQLITE_AUTOCONF_HASH
-tar xfz $SQLITE_AUTOCONF_ROOT.tar.gz
-cd $SQLITE_AUTOCONF_ROOT
-DESTDIR=/sqlite3 do_standard_install
-cd ..
-rm -rf $SQLITE_AUTOCONF_ROOT*
-rm /sqlite3/usr/local/lib/libsqlite3.a
-# Install for build
-cp -rf /sqlite3/* /
-# Clean-up for runtime
-rm -rf /sqlite3/usr/local/bin /sqlite3/usr/local/include /sqlite3/usr/local/lib/pkg-config /sqlite3/usr/local/share
-# Install for runtime
-mkdir -p /manylinux-rootfs
-cp -rf /sqlite3/* /manylinux-rootfs/
-# clean-up
-rm -rf /sqlite3
-
-
 # Compile the latest Python releases.
 # (In order to have a proper SSL module, Python is compiled
 # against a recent openssl [see env vars above], which is linked
