@@ -18,10 +18,18 @@ fetch_source ${LIBTOOL_ROOT}.tar.gz ${LIBTOOL_DOWNLOAD_URL}
 check_sha256sum ${LIBTOOL_ROOT}.tar.gz ${LIBTOOL_HASH}
 tar -zxf ${LIBTOOL_ROOT}.tar.gz
 pushd ${LIBTOOL_ROOT}
-do_standard_install
+DESTDIR=/manylinux-rootfs do_standard_install
 popd
 rm -rf ${LIBTOOL_ROOT} ${LIBTOOL_ROOT}.tar.gz
 
+# Strip what we can
+strip_ /manylinux-rootfs
+
+# Install
+cp -rf /manylinux-rootfs/* /
+
+# Remove temporary rootfs
+rm -rf /manylinux-rootfs
 
 hash -r
 libtoolize --version

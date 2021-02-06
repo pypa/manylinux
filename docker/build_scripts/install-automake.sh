@@ -29,10 +29,18 @@ fetch_source ${AUTOMAKE_ROOT}.tar.gz ${AUTOMAKE_DOWNLOAD_URL}
 check_sha256sum ${AUTOMAKE_ROOT}.tar.gz ${AUTOMAKE_HASH}
 tar -zxf ${AUTOMAKE_ROOT}.tar.gz
 pushd ${AUTOMAKE_ROOT}
-do_standard_install
+DESTDIR=/manylinux-rootfs do_standard_install
 popd
 rm -rf ${AUTOMAKE_ROOT} ${AUTOMAKE_ROOT}.tar.gz
 
+# Strip what we can
+strip_ /manylinux-rootfs
+
+# Install
+cp -rf /manylinux-rootfs/* /
+
+# Remove temporary rootfs
+rm -rf /manylinux-rootfs
 
 hash -r
 automake --version
