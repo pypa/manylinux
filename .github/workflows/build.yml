@@ -1,0 +1,42 @@
+name: Build
+
+on:
+  push:
+    branches-ignore:
+      - "dependabot/**"
+    paths:
+      - ".github/workflows/build.yml"
+      - "docker/**"
+      - "*.sh"
+  pull_request:
+    paths:
+      - ".github/workflows/build.yml"
+      - "docker/**"
+      - "build.sh"
+
+jobs:
+  build:
+    name: manylinux2010_${{ matrix.platform }}
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: "i686"
+          - platform: "x86_64"
+
+    env:
+      PLATFORM: ${{ matrix.platform }}
+      COMMIT_SHA: ${{ github.sha }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: ./build.sh
+      - name: Deploy
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository == 'pypa/manylinux'
+        run: ./deploy.sh
+        env:
+          QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
+          QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
