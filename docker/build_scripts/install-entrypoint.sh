@@ -5,7 +5,7 @@
 # Stop at any error, show all commands
 set -exuo pipefail
 
-if [ "${AUDITWHEEL_PLAT}" == "manylinux2014_i686" ]; then
+if [ "${AUDITWHEEL_PLAT}" == "manylinux2010_i686" ] || [ "${AUDITWHEEL_PLAT}" == "manylinux2014_i686" ]; then
 	echo "i386" > /etc/yum/vars/basearch
 	yum -y update
 	yum install -y util-linux-ng

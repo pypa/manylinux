@@ -1,16 +1,32 @@
 #!/bin/bash
-# Top-level build script called from Dockerfile
+# Install packages that will be needed at runtime
 
 # Stop at any error, show all commands
-set -ex
+set -exuo pipefail
 
-# Set build environment variables
-MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
-# Dependencies for compiling Python that we want to remove from
-# the final image after compiling Python
-PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel expat-devel ncurses-devel readline-devel tk-devel gdbm-devel libdb-devel libpcap-devel xz-devel openssl-devel keyutils-libs-devel krb5-devel libcom_err-devel libidn-devel curl-devel perl-devel libffi-devel kernel-devel"
-CMAKE_DEPS="openssl-devel zlib-devel libcurl-devel"
+# if a devel package is added to COMPILE_DEPS,
+# make sure the corresponding library is added to RUNTIME_DEPS if applicable
 
-# Development tools and libraries
-yum -y install ${PYTHON_COMPILE_DEPS} ${CMAKE_DEPS}
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
+	PACKAGE_MANAGER=yum
+	COMPILE_DEPS="zlib-devel bzip2-devel expat-devel ncurses-devel readline-devel tk-devel gdbm-devel libpcap-devel xz-devel openssl openssl-devel keyutils-libs-devel krb5-devel libcom_err-devel libidn-devel curl-devel uuid-devel libffi-devel kernel-headers"
+	if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
+		COMPILE_DEPS="${COMPILE_DEPS} db4-devel"
+	else
+		COMPILE_DEPS="${COMPILE_DEPS} libdb-devel"
+	fi
+else
+	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
+	exit 1
+fi
+
+
+if [ ${PACKAGE_MANAGER} == yum ]; then
+	yum -y install ${COMPILE_DEPS}
+	yum clean all
+	rm -rf /var/cache/yum
+else
+	echo "Not implemented"
+	exit 1
+fi

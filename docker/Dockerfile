@@ -21,6 +21,10 @@ ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH_ARG}
 ENV PATH=${PREPEND_PATH}${PATH}
 ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 
+# first fixup mirrors, keep the script around
+COPY build_scripts/fixup-mirrors.sh /usr/local/sbin/fixup-mirrors
+RUN fixup-mirrors
+
 # setup entrypoint, this will wrap commands with `linux32` with i686 images
 COPY build_scripts/install-entrypoint.sh /build_scripts/
 RUN bash /build_scripts/install-entrypoint.sh && rm -rf build_scripts
@@ -101,6 +105,12 @@ RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3340000 && \
     export SQLITE_AUTOCONF_HASH=bf6db7fae37d51754737747aaaf413b4d6b3b5fbacd52bdb2d0d6e5b2edd9aee && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2020 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
+
+COPY build_scripts/build-openssl.sh /build_scripts/
+RUN export OPENSSL_ROOT=openssl-1.1.1i && \
+    export OPENSSL_HASH=e8be6a35fe41d10603c3cc635e93289ed00bf34b79671a3a4de64fcee00d5242 && \
+    export OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source && \
+    manylinux-entrypoint /build_scripts/build-openssl.sh
 
 COPY build_scripts/build-cpython.sh /build_scripts/
 

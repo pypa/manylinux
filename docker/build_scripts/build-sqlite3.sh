@@ -29,7 +29,7 @@ rm /manylinux-rootfs/usr/local/lib/libsqlite3.a
 strip_ /manylinux-rootfs
 
 # Install
-cp -rf /manylinux-rootfs/* /
+cp -rlf /manylinux-rootfs/* /
 
 # Clean-up for runtime
 rm -rf /manylinux-rootfs/usr/local/bin /manylinux-rootfs/usr/local/include /manylinux-rootfs/usr/local/lib/pkg-config /manylinux-rootfs/usr/local/share
