@@ -58,3 +58,6 @@ target/
 
 # Prefetched source
 docker/sources
+
+# buildx cache
+.buildx-cache-*/
