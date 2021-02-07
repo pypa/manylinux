@@ -44,13 +44,20 @@ on June 30th, 2024.
 Code and details regarding ``manylinux1`` can be found here:
 `manylinux1 <https://github.com/pypa/manylinux/tree/manylinux1>`_.
 
-Code and details regarding ``manylinux2010`` can be found here:
-`manylinux2010 <https://github.com/pypa/manylinux/tree/master>`_.
-
 Wheel packages compliant with those tags can be uploaded to
 `PyPI <https://pypi.python.org>`_ (for instance with `twine
 <https://pypi.python.org/pypi/twine>`_) and can be installed with
-**pip 19.3 and later**.
+pip:
+
++-------------------+----------------------------------+
+| ``manylinux`` tag | Client-side pip version required |
++===================+==================================+
+| ``manylinux2014`` | pip >= 19.3                      |
++-------------------+----------------------------------+
+| ``manylinux2010`` | pip >= 19.0                      |
++-------------------+----------------------------------+
+| ``manylinux1``    | pip >= 8.1.0                     |
++-------------------+----------------------------------+
 
 The manylinux2014 tags allow projects to distribute wheels that are
 automatically installed (and work!) on the vast majority of desktop
@@ -61,9 +68,6 @@ This repository hosts several manylinux-related things:
 
 Docker images
 -------------
-
-.. image:: https://travis-ci.org/pypa/manylinux.svg?branch=manylinux2014
-   :target: https://travis-ci.org/pypa/manylinux
 
 Building manylinux-compatible wheels is not trivial; as a general
 rule, binaries built on one Linux distro will only work on other Linux
@@ -76,6 +80,35 @@ Rather than forcing you to install CentOS 7 yourself, install Python,
 etc., we provide `Docker <https://docker.com/>`_ images where we've
 done the work for you. The images are uploaded to `quay.io`_ and are tagged
 for repeatable builds.
+
+manylinux1 (CentOS 5 based)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+x86-64 image: ``quay.io/pypa/manylinux1_x86_64``
+
+.. image:: https://quay.io/repository/pypa/manylinux1_x86_64/status
+   :target: https://quay.io/repository/pypa/manylinux1_x86_64
+
+i686 image: ``quay.io/pypa/manylinux1_i686``
+
+.. image:: https://quay.io/repository/pypa/manylinux1_i686/status
+   :target: https://quay.io/repository/pypa/manylinux1_i686
+
+manylinux2010 (CentOS 6 based)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+x86-64 image: ``quay.io/pypa/manylinux2010_x86_64``
+
+.. image:: https://quay.io/repository/pypa/manylinux2010_x86_64/status
+   :target: https://quay.io/repository/pypa/manylinux2010_x86_64
+
+i686 image: ``quay.io/pypa/manylinux2010_i686``
+
+.. image:: https://quay.io/repository/pypa/manylinux2010_i686/status
+   :target: https://quay.io/repository/pypa/manylinux2010_i686
+
+manylinux2014 (CentOS 7 based)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 x86_64 image: ``quay.io/pypa/manylinux2014_x86_64``
 
@@ -102,9 +135,9 @@ s390x image: ``quay.io/pypa/manylinux2014_s390x``
 .. image:: https://quay.io/repository/pypa/manylinux2014_s390x/status
    :target: https://quay.io/repository/pypa/manylinux2014_s390x
 
-These images are rebuilt using Travis-CI on every commit to this
+These images are rebuilt using GitHub Actions on every commit to this
 repository; see the
-`docker/ <https://github.com/pypa/manylinux/tree/manylinux2014/docker>`_
+`docker/ <https://github.com/pypa/manylinux/tree/master/docker>`_
 directory for source code.
 
 The images currently contain:
@@ -112,15 +145,17 @@ The images currently contain:
 - CPython 3.5, 3.6, 3.7, 3.8 and 3.9, installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
-  e.g. ``/opt/python/cp35-cp35m`` contains a CPython 3.5 build, and
+  e.g. ``/opt/python/cp37-cp37m`` contains a CPython 3.7 build, and
   can be used to produce wheels named like
-  ``<pkg>-<version>-cp35-cp35m-<arch>.whl``.
+  ``<pkg>-<version>-cp37-cp37m-<arch>.whl``.
 
-- Devel packages for all the libraries that PEP 599 allows you to
+- Devel packages for all the libraries that PEP 571/599 allows you to
   assume are present on the host system
 
 - The `auditwheel <https://pypi.python.org/pypi/auditwheel>`_ tool
 
+Note that less common or virtually unheard of flag combinations
+(such as ``--with-pydebug`` (``d``) and ``--without-pymalloc`` (absence of ``m``)) are not provided.
 
 Note that `starting with CPython 3.8 <https://docs.python.org/dev/whatsnew/3.8.html#build-and-c-api-changes>`_,
 default ``sys.abiflags`` became an empty string: the ``m`` flag for pymalloc
@@ -133,7 +168,7 @@ Building Docker images
 To build the Docker images, please run the following command from the
 current (root) directory:
 
-    $ PLATFORM=$(uname -m) TRAVIS_COMMIT=latest ./build.sh
+    $ PLATFORM=$(uname -m) POLICY=manylinux2014 COMMIT_SHA=latest ./build.sh
 
 Example
 -------
@@ -186,7 +221,7 @@ Code of Conduct
 
 Everyone interacting in the manylinux project's codebases, issue
 trackers, chat rooms, and mailing lists is expected to follow the
-`PyPA Code of Conduct`_.
+`PSF Code of Conduct`_.
 
-.. _PyPA Code of Conduct: https://www.pypa.io/en/latest/code-of-conduct
+.. _PSF Code of Conduct: https://github.com/pypa/.github/blob/main/CODE_OF_CONDUCT.md
 .. _`quay.io`: https://quay.io/organization/pypa
