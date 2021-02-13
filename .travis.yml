@@ -28,16 +28,16 @@ jobs:
       env: POLICY="manylinux2014" PLATFORM="aarch64"
     - arch: s390x
       env: POLICY="manylinux2014" PLATFORM="s390x"
-    #- arch: ppc64le
-    #  env: POLICY="manylinux2014" PLATFORM="ppc64le"
+    - arch: ppc64le
+      env: POLICY="manylinux2014" PLATFORM="ppc64le"
     - arch: arm64-graviton2
       virt: vm
       group: edge
       env: POLICY="manylinux_2_24" PLATFORM="aarch64"
     - arch: s390x
       env: POLICY="manylinux_2_24" PLATFORM="s390x"
-    #- arch: ppc64le
-    #  env: POLICY="manylinux2014" PLATFORM="ppc64le"
+    - arch: ppc64le
+      env: POLICY="manylinux_2_24" PLATFORM="ppc64le"
 
 before_install:
   - if [ -d "${HOME}/buildx-cache/.buildx-cache-${POLICY}_${PLATFORM}" ]; then cp -rlf ${HOME}/buildx-cache/.buildx-cache-${POLICY}_${PLATFORM} ./; fi
