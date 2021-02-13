@@ -31,11 +31,7 @@ jobs:
           - policy: "manylinux2014"
             platform: "x86_64"
           - policy: "manylinux2014"
-            platform: "aarch64"
-          - policy: "manylinux2014"
             platform: "ppc64le"
-          - policy: "manylinux2014"
-            platform: "s390x"
 
     env:
       POLICY: ${{ matrix.policy }}
