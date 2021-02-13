@@ -1,10 +1,10 @@
 # default to latest supported policy, x86_64
-ARG BASEIMAGE=amd64/centos:7
-ARG POLICY=manylinux2014
+ARG BASEIMAGE=amd64/debian:9
+ARG POLICY=manylinux_2_24
 ARG PLATFORM=x86_64
-ARG DEVTOOLSET_ROOTPATH=/opt/rh/devtoolset-9/root
-ARG LD_LIBRARY_PATH_ARG=${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst:/usr/local/lib64:/usr/local/lib
-ARG PREPEND_PATH=${DEVTOOLSET_ROOTPATH}/usr/bin:
+ARG DEVTOOLSET_ROOTPATH=
+ARG LD_LIBRARY_PATH_ARG=
+ARG PREPEND_PATH=
 
 FROM $BASEIMAGE AS runtime_base
 ARG POLICY

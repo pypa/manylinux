@@ -8,18 +8,18 @@ Archives: https://mail.python.org/mailman/listinfo/wheel-builders
 Older archives: https://groups.google.com/forum/#!forum/manylinux-discuss
 
 The goal of the manylinux project is to provide a convenient way to
-distribute binary Python extensions as wheels on Linux. This effort
-has produced `PEP 513 <https://www.python.org/dev/peps/pep-0513/>`_ which
-is further enhanced by `PEP 571 <https://www.python.org/dev/peps/pep-0571/>`_
-and now `PEP 599 <https://www.python.org/dev/peps/pep-0599/>`_ defining
-``manylinux2014_*`` platform tags.
+distribute binary Python extensions as wheels on Linux.
+This effort has produced `PEP 513 <https://www.python.org/dev/peps/pep-0513/>`_ (manylinux1),
+`PEP 571 <https://www.python.org/dev/peps/pep-0571/>`_ (manylinux2010),
+`PEP 599 <https://www.python.org/dev/peps/pep-0599/>`_ (manylinux2014) and
+`PEP 600 <https://www.python.org/dev/peps/pep-0600/>`_ (manylinux_x_y).
 
 PEP 513 defined ``manylinux1_x86_64`` and ``manylinux1_i686`` platform tags
 and the wheels were built on Centos5. Centos5 reached End of Life (EOL) on
-March 31st, 2017 and thus PEP 571 was proposed.
+March 31st, 2017.
 
 PEP 571 defined ``manylinux2010_x86_64`` and ``manylinux2010_i686`` platform
-tags and the wheels were built on Centos6. Centos6 will reach End of Life (EOL)
+tags and the wheels were built on Centos6. Centos6 reached End of Life (EOL)
 on November 30th, 2020.
 
 PEP 599 defines the following platform tags:
@@ -41,8 +41,10 @@ PEP 599 defines the following platform tags:
 Wheels are built on CentOS 7 which will reach End of Life (EOL)
 on June 30th, 2024.
 
-Code and details regarding ``manylinux1`` can be found here:
-`manylinux1 <https://github.com/pypa/manylinux/tree/manylinux1>`_.
+PEP 600 has been designed to be "future-proof" and does not enforce specific symbols and a specific distro to build.
+It only states that a wheel tagged ``manylinux_x_y`` shall work on any distro based on ``glibc>=x.y``.
+The manylinux project supports ``manylinux_2_24`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
+
 
 Wheel packages compliant with those tags can be uploaded to
 `PyPI <https://pypi.python.org>`_ (for instance with `twine
@@ -52,6 +54,8 @@ pip:
 +-------------------+----------------------------------+
 | ``manylinux`` tag | Client-side pip version required |
 +===================+==================================+
+| ``manylinux_x_y`` | pip >= 20.3                      |
++-------------------+----------------------------------+
 | ``manylinux2014`` | pip >= 19.3                      |
 +-------------------+----------------------------------+
 | ``manylinux2010`` | pip >= 19.0                      |
@@ -59,7 +63,7 @@ pip:
 | ``manylinux1``    | pip >= 8.1.0                     |
 +-------------------+----------------------------------+
 
-The manylinux2014 tags allow projects to distribute wheels that are
+The various manylinux tags allow projects to distribute wheels that are
 automatically installed (and work!) on the vast majority of desktop
 and server Linux distributions.
 
@@ -73,74 +77,63 @@ Building manylinux-compatible wheels is not trivial; as a general
 rule, binaries built on one Linux distro will only work on other Linux
 distros that are the same age or newer. Therefore, if we want to make
 binaries that run on most Linux distros, we have to use an old enough
-distro -- CentOS 7.
+distro.
 
 
-Rather than forcing you to install CentOS 7 yourself, install Python,
+Rather than forcing you to install an old distro yourself, install Python,
 etc., we provide `Docker <https://docker.com/>`_ images where we've
 done the work for you. The images are uploaded to `quay.io`_ and are tagged
 for repeatable builds.
 
-manylinux1 (CentOS 5 based)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-x86-64 image: ``quay.io/pypa/manylinux1_x86_64``
+manylinux_2_24 (Debian 9 based)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: https://quay.io/repository/pypa/manylinux1_x86_64/status
-   :target: https://quay.io/repository/pypa/manylinux1_x86_64
+- x86_64 image: ``quay.io/pypa/manylinux_2_24_x86_64``
+- i686 image: ``quay.io/pypa/manylinux_2_24_i686``
+- aarch64 image: ``quay.io/pypa/manylinux_2_24_aarch64``
+- ppc64le image: ``quay.io/pypa/manylinux_2_24_ppc64le``
+- s390x image: ``quay.io/pypa/manylinux_2_24_s390x``
 
-i686 image: ``quay.io/pypa/manylinux1_i686``
-
-.. image:: https://quay.io/repository/pypa/manylinux1_i686/status
-   :target: https://quay.io/repository/pypa/manylinux1_i686
-
-manylinux2010 (CentOS 6 based)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-x86-64 image: ``quay.io/pypa/manylinux2010_x86_64``
-
-.. image:: https://quay.io/repository/pypa/manylinux2010_x86_64/status
-   :target: https://quay.io/repository/pypa/manylinux2010_x86_64
-
-i686 image: ``quay.io/pypa/manylinux2010_i686``
-
-.. image:: https://quay.io/repository/pypa/manylinux2010_i686/status
-   :target: https://quay.io/repository/pypa/manylinux2010_i686
 
 manylinux2014 (CentOS 7 based)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-x86_64 image: ``quay.io/pypa/manylinux2014_x86_64``
+- x86_64 image: ``quay.io/pypa/manylinux2014_x86_64``
+- i686 image: ``quay.io/pypa/manylinux2014_i686``
+- aarch64 image: ``quay.io/pypa/manylinux2014_aarch64``
+- ppc64le image: ``quay.io/pypa/manylinux2014_ppc64le``
+- s390x image: ``quay.io/pypa/manylinux2014_s390x``
 
-.. image:: https://quay.io/repository/pypa/manylinux2014_x86_64/status
-   :target: https://quay.io/repository/pypa/manylinux2014_x86_64
 
-i686 image: ``quay.io/pypa/manylinux2014_i686``
+manylinux2010 (CentOS 6 based - EOL)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: https://quay.io/repository/pypa/manylinux2014_i686/status
-   :target: https://quay.io/repository/pypa/manylinux2014_i686
+- x86-64 image: ``quay.io/pypa/manylinux2010_x86_64``
+- i686 image: ``quay.io/pypa/manylinux2010_i686``
 
-aarch64 image: ``quay.io/pypa/manylinux2014_aarch64``
 
-.. image:: https://quay.io/repository/pypa/manylinux2014_aarch64/status
-   :target: https://quay.io/repository/pypa/manylinux2014_aarch64
+manylinux1 (CentOS 5 based - EOL)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-ppc64le image: ``quay.io/pypa/manylinux2014_ppc64le``
+Code and details regarding ``manylinux1`` can be found in the `manylinux1 branch <https://github.com/pypa/manylinux/tree/manylinux1>`_.
 
-.. image:: https://quay.io/repository/pypa/manylinux2014_ppc64le/status
-   :target: https://quay.io/repository/pypa/manylinux2014_ppc64le
+Support for ``manylinux1`` will `end on January 1st, 2022 <https://github.com/pypa/manylinux/issues/994>`_.
 
-s390x image: ``quay.io/pypa/manylinux2014_s390x``
+- x86-64 image: ``quay.io/pypa/manylinux1_x86_64``
+- i686 image: ``quay.io/pypa/manylinux1_i686``
 
-.. image:: https://quay.io/repository/pypa/manylinux2014_s390x/status
-   :target: https://quay.io/repository/pypa/manylinux2014_s390x
 
-These images are rebuilt using GitHub Actions on every commit to this
+All images are rebuilt using GitHub Actions / Travis-CI on every commit to this
 repository; see the
 `docker/ <https://github.com/pypa/manylinux/tree/master/docker>`_
 directory for source code.
 
-The images currently contain:
+
+Image content
+~~~~~~~~~~~~~
+
+All images currently contain:
 
 - CPython 3.5, 3.6, 3.7, 3.8 and 3.9, installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
@@ -149,8 +142,7 @@ The images currently contain:
   can be used to produce wheels named like
   ``<pkg>-<version>-cp37-cp37m-<arch>.whl``.
 
-- Devel packages for all the libraries that PEP 571/599 allows you to
-  assume are present on the host system
+- Development packages for all the libraries that PEP 571/599 list. One should not assume the presence of any other development package.
 
 - The `auditwheel <https://pypi.python.org/pypi/auditwheel>`_ tool
 
@@ -169,6 +161,8 @@ To build the Docker images, please run the following command from the
 current (root) directory:
 
     $ PLATFORM=$(uname -m) POLICY=manylinux2014 COMMIT_SHA=latest ./build.sh
+
+Please not that the Docker build is using `buildx <https://github.com/docker/buildx>`_.
 
 Example
 -------
@@ -204,6 +198,9 @@ reached EOL was discussed in `PEP 571 <https://www.python.org/dev/peps/pep-0571/
 
 The proposal to upgrade ``manylinux2010`` to ``manylinux2014`` was
 discussed in `PEP 599 <https://www.python.org/dev/peps/pep-0599/>`_.
+
+The proposal for a "future-proof" ``manylinux_x_y`` definition was
+discussed in `PEP 600 <https://www.python.org/dev/peps/pep-0600/>`_.
 
 This repo also has some analysis code that was used when putting
 together the original proposal in the ``policy-info/`` directory.

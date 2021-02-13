@@ -53,6 +53,11 @@ elif [ "${POLICY}" == "manylinux2014" ]; then
 	else
 		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst:/usr/local/lib64:/usr/local/lib"
 	fi
+elif [ "${POLICY}" == "manylinux_2_24" ]; then
+	BASEIMAGE="${MULTIARCH_PREFIX}debian:9"
+	DEVTOOLSET_ROOTPATH=
+	PREPEND_PATH=
+	LD_LIBRARY_PATH_ARG=
 else
 	echo "Unsupported policy: '${POLICY}'"
 	exit 1

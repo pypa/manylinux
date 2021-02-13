@@ -32,6 +32,12 @@ jobs:
             platform: "x86_64"
           - policy: "manylinux2014"
             platform: "ppc64le"
+          - policy: "manylinux_2_24"
+            platform: "i686"
+          - policy: "manylinux_2_24"
+            platform: "x86_64"
+          - policy: "manylinux_2_24"
+            platform: "ppc64le"
 
     env:
       POLICY: ${{ matrix.policy }}
