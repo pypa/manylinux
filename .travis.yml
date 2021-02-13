@@ -28,21 +28,23 @@ jobs:
       env: POLICY="manylinux2014" PLATFORM="aarch64"
     - arch: s390x
       env: POLICY="manylinux2014" PLATFORM="s390x"
-    #- arch: ppc64le
-    #  env: POLICY="manylinux2014" PLATFORM="ppc64le"
+    - arch: ppc64le
+      env: POLICY="manylinux2014" PLATFORM="ppc64le"
     - arch: arm64-graviton2
       virt: vm
       group: edge
       env: POLICY="manylinux_2_24" PLATFORM="aarch64"
     - arch: s390x
       env: POLICY="manylinux_2_24" PLATFORM="s390x"
-    #- arch: ppc64le
-    #  env: POLICY="manylinux2014" PLATFORM="ppc64le"
+    - arch: ppc64le
+      env: POLICY="manylinux_2_24" PLATFORM="ppc64le"
 
 before_install:
   - if [ -d "${HOME}/buildx-cache/.buildx-cache-${POLICY}_${PLATFORM}" ]; then cp -rlf ${HOME}/buildx-cache/.buildx-cache-${POLICY}_${PLATFORM} ./; fi
 
 install:
+  - nproc
+  - free
   - ./travisci-install-buildx.sh
 
 script:
@@ -57,3 +59,7 @@ deploy:
   on:
     branch: master
     repo: pypa/manylinux
+
+after_script:
+  - if [ -f ${HOME}/dockerd-rootless.pid ]; then kill -15 $(cat ${HOME}/dockerd-rootless.pid); fi
+
