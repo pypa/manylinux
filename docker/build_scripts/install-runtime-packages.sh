@@ -26,6 +26,8 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 # MANYLINUX_DEPS: Install development packages (except for libgcc which is provided by gcc install)
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	MANYLINUX_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel mesa-libGL-devel libICE-devel libSM-devel"
+elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
+	MANYLINUX_DEPS="libc6-dev libstdc++-6-dev libglib2.0-dev libx11-dev libxext-dev libxrender-dev libgl1-mesa-dev libice-dev libsm-dev"
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
 	exit 1
@@ -39,6 +41,8 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == 
 	else
 		RUNTIME_DEPS="${RUNTIME_DEPS} libdb"
 	fi
+elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
+	RUNTIME_DEPS="zlib1g libbz2-1.0 libexpat1 libncurses5 libreadline7 tk libgdbm3 libdb5.3 libpcap0.8 liblzma5 libssl1.1 libkeyutils1 libkrb5-3 libcomerr2 libidn2-0 libcurl3 uuid libffi6"
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
 	exit 1
@@ -91,6 +95,14 @@ elif [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 		# Install mayeut/devtoolset-9 repo to get devtoolset-9
 		curl -fsSLo /etc/yum.repos.d/mayeut-devtoolset-9.repo https://copr.fedorainfracloud.org/coprs/mayeut/devtoolset-9/repo/custom-1/mayeut-devtoolset-9-custom-1.repo
 	fi
+elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
+	PACKAGE_MANAGER=apt
+	export DEBIAN_FRONTEND=noninteractive
+	sed -i 's/none/en_US/g' /etc/apt/apt.conf.d/docker-no-languages
+	apt-get update -qq
+	apt-get upgrade -qq -y
+	apt-get install -qq -y --no-install-recommends ca-certificates gpg curl locales
+	TOOLCHAIN_DEPS="binutils gcc g++ gfortran"
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
 	exit 1
@@ -98,7 +110,7 @@ fi
 
 if ! which localedef &> /dev/null; then
 	# somebody messed up glibc-common package to squeeze image size, reinstall the package
-	if [ ${PACKAGE_MANAGER} == yum ]; then
+	if [ "${PACKAGE_MANAGER}" == "yum" ]; then
 		yum -y reinstall glibc-common
 	else
 		echo "Not implemented"
@@ -109,10 +121,14 @@ fi
 # upgrading glibc-common can end with removal on en_US.UTF-8 locale
 localedef -i en_US -f UTF-8 en_US.UTF-8
 
-if [ ${PACKAGE_MANAGER} == yum ]; then
+if [ "${PACKAGE_MANAGER}" == "yum" ]; then
 	yum -y install ${BASETOOLS} ${TOOLCHAIN_DEPS} ${MANYLINUX_DEPS} ${RUNTIME_DEPS}
 	yum clean all
 	rm -rf /var/cache/yum
+elif [ "${PACKAGE_MANAGER}" == "apt" ]; then
+	apt-get install -qq -y --no-install-recommends ${BASETOOLS} ${TOOLCHAIN_DEPS} ${MANYLINUX_DEPS} ${RUNTIME_DEPS}
+	apt-get clean -qq
+	rm -rf /var/lib/apt/lists/*
 else
 	echo "Not implemented"
 	exit 1
@@ -128,7 +144,9 @@ if [ "${DEVTOOLSET_ROOTPATH:-}" != "" ]; then
 	find $DEVTOOLSET_ROOTPATH/usr/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
 fi
 
-rm -rf /usr/share/backgrounds
+if [ -d /usr/share/backgrounds ]; then
+	rm -rf /usr/share/backgrounds
+fi
 
 # if we updated glibc, we need to strip locales again...
 if localedef --list-archive | grep -sq -v -i ^en_US.utf8; then
@@ -137,6 +155,10 @@ fi
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	mv -f /usr/lib/locale/locale-archive /usr/lib/locale/locale-archive.tmpl
 	build-locale-archive
+elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
+	rm /usr/lib/locale/locale-archive
+	localedef -i en_US -f UTF-8 en_US.UTF-8
+	update-locale LANG=en_US.UTF-8
 fi
 
 find /usr/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
