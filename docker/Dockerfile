@@ -124,13 +124,13 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.5.10
 FROM build_cpython AS build_cpython36
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint gpg --import /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.6.12
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.6.13
 
 
 FROM build_cpython AS build_cpython37
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint gpg --import /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.9
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.10
 
 
 FROM build_cpython AS build_cpython38
