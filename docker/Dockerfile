@@ -107,8 +107,8 @@ RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3340000 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
 COPY build_scripts/build-openssl.sh /build_scripts/
-RUN export OPENSSL_ROOT=openssl-1.1.1i && \
-    export OPENSSL_HASH=e8be6a35fe41d10603c3cc635e93289ed00bf34b79671a3a4de64fcee00d5242 && \
+RUN export OPENSSL_ROOT=openssl-1.1.1j && \
+    export OPENSSL_HASH=aaf2fcb575cdf6491b98ab4829abf78a3dec8402b8b81efc8f23c00d443981bf && \
     export OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source && \
     manylinux-entrypoint /build_scripts/build-openssl.sh
 
@@ -124,13 +124,13 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.5.10
 FROM build_cpython AS build_cpython36
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint gpg --import /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.6.12
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.6.13
 
 
 FROM build_cpython AS build_cpython37
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint gpg --import /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.9
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.10
 
 
 FROM build_cpython AS build_cpython38
