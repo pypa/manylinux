@@ -2,7 +2,7 @@
 
 PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 # of the form <maj>.<min>.<rev> or <maj>.<min>.<rev>rc<n>
-CPYTHON_VERSIONS="2.7.18 3.5.10 3.6.13 3.7.10 3.8.7 3.9.1"
+CPYTHON_VERSIONS="2.7.18 3.5.10 3.6.13 3.7.10 3.8.8 3.9.2"
 
 # perl is needed to build openssl
 PERL_ROOT=perl-5.30.2
