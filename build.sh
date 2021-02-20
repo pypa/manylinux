@@ -76,6 +76,8 @@ docker buildx build \
 	--rm -t quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA} \
 	-f docker/Dockerfile docker/
 
+docker run --rm -v $(pwd)/tests:/tests:ro quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA} /tests/run_tests.sh
+
 if [ -d $(pwd)/.buildx-cache-${POLICY}_${PLATFORM} ]; then
 	rm -rf $(pwd)/.buildx-cache-${POLICY}_${PLATFORM}
 fi

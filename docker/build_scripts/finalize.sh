@@ -52,15 +52,6 @@ export SSL_CERT_FILE=/opt/_internal/certs.pem
 # Deactivate the tools virtual environment
 deactivate
 
-
-for PYTHON in /opt/python/*/bin/python; do
-	# Smoke test to make sure that our Pythons work, and do indeed detect as
-	# being manylinux compatible:
-	$PYTHON $MY_DIR/manylinux-check.py ${AUDITWHEEL_POLICY} ${AUDITWHEEL_ARCH}
-	# Make sure that SSL cert checking works
-	$PYTHON $MY_DIR/ssl-check.py
-done
-
 # We do not need the precompiled .pyc and .pyo files.
 clean_pyc /opt/_internal
 
@@ -68,4 +59,3 @@ clean_pyc /opt/_internal
 rm -rf /root/.cache
 
 hardlink -cv /opt/_internal
-
