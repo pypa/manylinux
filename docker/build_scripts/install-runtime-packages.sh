@@ -54,7 +54,9 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
 	BASETOOLS="${BASETOOLS} which"
 	# See https://unix.stackexchange.com/questions/41784/can-yum-express-a-preference-for-x86-64-over-i386-packages
 	echo "multilib_policy=best" >> /etc/yum.conf
+	fixup-mirrors
 	yum -y update
+	fixup-mirrors
 	yum -y install https://archives.fedoraproject.org/pub/archive/epel/6/x86_64/epel-release-6-8.noarch.rpm curl
 	fixup-mirrors
 	TOOLCHAIN_DEPS="devtoolset-8-binutils devtoolset-8-gcc devtoolset-8-gcc-c++ devtoolset-8-gcc-gfortran yasm"
@@ -108,63 +110,17 @@ else
 	exit 1
 fi
 
-if ! which localedef &> /dev/null; then
-	# somebody messed up glibc-common package to squeeze image size, reinstall the package
-	if [ "${PACKAGE_MANAGER}" == "yum" ]; then
-		yum -y reinstall glibc-common
-	else
-		echo "Not implemented"
-		exit 1
-	fi
-fi
-
-# upgrading glibc-common can end with removal on en_US.UTF-8 locale
-localedef -i en_US -f UTF-8 en_US.UTF-8
-
 if [ "${PACKAGE_MANAGER}" == "yum" ]; then
 	yum -y install ${BASETOOLS} ${TOOLCHAIN_DEPS} ${MANYLINUX_DEPS} ${RUNTIME_DEPS}
-	yum clean all
-	rm -rf /var/cache/yum
 elif [ "${PACKAGE_MANAGER}" == "apt" ]; then
 	apt-get install -qq -y --no-install-recommends ${BASETOOLS} ${TOOLCHAIN_DEPS} ${MANYLINUX_DEPS} ${RUNTIME_DEPS}
-	apt-get clean -qq
-	rm -rf /var/lib/apt/lists/*
 else
 	echo "Not implemented"
 	exit 1
 fi
 
-
-# Fix libc headers to remain compatible with C99 compilers.
-find /usr/include/ -type f -exec sed -i 's/\bextern _*inline_*\b/extern __inline __attribute__ ((__gnu_inline__))/g' {} +
-
-if [ "${DEVTOOLSET_ROOTPATH:-}" != "" ]; then
-	# remove useless things that have been installed by devtoolset
-	rm -rf $DEVTOOLSET_ROOTPATH/usr/share/man
-	find $DEVTOOLSET_ROOTPATH/usr/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
-fi
-
-if [ -d /usr/share/backgrounds ]; then
-	rm -rf /usr/share/backgrounds
-fi
-
-# if we updated glibc, we need to strip locales again...
-if localedef --list-archive | grep -sq -v -i ^en_US.utf8; then
-	localedef --list-archive | grep -v -i ^en_US.utf8 | xargs localedef --delete-from-archive
-fi
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
-	mv -f /usr/lib/locale/locale-archive /usr/lib/locale/locale-archive.tmpl
-	build-locale-archive
-elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
-	rm /usr/lib/locale/locale-archive
-	localedef -i en_US -f UTF-8 en_US.UTF-8
-	update-locale LANG=en_US.UTF-8
-fi
-
-find /usr/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
-if [ -d /usr/local/share/locale ]; then
-	find /usr/local/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
-fi
-if [ -d /usr/local/share/man ]; then
-	rm -rf /usr/local/share/man
-fi
+# update system packages, we already updated them but
+# the following script takes care of cleaning-up some things
+# and since it's also needed in the finalize step, everything's
+# centralized in this script to avoid code duplication
+LC_ALL=C ${MY_DIR}/update-system-packages.sh
