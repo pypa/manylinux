@@ -2,6 +2,15 @@
 # Helper utilities for build
 
 
+# use all flags used by ubuntu 20.04 for hardening builds, dpkg-buildflags --export
+# other flags mentioned in https://wiki.ubuntu.com/ToolChain/CompilerFlags can't be
+# used because the distros used here are too old
+MANYLINUX_CPPFLAGS="-Wdate-time -D_FORTIFY_SOURCE=2"
+MANYLINUX_CFLAGS="-g -O2 -Wall -fdebug-prefix-map=/=. -fstack-protector-strong -Wformat -Werror=format-security"
+MANYLINUX_CXXFLAGS="-g -O2 -Wall -fdebug-prefix-map=/=. -fstack-protector-strong -Wformat -Werror=format-security"
+MANYLINUX_LDFLAGS="-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now"
+
+
 function check_var {
     if [ -z "$1" ]; then
         echo "required variable not defined"
@@ -38,7 +47,7 @@ function check_sha256sum {
 
 
 function do_standard_install {
-    ./configure "$@" > /dev/null
+    ./configure "$@" CPPFLAGS="${MANYLINUX_CPPFLAGS}" CFLAGS="${MANYLINUX_CFLAGS}" "CXXFLAGS=${MANYLINUX_CXXFLAGS}" LDFLAGS="${MANYLINUX_LDFLAGS}" > /dev/null
     make -j$(nproc) > /dev/null
     make -j$(nproc) install > /dev/null
 }

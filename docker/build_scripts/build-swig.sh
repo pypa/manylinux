@@ -24,6 +24,10 @@ tar -xzf ${SWIG_ROOT}.tar.gz
 pushd ${SWIG_ROOT}
 fetch_source ${PCRE_ROOT}.tar.gz ${PCRE_DOWNLOAD_URL}
 check_sha256sum ${PCRE_ROOT}.tar.gz ${PCRE_HASH}
+export CPPFLAGS="${MANYLINUX_CPPFLAGS}"
+export CFLAGS="${MANYLINUX_CFLAGS}"
+export CXXFLAGS="${MANYLINUX_CXXFLAGS}"
+export LDFLAGS="${MANYLINUX_LDFLAGS}"
 ./Tools/pcre-build.sh
 ./configure
 make -j$(nproc)
