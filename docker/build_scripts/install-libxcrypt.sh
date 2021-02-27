@@ -48,4 +48,5 @@ rm -rf /manylinux-rootfs
 
 # Delete GLIBC version headers and libraries
 rm -rf /usr/include/crypt.h
-rm -rf /usr/lib*/libcrypt.a /usr/lib*/libcrypt.so /usr/lib*/libcrypt.so.1
+find /lib* /usr/lib* \( -name 'libcrypt.a' -o -name 'libcrypt.so' -o -name 'libcrypt.so.*' -o -name 'libcrypt-2.*.so' \) -delete
+ldconfig
