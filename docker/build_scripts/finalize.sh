@@ -59,3 +59,7 @@ clean_pyc /opt/_internal
 rm -rf /root/.cache
 
 hardlink -cv /opt/_internal
+
+# update system packages
+LC_ALL=C ${MY_DIR}/update-system-packages.sh
+

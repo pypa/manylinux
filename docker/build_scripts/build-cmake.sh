@@ -19,6 +19,10 @@ fetch_source cmake-${CMAKE_VERSION}.tar.gz ${CMAKE_DOWNLOAD_URL}/v${CMAKE_VERSIO
 check_sha256sum cmake-${CMAKE_VERSION}.tar.gz ${CMAKE_HASH}
 tar -xzf cmake-${CMAKE_VERSION}.tar.gz
 pushd cmake-${CMAKE_VERSION}
+export CPPFLAGS="${MANYLINUX_CPPFLAGS}"
+export CFLAGS="${MANYLINUX_CFLAGS} ${CPPFLAGS}"
+export CXXFLAGS="${MANYLINUX_CXXFLAGS} ${CPPFLAGS}"
+export LDFLAGS="${MANYLINUX_LDFLAGS}"
 ./bootstrap --system-curl --parallel=$(nproc)
 make -j$(nproc)
 make install DESTDIR=/manylinux-rootfs

@@ -21,18 +21,17 @@ ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH_ARG}
 ENV PATH=${PREPEND_PATH}${PATH}
 ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 
-# first fixup mirrors, keep the script around
+# first copy the fixup mirrors script, keep the script around
 COPY build_scripts/fixup-mirrors.sh /usr/local/sbin/fixup-mirrors
-RUN fixup-mirrors
 
 # setup entrypoint, this will wrap commands with `linux32` with i686 images
-COPY build_scripts/install-entrypoint.sh /build_scripts/
-RUN bash /build_scripts/install-entrypoint.sh && rm -rf build_scripts
+COPY build_scripts/install-entrypoint.sh build_scripts/update-system-packages.sh /build_scripts/
+RUN bash /build_scripts/install-entrypoint.sh && rm -rf /build_scripts
 COPY manylinux-entrypoint /usr/local/bin/manylinux-entrypoint
 ENTRYPOINT ["manylinux-entrypoint"]
 
-COPY build_scripts/install-runtime-packages.sh /build_scripts/
-RUN manylinux-entrypoint /build_scripts/install-runtime-packages.sh && rm /build_scripts/install-runtime-packages.sh
+COPY build_scripts/install-runtime-packages.sh build_scripts/update-system-packages.sh /build_scripts/
+RUN manylinux-entrypoint /build_scripts/install-runtime-packages.sh && rm -rf /build_scripts/
 
 COPY build_scripts/build_utils.sh /build_scripts/
 
@@ -160,7 +159,7 @@ COPY --from=build_cmake /manylinux-rootfs /
 COPY --from=build_swig /manylinux-rootfs /
 COPY --from=build_cpython /manylinux-rootfs /
 COPY --from=all_cpython /opt/_internal /opt/_internal/
-COPY build_scripts/finalize.sh build_scripts/python-tag-abi-tag.py build_scripts/requirements.txt build_scripts/requirements-tools.txt /build_scripts/
+COPY build_scripts/finalize.sh build_scripts/update-system-packages.sh build_scripts/python-tag-abi-tag.py build_scripts/requirements.txt build_scripts/requirements-tools.txt /build_scripts/
 RUN manylinux-entrypoint /build_scripts/finalize.sh && rm -rf /build_scripts
 
 ENV SSL_CERT_FILE=/opt/_internal/certs.pem
