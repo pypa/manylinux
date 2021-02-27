@@ -60,13 +60,13 @@ pip:
 | ``manylinux2014`` | pip >= 19.3      | 3.7.8+, 3.8.4+, 3.9.0+     | Fedora 32+, Photon OS 4.0+ (3.0+ with updates), |
 |                   |                  |                            | Ubuntu 20.04+                                   |
 +-------------------+------------------+----------------------------+-------------------------------------------------+
-| ``manylinux2010`` | pip >= 19.0      | 3.7.3+, 3.8.0+             | ALT Linux 9+, Fedora 30+,                       |
+| ``manylinux2010`` | pip >= 19.0      | 3.7.3+, 3.8.0+             | ALT Linux 9+, Fedora 30+, Mageia 7+,            |
 |                   |                  |                            | Photon OS 4.0+ (3.0+ with updates),             |
 |                   |                  |                            | Ubuntu 20.04+                                   |
 +-------------------+------------------+----------------------------+-------------------------------------------------+
 | ``manylinux1``    | pip >= 8.1.0     | 3.5.2+, 3.6.0+             | ALT Linux 8+, Amazon Linux 1+, CentOS 7+,       |
 |                   |                  |                            | Debian 9+, Fedora 25+, openSUSE 15.2+,          |
-|                   |                  |                            | Photon OS 1.0+, Ubuntu 16.04+                   |
+|                   |                  |                            | Mageia 7+, Photon OS 1.0+, Ubuntu 16.04+        |
 +-------------------+------------------+----------------------------+-------------------------------------------------+
 
 The various manylinux tags allow projects to distribute wheels that are
