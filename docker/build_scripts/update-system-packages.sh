@@ -76,3 +76,9 @@ fi
 if [ -d /usr/local/share/man ]; then
 	rm -rf /usr/local/share/man
 fi
+
+if [ -f /usr/local/lib/libcrypt.so.1 ]; then
+	# Remove libcrypt to only use installed libxcrypt instead
+	find /lib* /usr/lib* \( -name 'libcrypt.a' -o -name 'libcrypt.so' -o -name 'libcrypt.so.*' -o -name 'libcrypt-2.*.so' \) -delete
+	ldconfig
+fi
