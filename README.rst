@@ -52,7 +52,7 @@ Wheel packages compliant with those tags can be uploaded to
 pip:
 
 +-------------------+------------------+----------------------------+-------------------------------------------+
-| ``manylinux`` tag | Client-side pip  | CPython (sources) version  | Distribution default compatibility        |
+| ``manylinux`` tag | Client-side pip  | CPython (sources) version  | Distribution default pip compatibility    |
 |                   | version required | embedding a compatible pip |                                           |
 +===================+==================+============================+===========================================+
 | ``manylinux_x_y`` | pip >= 20.3      | 3.10.0+                    | Fedora 34+, Mageia 8+,                    |
