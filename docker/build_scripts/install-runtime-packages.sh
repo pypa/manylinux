@@ -124,3 +124,10 @@ fi
 # and since it's also needed in the finalize step, everything's
 # centralized in this script to avoid code duplication
 LC_ALL=C ${MY_DIR}/update-system-packages.sh
+
+# we'll be removing libcrypt.so.1 later on
+# this is needed to ensure the new one will be found
+# as LD_LIBRARY_PATH does not seem enough.
+# c.f. https://github.com/pypa/manylinux/issues/1022
+echo "/usr/local/lib" > /etc/ld.so.conf.d/manylinux.conf
+ldconfig

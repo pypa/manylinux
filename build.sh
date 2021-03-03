@@ -36,9 +36,9 @@ if [ "${POLICY}" == "manylinux2010" ]; then
 	DEVTOOLSET_ROOTPATH="/opt/rh/devtoolset-8/root"
 	PREPEND_PATH="${DEVTOOLSET_ROOTPATH}/usr/bin:"
 	if [ "${PLATFORM}" == "i686" ]; then
-		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst:/usr/local/lib"
+		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"
 	else
-		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst:/usr/local/lib64:/usr/local/lib"
+		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst:/usr/local/lib64"
 	fi
 elif [ "${POLICY}" == "manylinux2014" ]; then
 	if [ "${PLATFORM}" == "s390x" ]; then
@@ -49,9 +49,9 @@ elif [ "${POLICY}" == "manylinux2014" ]; then
 	DEVTOOLSET_ROOTPATH="/opt/rh/devtoolset-9/root"
 	PREPEND_PATH="${DEVTOOLSET_ROOTPATH}/usr/bin:"
 	if [ "${PLATFORM}" == "i686" ]; then
-		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst:/usr/local/lib"
+		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"
 	else
-		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst:/usr/local/lib64:/usr/local/lib"
+		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst:/usr/local/lib64"
 	fi
 elif [ "${POLICY}" == "manylinux_2_24" ]; then
 	BASEIMAGE="${MULTIARCH_PREFIX}debian:9"
