@@ -12,9 +12,9 @@ wheel==0.36.2 \
 setuptools==50.3.2 ; python_version=='3.5' \
     --hash=sha256:2c242a0856fbad7efbe560df4a7add9324f340cf48df43651e9604924466794a \
     --hash=sha256:ed0519d27a243843b05d82a5e9d01b0b083d9934eaa3d02779a23da18077bd3c
-setuptools==53.1.0 ; python_version>='3.6' \
-     --hash=sha256:487f7a3e5040445b687f1eadcebcbbd11e83da95cad5e755304e38a3b7a93207 \
-     --hash=sha256:8181c4625cd58fa7817761e0fa60f6fa3adc4c437f5c25377b1aefa861ca15a2
+setuptools==54.0.0 ; python_version>='3.6' \
+     --hash=sha256:d85b57c41e88b69ab87065c964134ec85b7573cbab0fdaa7ef32330ed764600a \
+     --hash=sha256:34efee89c4c879204f5739ec6d9d3635195b0b7d2b51e25c9261a327367ec5ff
 build==0.3.0 \
     --hash=sha256:0eb95b2c8d770d7c4c9b92c68c227c350bbf65f3ec83551ace9097c18cc15fdd \
     --hash=sha256:75bc5676b1a014fb996dc96914428b197d174364392a46778200d5e115ffe76c
