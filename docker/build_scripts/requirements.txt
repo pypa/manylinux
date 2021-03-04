@@ -79,9 +79,9 @@ importlib-resources==3.3.1; python_version=='2.7' \
 appdirs==1.4.4; python_version=='2.7' \
     --hash=sha256:7d5d0167b2b1ba821647616af46a749d1c653740dd0d2415100fe26e27afdf41 \
     --hash=sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128
-configparser==4.0.2; python_version=='2.7' \
-    --hash=sha256:254c1d9c79f60c45dfde850850883d5aaa7f19a23f13561243a050d5a7c3fe4c \
-    --hash=sha256:c7d282687a5308319bf3d2e7706e575c635b0a470342641c93bea0ea3b5331df
+configparser==5.0.2; python_version=='2.7' \
+    --hash=sha256:af59f2cdd7efbdd5d111c1976ecd0b82db9066653362f0962d7bf1d3ab89a1fa \
+    --hash=sha256:85d5de102cfe6d14a5172676f09d19c465ce63d6019cf0a4ef13385fc535e828
 virtualenv==20.4.2; python_version=='2.7' \
     --hash=sha256:147b43894e51dd6bba882cf9c282447f780e2251cd35172403745fc381a0a80d \
     --hash=sha256:2be72df684b74df0ea47679a7df93fd0e04e72520022c57b479d8f881485dbe3
