@@ -47,8 +47,8 @@ install:
 
 script:
   - COMMIT_SHA=${TRAVIS_COMMIT} ./build.sh
-
-before_cache:
+  - if [ -d "${HOME}/buildx-cache" ]; then rm -rf ${HOME}/buildx-cache; fi
+  - mkdir ${HOME}/buildx-cache
   - cp -rlf ./.buildx-cache-* ${HOME}/buildx-cache/
 
 deploy:
