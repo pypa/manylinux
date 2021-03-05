@@ -30,6 +30,7 @@ strip_ /manylinux-rootfs
 
 # Install
 cp -rlf /manylinux-rootfs/* /
+ldconfig
 
 # Clean-up for runtime
 rm -rf /manylinux-rootfs/usr/local/bin /manylinux-rootfs/usr/local/include /manylinux-rootfs/usr/local/lib/pkg-config /manylinux-rootfs/usr/local/share
