@@ -24,9 +24,9 @@ for PYTHON in /opt/python/*/bin/python; do
 	$PYTHON $MY_DIR/manylinux-check.py ${AUDITWHEEL_POLICY} ${AUDITWHEEL_ARCH}
 	# Make sure that SSL cert checking works
 	$PYTHON $MY_DIR/ssl-check.py
-	# Make sure sqlite3 module can be loaded properly
+	# Make sure sqlite3 module can be loaded properly and is the manylinux version one
 	# c.f. https://github.com/pypa/manylinux/issues/1030
-	$PYTHON -c 'import sqlite3; print(sqlite3.sqlite_version)'
+	$PYTHON -c 'import sqlite3; print(sqlite3.sqlite_version); assert sqlite3.sqlite_version_info[0:2] >= (3, 34)'
 done
 
 # minimal tests for tools that should be present
