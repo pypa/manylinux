@@ -129,5 +129,5 @@ LC_ALL=C ${MY_DIR}/update-system-packages.sh
 # this is needed to ensure the new one will be found
 # as LD_LIBRARY_PATH does not seem enough.
 # c.f. https://github.com/pypa/manylinux/issues/1022
-echo "/usr/local/lib" > /etc/ld.so.conf.d/manylinux.conf
+echo "/usr/local/lib" > /etc/ld.so.conf.d/00-manylinux.conf
 ldconfig
