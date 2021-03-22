@@ -33,5 +33,4 @@ cp -rlf /manylinux-rootfs/* /
 ldconfig
 
 # Clean-up for runtime
-rm -rf /manylinux-rootfs/usr/local/bin /manylinux-rootfs/usr/local/include /manylinux-rootfs/usr/local/lib/pkg-config /manylinux-rootfs/usr/local/share
-find -L /manylinux-rootfs -type f -a -not -name 'libsqlite3.so.*' -delete
+rm -rf /manylinux-rootfs/usr/local/bin /manylinux-rootfs/usr/local/share
