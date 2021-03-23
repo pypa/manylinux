@@ -172,7 +172,7 @@ current (root) directory:
 
     $ PLATFORM=$(uname -m) POLICY=manylinux2014 COMMIT_SHA=latest ./build.sh
 
-Please not that the Docker build is using `buildx <https://github.com/docker/buildx>`_.
+Please note that the Docker build is using `buildx <https://github.com/docker/buildx>`_.
 
 Example
 -------
