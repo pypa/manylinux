@@ -37,6 +37,7 @@ patchelf --version
 git --version
 cmake --version
 swig -version
+sqlite3 --version
 
 # check libcrypt.so.1 can be loaded by some system packages,
 # as LD_LIBRARY_PATH might not be enough.
@@ -51,3 +52,14 @@ else
 fi
 eval "$(ssh-agent)"
 eval "$(ssh-agent -k)"
+
+# compilation tests, intended to ensure appropriate headers, pkg_config, etc.
+# are available for downstream compile against installed tools
+source_dir="${MY_DIR}/ctest"
+build_dir="$(mktemp -d)"
+cmake -S "${source_dir}" -B "${build_dir}"
+cmake --build "${build_dir}"
+(cd "${build_dir}"; ctest --output-on-failure)
+
+# final report
+echo "run_tests successful!"
