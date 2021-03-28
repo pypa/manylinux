@@ -33,4 +33,4 @@ cp -rlf /manylinux-rootfs/* /
 ldconfig
 
 # Clean-up for runtime
-rm -rf /manylinux-rootfs/usr/local/bin /manylinux-rootfs/usr/local/share
+rm -rf /manylinux-rootfs/usr/local/share
