@@ -20,7 +20,7 @@ for PREFIX in $(find /opt/_internal/ -mindepth 1 -maxdepth 1 -name 'cpython*'); 
 	if [ -e ${PREFIX}/bin/pip3 ] && [ ! -e ${PREFIX}/bin/pip ]; then
 		ln -s pip3 ${PREFIX}/bin/pip
 	fi
-    PY_VER=$(${PREFIX}/bin/python -c "import sys; print('.'.join(str(v) for v in sys.version_info[:2]))")
+	PY_VER=$(${PREFIX}/bin/python -c "import sys; print('.'.join(str(v) for v in sys.version_info[:2]))")
 	# Since we fall back on a canned copy of pip, we might not have
 	# the latest pip and friends. Upgrade them to make sure.
 	${PREFIX}/bin/pip install -U --require-hashes -r ${MY_DIR}/requirements${PY_VER}.txt
@@ -63,4 +63,3 @@ hardlink -cv /opt/_internal
 
 # update system packages
 LC_ALL=C ${MY_DIR}/update-system-packages.sh
-
