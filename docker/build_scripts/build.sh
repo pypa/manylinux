@@ -72,7 +72,6 @@ yum -y install \
     diffutils \
     expat-devel \
     gettext \
-    kernel-devel-`uname -r` \
     file \
     make \
     patch \
