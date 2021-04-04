@@ -36,8 +36,8 @@ RUN manylinux-entrypoint /build_scripts/install-runtime-packages.sh && rm -rf /b
 COPY build_scripts/build_utils.sh /build_scripts/
 
 COPY build_scripts/install-autoconf.sh /build_scripts/
-RUN export AUTOCONF_ROOT=autoconf-2.70 && \
-    export AUTOCONF_HASH=f05f410fda74323ada4bdc4610db37f8dbd556602ba65bc843edb4d4d4a1b2b7 && \
+RUN export AUTOCONF_ROOT=autoconf-2.71 && \
+    export AUTOCONF_HASH=431075ad0bf529ef13cb41e9042c542381103e80015686222b8a9d4abef42a1c && \
     export AUTOCONF_DOWNLOAD_URL=http://ftp.gnu.org/gnu/autoconf && \
     manylinux-entrypoint /build_scripts/install-autoconf.sh
 
@@ -73,16 +73,16 @@ RUN manylinux-entrypoint /build_scripts/install-build-packages.sh
 
 FROM build_base AS build_git
 COPY build_scripts/build-git.sh /build_scripts/
-RUN export GIT_ROOT=git-2.30.0 && \
-    export GIT_HASH=d24c4fa2a658318c2e66e25ab67cc30038a35696d2d39e6b12ceccf024de1e5e && \
+RUN export GIT_ROOT=git-2.31.1 && \
+    export GIT_HASH=46d37c229e9d786510e0c53b60065704ce92d5aedc16f2c5111e3ed35093bfa7 && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     manylinux-entrypoint /build_scripts/build-git.sh
 
 
 FROM build_base AS build_cmake
 COPY build_scripts/build-cmake.sh /build_scripts/
-RUN export CMAKE_VERSION=3.18.3 && \
-    export CMAKE_HASH=2c89f4e30af4914fd6fb5d00f863629812ada848eee4e2d29ec7e456d7fa32e5 && \
+RUN export CMAKE_VERSION=3.20.0 && \
+    export CMAKE_HASH=9c06b2ddf7c337e31d8201f6ebcd3bba86a9a033976a9aee207fe0c6971f4755 && \
     export CMAKE_DOWNLOAD_URL=https://github.com/Kitware/CMake/releases/download && \
     manylinux-entrypoint /build_scripts/build-cmake.sh
 
@@ -100,14 +100,14 @@ RUN export SWIG_ROOT=swig-4.0.2 && \
 
 FROM build_base AS build_cpython
 COPY build_scripts/build-sqlite3.sh /build_scripts/
-RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3340000 && \
-    export SQLITE_AUTOCONF_HASH=bf6db7fae37d51754737747aaaf413b4d6b3b5fbacd52bdb2d0d6e5b2edd9aee && \
-    export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2020 && \
+RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3350400 && \
+    export SQLITE_AUTOCONF_HASH=7771525dff0185bfe9638ccce23faa0e1451757ddbda5a6c853bb80b923a512d && \
+    export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2021 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
 COPY build_scripts/build-openssl.sh /build_scripts/
-RUN export OPENSSL_ROOT=openssl-1.1.1j && \
-    export OPENSSL_HASH=aaf2fcb575cdf6491b98ab4829abf78a3dec8402b8b81efc8f23c00d443981bf && \
+RUN export OPENSSL_ROOT=openssl-1.1.1k && \
+    export OPENSSL_HASH=892a0875b9872acd04a9fde79b1f943075d5ea162415de3047c327df33fbaee5 && \
     export OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source && \
     manylinux-entrypoint /build_scripts/build-openssl.sh
 
@@ -135,13 +135,13 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.10
 FROM build_cpython AS build_cpython38
 COPY build_scripts/ambv-pubkey.txt /build_scripts/ambv-pubkey.txt
 RUN manylinux-entrypoint gpg --import /build_scripts/ambv-pubkey.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.8.8
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.8.9
 
 
 FROM build_cpython AS build_cpython39
 COPY build_scripts/ambv-pubkey.txt /build_scripts/ambv-pubkey.txt
 RUN manylinux-entrypoint gpg --import /build_scripts/ambv-pubkey.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.9.2
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.9.3
 
 
 FROM build_cpython AS all_cpython
