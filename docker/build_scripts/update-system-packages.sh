@@ -74,7 +74,10 @@ if [ -d /usr/share/backgrounds ]; then
 fi
 
 if [ -d /usr/local/share/man ]; then
-	rm -rf /usr/local/share/man
+	# https://github.com/pypa/manylinux/issues/1060
+	# wrong /usr/local/man symlink
+	# only delete the content
+	rm -rf /usr/local/share/man/*
 fi
 
 if [ -f /usr/local/lib/libcrypt.so.1 ]; then

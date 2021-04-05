@@ -61,5 +61,11 @@ cmake -S "${source_dir}" -B "${build_dir}"
 cmake --build "${build_dir}"
 (cd "${build_dir}"; ctest --output-on-failure)
 
+# https://github.com/pypa/manylinux/issues/1060
+# wrong /usr/local/man symlink
+if [ -L /usr/local/man ]; then
+	test -d /usr/local/man
+fi
+
 # final report
 echo "run_tests successful!"
