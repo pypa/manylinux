@@ -35,7 +35,13 @@ fi
 
 # RUNTIME_DEPS: Runtime dependencies. c.f. install-build-packages.sh
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
-	RUNTIME_DEPS="zlib bzip2 expat ncurses readline tk gdbm libpcap xz openssl keyutils-libs libkadm5 libcom_err libidn libcurl uuid libffi"
+        LOCALE_DEPS=""
+        if [ "${AUDITWHEEL_ARCH}" == "ppc64le" ]; then
+		LOCALE_DEPS="glibc-locale-source glibc-langpack-en"
+        fi
+
+	RUNTIME_DEPS="zlib bzip2 expat ncurses readline tk gdbm libpcap xz openssl keyutils-libs libkadm5 libcom_err libidn uuid libffi ${LOCALE_DEPS}"
+
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
 		RUNTIME_DEPS="${RUNTIME_DEPS} db4"
 	else
@@ -82,16 +88,23 @@ elif [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	yum -y update
 	yum -y install yum-utils curl
 	yum-config-manager --enable extras
-	TOOLCHAIN_DEPS="devtoolset-9-binutils devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-gcc-gfortran"
+	if [ "${AUDITWHEEL_ARCH}" == "ppc64le" ]; then
+		TOOLCHAIN_DEPS="gcc-toolset-9-gcc gcc-toolset-9-gcc-c++ gcc-toolset-9 gcc-toolset-9-gcc-gfortran gcc-toolset-9-runtime"
+	else
+		TOOLCHAIN_DEPS="devtoolset-9-binutils devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-gcc-gfortran"
+	fi
 	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
 		# Software collection (for devtoolset-9)
 		yum -y install centos-release-scl-rh
 		# EPEL support (for yasm)
 		yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 		TOOLCHAIN_DEPS="${TOOLCHAIN_DEPS} yasm"
-	elif [ "${AUDITWHEEL_ARCH}" == "aarch64" ] || [ "${AUDITWHEEL_ARCH}" == "ppc64le" ] || [ "${AUDITWHEEL_ARCH}" == "s390x" ]; then
+	elif [ "${AUDITWHEEL_ARCH}" == "aarch64" ] || [ "${AUDITWHEEL_ARCH}" == "s390x" ]; then
 		# Software collection (for devtoolset-9)
 		yum -y install centos-release-scl-rh
+	elif [ "${AUDITWHEEL_ARCH}" == "ppc64le" ]; then
+		# Software collection on centos8
+		dnf -y group install "Development Tools"
 	elif [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
 		# No yasm on i686
 		# Install mayeut/devtoolset-9 repo to get devtoolset-9

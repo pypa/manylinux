@@ -43,6 +43,8 @@ if [ "${POLICY}" == "manylinux2010" ]; then
 elif [ "${POLICY}" == "manylinux2014" ]; then
 	if [ "${PLATFORM}" == "s390x" ]; then
 		BASEIMAGE="s390x/clefos:7"
+	elif [ "${PLATFORM}" == "ppc64le" ]; then
+                BASEIMAGE="${MULTIARCH_PREFIX}centos:8"
 	else
 		BASEIMAGE="${MULTIARCH_PREFIX}centos:7"
 	fi

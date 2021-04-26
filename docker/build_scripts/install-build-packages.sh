@@ -10,7 +10,15 @@ set -exuo pipefail
 
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	PACKAGE_MANAGER=yum
-	COMPILE_DEPS="zlib-devel bzip2-devel expat-devel ncurses-devel readline-devel tk-devel gdbm-devel libpcap-devel xz-devel openssl openssl-devel keyutils-libs-devel krb5-devel libcom_err-devel libidn-devel curl-devel uuid-devel libffi-devel kernel-headers"
+	COMPILE_DEPS="zlib-devel bzip2-devel expat-devel ncurses-devel readline-devel tk-devel gdbm-devel xz-devel openssl openssl-devel keyutils-libs-devel krb5-devel libcom_err-devel curl-devel libffi-devel kernel-headers"
+
+	if [ "${AUDITWHEEL_ARCH}" == "ppc64le" ]; then
+		DIFF_NAME_DEPS="libpcap libidn uuid"
+	else
+		DIFF_NAME_DEPS="libpcap-devel libidn-devel uuid-devel"
+	fi
+	COMPILE_DEPS="${COMPILE_DEPS} ${DIFF_NAME_DEPS}"
+
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
 		COMPILE_DEPS="${COMPILE_DEPS} db4-devel"
 	else
