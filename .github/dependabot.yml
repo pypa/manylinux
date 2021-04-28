@@ -1,0 +1,50 @@
+version: 2
+registries:
+  python-index-repo-fury-io-dstufft:
+    type: python-index
+    url: https://repo.fury.io/dstufft/
+    token: "${{secrets.PYTHON_INDEX_REPO_FURY_IO_DSTUFFT_TOKEN}}"
+
+updates:
+- package-ecosystem: pip
+  directory: "/docker/build_scripts"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 99
+  ignore:
+  - dependency-name: setuptools
+    versions:
+    - 53.0.0
+    - 53.1.0
+    - 54.0.0
+    - 54.1.1
+    - 54.1.2
+    - 54.2.0
+    - 56.0.0
+  registries:
+  - python-index-repo-fury-io-dstufft
+- package-ecosystem: pip
+  directory: "/docker/build_scripts"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 99
+  target-branch: manylinux1
+  ignore:
+  - dependency-name: setuptools
+    versions:
+    - 53.0.0
+    - 53.1.0
+    - 54.0.0
+    - 54.1.1
+    - 54.1.2
+    - 54.2.0
+    - 56.0.0
+  - dependency-name: importlib-resources
+    versions:
+    - 5.1.1
+    - 5.1.2
+  - dependency-name: configparser
+    versions:
+    - 5.0.2
+  registries:
+  - python-index-repo-fury-io-dstufft
