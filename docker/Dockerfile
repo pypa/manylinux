@@ -138,11 +138,18 @@ RUN manylinux-entrypoint gpg --import /build_scripts/ambv-pubkey.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.9.4
 
 
+FROM build_cpython AS build_cpython310
+COPY build_scripts/cpython-pubkey-310-311.txt /build_scripts/cpython-pubkey-310-311.txt
+RUN manylinux-entrypoint gpg --import /build_scripts/cpython-pubkey-310-311.txt
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.10.0b1
+
+
 FROM build_cpython AS all_cpython
 COPY --from=build_cpython36 /opt/_internal /opt/_internal/
 COPY --from=build_cpython37 /opt/_internal /opt/_internal/
 COPY --from=build_cpython38 /opt/_internal /opt/_internal/
 COPY --from=build_cpython39 /opt/_internal /opt/_internal/
+COPY --from=build_cpython310 /opt/_internal /opt/_internal/
 RUN hardlink -cv /opt/_internal
 
 
