@@ -114,12 +114,6 @@ RUN export OPENSSL_ROOT=openssl-1.1.1k && \
 COPY build_scripts/build-cpython.sh /build_scripts/
 
 
-FROM build_cpython AS build_cpython35
-COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint gpg --import /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.5.10
-
-
 FROM build_cpython AS build_cpython36
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint gpg --import /build_scripts/cpython-pubkeys.txt
@@ -145,7 +139,6 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.9.4
 
 
 FROM build_cpython AS all_cpython
-COPY --from=build_cpython35 /opt/_internal /opt/_internal/
 COPY --from=build_cpython36 /opt/_internal /opt/_internal/
 COPY --from=build_cpython37 /opt/_internal /opt/_internal/
 COPY --from=build_cpython38 /opt/_internal /opt/_internal/

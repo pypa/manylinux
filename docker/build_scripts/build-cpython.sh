@@ -34,18 +34,10 @@ PREFIX="/opt/_internal/cpython-${CPYTHON_VERSION}"
 mkdir -p ${PREFIX}/lib
 # configure with hardening options only for the interpreter & stdlib C extensions
 # do not change the default for user built extension (yet?)
-if [ "${CPYTHON_VERSION:0:4}" == "3.5." ]; then
-	./configure \
-		CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS}" \
-		--prefix=${PREFIX} --disable-shared --with-ensurepip=no > /dev/null
-	# those are not picked-up by distutils in CPython 3.5 which has no LDFLAGS_NODIST option in configure
-	export LDFLAGS="${MANYLINUX_LDFLAGS}"
-else
-	./configure \
-		CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS}" \
-		LDFLAGS_NODIST="${MANYLINUX_LDFLAGS}" \
-		--prefix=${PREFIX} --disable-shared --with-ensurepip=no > /dev/null
-fi
+./configure \
+	CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS}" \
+	LDFLAGS_NODIST="${MANYLINUX_LDFLAGS}" \
+	--prefix=${PREFIX} --disable-shared --with-ensurepip=no > /dev/null
 make -j$(nproc) > /dev/null
 make -j$(nproc) install > /dev/null
 popd
