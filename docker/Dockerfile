@@ -129,13 +129,13 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.10
 FROM build_cpython AS build_cpython38
 COPY build_scripts/ambv-pubkey.txt /build_scripts/ambv-pubkey.txt
 RUN manylinux-entrypoint gpg --import /build_scripts/ambv-pubkey.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.8.9
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.8.10
 
 
 FROM build_cpython AS build_cpython39
 COPY build_scripts/ambv-pubkey.txt /build_scripts/ambv-pubkey.txt
 RUN manylinux-entrypoint gpg --import /build_scripts/ambv-pubkey.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.9.4
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.9.5
 
 
 FROM build_cpython AS build_cpython310
