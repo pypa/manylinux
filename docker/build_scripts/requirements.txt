@@ -52,9 +52,9 @@ typing-extensions==3.7.4.3 ; python_version>='3.6' and python_version<'3.8' \
 typing==3.7.4.3; python_version=='2.7' \
     --hash=sha256:1187fb9c82fd670d10aa07bbb6cfcfe4bdda42d6fab8d5134f04e8c4d0b71cc9 \
     --hash=sha256:283d868f5071ab9ad873e5e52268d611e851c870a2ba354193026f2dfb29d8b5
-six==1.15.0; python_version=='2.7' \
-    --hash=sha256:30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259 \
-    --hash=sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced
+six==1.16.0; python_version=='2.7' \
+    --hash=sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254 \
+    --hash=sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926
 singledispatch==3.6.1; python_version=='2.7' \
     --hash=sha256:58b46ce1cc4d43af0aac3ac9a047bdb0f44e05f0b2fa2eec755863331700c865 \
     --hash=sha256:85c97f94c8957fa4e6dab113156c182fb346d56d059af78aad710bced15f16fb
