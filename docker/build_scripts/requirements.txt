@@ -82,9 +82,9 @@ appdirs==1.4.4; python_version=='2.7' \
 configparser==4.0.2; python_version=='2.7' \
     --hash=sha256:254c1d9c79f60c45dfde850850883d5aaa7f19a23f13561243a050d5a7c3fe4c \
     --hash=sha256:c7d282687a5308319bf3d2e7706e575c635b0a470342641c93bea0ea3b5331df
-virtualenv==20.4.4; python_version=='2.7' \
-    --hash=sha256:a935126db63128861987a7d5d30e23e8ec045a73840eeccb467c148514e29535 \
-    --hash=sha256:09c61377ef072f43568207dc8e46ddeac6bcdcaf288d49011bda0e7f4d38c4a2
+virtualenv==20.4.6; python_version=='2.7' \
+    --hash=sha256:307a555cf21e1550885c82120eccaf5acedf42978fd362d32ba8410f9593f543 \
+    --hash=sha256:72cf267afc04bf9c86ec932329b7e94db6a0331ae9847576daaa7ca3c86b29a4
 contextlib2==0.6.0.post1; python_version=='2.7' \
     --hash=sha256:01f490098c18b19d2bd5bb5dc445b2054d2fa97f09a4280ba2c5f3c394c8162e \
     --hash=sha256:3355078a159fbb44ee60ea80abd0d87b80b78c248643b49aa6d94673b413609b
