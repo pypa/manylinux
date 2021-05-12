@@ -81,8 +81,8 @@ RUN export GIT_ROOT=git-2.31.1 && \
 
 FROM build_base AS build_cmake
 COPY build_scripts/build-cmake.sh /build_scripts/
-RUN export CMAKE_VERSION=3.20.0 && \
-    export CMAKE_HASH=9c06b2ddf7c337e31d8201f6ebcd3bba86a9a033976a9aee207fe0c6971f4755 && \
+RUN export CMAKE_VERSION=3.20.2 && \
+    export CMAKE_HASH=aecf6ecb975179eb3bb6a4a50cae192d41e92b9372b02300f9e8f1d5f559544e && \
     export CMAKE_DOWNLOAD_URL=https://github.com/Kitware/CMake/releases/download && \
     manylinux-entrypoint /build_scripts/build-cmake.sh
 
@@ -100,8 +100,8 @@ RUN export SWIG_ROOT=swig-4.0.2 && \
 
 FROM build_base AS build_cpython
 COPY build_scripts/build-sqlite3.sh /build_scripts/
-RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3350400 && \
-    export SQLITE_AUTOCONF_HASH=7771525dff0185bfe9638ccce23faa0e1451757ddbda5a6c853bb80b923a512d && \
+RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3350500 && \
+    export SQLITE_AUTOCONF_HASH=f52b72a5c319c3e516ed7a92e123139a6e87af08a2dc43d7757724f6132e6db0 && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2021 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
