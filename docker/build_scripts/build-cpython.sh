@@ -27,6 +27,7 @@ function pyver_dist_dir {
 CPYTHON_DIST_DIR=$(pyver_dist_dir ${CPYTHON_VERSION})
 fetch_source Python-${CPYTHON_VERSION}.tgz ${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}
 fetch_source Python-${CPYTHON_VERSION}.tgz.asc ${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}
+gpg --import ${MY_DIR}/cpython-pubkeys.txt
 gpg --verify Python-${CPYTHON_VERSION}.tgz.asc
 tar -xzf Python-${CPYTHON_VERSION}.tgz
 pushd Python-${CPYTHON_VERSION}
