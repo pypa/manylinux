@@ -73,9 +73,9 @@ scandir==1.10.0; python_version=='2.7' \
 pathlib2==2.3.5; python_version=='2.7' \
     --hash=sha256:0ec8205a157c80d7acc301c0b18fbd5d44fe655968f5d947b6ecef5290fc35db \
     --hash=sha256:6cd9a47b597b37cc57de1c05e56fb1a1c9cc9fab04fe78c29acd090418529868
-importlib-resources==3.3.1; python_version=='2.7' \
-    --hash=sha256:0ed250dbd291947d1a298e89f39afcc477d5a6624770503034b72588601bcc05 \
-    --hash=sha256:42068585cc5e8c2bf0a17449817401102a5125cbfbb26bb0f43cde1568f6f2df
+importlib-resources==5.1.3; python_version=='2.7' \
+    --hash=sha256:3b9c774e0e7e8d9c069eb2fe6aee7e9ae71759a381dec02eb45249fba7f38713 \
+    --hash=sha256:0786b216556e53b34156263ab654406e543a8b0d9b1381019e25a36a09263c36
 appdirs==1.4.4; python_version=='2.7' \
     --hash=sha256:7d5d0167b2b1ba821647616af46a749d1c653740dd0d2415100fe26e27afdf41 \
     --hash=sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128
