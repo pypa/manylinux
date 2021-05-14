@@ -48,7 +48,7 @@ else
 	exit 1
 fi
 
-BASETOOLS="autoconf automake bison bzip2 diffutils file hardlink hostname make patch unzip"
+BASETOOLS="autoconf automake bison bzip2 diffutils file hardlink make patch unzip"
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
 	PACKAGE_MANAGER=yum
 	BASETOOLS="${BASETOOLS} which"
@@ -72,7 +72,7 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
 	fi
 elif [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	PACKAGE_MANAGER=yum
-	BASETOOLS="${BASETOOLS} which"
+	BASETOOLS="${BASETOOLS} hostname which"
 	# See https://unix.stackexchange.com/questions/41784/can-yum-express-a-preference-for-x86-64-over-i386-packages
 	echo "multilib_policy=best" >> /etc/yum.conf
 	# Error out if requested packages do not exist
@@ -101,6 +101,7 @@ elif [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	fi
 elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
 	PACKAGE_MANAGER=apt
+	BASETOOLS="${BASETOOLS} hostname"
 	export DEBIAN_FRONTEND=noninteractive
 	sed -i 's/none/en_US/g' /etc/apt/apt.conf.d/docker-no-languages
 	apt-get update -qq
