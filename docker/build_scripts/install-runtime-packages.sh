@@ -79,6 +79,8 @@ elif [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	echo "skip_missing_names_on_install=False" >> /etc/yum.conf
 	# Make sure that locale will not be removed
 	sed -i '/^override_install_langs=/d' /etc/yum.conf
+	# Exclude mirror holding broken package metadata
+	echo "exclude = d36uatko69830t.cloudfront.net" >> /etc/yum/pluginconf.d/fastestmirror.conf
 	yum -y update
 	yum -y install yum-utils curl
 	yum-config-manager --enable extras
