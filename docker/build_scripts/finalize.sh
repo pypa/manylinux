@@ -26,6 +26,10 @@ for PREFIX in $(find /opt/_internal/ -mindepth 1 -maxdepth 1 -name 'cpython*'); 
 	# Create a symlink to PREFIX using the ABI_TAG in /opt/python/
 	ABI_TAG=$(${PREFIX}/bin/python ${MY_DIR}/python-tag-abi-tag.py)
 	ln -s ${PREFIX} /opt/python/${ABI_TAG}
+	# Make versioned python commands available directly in environment.
+	PYVERS=$(${PREFIX}/bin/python -c "import sys; print('.'.join(map(str, sys.version_info[:2])))")
+	ln -s ${PREFIX}/bin/python /usr/local/bin/python${PYVERS}
+	ln -s ${PREFIX}/bin/pip /usr/local/bin/pip${PYVERS}
 done
 
 # Create venv for auditwheel & certifi
