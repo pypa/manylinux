@@ -27,6 +27,14 @@ for PYTHON in /opt/python/*/bin/python; do
 	# Make sure sqlite3 module can be loaded properly and is the manylinux version one
 	# c.f. https://github.com/pypa/manylinux/issues/1030
 	$PYTHON -c 'import sqlite3; print(sqlite3.sqlite_version); assert sqlite3.sqlite_version_info[0:2] >= (3, 34)'
+	# pythonx.y & pipx.y shall be available directly in PATH
+	PYVERS=$(${PYTHON} -c "import sys; print('.'.join(map(str, sys.version_info[:2])))")
+	LINK_VERSION=$(python${PYVERS} -V)
+	REAL_VERSION=$(${PYTHON} -V)
+	test "${LINK_VERSION}" = "${REAL_VERSION}"
+	LINK_VERSION=$(pip${PYVERS} -V)
+	REAL_VERSION=$(${PYTHON} -m pip -V)
+	test "${LINK_VERSION%% from *}" = "${REAL_VERSION%% from *}"
 done
 
 # minimal tests for tools that should be present
