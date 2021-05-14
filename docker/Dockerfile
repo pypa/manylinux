@@ -116,31 +116,26 @@ COPY build_scripts/build-cpython.sh /build_scripts/
 
 FROM build_cpython AS build_cpython36
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint gpg --import /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.6.13
 
 
 FROM build_cpython AS build_cpython37
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint gpg --import /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.10
 
 
 FROM build_cpython AS build_cpython38
-COPY build_scripts/ambv-pubkey.txt /build_scripts/ambv-pubkey.txt
-RUN manylinux-entrypoint gpg --import /build_scripts/ambv-pubkey.txt
+COPY build_scripts/ambv-pubkey.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.8.10
 
 
 FROM build_cpython AS build_cpython39
-COPY build_scripts/ambv-pubkey.txt /build_scripts/ambv-pubkey.txt
-RUN manylinux-entrypoint gpg --import /build_scripts/ambv-pubkey.txt
+COPY build_scripts/ambv-pubkey.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.9.5
 
 
 FROM build_cpython AS build_cpython310
-COPY build_scripts/cpython-pubkey-310-311.txt /build_scripts/cpython-pubkey-310-311.txt
-RUN manylinux-entrypoint gpg --import /build_scripts/cpython-pubkey-310-311.txt
+COPY build_scripts/cpython-pubkey-310-311.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.10.0b1
 
 
