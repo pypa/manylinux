@@ -45,6 +45,9 @@ pip install -U --require-hashes -r $MY_DIR/requirements-tools.txt
 # Make auditwheel available in PATH
 ln -s $TOOLS_PATH/bin/auditwheel /usr/local/bin/auditwheel
 
+# Make pipx available in PATH
+ln -s $TOOLS_PATH/bin/pipx /usr/local/bin/pipx
+
 # Our openssl doesn't know how to find the system CA trust store
 #   (https://github.com/pypa/manylinux/issues/53)
 # And it's not clear how up-to-date that is anyway
@@ -66,4 +69,3 @@ hardlink -cv /opt/_internal
 
 # update system packages
 LC_ALL=C ${MY_DIR}/update-system-packages.sh
-
