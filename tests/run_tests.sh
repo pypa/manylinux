@@ -47,6 +47,8 @@ cmake --version
 swig -version
 sqlite3 --version
 pipx run nox --version
+pipx install nox
+nox --version
 
 # check libcrypt.so.1 can be loaded by some system packages,
 # as LD_LIBRARY_PATH might not be enough.

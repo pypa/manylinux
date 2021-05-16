@@ -45,8 +45,19 @@ pip install -U --require-hashes -r $MY_DIR/requirements-tools.txt
 # Make auditwheel available in PATH
 ln -s $TOOLS_PATH/bin/auditwheel /usr/local/bin/auditwheel
 
-# Make pipx available in PATH
-ln -s $TOOLS_PATH/bin/pipx /usr/local/bin/pipx
+# Make pipx available in PATH,
+# Make sure when root installs apps, they're also in the PATH
+cat <<EOF > /usr/local/bin/pipx
+#!/bin/bash
+
+set -euo pipefail
+
+if [ \$(id -u) -eq 0 ]; then
+	export PIPX_BIN_DIR=/usr/local/bin
+fi
+${TOOLS_PATH}/bin/pipx \$*
+EOF
+chmod 755 /usr/local/bin/pipx
 
 # Our openssl doesn't know how to find the system CA trust store
 #   (https://github.com/pypa/manylinux/issues/53)
