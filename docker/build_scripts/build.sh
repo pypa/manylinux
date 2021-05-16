@@ -133,7 +133,7 @@ build_cpythons $CPYTHON_VERSIONS
 
 # Create venv for auditwheel & certifi
 TOOLS_PATH=/opt/_internal/tools
-/opt/python/cp37-cp37m/bin/python -m venv $TOOLS_PATH
+/opt/python/cp39-cp39/bin/python -m venv $TOOLS_PATH
 source $TOOLS_PATH/bin/activate
 
 # Install default packages
@@ -143,6 +143,19 @@ pip install -U --require-hashes -r $MY_DIR/requirements-tools.txt
 
 # Make auditwheel available in PATH
 ln -s $TOOLS_PATH/bin/auditwheel /usr/local/bin/auditwheel
+# Make pipx available in PATH,
+# Make sure when root installs apps, they're also in the PATH
+cat <<EOF > /usr/local/bin/pipx
+#!/bin/bash
+
+set -euo pipefail
+
+if [ \$(id -u) -eq 0 ]; then
+	export PIPX_BIN_DIR=/usr/local/bin
+fi
+${TOOLS_PATH}/bin/pipx \$*
+EOF
+chmod 755 /usr/local/bin/pipx
 
 # Our openssl doesn't know how to find the system CA trust store
 #   (https://github.com/pypa/manylinux/issues/53)
