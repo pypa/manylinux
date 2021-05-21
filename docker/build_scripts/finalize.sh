@@ -45,6 +45,11 @@ pip install -U --require-hashes -r $MY_DIR/requirements-tools.txt
 # Make auditwheel available in PATH
 ln -s $TOOLS_PATH/bin/auditwheel /usr/local/bin/auditwheel
 
+# Make CMake available in PATH
+ln -s $TOOLS_PATH/bin/cmake /usr/local/bin/cmake
+ln -s $TOOLS_PATH/bin/cpack /usr/local/bin/cpack
+ln -s $TOOLS_PATH/bin/ctest /usr/local/bin/ctest
+
 # Make pipx available in PATH,
 # Make sure when root installs apps, they're also in the PATH
 cat <<EOF > /usr/local/bin/pipx

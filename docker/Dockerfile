@@ -79,14 +79,6 @@ RUN export GIT_ROOT=git-2.31.1 && \
     manylinux-entrypoint /build_scripts/build-git.sh
 
 
-FROM build_base AS build_cmake
-COPY build_scripts/build-cmake.sh /build_scripts/
-RUN export CMAKE_VERSION=3.20.2 && \
-    export CMAKE_HASH=aecf6ecb975179eb3bb6a4a50cae192d41e92b9372b02300f9e8f1d5f559544e && \
-    export CMAKE_DOWNLOAD_URL=https://github.com/Kitware/CMake/releases/download && \
-    manylinux-entrypoint /build_scripts/build-cmake.sh
-
-
 FROM build_base AS build_swig
 COPY build_scripts/build-swig.sh /build_scripts/
 RUN export SWIG_ROOT=swig-4.0.2 && \
@@ -150,7 +142,6 @@ RUN hardlink -cv /opt/_internal
 
 FROM runtime_base
 COPY --from=build_git /manylinux-rootfs /
-COPY --from=build_cmake /manylinux-rootfs /
 COPY --from=build_swig /manylinux-rootfs /
 COPY --from=build_cpython /manylinux-rootfs /
 COPY --from=all_cpython /opt/_internal /opt/_internal/
