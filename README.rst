@@ -146,7 +146,7 @@ Image content
 
 All images currently contain:
 
-- CPython 3.5, 3.6, 3.7, 3.8 and 3.9, installed in
+- CPython 3.6, 3.7, 3.8 and 3.9, PyPy 3.7 installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
   e.g. ``/opt/python/cp37-cp37m`` contains a CPython 3.7 build, and
@@ -164,6 +164,8 @@ Note that `starting with CPython 3.8 <https://docs.python.org/dev/whatsnew/3.8.h
 default ``sys.abiflags`` became an empty string: the ``m`` flag for pymalloc
 became useless (builds with and without pymalloc are ABI compatible) and so has
 been removed. (e.g. ``/opt/python/cp38-cp38``)
+
+Note that PyPy is not available on ppc64le & s390x.
 
 Building Docker images
 ----------------------

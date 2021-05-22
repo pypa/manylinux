@@ -10,7 +10,7 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source $MY_DIR/build_utils.sh
 
 mkdir /opt/python
-for PREFIX in $(find /opt/_internal/ -mindepth 1 -maxdepth 1 -name 'cpython*'); do
+for PREFIX in $(find /opt/_internal/ -mindepth 1 -maxdepth 1 \( -name 'cpython*' -o -name 'pypy*' \)); do
 	# Some python's install as bin/python3. Make them available as
 	# bin/python.
 	if [ -e ${PREFIX}/bin/python3 ] && [ ! -e ${PREFIX}/bin/python ]; then
@@ -28,7 +28,11 @@ for PREFIX in $(find /opt/_internal/ -mindepth 1 -maxdepth 1 -name 'cpython*'); 
 	ln -s ${PREFIX} /opt/python/${ABI_TAG}
 	# Make versioned python commands available directly in environment.
 	PYVERS=$(${PREFIX}/bin/python -c "import sys; print('.'.join(map(str, sys.version_info[:2])))")
-	ln -s ${PREFIX}/bin/python /usr/local/bin/python${PYVERS}
+	if [[ "${PREFIX}" == *"/pypy"* ]]; then
+		ln -s ${PREFIX}/bin/python /usr/local/bin/pypy${PYVERS}
+	else
+		ln -s ${PREFIX}/bin/python /usr/local/bin/python${PYVERS}
+	fi
 done
 
 # Create venv for auditwheel & certifi

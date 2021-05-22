@@ -131,7 +131,10 @@ COPY build_scripts/cpython-pubkey-310-311.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.10.0b1
 
 
-FROM build_cpython AS all_cpython
+FROM build_cpython AS all_python
+COPY build_scripts/install-pypy.sh /build_scripts/install-pypy.sh
+COPY build_scripts/pypy.sha256 /build_scripts/pypy.sha256
+RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.7 7.3.5
 COPY --from=build_cpython36 /opt/_internal /opt/_internal/
 COPY --from=build_cpython37 /opt/_internal /opt/_internal/
 COPY --from=build_cpython38 /opt/_internal /opt/_internal/
@@ -144,7 +147,7 @@ FROM runtime_base
 COPY --from=build_git /manylinux-rootfs /
 COPY --from=build_swig /manylinux-rootfs /
 COPY --from=build_cpython /manylinux-rootfs /
-COPY --from=all_cpython /opt/_internal /opt/_internal/
+COPY --from=all_python /opt/_internal /opt/_internal/
 COPY build_scripts/finalize.sh build_scripts/update-system-packages.sh build_scripts/python-tag-abi-tag.py build_scripts/requirements.txt build_scripts/requirements-tools.txt /build_scripts/
 RUN manylinux-entrypoint /build_scripts/finalize.sh && rm -rf /build_scripts
 

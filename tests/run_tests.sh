@@ -24,12 +24,18 @@ for PYTHON in /opt/python/*/bin/python; do
 	$PYTHON $MY_DIR/manylinux-check.py ${AUDITWHEEL_POLICY} ${AUDITWHEEL_ARCH}
 	# Make sure that SSL cert checking works
 	$PYTHON $MY_DIR/ssl-check.py
-	# Make sure sqlite3 module can be loaded properly and is the manylinux version one
-	# c.f. https://github.com/pypa/manylinux/issues/1030
-	$PYTHON -c 'import sqlite3; print(sqlite3.sqlite_version); assert sqlite3.sqlite_version_info[0:2] >= (3, 34)'
-	# pythonx.y shall be available directly in PATH
+	IMPLEMENTATION=$(${PYTHON} -c "import sys; print(sys.implementation.name)")
 	PYVERS=$(${PYTHON} -c "import sys; print('.'.join(map(str, sys.version_info[:2])))")
-	LINK_VERSION=$(python${PYVERS} -V)
+	if [ "${IMPLEMENTATION}" == "pypy" ]; then
+		LINK_PREFIX=pypy
+	else
+		LINK_PREFIX=python
+		# Make sure sqlite3 module can be loaded properly and is the manylinux version one
+		# c.f. https://github.com/pypa/manylinux/issues/1030
+		$PYTHON -c 'import sqlite3; print(sqlite3.sqlite_version); assert sqlite3.sqlite_version_info[0:2] >= (3, 34)'
+	fi
+	# pythonX.Y / pypyX.Y shall be available directly in PATH
+	LINK_VERSION=$(${LINK_PREFIX}${PYVERS} -V)
 	REAL_VERSION=$(${PYTHON} -V)
 	test "${LINK_VERSION}" = "${REAL_VERSION}"
 done
