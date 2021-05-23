@@ -19,9 +19,17 @@ if [ ${BUILDX_MACHINE} == "ppc64le" ]; then
 	sudo apt-get update
 	sudo apt-get remove -y docker docker.io containerd runc
 	sudo apt-get install -y --no-install-recommends containerd uidmap slirp4netns fuse-overlayfs
-	curl -fsSLO https://oplab9.parqtec.unicamp.br/pub/ppc64el/docker/version-20.10.6/ubuntu-focal/docker-ce-cli_20.10.6~3-0~ubuntu-focal_ppc64el.deb
-	curl -fsSLO https://oplab9.parqtec.unicamp.br/pub/ppc64el/docker/version-20.10.6/ubuntu-focal/docker-ce_20.10.6~3-0~ubuntu-focal_ppc64el.deb
-	curl -fsSLO https://oplab9.parqtec.unicamp.br/pub/ppc64el/docker/version-20.10.6/ubuntu-focal/docker-ce-rootless-extras_20.10.6~3-0~ubuntu-focal_ppc64el.deb
+	# issues with SSL certificate expiring, let's go insecure & check sha256
+	curl --insecure -fsSLO https://oplab9.parqtec.unicamp.br/pub/ppc64el/docker/version-20.10.6/ubuntu-focal/docker-ce-cli_20.10.6~3-0~ubuntu-focal_ppc64el.deb
+	curl --insecure -fsSLO https://oplab9.parqtec.unicamp.br/pub/ppc64el/docker/version-20.10.6/ubuntu-focal/docker-ce_20.10.6~3-0~ubuntu-focal_ppc64el.deb
+	curl --insecure -fsSLO https://oplab9.parqtec.unicamp.br/pub/ppc64el/docker/version-20.10.6/ubuntu-focal/docker-ce-rootless-extras_20.10.6~3-0~ubuntu-focal_ppc64el.deb
+	cat <<EOF > docker-ce-ppc64le.sha256
+e4304b2e20d79e94f0c4e105bb4abbddb637a83c0bad164a56660c65f0d77631  docker-ce_20.10.6~3-0~ubuntu-focal_ppc64el.deb
+cd31d12aee7bd91ccb726ab750d382631fcc21ae2de64ab9868dcd275bcfa112  docker-ce-cli_20.10.6~3-0~ubuntu-focal_ppc64el.deb
+0117a2edea9b2fa75410dc3f62e64ee82282bfe5b07c508b01508661ce2c3861  docker-ce-rootless-extras_20.10.6~3-0~ubuntu-focal_ppc64el.deb
+EOF
+	sha256sum -c docker-ce-ppc64le.sha256
+	rm -f docker-ce-ppc64le.sha256
 	# prevent the docker service to start upon installation
 	echo -e '#!/bin/sh\nexit 101' | sudo tee /usr/sbin/policy-rc.d
 	sudo chmod +x /usr/sbin/policy-rc.d
