@@ -137,7 +137,7 @@ TOOLS_PATH=/opt/_internal/tools
 source $TOOLS_PATH/bin/activate
 
 # Install default packages
-pip install -U --require-hashes -r $MY_DIR/requirements.txt
+pip install -U --require-hashes -r $MY_DIR/requirements3.9.txt
 # Install certifi and auditwheel
 pip install -U --require-hashes -r $MY_DIR/requirements-tools.txt
 
