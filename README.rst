@@ -101,6 +101,15 @@ Please run the following command from the current (root) directory::
 
     $ PLATFORM=$(uname -m) TRAVIS_COMMIT=latest ./build.sh
 
+Updating the requirements
+-------------------------
+
+The requirement files are pinned and controlled by pip-tools compile. To update
+the pins, run nox on a Linux system with all supported versions of Python included.
+For example, using a docker image:
+
+    $ docker run --rm -v $PWD:/nox -t thekevjames/nox nox -f /nox/noxfile.py -s compile tools
+
 Example
 -------
 
