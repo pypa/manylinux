@@ -20,9 +20,10 @@ for PREFIX in $(find /opt/_internal/ -mindepth 1 -maxdepth 1 \( -name 'cpython*'
 	if [ -e ${PREFIX}/bin/pip3 ] && [ ! -e ${PREFIX}/bin/pip ]; then
 		ln -s pip3 ${PREFIX}/bin/pip
 	fi
+	PY_VER=$(${PREFIX}/bin/python -c "import sys; print('.'.join(str(v) for v in sys.version_info[:2]))")
 	# Since we fall back on a canned copy of pip, we might not have
 	# the latest pip and friends. Upgrade them to make sure.
-	${PREFIX}/bin/pip install -U --require-hashes -r ${MY_DIR}/requirements.txt
+	${PREFIX}/bin/pip install -U --require-hashes -r ${MY_DIR}/requirements${PY_VER}.txt
 	# Create a symlink to PREFIX using the ABI_TAG in /opt/python/
 	ABI_TAG=$(${PREFIX}/bin/python ${MY_DIR}/python-tag-abi-tag.py)
 	ln -s ${PREFIX} /opt/python/${ABI_TAG}
@@ -41,7 +42,7 @@ TOOLS_PATH=/opt/_internal/tools
 source $TOOLS_PATH/bin/activate
 
 # Install default packages
-pip install -U --require-hashes -r $MY_DIR/requirements.txt
+pip install -U --require-hashes -r $MY_DIR/requirements3.9.txt
 # Install certifi and auditwheel
 pip install -U --require-hashes -r $MY_DIR/requirements-tools.txt
 

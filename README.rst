@@ -177,6 +177,15 @@ current (root) directory:
 
 Please note that the Docker build is using `buildx <https://github.com/docker/buildx>`_.
 
+Updating the requirements
+-------------------------
+
+The requirement files are pinned and controlled by pip-tools compile. To update
+the pins, run nox on a Linux system with all supported versions of Python included.
+For example, using a docker image:
+
+    $ docker run --rm -v $PWD:/nox -t quay.io/pypa/manylinux2010_x86_64:latest pipx run nox -f /nox/noxfile.py -s compile tools
+
 Example
 -------
 
