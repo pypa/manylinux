@@ -4,11 +4,11 @@ dist: focal
 services:
   - docker
 
-# Don't build the depandabot branches that dependabot creates; it's redundant
+# Don't build the update-dependencies-pr branch; it's redundant
 # with the PR builds that Travis also does.
 branches:
   except:
-    - /^dependabot/
+    - /^update-dependencies-pr/
 
 cache:
   directories:
