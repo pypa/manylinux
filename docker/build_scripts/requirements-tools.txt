@@ -31,17 +31,13 @@ cmake==3.20.2 \
     --hash=sha256:b6aae4b86e1165fdf6b63628ec39eaed25b43b59e43993499f6cadee7c8c6897 \
     --hash=sha256:d5bcd0ca0077d89fac452d522b623c27f8eb1c76fb21efc0366ddc2b0fb2a770
     # via -r requirements-tools.in
-colorama==0.4.4 \
-    --hash=sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b \
-    --hash=sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2
-    # via pipx
 packaging==20.9 \
     --hash=sha256:5b327ac1320dc863dca72f4514ecc086f31186744b84a230374cc1fd776feae5 \
     --hash=sha256:67714da7f7bc052e064859c05c595155bd1ee9f69f76557e21f051443c20947a
     # via pipx
-pipx==0.16.2.1 \
-    --hash=sha256:0ac30d7c1bbcd565130caa8faa08a486aed292882b12b047b80cd8abacaaa843 \
-    --hash=sha256:805319eab100c0c36e349b76103bbe903445229a60ebb0010d7cf7590ff5ba20
+pipx==0.16.3 \
+    --hash=sha256:51fa41281383212db3b2a6906713871edc1a7d597ae387873026402e281a0b25 \
+    --hash=sha256:f8af81adaf55716a44f62197528ed3468e33ce53afa21f3b9fe812319bef851c
     # via -r requirements-tools.in
 pyelftools==0.27 \
     --hash=sha256:5609aa6da1123fccfae2e8431a67b4146aa7fad5b3889f808df12b110f230937 \
