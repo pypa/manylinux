@@ -8,9 +8,9 @@ build==0.4.0 \
     --hash=sha256:5950f98775a59f0c5ac68586691003d2db58a809fbea2ade3fe32109dfd12790 \
     --hash=sha256:b798f3f490c779fa88c99816ebee97ab636acd6630b1d91c8cf8eb8a4d922a19
     # via -r requirements.in
-importlib-metadata==4.0.1 \
-    --hash=sha256:8c501196e49fb9df5df43833bdb1e4328f64847763ec8a50703148b73784d581 \
-    --hash=sha256:d7eb1dea6d6a6086f8be21784cc9e3bcfa55872b52309bc5fad53a8ea444465d
+importlib-metadata==4.3.1 \
+    --hash=sha256:2d932ea08814f745863fd20172fe7de4794ad74567db78f2377343e24520a5b6 \
+    --hash=sha256:c2e27fa8b6c8b34ebfcd4056ae2ca290e36250d1fbeceec85c1c67c711449fac
     # via
     #   build
     #   pep517
