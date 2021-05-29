@@ -3,7 +3,7 @@ name: Build
 on:
   push:
     branches-ignore:
-      - "dependabot/**"
+      - "update-dependencies-pr"
     paths:
       - ".github/workflows/build.yml"
       - "docker/**"
