@@ -12,9 +12,9 @@ auditwheel==4.0.0 \
     --hash=sha256:03a079fe273f42336acdb5953ff5ce7578f93ca6a832b16c835fe337a1e2bd4a \
     --hash=sha256:96927695ddf27b4edb67291e326908d64ffe272b8a42b9504f283e7ae5ebbc14
     # via -r requirements-tools.in
-certifi==2020.12.5 \
-    --hash=sha256:1a4995114262bffbc2413b159f2a1a480c969de6e6eb13ee966d470af86af59c \
-    --hash=sha256:719a74fb9e33b9bd44cc7f3a8d94bc35e4049deebe19ba7d8e108280cfd59830
+certifi==2021.5.30 \
+    --hash=sha256:2bbf76fd432960138b3ef6dda3dde0544f27cbf8546c458e60baf371917ba9ee \
+    --hash=sha256:50b1e4f8446b06f41be7dd6338db18e0990601dce795c2b1686458aa7e8fa7d8
     # via -r requirements-tools.in
 click==8.0.1 \
     --hash=sha256:8c04c11192119b1ef78ea049e0a6f0463e4c48ef00a30160c704337586f3ad7a \
@@ -36,7 +36,7 @@ pyparsing==2.4.7 \
     --hash=sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1 \
     --hash=sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b
     # via packaging
-userpath==1.5.0 \
-    --hash=sha256:61f84899b7280800a8b6cc1b959a0cf250f6757e6f6c7176d7455bb693a4423a \
-    --hash=sha256:c6a5b42e454f5e88d54af035fe3756de33a5318ad65a4191bb64e6b7cac03bcc
+userpath==1.6.0 \
+    --hash=sha256:43569129eeecec6c567bcbd47120c161a43344712417de013b754191961426db \
+    --hash=sha256:b2b9a5ca1478ecfa63514b48709d650f48bf7be89f62bd236db556b85b6deff6
     # via pipx
