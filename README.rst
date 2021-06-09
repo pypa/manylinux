@@ -165,7 +165,7 @@ default ``sys.abiflags`` became an empty string: the ``m`` flag for pymalloc
 became useless (builds with and without pymalloc are ABI compatible) and so has
 been removed. (e.g. ``/opt/python/cp38-cp38``)
 
-Note that PyPy is not available on ppc64le & s390x.
+Note that PyPy is not available on ppc64le.
 
 Building Docker images
 ----------------------
