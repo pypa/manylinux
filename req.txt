@@ -1,5 +1,1 @@
-ipython
-colorama
-markdown
-tabulate
 PyInstaller
