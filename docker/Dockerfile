@@ -73,8 +73,8 @@ RUN manylinux-entrypoint /build_scripts/install-build-packages.sh
 
 FROM build_base AS build_git
 COPY build_scripts/build-git.sh /build_scripts/
-RUN export GIT_ROOT=git-2.31.1 && \
-    export GIT_HASH=46d37c229e9d786510e0c53b60065704ce92d5aedc16f2c5111e3ed35093bfa7 && \
+RUN export GIT_ROOT=git-2.32.0 && \
+    export GIT_HASH=6038f06d396ba9dab2eee541c7db6e7f9f847f181ec62f3d8441893f8c469398 && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     manylinux-entrypoint /build_scripts/build-git.sh
 
@@ -92,8 +92,8 @@ RUN export SWIG_ROOT=swig-4.0.2 && \
 
 FROM build_base AS build_cpython
 COPY build_scripts/build-sqlite3.sh /build_scripts/
-RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3350500 && \
-    export SQLITE_AUTOCONF_HASH=f52b72a5c319c3e516ed7a92e123139a6e87af08a2dc43d7757724f6132e6db0 && \
+RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3360000 && \
+    export SQLITE_AUTOCONF_HASH=bd90c3eb96bee996206b83be7065c9ce19aef38c3f4fb53073ada0d0b69bbce3 && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2021 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
@@ -108,27 +108,27 @@ COPY build_scripts/build-cpython.sh /build_scripts/
 
 FROM build_cpython AS build_cpython36
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.6.13
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.6.14
 
 
 FROM build_cpython AS build_cpython37
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.10
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.11
 
 
 FROM build_cpython AS build_cpython38
 COPY build_scripts/ambv-pubkey.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.8.10
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.8.11
 
 
 FROM build_cpython AS build_cpython39
 COPY build_scripts/ambv-pubkey.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.9.5
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.9.6
 
 
 FROM build_cpython AS build_cpython310
 COPY build_scripts/cpython-pubkey-310-311.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.10.0b2
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.10.0b3
 
 
 FROM build_cpython AS all_python
