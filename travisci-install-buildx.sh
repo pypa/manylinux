@@ -44,6 +44,16 @@ EOF
 	DOCKERD_ROOTLESS_PID=$!
 	echo "${DOCKERD_ROOTLESS_PID}" > ${HOME}/dockerd-rootless.pid
 	docker context use rootless
+	DOCKER_WAIT_COUNT=0
+	while ! docker ps -q &>/dev/null; do
+		DOCKER_WAIT_COUNT=$(( ${DOCKER_WAIT_COUNT} + 1 ))
+		if [ ${DOCKER_WAIT_COUNT} -ge 12 ]; then
+			echo "Docker is still not running."
+			kill -15 $(cat ${HOME}/dockerd-rootless.pid)
+			exit 1
+		fi
+		sleep 5
+	done
 fi
 mkdir -vp ~/.docker/cli-plugins/
 curl -sSL "https://github.com/docker/buildx/releases/download/v0.5.1/buildx-v0.5.1.linux-${BUILDX_MACHINE}" > ~/.docker/cli-plugins/docker-buildx
