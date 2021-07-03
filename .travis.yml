@@ -29,7 +29,7 @@ jobs:
     - arch: s390x
       env: POLICY="manylinux2014" PLATFORM="s390x"
     - arch: ppc64le
-      env: POLICY="manylinux2014" PLATFORM="ppc64le"
+      env: POLICY="manylinux2014" PLATFORM="ppc64le" MANYLINUX_BUILD_FRONTEND="buildkit"
     - arch: arm64-graviton2
       virt: vm
       group: edge
@@ -37,7 +37,7 @@ jobs:
     - arch: s390x
       env: POLICY="manylinux_2_24" PLATFORM="s390x"
     - arch: ppc64le
-      env: POLICY="manylinux_2_24" PLATFORM="ppc64le"
+      env: POLICY="manylinux_2_24" PLATFORM="ppc64le" MANYLINUX_BUILD_FRONTEND="buildkit"
 
 before_install:
   - if [ -d "${HOME}/buildx-cache/.buildx-cache-${POLICY}_${PLATFORM}" ]; then cp -rlf ${HOME}/buildx-cache/.buildx-cache-${POLICY}_${PLATFORM} ./; fi
@@ -62,4 +62,4 @@ deploy:
 
 after_script:
   - if [ -f ${HOME}/dockerd-rootless.pid ]; then kill -15 $(cat ${HOME}/dockerd-rootless.pid); fi
-
+  - if [ -f /tmp/buildkitd.pid ]; then sudo kill -15 $(cat /tmp/buildkitd.pid); fi
