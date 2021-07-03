@@ -5,6 +5,7 @@
 # Stop at any error, show all commands
 set -exuo pipefail
 
+
 BUILDX_MACHINE=$(uname -m)
 if [ ${BUILDX_MACHINE} == "x86_64" ]; then
 	BUILDX_MACHINE=amd64
@@ -12,6 +13,44 @@ elif [ ${BUILDX_MACHINE} == "aarch64" ]; then
 	BUILDX_MACHINE=arm64
 fi
 
+if [ "${MANYLINUX_BUILD_FRONTEND:-}" ="docker" ]; then
+	exit 0
+fi
+
+if [ "${MANYLINUX_BUILD_FRONTEND:-}" == "buildkit" ]; then
+	sudo apt-get update
+	sudo apt-get remove -y fuse ntfs-3g
+	sudo apt-get install -y --no-install-recommends runc containerd uidmap slirp4netns fuse-overlayfs
+	curl -fsSL "https://github.com/moby/buildkit/releases/download/v0.8.3/buildkit-v0.8.3.linux-${BUILDX_MACHINE}.tar.gz" | sudo tar -C /usr/local -xz
+	cat <<EOF > /tmp/start-buildkitd.sh
+buildkitd &> /dev/null &
+BUILDKITD_PID=\$!
+echo "\${BUILDKITD_PID}" > /tmp/buildkitd.pid
+EOF
+	sudo bash /tmp/start-buildkitd.sh
+	DOCKER_WAIT_COUNT=0
+	while ! sudo buildctl du &>/dev/null; do
+		DOCKER_WAIT_COUNT=$(( ${DOCKER_WAIT_COUNT} + 1 ))
+		if [ ${DOCKER_WAIT_COUNT} -ge 12 ]; then
+			sudo buildctl du || true
+			echo "buildkitd is still not running."
+			sudo kill -15 $(cat /tmp/buildkitd.pid)
+			exit 1
+		fi
+		sleep 5
+	done
+	sudo chmod 777 /run/buildkit
+	sudo chmod 666 /run/buildkit/buildkitd.sock
+	if ! buildctl du &>/dev/null; then
+		buildctl du || true
+		echo "can't connect to buildkitd."
+		sudo kill -15 $(cat /tmp/buildkitd.pid)
+		exit 1
+	fi
+	exit 0
+fi
+
+# default to docker-buildx frontend
 if [ ${BUILDX_MACHINE} == "ppc64le" ]; then
 	# We need to run a rootless docker daemon due to travis-ci LXD configuration
 	# Update docker, c.f. https://developer.ibm.com/components/ibm-power/tutorials/install-docker-on-linux-on-power/
