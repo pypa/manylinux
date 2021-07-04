@@ -153,7 +153,7 @@ set -euo pipefail
 if [ \$(id -u) -eq 0 ]; then
 	export PIPX_BIN_DIR=/usr/local/bin
 fi
-${TOOLS_PATH}/bin/pipx \$*
+${TOOLS_PATH}/bin/pipx "\$@"
 EOF
 chmod 755 /usr/local/bin/pipx
 
