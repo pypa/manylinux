@@ -50,7 +50,7 @@ cmake --version
 swig -version
 sqlite3 --version
 pipx run nox --version
-pipx install nox
+pipx install --pip-args='--no-python-version-warning --no-input' nox
 nox --version
 
 # check libcrypt.so.1 can be loaded by some system packages,
