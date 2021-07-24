@@ -41,6 +41,7 @@ for PYTHON in /opt/python/*/bin/python; do
 done
 
 # minimal tests for tools that should be present
+auditwheel --version
 autoconf --version
 automake --version
 libtoolize --version

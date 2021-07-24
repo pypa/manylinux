@@ -1,4 +1,2 @@
 auditwheel
-certifi
 cmake
-pipx
