@@ -28,7 +28,7 @@ pyparsing==2.4.7 \
     --hash=sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1 \
     --hash=sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b
     # via packaging
-userpath==1.6.0 \
-    --hash=sha256:43569129eeecec6c567bcbd47120c161a43344712417de013b754191961426db \
-    --hash=sha256:b2b9a5ca1478ecfa63514b48709d650f48bf7be89f62bd236db556b85b6deff6
+userpath==1.7.0 \
+    --hash=sha256:4c3d3b611706a8b0c6309510c8b1a774c54eb491cafe7df58dc5571c0bee30e2 \
+    --hash=sha256:dcd66c5fa9b1a3c12362f309bbb5bc7992bac8af86d17b4e6b1a4b166a11c43f
     # via pipx
