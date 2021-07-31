@@ -102,9 +102,9 @@ typing==3.10.0.0 \
     # via
     #   build
     #   importlib-resources
-virtualenv==20.6.0 \
-    --hash=sha256:51df5d8a2fad5d1b13e088ff38a433475768ff61f202356bb9812c454c20ae45 \
-    --hash=sha256:e4fc84337dce37ba34ef520bf2d4392b392999dbe47df992870dc23230f6b758
+virtualenv==20.7.0 \
+    --hash=sha256:97066a978431ec096d163e72771df5357c5c898ffdd587048f45e0aecc228094 \
+    --hash=sha256:fdfdaaf0979ac03ae7f76d5224a05b58165f3c804f8aa633f3dd6f22fbd435d5
     # via build
 wheel==0.36.2 \
     --hash=sha256:78b5b185f0e5763c26ca1e324373aadd49182ca90e825f7853f4b2509215dc0e \
