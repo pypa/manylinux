@@ -4,9 +4,9 @@ PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 # of the form <maj>.<min>.<rev> or <maj>.<min>.<rev>rc<n>
 CPYTHON_VERSIONS="2.7.18 3.5.10 3.6.14 3.7.11 3.8.11 3.9.6"
 
-# perl is needed to build openssl
-PERL_ROOT=perl-5.32.1
-PERL_HASH=03b693901cd8ae807231b1787798cf1f2e0b8a56218d07b7da44f784a7caeb2c
+# perl is needed to build openssl and libxcrypt
+PERL_ROOT=perl-5.34.0
+PERL_HASH=551efc818b968b05216024fb0b727ef2ad4c100f8cb6b43fab615fa78ae5be9a
 PERL_DOWNLOAD_URL=https://www.cpan.org/src/5.0
 
 # openssl version to build, with expected sha256 hash of .tar.gz
@@ -37,8 +37,8 @@ SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3360000
 SQLITE_AUTOCONF_HASH=bd90c3eb96bee996206b83be7065c9ce19aef38c3f4fb53073ada0d0b69bbce3
 SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2021
 
-LIBXCRYPT_VERSION=4.4.17
-LIBXCRYPT_HASH=7665168d0409574a03f7b484682e68334764c29c21ca5df438955a381384ca07
+LIBXCRYPT_VERSION=4.4.23
+LIBXCRYPT_HASH=9cbbcb795ed5d121a1613eb0e40c77173b53e15a746796fc7cd7bd71cfd64533
 LIBXCRYPT_DOWNLOAD_URL=https://github.com/besser82/libxcrypt/archive
 
 GIT_ROOT=git-2.32.0

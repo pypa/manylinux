@@ -274,8 +274,8 @@ function build_libxcrypt {
     check_sha256sum "v${LIBXCRYPT_VERSION}.tar.gz" "$LIBXCRYPT_HASH"
     tar xfz "v${LIBXCRYPT_VERSION}.tar.gz"
     pushd "libxcrypt-$LIBXCRYPT_VERSION"
-    ./autogen.sh > /dev/null
-    do_standard_install \
+    PATH=/opt/perl/bin:$PATH ./autogen.sh > /dev/null
+    PATH=/opt/perl/bin:$PATH do_standard_install \
         --disable-obsolete-api \
         --enable-hashes=all \
         --disable-werror
@@ -283,7 +283,7 @@ function build_libxcrypt {
     # c.f https://github.com/pypa/manylinux/issues/305#issuecomment-625902928
     make clean > /dev/null
     sed -r -i 's/XCRYPT_([0-9.])+/-/g;s/(%chain OW_CRYPT_1.0).*/\1/g' lib/libcrypt.map.in
-    DESTDIR=$(pwd)/so.1 do_standard_install \
+    PATH=/opt/perl/bin:$PATH DESTDIR=$(pwd)/so.1 do_standard_install \
         --disable-xcrypt-compat-files \
         --enable-obsolete-api=glibc \
         --enable-hashes=all \
