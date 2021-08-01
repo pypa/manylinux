@@ -80,24 +80,17 @@ yum -y install \
     yasm \
     ${PYTHON_COMPILE_DEPS}
 
-# Build PERL in order to build OpenSSL. We'll delete this after OpenSSL build.
+# Build PERL in order to build OpenSSL. We'll delete this after OpenSSL and libxcrypt builds.
 build_perl $PERL_ROOT $PERL_HASH
 
 # Build an OpenSSL for both curl and the Pythons. We'll delete this at the end.
 build_openssl $OPENSSL_ROOT $OPENSSL_HASH
-
-# Delete PERL
-rm -rf /opt/perl
 
 # Install curl so we can have TLS 1.2 in this ancient container.
 build_curl $CURL_ROOT $CURL_HASH
 hash -r
 curl --version
 curl-config --features
-
-# Install a git we link against OpenSSL so that we can use TLS 1.2
-build_git $GIT_ROOT $GIT_HASH
-git version
 
 # Install newest autoconf
 build_autoconf $AUTOCONF_ROOT $AUTOCONF_HASH
@@ -111,6 +104,16 @@ automake --version
 build_libtool $LIBTOOL_ROOT $LIBTOOL_HASH
 libtool --version
 
+# Install libcrypt.so.1 and libcrypt.so.2
+build_libxcrypt "$LIBXCRYPT_DOWNLOAD_URL" "$LIBXCRYPT_VERSION" "$LIBXCRYPT_HASH"
+
+# Delete PERL now that OpenSSL and libxcrypt are built
+rm -rf /opt/perl
+
+# Install a git we link against OpenSSL so that we can use TLS 1.2
+build_git $GIT_ROOT $GIT_HASH
+git version
+
 # Install a more recent SQLite3
 curl -fsSLO $SQLITE_AUTOCONF_DOWNLOAD_URL/$SQLITE_AUTOCONF_ROOT.tar.gz
 check_sha256sum $SQLITE_AUTOCONF_ROOT.tar.gz $SQLITE_AUTOCONF_HASH
@@ -120,9 +123,6 @@ do_standard_install
 cd ..
 rm -rf $SQLITE_AUTOCONF_ROOT*
 rm /usr/local/lib/libsqlite3.a
-
-# Install libcrypt.so.1 and libcrypt.so.2
-build_libxcrypt "$LIBXCRYPT_DOWNLOAD_URL" "$LIBXCRYPT_VERSION" "$LIBXCRYPT_HASH"
 
 # Compile the latest Python releases.
 # (In order to have a proper SSL module, Python is compiled
