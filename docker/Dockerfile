@@ -25,12 +25,19 @@ ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 COPY build_scripts/fixup-mirrors.sh /usr/local/sbin/fixup-mirrors
 
 # setup entrypoint, this will wrap commands with `linux32` with i686 images
-COPY build_scripts/install-entrypoint.sh build_scripts/update-system-packages.sh /build_scripts/
-RUN bash /build_scripts/install-entrypoint.sh && rm -rf /build_scripts
+COPY build_scripts/install-entrypoint.sh \
+     build_scripts/update-system-packages.sh \
+     build_scripts/build_utils.sh \
+     /build_scripts/
+
+RUN /build_scripts/install-entrypoint.sh && rm -rf /build_scripts
 COPY manylinux-entrypoint /usr/local/bin/manylinux-entrypoint
 ENTRYPOINT ["manylinux-entrypoint"]
 
-COPY build_scripts/install-runtime-packages.sh build_scripts/update-system-packages.sh /build_scripts/
+COPY build_scripts/install-runtime-packages.sh \
+     build_scripts/update-system-packages.sh \
+     build_scripts/build_utils.sh \
+     /build_scripts/
 RUN manylinux-entrypoint /build_scripts/install-runtime-packages.sh && rm -rf /build_scripts/
 
 COPY build_scripts/build_utils.sh /build_scripts/
@@ -67,7 +74,6 @@ RUN export LIBXCRYPT_VERSION=4.4.26 && \
     export PERL_HASH=551efc818b968b05216024fb0b727ef2ad4c100f8cb6b43fab615fa78ae5be9a && \
     export PERL_DOWNLOAD_URL=https://www.cpan.org/src/5.0 && \
     manylinux-entrypoint /build_scripts/install-libxcrypt.sh
-
 
 FROM runtime_base AS build_base
 COPY build_scripts/install-build-packages.sh /build_scripts/
