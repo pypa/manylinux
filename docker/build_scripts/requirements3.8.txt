@@ -4,9 +4,9 @@
 #
 #    pip-compile --allow-unsafe --generate-hashes --output-file=docker/build_scripts/requirements3.8.txt requirements.in
 #
-build==0.5.1 \
-    --hash=sha256:0281eeec2697ee43114eb4fe3ba6e54c111ee2c4ef287b5cd24f82cb24cc1bdb \
-    --hash=sha256:16897cac845b50cca04f3c92cf8d3e9e0868b21b29b96b577333c14473baa916
+build==0.6.0.post1 \
+    --hash=sha256:32290592c8ccf70ce84107962f6129407abf52cedaa752af28c0c95d99dfa2e7 \
+    --hash=sha256:d8d8417caff47888274d677f984de509554637dd1ea952d467b027849b06d83b
     # via -r requirements.in
 packaging==21.0 \
     --hash=sha256:7dc96269f53a4ccec5c0670940a4281106dd0bb343f47b7471f779df49c2fbe7 \
@@ -20,23 +20,21 @@ pyparsing==2.4.7 \
     --hash=sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1 \
     --hash=sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b
     # via packaging
-toml==0.10.2 \
-    --hash=sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b \
-    --hash=sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f
-    # via build
-tomli==1.2.0 \
-    --hash=sha256:056f0376bf5a6b182c513f9582c1e5b0487265eb6c48842b69aa9ca1cd5f640a \
-    --hash=sha256:d60e681734099207a6add7a10326bc2ddd1fdc36c1b0f547d00ef73ac63739c2
-    # via pep517
-wheel==0.36.2 \
-    --hash=sha256:78b5b185f0e5763c26ca1e324373aadd49182ca90e825f7853f4b2509215dc0e \
-    --hash=sha256:e11eefd162658ea59a60a0f6c7d493a7190ea4b9a85e335b33489d9f17e0245e
+tomli==1.2.1 \
+    --hash=sha256:8dd0e9524d6f386271a36b41dbf6c57d8e32fd96fd22b6584679dc569d20899f \
+    --hash=sha256:a5b75cb6f3968abb47af1b40c1819dc519ea82bcc065776a866e8d74c5ca9442
+    # via
+    #   build
+    #   pep517
+wheel==0.37.0 \
+    --hash=sha256:21014b2bd93c6d0034b6ba5d35e4eb284340e09d63c59aef6fc14b0f346146fd \
+    --hash=sha256:e2ef7239991699e3355d54f8e968a21bb940a1dbf34a4d226741e64462516fad
     # via -r requirements.in
 
 # The following packages are considered to be unsafe in a requirements file:
-pip==21.2.2 \
-    --hash=sha256:38e9250dfb0d7fa842492bede9259d4b3289a936ce454f7c58f059f28a94c01d \
-    --hash=sha256:b02a9d345f913e03fde2ed41896687cc1a2053c6adbe142ec03cff6b0827233d
+pip==21.2.4 \
+    --hash=sha256:0eb8a1516c3d138ae8689c0c1a60fde7143310832f9dc77e11d8a4bc62de193b \
+    --hash=sha256:fa9ebb85d3fd607617c0c44aca302b1b45d87f9c2a1649b46c26167ca4296323
     # via -r requirements.in
 setuptools==57.4.0 \
     --hash=sha256:6bac238ffdf24e8806c61440e755192470352850f3419a52f26ffe0a1a64f465 \
