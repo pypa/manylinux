@@ -60,8 +60,8 @@ RUN export PATCHELF_VERSION=0.13 && \
     manylinux-entrypoint /build_scripts/install-patchelf.sh
 
 COPY build_scripts/install-libxcrypt.sh /build_scripts/
-RUN export LIBXCRYPT_VERSION=4.4.23 && \
-    export LIBXCRYPT_HASH=9cbbcb795ed5d121a1613eb0e40c77173b53e15a746796fc7cd7bd71cfd64533 && \
+RUN export LIBXCRYPT_VERSION=4.4.25 && \
+    export LIBXCRYPT_HASH=caea3d032a46c4855ff818637884c7f5719ad228b79387b62ee023c8fbef17b4 && \
     export LIBXCRYPT_DOWNLOAD_URL=https://github.com/besser82/libxcrypt/archive && \
     export PERL_ROOT=perl-5.34.0 && \
     export PERL_HASH=551efc818b968b05216024fb0b727ef2ad4c100f8cb6b43fab615fa78ae5be9a && \
@@ -76,8 +76,8 @@ RUN manylinux-entrypoint /build_scripts/install-build-packages.sh
 
 FROM build_base AS build_git
 COPY build_scripts/build-git.sh /build_scripts/
-RUN export GIT_ROOT=git-2.32.0 && \
-    export GIT_HASH=6038f06d396ba9dab2eee541c7db6e7f9f847f181ec62f3d8441893f8c469398 && \
+RUN export GIT_ROOT=git-2.33.0 && \
+    export GIT_HASH=02d909d0bba560d3a1008bd00dd577621ffb57401b09175fab2bf6da0e9704ae && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     manylinux-entrypoint /build_scripts/build-git.sh
 
