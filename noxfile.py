@@ -3,7 +3,7 @@ import locale
 
 
 @nox.session(python=["2.7", "3.5", "3.6", "3.7", "3.8", "3.9"])
-def compile(session):
+def update_python_dependencies(session):
     session.install("pip-tools")
 
     session.run(
@@ -18,7 +18,7 @@ def compile(session):
 
 
 @nox.session(python="3.9")
-def tools(session):
+def update_python_tools(session):
     session.install("pip-tools")
     session.run(
         "pip-compile",
@@ -28,3 +28,9 @@ def tools(session):
         "--output-file",
         f"docker/build_scripts/requirements-tools.txt",
     )
+
+
+@nox.session(python="3.9", reuse_venv=True)
+def update_native_dependencies(session):
+    session.install("lastversion", "packaging", "requests")
+    session.run("python", "update_native_dependencies.py")
