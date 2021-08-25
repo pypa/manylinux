@@ -31,8 +31,8 @@ jobs:
       if: github.ref == 'refs/heads/manylinux1' && github.repository == 'pypa/manylinux'
       uses: peter-evans/create-pull-request@v3
       with:
-        commit-message: Update dependencies
-        title: '[Bot] Update python dependencies'
+        commit-message: Update python dependencies
+        title: '[Bot(manylinux1)] Update dependencies'
         body: |
           Update the versions of our dependencies.
 
