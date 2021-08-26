@@ -4,14 +4,16 @@
 #
 #    pip-compile --generate-hashes --output-file=docker/build_scripts/requirements-tools/cmake .nox/update_python_tools/tmp/cmake.in
 #
-cmake==3.21.1.post1 \
-    --hash=sha256:1cf061e78e9a16f7f40f768f12d806483fe0eee7c1f9eeb4766610cb9122cb73 \
-    --hash=sha256:1d637b7153d337c118df79aca9189f8c44d4200f0c99d2aaf021d7696a535f9a \
-    --hash=sha256:2fc534f714347c2bfca7b15a0004f224f61164658130f33402341e10a5188658 \
-    --hash=sha256:4b8c1810b2defc30b35b8973aec5d8055038fde1e9df984812e09a290d4b65a3 \
-    --hash=sha256:9e21f75ba51b04f7fa8cbf6965bfb194db32f4b04eb7757c312a621c0a4dd847 \
-    --hash=sha256:a3f32247ef6000616585ab847bcb367787606ad33ab34f64dcfc85d304dafea9 \
-    --hash=sha256:aaea4911f6fccaf5a84110b2c9d4b5d99e9792112199ca25408c635bd2fd8584 \
-    --hash=sha256:caa81c3f3985b552bc2e38fb339ba84c0c237441d508f4de01d44a2948eddd36 \
-    --hash=sha256:e000ef5d4893ceaec852f468d6adc7698ca08ebaecb6df38d81ceed32b4ad9e3
+cmake==3.21.2 \
+    --hash=sha256:0c3b8d862232a460fa66792208264b57cdb5f1579da41d80d0ef4f4f2daa498c \
+    --hash=sha256:32ef54e1024c1fddf580d220024347536b2ac334a4ec695f1abece171e77c8f9 \
+    --hash=sha256:47f32fdb3b8fef0138c47f789154c3d5d214313c26e296674bf8afad97f89af8 \
+    --hash=sha256:524f0bd243bf88942e5501a59056f8525c372e2f639c89f9a0d2afa716530333 \
+    --hash=sha256:533b6ba0f126d51fe0223c81c2acb587ffe284ede48e1ba9dc56b556bbbf3f5f \
+    --hash=sha256:71fad9dc655eccf159108d494d828c27b466872c56e4750728ceea7f628bb8e2 \
+    --hash=sha256:b75d9f0aedd6a12222d8e0fc9171c37cd6486e883e93febe5a259228a0020675 \
+    --hash=sha256:bf599ef04f34c8b2c99e8843004b24f2a510a35453e45b16804eae3ca5eb2dc6 \
+    --hash=sha256:bf706da9171f63dcffc39511ff0a8c8e863d5154850bacc7740b34d3cfcb5c44 \
+    --hash=sha256:c5f3218637951041798cb0ef28c0c87aeb61a9559548094d1b02e7cb2eadc785 \
+    --hash=sha256:f25a9a93e3b402d1a63c4673d4cde901bb19f57669249ce0feb2aec623cb7bb1
     # via -r .nox/update_python_tools/tmp/cmake.in
