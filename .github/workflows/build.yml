@@ -3,7 +3,7 @@ name: Build
 on:
   push:
     branches-ignore:
-      - "dependabot/**"
+      - "update-dependencies-manylinux1-pr"
     paths:
       - ".github/workflows/build.yml"
       - "docker/**"
