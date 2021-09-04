@@ -55,8 +55,9 @@ pip:
 | ``manylinux`` tag | Client-side pip  | CPython (sources) version  | Distribution default pip compatibility    |
 |                   | version required | embedding a compatible pip |                                           |
 +===================+==================+============================+===========================================+
-| ``manylinux_x_y`` | pip >= 20.3      | 3.8.10+, 3.9.5+, 3.10.0+   | Debian 11+, Fedora 34+, Mageia 8+,        |
-|                   |                  |                            | Photon OS 3.0 with updates, Ubuntu 21.04+ |
+| ``manylinux_x_y`` | pip >= 20.3      | 3.8.10+, 3.9.5+, 3.10.0+   | ALT Linux 10+, Debian 11+, Fedora 34+,    |
+|                   |                  |                            | Mageia 8+, Photon OS 3.0 with updates,    |
+|                   |                  |                            | Ubuntu 21.04+                             |
 +-------------------+------------------+----------------------------+-------------------------------------------+
 | ``manylinux2014`` | pip >= 19.3      | 3.7.8+, 3.8.4+, 3.9.0+     | CentOS 7 rh-python38, CentOS 8 python38,  |
 |                   |                  |                            | Fedora 32+, Mageia 8+, openSUSE 15.3+,    |
