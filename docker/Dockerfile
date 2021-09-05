@@ -116,7 +116,7 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.6.15
 
 FROM build_cpython AS build_cpython37
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.11
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.12
 
 
 FROM build_cpython AS build_cpython38
