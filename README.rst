@@ -172,18 +172,36 @@ Building Docker images
 ----------------------
 
 To build the Docker images, please run the following command from the
-current (root) directory:
+current (root) directory::
 
     $ PLATFORM=$(uname -m) POLICY=manylinux2014 COMMIT_SHA=latest ./build.sh
 
 Please note that the Docker build is using `buildx <https://github.com/docker/buildx>`_.
+
+Shared Library CPython
+~~~~~~~~~~~~~~~~~~~~~~
+
+You can build the Docker images with shared library CPython builds alongside the
+static CPython builds. This might be useful for special packaging requirements,
+but ``libpythonX.Y`` is `not a library that a manylinux extension is allowed to
+link to <https://www.python.org/dev/peps/pep-0513/#libpythonx-y-so-1>`_, so it is
+not part of the default manylinux images.
+
+To build the Docker images with shared library CPython builds::
+
+    $ PY_SHARED=1 PLATFORM=$(uname -m) POLICY=manylinux2014 COMMIT_SHA=latest ./build.sh
+
+The shared CPython interpreters are installed in
+``/opt/python/<python tag>-<abi tag>-shared``. The directories are named after
+the PEP 425 tags for each environment -- e.g. ``/opt/python/cp37-cp37m-shared``
+contains a shared library CPython 3.7 build.
 
 Updating the requirements
 -------------------------
 
 The requirement files are pinned and controlled by pip-tools compile. To update
 the pins, run nox on a Linux system with all supported versions of Python included.
-For example, using a docker image:
+For example, using a docker image::
 
     $ docker run --rm -v $PWD:/nox -t quay.io/pypa/manylinux2010_x86_64:latest pipx run nox -f /nox/noxfile.py -s compile tools
 

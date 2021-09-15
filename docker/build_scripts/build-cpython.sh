@@ -30,36 +30,59 @@ fetch_source Python-${CPYTHON_VERSION}.tgz.asc ${CPYTHON_DOWNLOAD_URL}/${CPYTHON
 gpg --import ${MY_DIR}/cpython-pubkeys.txt
 gpg --verify Python-${CPYTHON_VERSION}.tgz.asc
 tar -xzf Python-${CPYTHON_VERSION}.tgz
-pushd Python-${CPYTHON_VERSION}
-PREFIX="/opt/_internal/cpython-${CPYTHON_VERSION}"
-mkdir -p ${PREFIX}/lib
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
-	# The _ctypes stdlib module build started to fail with 3.10.0rc1
-	# No clue what changed exactly yet
-	# This workaround fixes the build
-	LIBFFI_INCLUDEDIR=$(pkg-config --cflags-only-I libffi  | tr -d '[:space:]')
-	LIBFFI_INCLUDEDIR=${LIBFFI_INCLUDEDIR:2}
-	cp ${LIBFFI_INCLUDEDIR}/ffi.h ${LIBFFI_INCLUDEDIR}/ffitarget.h /usr/include/
+
+function build {
+	IS_SHARED=$1
+	pushd Python-${CPYTHON_VERSION}
+	PREFIX="/opt/_internal/cpython-${CPYTHON_VERSION}"
+	if [ ${IS_SHARED} -eq 1 ]; then
+		PREFIX="${PREFIX}-shared"
+	fi
+	mkdir -p ${PREFIX}/lib
+	if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
+		# The _ctypes stdlib module build started to fail with 3.10.0rc1
+		# No clue what changed exactly yet
+		# This workaround fixes the build
+		LIBFFI_INCLUDEDIR=$(pkg-config --cflags-only-I libffi  | tr -d '[:space:]')
+		LIBFFI_INCLUDEDIR=${LIBFFI_INCLUDEDIR:2}
+		cp ${LIBFFI_INCLUDEDIR}/ffi.h ${LIBFFI_INCLUDEDIR}/ffitarget.h /usr/include/
+	fi
+	# configure with hardening options only for the interpreter & stdlib C extensions
+	# do not change the default for user built extension (yet?)
+	if [ ${IS_SHARED} -eq 1 ]; then
+		FLAVOR="--enable-shared"
+		FLAVOR_LDFLAGS="-Wl,-rpath=${PREFIX}/lib"
+	else
+		FLAVOR="--disable-shared"
+		FLAVOR_LDFLAGS=
+	fi
+
+	./configure \
+		CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS}" \
+		LDFLAGS_NODIST="${MANYLINUX_LDFLAGS} ${FLAVOR_LDFLAGS}" \
+		--prefix=${PREFIX} ${FLAVOR} --with-ensurepip=no > /dev/null
+	make > /dev/null
+	make install > /dev/null
+	if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
+		rm -f /usr/include/ffi.h /usr/include/ffitarget.h
+	fi
+	popd
+
+	if [ ${IS_SHARED} -eq 0 ]; then
+		# we don't need libpython*.a, and they're many megabytes
+		find ${PREFIX} -name '*.a' -print0 | xargs -0 rm -f
+	fi
+
+	# We do not need precompiled .pyc and .pyo files.
+	clean_pyc ${PREFIX}
+
+	# Strip ELF files found in ${PREFIX}
+	strip_ ${PREFIX}
+}
+
+build 0
+if [ ${PY_SHARED-0} -eq 1 ]; then
+	build 1
 fi
-# configure with hardening options only for the interpreter & stdlib C extensions
-# do not change the default for user built extension (yet?)
-./configure \
-	CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS}" \
-	LDFLAGS_NODIST="${MANYLINUX_LDFLAGS}" \
-	--prefix=${PREFIX} --disable-shared --with-ensurepip=no > /dev/null
-make > /dev/null
-make install > /dev/null
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
-	rm -f /usr/include/ffi.h /usr/include/ffitarget.h
-fi
-popd
+
 rm -rf Python-${CPYTHON_VERSION} Python-${CPYTHON_VERSION}.tgz Python-${CPYTHON_VERSION}.tgz.asc
-
-# we don't need libpython*.a, and they're many megabytes
-find ${PREFIX} -name '*.a' -print0 | xargs -0 rm -f
-
-# We do not need precompiled .pyc and .pyo files.
-clean_pyc ${PREFIX}
-
-# Strip ELF files found in ${PREFIX}
-strip_ ${PREFIX}

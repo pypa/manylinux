@@ -66,14 +66,20 @@ else
 	echo "Unsupported policy: '${POLICY}'"
 	exit 1
 fi
+
+# default is not to include shared interpreter builds
+: "${PY_SHARED:=0}"
+
 export BASEIMAGE
 export DEVTOOLSET_ROOTPATH
 export PREPEND_PATH
 export LD_LIBRARY_PATH_ARG
+export PY_SHARED
 
 BUILD_ARGS_COMMON="
 	--build-arg POLICY --build-arg PLATFORM --build-arg BASEIMAGE
 	--build-arg DEVTOOLSET_ROOTPATH --build-arg PREPEND_PATH --build-arg LD_LIBRARY_PATH_ARG
+	--build-arg PY_SHARED
 	--rm -t quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA}
 	-f docker/Dockerfile docker/
 "
@@ -94,7 +100,7 @@ elif [ "${MANYLINUX_BUILD_FRONTEND}" == "buildkit" ]; then
 		--import-cache type=local,src=$(pwd)/.buildx-cache-${POLICY}_${PLATFORM} \
 		--export-cache type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM} \
 		--opt build-arg:POLICY=${POLICY} --opt build-arg:PLATFORM=${PLATFORM} --opt build-arg:BASEIMAGE=${BASEIMAGE} \
-		--opt "build-arg:DEVTOOLSET_ROOTPATH=${DEVTOOLSET_ROOTPATH}" --opt "build-arg:PREPEND_PATH=${PREPEND_PATH}" --opt "build-arg:LD_LIBRARY_PATH_ARG=${LD_LIBRARY_PATH_ARG}" \
+		--opt "build-arg:DEVTOOLSET_ROOTPATH=${DEVTOOLSET_ROOTPATH}" --opt "build-arg:PREPEND_PATH=${PREPEND_PATH}" --opt "build-arg:LD_LIBRARY_PATH_ARG=${LD_LIBRARY_PATH_ARG}" --opt "build-arg:PY_SHARED=${PY_SHARED}"\
 		--output type=docker,name=quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA} | docker load
 else
 	echo "Unsupported build frontend: '${MANYLINUX_BUILD_FRONTEND}'"
