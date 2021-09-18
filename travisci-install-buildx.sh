@@ -13,7 +13,7 @@ elif [ ${BUILDX_MACHINE} == "aarch64" ]; then
 	BUILDX_MACHINE=arm64
 fi
 
-if [ "${MANYLINUX_BUILD_FRONTEND:-}" ="docker" ]; then
+if [ "${MANYLINUX_BUILD_FRONTEND:-}" == "docker" ]; then
 	exit 0
 fi
 
