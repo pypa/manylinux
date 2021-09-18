@@ -78,6 +78,11 @@ BUILD_ARGS_COMMON="
 	-f docker/Dockerfile docker/
 "
 
+# Force plain output on CI
+if [ "${CI:-}" == "true" ]; then
+	BUILD_ARGS_COMMON="--progress plain ${BUILD_ARGS_COMMON}"
+fi
+
 if [ "${MANYLINUX_BUILD_FRONTEND}" == "docker" ]; then
 	docker build ${BUILD_ARGS_COMMON}
 elif [ "${MANYLINUX_BUILD_FRONTEND}" == "docker-buildx" ]; then

@@ -13,7 +13,7 @@ elif [ ${BUILDX_MACHINE} == "aarch64" ]; then
 	BUILDX_MACHINE=arm64
 fi
 
-if [ "${MANYLINUX_BUILD_FRONTEND:-}" ="docker" ]; then
+if [ "${MANYLINUX_BUILD_FRONTEND:-}" == "docker" ]; then
 	exit 0
 fi
 
@@ -21,7 +21,7 @@ if [ "${MANYLINUX_BUILD_FRONTEND:-}" == "buildkit" ]; then
 	sudo apt-get update
 	sudo apt-get remove -y fuse ntfs-3g
 	sudo apt-get install -y --no-install-recommends runc containerd uidmap slirp4netns fuse-overlayfs
-	curl -fsSL "https://github.com/moby/buildkit/releases/download/v0.8.3/buildkit-v0.8.3.linux-${BUILDX_MACHINE}.tar.gz" | sudo tar -C /usr/local -xz
+	curl -fsSL "https://github.com/moby/buildkit/releases/download/v0.9.0/buildkit-v0.9.0.linux-${BUILDX_MACHINE}.tar.gz" | sudo tar -C /usr/local -xz
 	cat <<EOF > /tmp/start-buildkitd.sh
 buildkitd &> /dev/null &
 BUILDKITD_PID=\$!
@@ -95,7 +95,7 @@ EOF
 	done
 fi
 mkdir -vp ~/.docker/cli-plugins/
-curl -sSL "https://github.com/docker/buildx/releases/download/v0.5.1/buildx-v0.5.1.linux-${BUILDX_MACHINE}" > ~/.docker/cli-plugins/docker-buildx
+curl -sSL "https://github.com/docker/buildx/releases/download/v0.6.3/buildx-v0.6.3.linux-${BUILDX_MACHINE}" > ~/.docker/cli-plugins/docker-buildx
 chmod a+x ~/.docker/cli-plugins/docker-buildx
 docker buildx version
 
@@ -105,4 +105,5 @@ if [ ${BUILDX_MACHINE} == "ppc64le" ]; then
 	# https://github.com/docker/buildx/issues/561
 	docker run -d --name buildx_buildkit_builder-manylinux0 --privileged moby/buildkit:buildx-stable-1
 fi
-docker buildx inspect --bootstrap --builder builder-manylinux
+# Force plain output done with 2>&1 | tee /dev/null
+docker buildx inspect --bootstrap --builder builder-manylinux 2>&1 | tee /dev/null
