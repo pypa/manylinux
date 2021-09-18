@@ -105,4 +105,5 @@ if [ ${BUILDX_MACHINE} == "ppc64le" ]; then
 	# https://github.com/docker/buildx/issues/561
 	docker run -d --name buildx_buildkit_builder-manylinux0 --privileged moby/buildkit:buildx-stable-1
 fi
-docker buildx inspect --bootstrap --builder builder-manylinux
+# Force plain output done with 2>&1 | tee /dev/null
+docker buildx inspect --bootstrap --builder builder-manylinux 2>&1 | tee /dev/null
