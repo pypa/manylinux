@@ -1,3 +1,4 @@
+import argparse
 import hashlib
 import re
 import subprocess
@@ -23,7 +24,7 @@ def _sha256(url):
     return m.hexdigest()
 
 
-def _update_cpython():
+def _update_cpython(dry_run):
     build_env = Path(__file__).parent / "docker" / "build_scripts" / "build_env.sh"
     lines = build_env.read_text().splitlines()
     re_ = re.compile(r'^CPYTHON_VERSIONS="(?P<versions>.*)"$')
@@ -40,14 +41,15 @@ def _update_cpython():
                 url = f"https://www.python.org/ftp/python/{latest_version.major}.{latest_version.minor}.{latest_version.micro}"
                 _sha256(f"{url}/{root}.tgz")
                 lines[i] = lines[i].replace(version, str(latest_version))
-                build_env.write_text("\n".join(lines) + "\n")
                 message = f"Bump CPython {current_version} → {latest_version}"
                 print(message)
-                subprocess.check_call(["git", "commit", "-am", message])
+                if not dry_run:
+                    build_env.write_text("\n".join(lines) + "\n")
+                    subprocess.check_call(["git", "commit", "-am", message])
         break
 
 
-def _update_with_root(tool):
+def _update_with_root(tool, dry_run):
     repo = {
         "autoconf": "autotools-mirror/autoconf",
         "automake": "autotools-mirror/automake",
@@ -76,14 +78,15 @@ def _update_with_root(tool):
             sha256 = _sha256(f"{url}/{root}.tar.gz")
             lines[i + 0] = f"{tool.upper()}_ROOT={root}"
             lines[i + 1] = f"{tool.upper()}_HASH={sha256}"
-            build_env.write_text("\n".join(lines) + "\n")
             message = f"Bump {tool} {current_version} → {latest_version}"
             print(message)
-            subprocess.check_call(["git", "commit", "-am", message])
+            if not dry_run:
+                build_env.write_text("\n".join(lines) + "\n")
+                subprocess.check_call(["git", "commit", "-am", message])
         break
 
 
-def _update_sqlite():
+def _update_sqlite(dry_run):
     build_env = Path(__file__).parent / "docker" / "build_scripts" / "build_env.sh"
     lines = build_env.read_text().splitlines()
     re_ = re.compile(f"^SQLITE_AUTOCONF_ROOT=sqlite-autoconf-(?P<version>\\S+)$")
@@ -108,14 +111,15 @@ def _update_sqlite():
             lines[i + 0] = f"SQLITE_AUTOCONF_ROOT={root}"
             lines[i + 1] = f"SQLITE_AUTOCONF_HASH={sha256}"
             lines[i + 2] = f"SQLITE_AUTOCONF_DOWNLOAD_URL={url}"
-            build_env.write_text("\n".join(lines) + "\n")
             message = f"Bump sqlite {current_version} → {latest_version}"
             print(message)
-            subprocess.check_call(["git", "commit", "-am", message])
+            if not dry_run:
+                build_env.write_text("\n".join(lines) + "\n")
+                subprocess.check_call(["git", "commit", "-am", message])
         break
 
 
-def _update_with_gh(tool):
+def _update_with_gh(tool, dry_run):
     repo = {
         "patchelf": "NixOS/patchelf",
         "libxcrypt": "besser82/libxcrypt",
@@ -135,20 +139,24 @@ def _update_with_gh(tool):
             sha256 = _sha256(f"{url}/{latest_tag}.tar.gz")
             lines[i + 0] = f"{tool.upper()}_VERSION={latest_version}"
             lines[i + 1] = f"{tool.upper()}_HASH={sha256}"
-            build_env.write_text("\n".join(lines) + "\n")
             message = f"Bump {tool} {current_version} → {latest_version}"
             print(message)
-            subprocess.check_call(["git", "commit", "-am", message])
+            if not dry_run:
+                build_env.write_text("\n".join(lines) + "\n")
+                subprocess.check_call(["git", "commit", "-am", message])
         break
 
 
 def main():
-    _update_cpython()
-    _update_sqlite()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dry-run", dest="dry_run", action="store_true", help="dry run")
+    args = parser.parse_args()
+    _update_cpython(args.dry_run)
+    _update_sqlite(args.dry_run)
     for tool in ["autoconf", "automake", "curl", "libtool", "git", "swig", "openssl"]:
-        _update_with_root(tool)
+        _update_with_root(tool, args.dry_run)
     for tool in ["patchelf", "libxcrypt"]:
-        _update_with_gh(tool)
+        _update_with_gh(tool, args.dry_run)
 
 
 if __name__ == "__main__":

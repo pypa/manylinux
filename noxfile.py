@@ -33,4 +33,4 @@ def update_python_tools(session):
 @nox.session(python="3.9", reuse_venv=True)
 def update_native_dependencies(session):
     session.install("lastversion", "packaging", "requests")
-    session.run("python", "update_native_dependencies.py")
+    session.run("python", "update_native_dependencies.py", *session.posargs)
