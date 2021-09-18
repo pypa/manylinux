@@ -53,6 +53,9 @@ def _update_with_root(tool):
         "swig": "swig/swig",
         "openssl": "openssl/openssl",
     }
+    major = {
+        "openssl": "1.1"
+    }
     dockerfile = Path(__file__).parent / "docker" / "Dockerfile"
     lines = dockerfile.read_text().splitlines()
     re_ = re.compile(f"^RUN export {tool.upper()}_ROOT={tool}-(?P<version>\\S+) && \\\\$")
@@ -61,7 +64,7 @@ def _update_with_root(tool):
         if match is None:
             continue
         current_version = Version(match["version"], char_fix_required=tool=="openssl")
-        latest_version = latest(repo[tool])
+        latest_version = latest(repo[tool], major=major.get(tool, None))
         if latest_version > current_version:
             root = f"{tool}-{latest_version}"
             url = re.match(f"^    export {tool.upper()}_DOWNLOAD_URL=(?P<url>\\S+) && \\\\$", lines[i + 2])["url"]
