@@ -185,7 +185,18 @@ The requirement files are pinned and controlled by pip-tools compile. To update
 the pins, run nox on a Linux system with all supported versions of Python included.
 For example, using a docker image:
 
-    $ docker run --rm -v $PWD:/nox -t quay.io/pypa/manylinux2010_x86_64:latest pipx run nox -f /nox/noxfile.py -s compile tools
+    $ docker run --rm -v $PWD:/nox -t quay.io/pypa/manylinux2010_x86_64:latest pipx run nox -f /nox/noxfile.py -s update_python_dependencies update_python_tools
+
+Updating the native dependencies
+--------------------------------
+
+Native dependencies are all pinned in the Dockerfile. To update the pins, run the dedicated
+nox session. This will add a commit for each update. If you only want to see what would be
+updated, you can do a dry run:
+
+    $ nox -s update_native_dependencies [-- --dry-run]
+
+
 
 Example
 -------
