@@ -4,9 +4,9 @@
 #
 #    pip-compile --allow-unsafe --generate-hashes --output-file=docker/build_scripts/requirements3.7.txt requirements.in
 #
-build==0.6.0.post1 \
-    --hash=sha256:32290592c8ccf70ce84107962f6129407abf52cedaa752af28c0c95d99dfa2e7 \
-    --hash=sha256:d8d8417caff47888274d677f984de509554637dd1ea952d467b027849b06d83b
+build==0.7.0 \
+    --hash=sha256:1aaadcd69338252ade4f7ec1265e1a19184bf916d84c9b7df095f423948cb89f \
+    --hash=sha256:21b7ebbd1b22499c4dac536abc7606696ea4d909fd755e00f09f3c0f2c05e3c8
     # via -r requirements.in
 importlib-metadata==4.8.1 \
     --hash=sha256:b618b6d2d5ffa2f16add5697cf57a46c76a56229b0ed1c438322e4e95645bd15 \
