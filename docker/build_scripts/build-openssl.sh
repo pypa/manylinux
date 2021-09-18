@@ -27,6 +27,8 @@ fi
 
 if which yum; then
 	yum erase -y openssl-devel
+elif which apk; then
+	apk del openssl-dev
 else
 	apt-get remove -y libssl-dev
 fi

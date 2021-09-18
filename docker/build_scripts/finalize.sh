@@ -75,7 +75,13 @@ deactivate
 pushd $MY_DIR/requirements-tools
 for TOOL_PATH in $(find . -type f); do
 	TOOL=$(basename ${TOOL_PATH})
-	pipx install --pip-args="--require-hashes -r" ${TOOL}
+	if [ "${TOOL}" == "cmake" ] && [ "${POLICY}" == "musllinux_1_1" ]; then
+		# TODO remove this exception once https://github.com/scikit-build/cmake-python-distributions
+		# provides a musllinux wheel
+		apk add --no-cache cmake
+	else
+		pipx install --pip-args="--require-hashes -r" ${TOOL}
+	fi
 done
 popd
 
