@@ -65,7 +65,7 @@ deploy:
   provider: script
   script: COMMIT_SHA=${TRAVIS_COMMIT} ./deploy.sh
   on:
-    branch: master
+    branch: main
     repo: pypa/manylinux
 
 after_script:

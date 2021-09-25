@@ -138,7 +138,7 @@ Support for ``manylinux1`` will `end on January 1st, 2022 <https://github.com/py
 
 All images are rebuilt using GitHub Actions / Travis-CI on every commit to this
 repository; see the
-`docker/ <https://github.com/pypa/manylinux/tree/master/docker>`_
+`docker/ <https://github.com/pypa/manylinux/tree/main/docker>`_
 directory for source code.
 
 
@@ -222,7 +222,7 @@ The official version of `PEP 513
 <https://www.python.org/dev/peps/pep-0513/>`_ is stored in the `PEP
 repository <https://github.com/python/peps>`_, but we also have our
 `own copy here
-<https://github.com/pypa/manylinux/tree/master/pep-513.rst>`_. This is
+<https://github.com/pypa/manylinux/tree/main/pep-513.rst>`_. This is
 where the PEP was originally written, so if for some reason you really
 want to see the full history of edits it went through, then this is
 the place to look.

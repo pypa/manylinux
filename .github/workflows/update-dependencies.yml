@@ -31,7 +31,7 @@ jobs:
         app_id: ${{ secrets.MANYLINUX_BOT_APP_ID }}
         private_key: ${{ secrets.MANYLINUX_BOT_APP_PRIVATE_KEY }}
     - name: Create Pull Request
-      if: github.ref == 'refs/heads/master' && github.repository == 'pypa/manylinux'
+      if: github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
       uses: peter-evans/create-pull-request@v3
       with:
         commit-message: Update python dependencies
