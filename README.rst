@@ -59,8 +59,8 @@ pip:
 |                   |                  |                            | Mageia 8+, Photon OS 3.0 with updates,    |
 |                   |                  |                            | Ubuntu 21.04+                             |
 +-------------------+------------------+----------------------------+-------------------------------------------+
-| ``manylinux2014`` | pip >= 19.3      | 3.7.8+, 3.8.4+, 3.9.0+     | CentOS 7 rh-python38, CentOS 8 python38,  |
-|                   |                  |                            | Fedora 32+, Mageia 8+, openSUSE 15.3+,    |
+| ``manylinux2014`` | pip >= 19.3      | 3.7.8+, 3.8.4+, 3.9.0+,    | CentOS 7 rh-python38, CentOS 8 python38,  |
+|                   |                  | 3.10.0+                    | Fedora 32+, Mageia 8+, openSUSE 15.3+,    |
 |                   |                  |                            | Photon OS 4.0+ (3.0+ with updates),       |
 |                   |                  |                            | Ubuntu 20.04+                             |
 +-------------------+------------------+----------------------------+-------------------------------------------+
@@ -147,7 +147,7 @@ Image content
 
 All images currently contain:
 
-- CPython 3.6, 3.7, 3.8 and 3.9, PyPy 3.7 installed in
+- CPython 3.6, 3.7, 3.8, 3.9, 3.10, and PyPy 3.7 installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
   e.g. ``/opt/python/cp37-cp37m`` contains a CPython 3.7 build, and
