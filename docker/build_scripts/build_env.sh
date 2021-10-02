@@ -44,3 +44,8 @@ LIBXCRYPT_DOWNLOAD_URL=https://github.com/besser82/libxcrypt/archive
 GIT_ROOT=git-2.33.0
 GIT_HASH=02d909d0bba560d3a1008bd00dd577621ffb57401b09175fab2bf6da0e9704ae
 GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git
+
+CACERT_ROOT=cacert
+CACERT_EXTENSION=.pem
+CACERT_DOWNLOAD_URL=https://raw.githubusercontent.com/certifi/python-certifi/2021.05.30/certifi
+CACERT_HASH=de2fa17c4d8ae68dc204a1b6b58b7a7a12569367cfeb8a3a4e1f377c73e83e9e

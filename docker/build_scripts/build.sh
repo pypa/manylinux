@@ -28,6 +28,11 @@ sed -i 's/#\(baseurl.*\)mirror.centos.org\/centos\/$releasever/\1vault.centos.or
 # Get build utilities
 source $MY_DIR/build_utils.sh
 
+# Update ca-certs
+check_required_source ${CACERT_ROOT}${CACERT_EXTENSION}
+check_sha256sum ${CACERT_ROOT}${CACERT_EXTENSION} ${CACERT_HASH}
+cp -f ${CACERT_ROOT}${CACERT_EXTENSION} /etc/pki/tls/certs/ca-bundle.crt
+
 # See https://unix.stackexchange.com/questions/41784/can-yum-express-a-preference-for-x86-64-over-i386-packages
 echo "multilib_policy=best" >> /etc/yum.conf
 
