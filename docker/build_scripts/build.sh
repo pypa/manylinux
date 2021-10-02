@@ -42,22 +42,14 @@ echo "multilib_policy=best" >> /etc/yum.conf
 yum -y update
 
 # EPEL support
-yum -y install wget
 # https://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
-cp $MY_DIR/epel-release-5-4.noarch.rpm .
-check_sha256sum epel-release-5-4.noarch.rpm $EPEL_RPM_HASH
-
-# Dev toolset (for LLVM and other projects requiring C++11 support)
-wget -q https://people.centos.org/tru/devtools-2/devtools-2.repo
-check_sha256sum devtools-2.repo $DEVTOOLS_HASH
-mv devtools-2.repo /etc/yum.repos.d/devtools-2.repo
-sed -i 's/\<http\>/https/g' /etc/yum.repos.d/devtools-2.repo
-rpm -Uvh --replacepkgs epel-release-5*.rpm
-rm -f epel-release-5*.rpm
+rpm -Uvh --replacepkgs $MY_DIR/epel-release-5-4.noarch.rpm
 sed -i 's/\(mirrorlist=.*\)/\1\&protocol=http/g' /etc/yum.repos.d/epel*.repo
 
-# from now on, we shall only use curl to retrieve files
-yum -y erase wget
+# Dev toolset (for LLVM and other projects requiring C++11 support)
+# https://people.centos.org/tru/devtools-2/devtools-2.repo
+cp $MY_DIR/devtools-2.repo /etc/yum.repos.d/
+sed -i 's/\<http\>/https/g' /etc/yum.repos.d/devtools-2.repo
 
 # Development tools and libraries
 yum -y install \

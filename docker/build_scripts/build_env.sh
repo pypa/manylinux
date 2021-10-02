@@ -44,6 +44,3 @@ LIBXCRYPT_DOWNLOAD_URL=https://github.com/besser82/libxcrypt/archive
 GIT_ROOT=git-2.33.0
 GIT_HASH=02d909d0bba560d3a1008bd00dd577621ffb57401b09175fab2bf6da0e9704ae
 GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git
-
-EPEL_RPM_HASH=0dcc89f9bf67a2a515bad64569b7a9615edc5e018f676a578d5fd0f17d3c81d4
-DEVTOOLS_HASH=a8ebeb4bed624700f727179e6ef771dafe47651131a00a78b342251415646acc
