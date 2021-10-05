@@ -26,6 +26,13 @@ elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
 	apt-get upgrade -qq -y
 	apt-get clean -qq
 	rm -rf /var/lib/apt/lists/*
+	if [ "${AUDITWHEEL_ARCH}" == "s390x" ] || [ "${AUDITWHEEL_ARCH}" == "ppc64le" ]; then
+		# those arch are missing some updates
+		# we need to manually delete some certificates...
+		sed -i '/DST_Root_CA_X3.crt$/d' /etc/ca-certificates.conf
+		find /etc/ssl/certs -name 'DST_Root_CA_X3.pem' -delete
+		update-ca-certificates
+	fi
 elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
 	apk upgrade --no-cache
 else
