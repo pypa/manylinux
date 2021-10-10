@@ -12,9 +12,9 @@ certifi==2021.10.8 \
     --hash=sha256:78884e7c1d4b00ce3cea67b44566851c4343c120abd683433ce934a68ea58872 \
     --hash=sha256:d62a0163eb4c2344ac042ab2bdf75399a71a2d8c7d47eac2e2ee91b9d6339569
     # via -r requirements-base-tools.in
-click==8.0.2 \
-    --hash=sha256:3fab8aeb8f15f5452ae7511ad448977b3417325bceddd53df87e0bb81f3a8cf8 \
-    --hash=sha256:7027bc7bbafaab8b2c2816861d8eb372429ee3c02e193fc2f93d6c4ab9de49c5
+click==8.0.3 \
+    --hash=sha256:353f466495adaeb40b6b5f592f9f91cb22372351c84caeb068132442a4518ef3 \
+    --hash=sha256:410e932b050f5eed773c4cda94de75971c89cdb3155a72a0831139a79e5ecb5b
     # via userpath
 packaging==21.0 \
     --hash=sha256:7dc96269f53a4ccec5c0670940a4281106dd0bb343f47b7471f779df49c2fbe7 \
