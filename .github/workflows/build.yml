@@ -25,11 +25,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        policy: ["manylinux2010", "manylinux2014", "manylinux_2_24", "musllinux_1_1"]
+        policy: ["manylinux2014", "manylinux_2_24", "musllinux_1_1"]
         platform: ["i686", "x86_64", "ppc64le"]
-        exclude:
+        include:
           - policy: "manylinux2010"
-            platform: "ppc64le"
+            platform: "i686"
+          - policy: "manylinux2010"
+            platform: "x86_64"
 
     env:
       POLICY: ${{ matrix.policy }}
@@ -44,7 +46,7 @@ jobs:
         if: matrix.platform == 'ppc64le'
         uses: docker/setup-qemu-action@v1
         with:
-          platforms: ppc64le
+          platforms: ${{ matrix.platform }}
 
       # - name: Set BuildKit for ppc64le
       #   if: matrix.platform == 'ppc64le'
