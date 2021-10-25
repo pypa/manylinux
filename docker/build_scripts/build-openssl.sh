@@ -23,7 +23,6 @@ OPENSSL_MIN_VERSION=1.1.1
 INSTALLED=$((openssl version | head -1 || test $? -eq 141) | awk '{ print $2 }')
 SMALLEST=$(echo -e "${INSTALLED}\n${OPENSSL_MIN_VERSION}" | sort -t. -k 1,1n -k 2,2n -k 3,3n -k 4,4n | head -1 || test $? -eq 141)
 
-# Ignore letters in version numbers
 if [ "${SMALLEST}" = "${OPENSSL_MIN_VERSION}" ]; then
 	echo "skipping installation of openssl ${OPENSSL_VERSION}, system provides openssl ${INSTALLED} which is newer than openssl ${OPENSSL_MIN_VERSION}"
 	exit 0
