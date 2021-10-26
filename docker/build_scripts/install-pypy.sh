@@ -32,6 +32,7 @@ case ${AUDITWHEEL_ARCH} in
 	x86_64) PYPY_ARCH=linux64;;
 	i686) PYPY_ARCH=linux32;;
 	aarch64) PYPY_ARCH=aarch64;;
+    s390x) PYPY_ARCH=s390x;;
 	*) echo "No PyPy for ${AUDITWHEEL_ARCH}"; exit 0;;
 esac
 
