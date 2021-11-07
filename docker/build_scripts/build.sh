@@ -23,7 +23,7 @@ MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-de
 # (5.11) can be referenced.
 sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf
 sed -i 's/mirrorlist/#mirrorlist/' /etc/yum.repos.d/*.repo
-sed -i 's/#\(baseurl.*\)mirror.centos.org\/centos\/$releasever/\1vault.centos.org\/5.11/' /etc/yum.repos.d/*.repo
+sed -i 's/#\(baseurl.*\)mirror.centos.org\/centos\/$releasever/\1archive.kernel.org\/centos-vault\/5.11/' /etc/yum.repos.d/*.repo
 
 # Get build utilities
 source $MY_DIR/build_utils.sh
@@ -52,9 +52,8 @@ rpm -Uvh --replacepkgs $MY_DIR/epel-release-5-4.noarch.rpm
 sed -i 's/\(mirrorlist=.*\)/\1\&protocol=http/g' /etc/yum.repos.d/epel*.repo
 
 # Dev toolset (for LLVM and other projects requiring C++11 support)
-# https://people.centos.org/tru/devtools-2/devtools-2.repo
+# http://linuxsoft.cern.ch/cern/devtoolset/slc5-devtoolset.repo
 cp $MY_DIR/devtools-2.repo /etc/yum.repos.d/
-sed -i 's/\<http\>/https/g' /etc/yum.repos.d/devtools-2.repo
 
 # Development tools and libraries
 yum -y install \
