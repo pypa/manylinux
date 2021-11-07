@@ -21,7 +21,7 @@ if [ "${MANYLINUX_BUILD_FRONTEND:-}" == "buildkit" ]; then
 	sudo apt-get update
 	sudo apt-get remove -y fuse ntfs-3g
 	sudo apt-get install -y --no-install-recommends runc containerd uidmap slirp4netns fuse-overlayfs
-	curl -fsSL "https://github.com/moby/buildkit/releases/download/v0.9.0/buildkit-v0.9.0.linux-${BUILDX_MACHINE}.tar.gz" | sudo tar -C /usr/local -xz
+	curl -fsSL "https://github.com/moby/buildkit/releases/download/v0.9.3/buildkit-v0.9.3.linux-${BUILDX_MACHINE}.tar.gz" | sudo tar -C /usr/local -xz
 	cat <<EOF > /tmp/start-buildkitd.sh
 buildkitd &> /dev/null &
 BUILDKITD_PID=\$!
