@@ -1,5 +1,5 @@
 [testing-devtools-2-centos-$releasever]
-name=testing 2 devtools for CentOS $releasever 
-baseurl=http://people.centos.org/tru/devtools-2/$releasever/$basearch/RPMS
+name=testing 2 devtools for CentOS $releasever
+baseurl=http://linuxsoft.cern.ch/cern/devtoolset/slc5X/$basearch/yum/devtoolset/
 gpgcheck=0
 
