@@ -2,7 +2,7 @@
 
 PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 # of the form <maj>.<min>.<rev> or <maj>.<min>.<rev>rc<n>
-CPYTHON_VERSIONS="2.7.18 3.5.10 3.6.15 3.7.12 3.8.12 3.9.7"
+CPYTHON_VERSIONS="2.7.18 3.5.10 3.6.15 3.7.12 3.8.12 3.9.8"
 
 # perl is needed to build openssl and libxcrypt
 PERL_ROOT=perl-5.34.0
@@ -41,8 +41,8 @@ LIBXCRYPT_VERSION=4.4.26
 LIBXCRYPT_HASH=e8a544dd19171c1e6191a6044c96cc31496d781ba08b5a00f53310d001d58114
 LIBXCRYPT_DOWNLOAD_URL=https://github.com/besser82/libxcrypt/archive
 
-GIT_ROOT=git-2.33.0
-GIT_HASH=02d909d0bba560d3a1008bd00dd577621ffb57401b09175fab2bf6da0e9704ae
+GIT_ROOT=git-2.33.1
+GIT_HASH=02047f8dc8934d57ff5e02aadd8a2fe8e0bcf94a7158da375e48086cc46fce1d
 GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git
 
 CACERT_ROOT=cacert
