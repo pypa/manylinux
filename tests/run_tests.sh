@@ -12,7 +12,7 @@ elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
 	export DEBIAN_FRONTEND=noninteractive
 	PACKAGE_MANAGER=apt
 	apt-get update -qq
-elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
+elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
 	PACKAGE_MANAGER=apk
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"

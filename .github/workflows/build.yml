@@ -25,7 +25,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        policy: ["manylinux2014", "manylinux_2_24", "musllinux_1_1"]
+        policy: ["manylinux2014", "manylinux_2_24", "musllinux_1_1", "musllinux_1_2"]
         platform: ["i686", "x86_64", "ppc64le"]
         include:
           - policy: "manylinux2010"

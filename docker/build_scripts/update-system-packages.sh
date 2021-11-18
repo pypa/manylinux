@@ -33,7 +33,7 @@ elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
 		find /etc/ssl/certs -name 'DST_Root_CA_X3.pem' -delete
 		update-ca-certificates
 	fi
-elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
+elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
 	apk upgrade --no-cache
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"

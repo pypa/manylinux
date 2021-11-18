@@ -36,7 +36,7 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == 
 	MANYLINUX_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel mesa-libGL-devel libICE-devel libSM-devel zlib-devel expat-devel"
 elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
 	MANYLINUX_DEPS="libc6-dev libstdc++-6-dev libglib2.0-dev libx11-dev libxext-dev libxrender-dev libgl1-mesa-dev libice-dev libsm-dev libz-dev libexpat1-dev"
-elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
+elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
 	MANYLINUX_DEPS="musl-dev libstdc++ glib-dev libx11-dev libxext-dev libxrender-dev mesa-dev libice-dev libsm-dev zlib-dev expat-dev"
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
@@ -53,8 +53,8 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == 
 	fi
 elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
 	RUNTIME_DEPS="zlib1g libbz2-1.0 libexpat1 libncurses5 libreadline7 tk libgdbm3 libdb5.3 libpcap0.8 liblzma5 libssl1.1 libkeyutils1 libkrb5-3 libcomerr2 libidn2-0 libcurl3 uuid libffi6"
-elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
-	RUNTIME_DEPS="zlib bzip2 expat ncurses5-libs readline tk gdbm db xz openssl keyutils-libs krb5-libs libcom_err libidn2 libcurl libuuid libffi"
+elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
+	RUNTIME_DEPS="zlib bzip2 expat ncurses-libs readline tk gdbm db xz openssl keyutils-libs krb5-libs libcom_err libidn2 libcurl libuuid libffi"
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
 	exit 1
@@ -120,7 +120,7 @@ elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
 	apt-get upgrade -qq -y
 	apt-get install -qq -y --no-install-recommends ca-certificates gpg curl locales
 	TOOLCHAIN_DEPS="binutils gcc g++ gfortran"
-elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
+elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
 	TOOLCHAIN_DEPS="binutils gcc g++ gfortran"
 	BASETOOLS="${BASETOOLS} curl util-linux"
 	PACKAGE_MANAGER=apk

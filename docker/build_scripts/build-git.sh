@@ -7,12 +7,12 @@ set -exuo pipefail
 # Get script directory
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
-if [ "${POLICY}" == "musllinux_1_1" ]; then
-	export NO_REGEX=NeedsStartEnd
-fi
-
 # Get build utilities
 source $MY_DIR/build_utils.sh
+
+if [ "${BASE_POLICY}" == "musllinux" ]; then
+	export NO_REGEX=NeedsStartEnd
+fi
 
 # Install newest libtool
 check_var ${GIT_ROOT}
