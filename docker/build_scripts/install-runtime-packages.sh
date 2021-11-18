@@ -54,7 +54,12 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == 
 elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
 	RUNTIME_DEPS="zlib1g libbz2-1.0 libexpat1 libncurses5 libreadline7 tk libgdbm3 libdb5.3 libpcap0.8 liblzma5 libssl1.1 libkeyutils1 libkrb5-3 libcomerr2 libidn2-0 libcurl3 uuid libffi6"
 elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
-	RUNTIME_DEPS="zlib bzip2 expat ncurses-libs readline tk gdbm db xz openssl keyutils-libs krb5-libs libcom_err libidn2 libcurl libuuid libffi"
+	RUNTIME_DEPS="zlib bzip2 expat readline tk gdbm db xz openssl keyutils-libs krb5-libs libcom_err libidn2 libcurl libuuid libffi"
+	if [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
+		RUNTIME_DEPS="${RUNTIME_DEPS} ncurses5-libs"
+	else
+		RUNTIME_DEPS="${RUNTIME_DEPS} ncurses-libs"
+	fi
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
 	exit 1
