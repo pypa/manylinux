@@ -2,7 +2,7 @@
 
 PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 # of the form <maj>.<min>.<rev> or <maj>.<min>.<rev>rc<n>
-CPYTHON_VERSIONS="2.7.18 3.5.10 3.6.15 3.7.12 3.8.12 3.9.8"
+CPYTHON_VERSIONS="2.7.18 3.5.10 3.6.15 3.7.12 3.8.12 3.9.9"
 
 # perl is needed to build openssl and libxcrypt
 PERL_ROOT=perl-5.34.0
@@ -19,8 +19,8 @@ PATCHELF_VERSION=0.13
 PATCHELF_HASH=60c6aeadb673de9cc1838b630c81f61e31c501de324ef7f1e8094a2431197d09
 PATCHELF_DOWNLOAD_URL=https://github.com/NixOS/patchelf/archive
 
-CURL_ROOT=curl-7.79.1
-CURL_HASH=370b11201349816287fb0ccc995e420277fbfcaf76206e309b3f60f0eda090c2
+CURL_ROOT=curl-7.80.0
+CURL_HASH=dab997c9b08cb4a636a03f2f7f985eaba33279c1c52692430018fae4a4878dc7
 CURL_DOWNLOAD_URL=https://curl.haxx.se/download
 
 AUTOCONF_ROOT=autoconf-2.71
@@ -41,8 +41,8 @@ LIBXCRYPT_VERSION=4.4.26
 LIBXCRYPT_HASH=e8a544dd19171c1e6191a6044c96cc31496d781ba08b5a00f53310d001d58114
 LIBXCRYPT_DOWNLOAD_URL=https://github.com/besser82/libxcrypt/archive
 
-GIT_ROOT=git-2.33.1
-GIT_HASH=02047f8dc8934d57ff5e02aadd8a2fe8e0bcf94a7158da375e48086cc46fce1d
+GIT_ROOT=git-2.34.0
+GIT_HASH=0ce6222bfd31938b29360150286b51c77c643fa97740b1d35b6d1ceef8b0ecd7
 GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git
 
 CACERT_ROOT=cacert
