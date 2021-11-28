@@ -61,8 +61,8 @@ RUN export LIBTOOL_ROOT=libtool-2.4.6 && \
     manylinux-entrypoint /build_scripts/install-libtool.sh
 
 COPY build_scripts/install-patchelf.sh /build_scripts/
-RUN export PATCHELF_VERSION=0.13 && \
-    export PATCHELF_HASH=60c6aeadb673de9cc1838b630c81f61e31c501de324ef7f1e8094a2431197d09 && \
+RUN export PATCHELF_VERSION=0.13.1 && \
+    export PATCHELF_HASH=f6d5ecdb51ad78e963233cfde15020f9eebc9d9c7c747aaed54ce39c284ad019 && \
     export PATCHELF_DOWNLOAD_URL=https://github.com/NixOS/patchelf/archive && \
     manylinux-entrypoint /build_scripts/install-patchelf.sh
 
@@ -82,8 +82,8 @@ RUN manylinux-entrypoint /build_scripts/install-build-packages.sh
 
 FROM build_base AS build_git
 COPY build_scripts/build-git.sh /build_scripts/
-RUN export GIT_ROOT=git-2.34.0 && \
-    export GIT_HASH=0ce6222bfd31938b29360150286b51c77c643fa97740b1d35b6d1ceef8b0ecd7 && \
+RUN export GIT_ROOT=git-2.34.1 && \
+    export GIT_HASH=fc4eb5ecb9299db91cdd156c06cdeb41833f53adc5631ddf8c0cb13eaa2911c1 && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     manylinux-entrypoint /build_scripts/build-git.sh
 
@@ -101,8 +101,8 @@ RUN export SWIG_ROOT=swig-4.0.2 && \
 
 FROM build_base AS build_cpython
 COPY build_scripts/build-sqlite3.sh /build_scripts/
-RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3360000 && \
-    export SQLITE_AUTOCONF_HASH=bd90c3eb96bee996206b83be7065c9ce19aef38c3f4fb53073ada0d0b69bbce3 && \
+RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3370000 && \
+    export SQLITE_AUTOCONF_HASH=731a4651d4d4b36fc7d21db586b2de4dd00af31fd54fb5a9a4b7f492057479f7 && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2021 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 

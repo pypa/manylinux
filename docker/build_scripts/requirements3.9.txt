@@ -36,7 +36,7 @@ pip==21.3.1 \
     --hash=sha256:deaf32dcd9ab821e359cd8330786bcd077604b5c5730c0b096eda46f95c24a2d \
     --hash=sha256:fd11ba3d0fdb4c07fbc5ecbba0b1b719809420f25038f8ee3cd913d3faa3033a
     # via -r requirements.in
-setuptools==59.2.0 \
-    --hash=sha256:157d21de9d055ab9e8ea3186d91e7f4f865e11f42deafa952d90842671fc2576 \
-    --hash=sha256:4adde3d1e1c89bde1c643c64d89cdd94cbfd8c75252ee459d4500bccb9c7d05d
+setuptools==59.3.0 \
+    --hash=sha256:10635f160e9e71546b883e337646567156a02808ecc0e7fafc12021deabf205e \
+    --hash=sha256:da27016d4b3b89cc9b672d93597520e44afa3f87a9aac32d3f084f37fa667ce7
     # via -r requirements.in
