@@ -120,6 +120,9 @@ def _update_with_gh(tool, dry_run):
         "patchelf": "NixOS/patchelf",
         "libxcrypt": "besser82/libxcrypt",
     }
+    major = {
+        "patchelf": "0.13"
+    }
     dockerfile = Path(__file__).parent / "docker" / "Dockerfile"
     lines = dockerfile.read_text().splitlines()
     re_ = re.compile(f"^RUN export {tool.upper()}_VERSION=(?P<version>\\S+) && \\\\$")
@@ -128,7 +131,7 @@ def _update_with_gh(tool, dry_run):
         if match is None:
             continue
         current_version = Version(match["version"])
-        latest_tag = latest(repo[tool], output_format="tag")
+        latest_tag = latest(repo[tool], output_format="tag", major=major.get(tool, None))
         latest_version = Version(latest_tag)
         if latest_version > current_version:
             url = re.match(f"^    export {tool.upper()}_DOWNLOAD_URL=(?P<url>\\S+) && \\\\$", lines[i + 2])["url"]
