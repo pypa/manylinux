@@ -61,8 +61,8 @@ RUN export LIBTOOL_ROOT=libtool-2.4.6 && \
     manylinux-entrypoint /build_scripts/install-libtool.sh
 
 COPY build_scripts/install-patchelf.sh /build_scripts/
-RUN export PATCHELF_VERSION=0.13 && \
-    export PATCHELF_HASH=60c6aeadb673de9cc1838b630c81f61e31c501de324ef7f1e8094a2431197d09 && \
+RUN export PATCHELF_VERSION=0.13.1 && \
+    export PATCHELF_HASH=f6d5ecdb51ad78e963233cfde15020f9eebc9d9c7c747aaed54ce39c284ad019 && \
     export PATCHELF_DOWNLOAD_URL=https://github.com/NixOS/patchelf/archive && \
     manylinux-entrypoint /build_scripts/install-patchelf.sh
 
