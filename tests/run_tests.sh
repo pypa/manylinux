@@ -30,6 +30,8 @@ for PYTHON in /opt/python/*/bin/python; do
 	PYVERS=$(${PYTHON} -c "import sys; print('.'.join(map(str, sys.version_info[:2])))")
 	if [ "${IMPLEMENTATION}" == "pypy" ]; then
 		LINK_PREFIX=pypy
+	elif [ "${IMPLEMENTATION}" == "pyston" ]; then
+		LINK_PREFIX=pyston
 	else
 		LINK_PREFIX=python
 		# Make sure sqlite3 module can be loaded properly and is the manylinux version one

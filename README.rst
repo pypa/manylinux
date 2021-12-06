@@ -147,7 +147,7 @@ Image content
 
 All images currently contain:
 
-- CPython 3.6, 3.7, 3.8, 3.9, 3.10, and PyPy 3.7, 3.8 installed in
+- CPython 3.6, 3.7, 3.8, 3.9, 3.10, and PyPy 3.7, 3.8 and Pyston 2.3 installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
   e.g. ``/opt/python/cp37-cp37m`` contains a CPython 3.7 build, and
@@ -167,6 +167,8 @@ became useless (builds with and without pymalloc are ABI compatible) and so has
 been removed. (e.g. ``/opt/python/cp38-cp38``)
 
 Note that PyPy is not available on ppc64le & s390x.
+
+Note that Pyston is only available on x86_64.
 
 Building Docker images
 ----------------------
