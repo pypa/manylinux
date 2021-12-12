@@ -15,10 +15,6 @@ OPENSSL_ROOT=openssl-1.1.1l
 OPENSSL_HASH=0b7a3e5e59c34827fe0c3a74b7ec8baef302b98fa80088d7f9153aa16fa76bd1
 OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source
 
-PATCHELF_VERSION=0.13.1
-PATCHELF_HASH=f6d5ecdb51ad78e963233cfde15020f9eebc9d9c7c747aaed54ce39c284ad019
-PATCHELF_DOWNLOAD_URL=https://github.com/NixOS/patchelf/archive
-
 CURL_ROOT=curl-7.80.0
 CURL_HASH=dab997c9b08cb4a636a03f2f7f985eaba33279c1c52692430018fae4a4878dc7
 CURL_DOWNLOAD_URL=https://curl.haxx.se/download
