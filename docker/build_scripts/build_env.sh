@@ -11,8 +11,8 @@ PERL_DOWNLOAD_URL=https://www.cpan.org/src/5.0
 
 # openssl version to build, with expected sha256 hash of .tar.gz
 # archive.
-OPENSSL_ROOT=openssl-1.1.1l
-OPENSSL_HASH=0b7a3e5e59c34827fe0c3a74b7ec8baef302b98fa80088d7f9153aa16fa76bd1
+OPENSSL_ROOT=openssl-1.1.1m
+OPENSSL_HASH=f89199be8b23ca45fc7cb9f1d8d3ee67312318286ad030f5316aca6462db6c96
 OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source
 
 PATCHELF_VERSION=0.13.1
