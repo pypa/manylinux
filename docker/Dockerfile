@@ -60,12 +60,6 @@ RUN export LIBTOOL_ROOT=libtool-2.4.6 && \
     export LIBTOOL_DOWNLOAD_URL=http://ftp.gnu.org/gnu/libtool && \
     manylinux-entrypoint /build_scripts/install-libtool.sh
 
-COPY build_scripts/install-patchelf.sh /build_scripts/
-RUN export PATCHELF_VERSION=0.13.1 && \
-    export PATCHELF_HASH=f6d5ecdb51ad78e963233cfde15020f9eebc9d9c7c747aaed54ce39c284ad019 && \
-    export PATCHELF_DOWNLOAD_URL=https://github.com/NixOS/patchelf/archive && \
-    manylinux-entrypoint /build_scripts/install-patchelf.sh
-
 COPY build_scripts/install-libxcrypt.sh /build_scripts/
 RUN export LIBXCRYPT_VERSION=4.4.27 && \
     export LIBXCRYPT_HASH=e4ff47b7fa5370fa08e27258f8a0de5cb7e9b09c297ec7ab56a8a82e229a1c84 && \

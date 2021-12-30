@@ -117,11 +117,7 @@ def _update_sqlite(dry_run):
 
 def _update_with_gh(tool, dry_run):
     repo = {
-        "patchelf": "NixOS/patchelf",
         "libxcrypt": "besser82/libxcrypt",
-    }
-    major = {
-        "patchelf": "0.13"
     }
     dockerfile = Path(__file__).parent / "docker" / "Dockerfile"
     lines = dockerfile.read_text().splitlines()
@@ -131,7 +127,7 @@ def _update_with_gh(tool, dry_run):
         if match is None:
             continue
         current_version = Version(match["version"])
-        latest_tag = latest(repo[tool], output_format="tag", major=major.get(tool, None))
+        latest_tag = latest(repo[tool], output_format="tag")
         latest_version = Version(latest_tag)
         if latest_version > current_version:
             url = re.match(f"^    export {tool.upper()}_DOWNLOAD_URL=(?P<url>\\S+) && \\\\$", lines[i + 2])["url"]
@@ -154,7 +150,7 @@ def main():
     _update_sqlite(args.dry_run)
     for tool in ["autoconf", "automake", "libtool", "git", "swig", "openssl"]:
         _update_with_root(tool, args.dry_run)
-    for tool in ["patchelf", "libxcrypt"]:
+    for tool in ["libxcrypt"]:
         _update_with_gh(tool, args.dry_run)
 
 
