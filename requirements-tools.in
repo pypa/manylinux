@@ -1,3 +1,4 @@
 auditwheel
 certifi
+patchelf
 pipx

@@ -139,6 +139,8 @@ pip install -U --require-hashes -r $MY_DIR/requirements-tools.txt
 
 # Make auditwheel available in PATH
 ln -s $TOOLS_PATH/bin/auditwheel /usr/local/bin/auditwheel
+# Make patchelf available in PATH
+ln -s $TOOLS_PATH/bin/patchelf /usr/local/bin/patchelf
 # Make pipx available in PATH,
 # Make sure when root installs apps, they're also in the PATH
 cat <<EOF > /usr/local/bin/pipx
@@ -166,9 +168,6 @@ deactivate
 
 # Now we can delete our built OpenSSL headers/static libs since we've linked everything we need
 rm -rf /usr/local/ssl
-
-# Install patchelf (latest with unreleased bug fixes) and apply our patches
-build_patchelf $PATCHELF_VERSION $PATCHELF_HASH
 
 # Clean up development headers and other unnecessary stuff for
 # final image

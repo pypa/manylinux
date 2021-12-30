@@ -296,16 +296,3 @@ function build_libxcrypt {
     rm -rf /usr/include/crypt.h
     rm -rf /usr/lib*/libcrypt.a /usr/lib*/libcrypt.so /usr/lib*/libcrypt.so.1
 }
-
-function build_patchelf {
-    local patchelf_version=$1
-    local patchelf_hash=$2
-    check_var ${patchelf_version}
-    check_var ${patchelf_hash}
-    check_var ${PATCHELF_DOWNLOAD_URL}
-    fetch_source ${patchelf_version}.tar.gz ${PATCHELF_DOWNLOAD_URL}
-    check_sha256sum ${patchelf_version}.tar.gz $patchelf_hash
-    tar -xzf ${patchelf_version}.tar.gz
-    (cd patchelf-$patchelf_version && ./bootstrap.sh && do_standard_install)
-    rm -rf ${patchelf_version}.tar.gz patchelf-$patchelf_version
-}
