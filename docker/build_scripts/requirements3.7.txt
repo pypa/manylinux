@@ -8,9 +8,9 @@ build==0.7.0 \
     --hash=sha256:1aaadcd69338252ade4f7ec1265e1a19184bf916d84c9b7df095f423948cb89f \
     --hash=sha256:21b7ebbd1b22499c4dac536abc7606696ea4d909fd755e00f09f3c0f2c05e3c8
     # via -r requirements.in
-importlib-metadata==4.9.0 \
-    --hash=sha256:e8b45564028bc25f8c99f546616112a6df5de6655893d7eb74c9a99680dc9751 \
-    --hash=sha256:ee50794eccb0ec340adbc838344ebb9a6ff2bcba78f752d31fc716497e2149d6
+importlib-metadata==4.10.0 \
+    --hash=sha256:92a8b58ce734b2a4494878e0ecf7d79ccd7a128b5fc6014c401e0b61f006f0f6 \
+    --hash=sha256:b7cf7d3fef75f1e4c80a96ca660efbd51473d7e8f39b5ab9210febc7809012a4
     # via
     #   build
     #   pep517
@@ -36,13 +36,13 @@ typing-extensions==4.0.1 \
     --hash=sha256:4ca091dea149f945ec56afb48dae714f21e8692ef22a395223bcd328961b6a0e \
     --hash=sha256:7f001e5ac290a0c0401508864c7ec868be4e701886d5b573a9528ed3973d9d3b
     # via importlib-metadata
-wheel==0.37.0 \
-    --hash=sha256:21014b2bd93c6d0034b6ba5d35e4eb284340e09d63c59aef6fc14b0f346146fd \
-    --hash=sha256:e2ef7239991699e3355d54f8e968a21bb940a1dbf34a4d226741e64462516fad
+wheel==0.37.1 \
+    --hash=sha256:4bdcd7d840138086126cd09254dc6195fb4fc6f01c050a1d7236f2630db1d22a \
+    --hash=sha256:e9a504e793efbca1b8e0e9cb979a249cf4a0a7b5b8c9e8b65a5e39d49529c1c4
     # via -r requirements.in
-zipp==3.6.0 \
-    --hash=sha256:71c644c5369f4a6e07636f0aa966270449561fcea2e3d6747b8d23efaa9d7832 \
-    --hash=sha256:9fe5ea21568a0a70e50f273397638d39b03353731e6cbbb3fd8502a33fec40bc
+zipp==3.7.0 \
+    --hash=sha256:9f50f446828eb9d45b267433fd3e9da8d801f614129124863f9c51ebceafb87d \
+    --hash=sha256:b47250dd24f92b7dd6a0a8fc5244da14608f3ca90a5efcd37a3b1642fac9a375
     # via
     #   importlib-metadata
     #   pep517
@@ -52,7 +52,7 @@ pip==21.3.1 \
     --hash=sha256:deaf32dcd9ab821e359cd8330786bcd077604b5c5730c0b096eda46f95c24a2d \
     --hash=sha256:fd11ba3d0fdb4c07fbc5ecbba0b1b719809420f25038f8ee3cd913d3faa3033a
     # via -r requirements.in
-setuptools==59.7.0 \
-    --hash=sha256:0c8d5c36aea600828875ab751c03e2c52624edc8382a88a127e31bd8d860e34b \
-    --hash=sha256:a426c5ce42242404fecb1cbce07af79c10b820ab2f684109e8129040413faaa1
+setuptools==60.2.0 \
+    --hash=sha256:5c89b1a14a67ac5f0956f1cb0aeb7d1d3f4c8ba4e4e1ab7bf1af4933f9a2f0fe \
+    --hash=sha256:675fcebecb43c32eb930481abf907619137547f4336206e4d673180242e1a278
     # via -r requirements.in
