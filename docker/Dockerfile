@@ -135,8 +135,10 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.10.1
 
 
 FROM build_cpython AS all_python
-COPY build_scripts/install-pypy.sh /build_scripts/install-pypy.sh
-COPY build_scripts/pypy.sha256 /build_scripts/pypy.sha256
+COPY build_scripts/install-pypy.sh \
+     build_scripts/pypy.sha256 \
+     build_scripts/finalize-python.sh \
+     /build_scripts/
 RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.7 7.3.7
 RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.8 7.3.7
 COPY --from=build_cpython36 /opt/_internal /opt/_internal/
@@ -144,7 +146,7 @@ COPY --from=build_cpython37 /opt/_internal /opt/_internal/
 COPY --from=build_cpython38 /opt/_internal /opt/_internal/
 COPY --from=build_cpython39 /opt/_internal /opt/_internal/
 COPY --from=build_cpython310 /opt/_internal /opt/_internal/
-RUN hardlink -cv /opt/_internal
+RUN manylinux-entrypoint /build_scripts/finalize-python.sh
 
 
 FROM runtime_base
