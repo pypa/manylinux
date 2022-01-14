@@ -6,8 +6,8 @@
 # other flags mentioned in https://wiki.ubuntu.com/ToolChain/CompilerFlags can't be
 # used because the distros used here are too old
 MANYLINUX_CPPFLAGS="-Wdate-time -D_FORTIFY_SOURCE=2"
-MANYLINUX_CFLAGS="-g -O2 -Wall -fdebug-prefix-map=/=. -fstack-protector-strong -Wformat -Werror=format-security"
-MANYLINUX_CXXFLAGS="-g -O2 -Wall -fdebug-prefix-map=/=. -fstack-protector-strong -Wformat -Werror=format-security"
+MANYLINUX_CFLAGS="-g -O2 -Wall -fdebug-prefix-map=/=. -fstack-protector-strong -Wformat -Werror=format-security -fPIC"
+MANYLINUX_CXXFLAGS="-g -O2 -Wall -fdebug-prefix-map=/=. -fstack-protector-strong -Wformat -Werror=format-security -fPIC"
 MANYLINUX_LDFLAGS="-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now"
 
 export BASE_POLICY=manylinux
