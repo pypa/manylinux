@@ -30,6 +30,9 @@ fetch_source Python-${CPYTHON_VERSION}.tgz.asc ${CPYTHON_DOWNLOAD_URL}/${CPYTHON
 gpg --import ${MY_DIR}/cpython-pubkeys.txt
 gpg --verify Python-${CPYTHON_VERSION}.tgz.asc
 tar -xzf Python-${CPYTHON_VERSION}.tgz
+if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
+  manylinux-entrypoint $MY_DIR/maybe-patch-cpython.sh ${CPYTHON_VERSION}
+fi
 pushd Python-${CPYTHON_VERSION}
 PREFIX="/opt/_internal/cpython-${CPYTHON_VERSION}"
 mkdir -p ${PREFIX}/lib

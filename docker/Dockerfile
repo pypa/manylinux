@@ -107,7 +107,11 @@ RUN export OPENSSL_ROOT=openssl-1.1.1m && \
     manylinux-entrypoint /build_scripts/build-openssl.sh
 
 COPY build_scripts/build-cpython.sh /build_scripts/
+COPY build_scripts/maybe-patch-cpython.sh /build_scripts/
+COPY build_scripts/cpython-patches /build_scripts/cpython-patches
 
+# We should grant exec perrmission because it will be called not from Dockerfile
+RUN chmod +x /build_scripts/maybe-patch-cpython.sh
 
 FROM build_cpython AS build_cpython36
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt

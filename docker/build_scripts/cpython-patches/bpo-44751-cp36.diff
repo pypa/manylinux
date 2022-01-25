@@ -1,0 +1,24 @@
+--- Include/Python.h
++++ Include/Python.h
+@@ -35,9 +35,6 @@
+ #ifdef HAVE_UNISTD_H
+ #include <unistd.h>
+ #endif
+-#ifdef HAVE_CRYPT_H
+-#include <crypt.h>
+-#endif
+
+ /* For size_t? */
+ #ifdef HAVE_STDDEF_H
+--- Modules/_cryptmodule.c
++++ Modules/_cryptmodule.c
+@@ -4,6 +4,9 @@
+ #include "Python.h"
+
+ #include <sys/types.h>
++#ifdef HAVE_CRYPT_H
++#include <crypt.h>
++#endif
+
+ /* Module crypt */
+
