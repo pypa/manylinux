@@ -37,8 +37,8 @@ LIBXCRYPT_VERSION=4.4.27
 LIBXCRYPT_HASH=e4ff47b7fa5370fa08e27258f8a0de5cb7e9b09c297ec7ab56a8a82e229a1c84
 LIBXCRYPT_DOWNLOAD_URL=https://github.com/besser82/libxcrypt/archive
 
-GIT_ROOT=git-2.34.1
-GIT_HASH=fc4eb5ecb9299db91cdd156c06cdeb41833f53adc5631ddf8c0cb13eaa2911c1
+GIT_ROOT=git-2.35.1
+GIT_HASH=9845a37dd01f9faaa7d8aa2078399d3aea91b43819a5efea6e2877b0af09bd43
 GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git
 
 CACERT_ROOT=cacert
