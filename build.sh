@@ -34,7 +34,7 @@ if [ "${POLICY}" == "manylinux2014" ]; then
 	else
 		BASEIMAGE="${MULTIARCH_PREFIX}centos:7"
 	fi
-	DEVTOOLSET_ROOTPATH="/opt/rh/devtoolset-10/root"
+	DEVTOOLSET_ROOTPATH="/opt/rh/devtoolset-11/root"
 	PREPEND_PATH="${DEVTOOLSET_ROOTPATH}/usr/bin:"
 	if [ "${PLATFORM}" == "i686" ]; then
 		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"

@@ -71,20 +71,20 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	yum -y update
 	yum -y install yum-utils curl
 	yum-config-manager --enable extras
-	TOOLCHAIN_DEPS="devtoolset-10-binutils devtoolset-10-gcc devtoolset-10-gcc-c++ devtoolset-10-gcc-gfortran"
+	TOOLCHAIN_DEPS="devtoolset-11-binutils devtoolset-11-gcc devtoolset-11-gcc-c++ devtoolset-11-gcc-gfortran"
 	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
-		# Software collection (for devtoolset-10)
+		# Software collection (for devtoolset-11)
 		yum -y install centos-release-scl-rh
 		# EPEL support (for yasm)
 		yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 		TOOLCHAIN_DEPS="${TOOLCHAIN_DEPS} yasm"
 	elif [ "${AUDITWHEEL_ARCH}" == "aarch64" ] || [ "${AUDITWHEEL_ARCH}" == "ppc64le" ] || [ "${AUDITWHEEL_ARCH}" == "s390x" ]; then
-		# Software collection (for devtoolset-10)
+		# Software collection (for devtoolset-11)
 		yum -y install centos-release-scl-rh
 	elif [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
 		# No yasm on i686
-		# Install mayeut/devtoolset-10 repo to get devtoolset-10
-		curl -fsSLo /etc/yum.repos.d/mayeut-devtoolset-10.repo https://copr.fedorainfracloud.org/coprs/mayeut/devtoolset-10/repo/custom-1/mayeut-devtoolset-10-custom-1.repo
+		# Install mayeut/devtoolset-11 repo to get devtoolset-11
+		curl -fsSLo /etc/yum.repos.d/mayeut-devtoolset-11.repo https://copr.fedorainfracloud.org/coprs/mayeut/devtoolset-11/repo/custom-1/mayeut-devtoolset-11-custom-1.repo
 	fi
 elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
 	PACKAGE_MANAGER=dnf
