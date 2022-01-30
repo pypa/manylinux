@@ -1,6 +1,13 @@
 name: Build
 
 on:
+  workflow_dispatch:
+    inputs:
+      useCache:
+        description: Use GHA cache
+        type: boolean
+        required: false
+        default: true
   push:
     branches-ignore:
       - "update-dependencies-pr"
@@ -48,14 +55,11 @@ jobs:
         with:
           platforms: ${{ matrix.platform }}
 
-      # - name: Set BuildKit for ppc64le
-      #   if: matrix.platform == 'ppc64le'
-      #   run: echo 'MANYLINUX_BUILD_FRONTEND=buildkit' >> $GITHUB_ENV 
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
       - name: Setup cache
+        if: github.event_name != 'workflow_dispatch' || fromJSON(github.event.inputs.useCache)
         uses: actions/cache@v2
         with:
           path: .buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
