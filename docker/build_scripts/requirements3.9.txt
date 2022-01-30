@@ -32,9 +32,9 @@ wheel==0.37.1 \
     # via -r requirements.in
 
 # The following packages are considered to be unsafe in a requirements file:
-pip==22.0 \
-    --hash=sha256:6cb1ea2bd7fda0668e26ae8c3e45188f301a7ef17ff22efe1f70f3643e56a822 \
-    --hash=sha256:d3fa5c3e42b33de52bddce89de40268c9a263cd6ef7c94c40774808dafb32c82
+pip==22.0.1 \
+    --hash=sha256:30739ac5fb973cfa4399b0afff0523d4fe6bed2f7a5229333f64d9c2ce0d1933 \
+    --hash=sha256:7fd7a92f2fb1d2ac2ae8c72fb10b1e640560a0361ed4427453509e2bcc18605b
     # via -r requirements.in
 setuptools==60.5.0 \
     --hash=sha256:2404879cda71495fc4d5cbc445ed52fdaddf352b36e40be8dcc63147cb4edabe \
