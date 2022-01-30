@@ -48,9 +48,9 @@ zipp==3.7.0 \
     #   pep517
 
 # The following packages are considered to be unsafe in a requirements file:
-pip==21.3.1 \
-    --hash=sha256:deaf32dcd9ab821e359cd8330786bcd077604b5c5730c0b096eda46f95c24a2d \
-    --hash=sha256:fd11ba3d0fdb4c07fbc5ecbba0b1b719809420f25038f8ee3cd913d3faa3033a
+pip==22.0 \
+    --hash=sha256:6cb1ea2bd7fda0668e26ae8c3e45188f301a7ef17ff22efe1f70f3643e56a822 \
+    --hash=sha256:d3fa5c3e42b33de52bddce89de40268c9a263cd6ef7c94c40774808dafb32c82
     # via -r requirements.in
 setuptools==60.5.0 \
     --hash=sha256:2404879cda71495fc4d5cbc445ed52fdaddf352b36e40be8dcc63147cb4edabe \
