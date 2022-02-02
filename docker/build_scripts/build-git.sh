@@ -10,11 +10,11 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 # Get build utilities
 source $MY_DIR/build_utils.sh
 
-if [ "${POLICY}" == "musllinux_1_1" ]; then
+if [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
 	export NO_REGEX=NeedsStartEnd
 fi
 
-if [ "${POLICY}" == "manylinux2010" ] || [ "${POLICY}" == "manylinux2014" ] || [ "${POLICY}" == "manylinux_2_24" ]; then
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
 	export NO_UNCOMPRESS2=1
 fi
 
