@@ -13,10 +13,6 @@ elif [ ${BUILDX_MACHINE} == "aarch64" ]; then
 	BUILDX_MACHINE=arm64
 fi
 
-if [ "${MANYLINUX_BUILD_FRONTEND:-}" == "docker" ]; then
-	exit 0
-fi
-
 if [ "${MANYLINUX_BUILD_FRONTEND:-}" == "buildkit" ]; then
 	sudo apt-get update
 	sudo apt-get remove -y fuse ntfs-3g
@@ -52,11 +48,10 @@ fi
 
 # default to docker-buildx frontend
 if [ ${BUILDX_MACHINE} == "ppc64le" ]; then
-	# We need to run a rootless docker daemon due to travis-ci LXD configuration
-	# Update docker, c.f. https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
+	# We need to update docker to get buildx support, c.f. https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
 	sudo systemctl stop docker
 	sudo apt-get update
-	sudo apt-get remove -y docker docker.io containerd runc
+	sudo apt-get purge -y docker docker.io containerd runc
 	sudo apt-get install -y --no-install-recommends ca-certificates curl gnupg lsb-release
 	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 	echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
@@ -65,27 +60,18 @@ if [ ${BUILDX_MACHINE} == "ppc64le" ]; then
 	echo -e '#!/bin/sh\nexit 101' | sudo tee /usr/sbin/policy-rc.d
 	sudo chmod +x /usr/sbin/policy-rc.d
 	# install docker
-	sudo apt-get install docker-ce docker-ce-cli docker-ce-rootless-extras containerd.io
+	sudo apt-get install docker-ce docker-ce-cli docker-ce-rootless-extras
 	# "restore" policy-rc.d
 	sudo rm -f /usr/sbin/policy-rc.d
-	# prepare & start the rootless docker daemon
-	dockerd-rootless-setuptool.sh install --force
-	export XDG_RUNTIME_DIR=/home/travis/.docker/run
-	dockerd-rootless.sh &> /dev/null &
-	DOCKERD_ROOTLESS_PID=$!
-	echo "${DOCKERD_ROOTLESS_PID}" > ${HOME}/dockerd-rootless.pid
-	docker context use rootless
-	DOCKER_WAIT_COUNT=0
-	while ! docker ps -q &>/dev/null; do
-		DOCKER_WAIT_COUNT=$(( ${DOCKER_WAIT_COUNT} + 1 ))
-		if [ ${DOCKER_WAIT_COUNT} -ge 12 ]; then
-			echo "Docker is still not running."
-			kill -15 $(cat ${HOME}/dockerd-rootless.pid)
-			exit 1
-		fi
-		sleep 5
-	done
+	sudo sed -i 's;fd://;unix://;g' /lib/systemd/system/docker.service
+	sudo systemctl daemon-reload
+	sudo systemctl start docker
 fi
+if [ "${MANYLINUX_BUILD_FRONTEND:-}" == "docker" ]; then
+	exit 0
+fi
+
+# update buildx
 mkdir -vp ~/.docker/cli-plugins/
 curl -sSL "https://github.com/docker/buildx/releases/download/v0.7.1/buildx-v0.7.1.linux-${BUILDX_MACHINE}" > ~/.docker/cli-plugins/docker-buildx
 chmod a+x ~/.docker/cli-plugins/docker-buildx
