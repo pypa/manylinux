@@ -18,8 +18,10 @@ check_var ${AUTOCONF_DOWNLOAD_URL}
 
 AUTOCONF_VERSION=${AUTOCONF_ROOT#*-}
 if autoconf --version > /dev/null 2>&1; then
-	INSTALLED=$(autoconf --version | head -1 | awk '{ print $NF }')
-	SMALLEST=$(echo -e "${INSTALLED}\n${AUTOCONF_VERSION}" | sort -t. -k 1,1n -k 2,2n -k 3,3n -k 4,4n | head -1)
+	# || test $? -eq 141 is there to ignore SIGPIPE with set -o pipefail
+	# c.f. https://stackoverflow.com/questions/22464786/ignoring-bash-pipefail-for-error-code-141#comment60412687_33026977
+	INSTALLED=$((autoconf --version | head -1 || test $? -eq 141) | awk '{ print $NF }')
+	SMALLEST=$(echo -e "${INSTALLED}\n${AUTOCONF_VERSION}" | sort -t. -k 1,1n -k 2,2n -k 3,3n -k 4,4n | head -1 || test $? -eq 141)
 	if [ "${SMALLEST}" == "${AUTOCONF_VERSION}" ]; then
 		echo "skipping installation of autoconf ${AUTOCONF_VERSION}, system provides autoconf ${INSTALLED}"
 		exit 0
