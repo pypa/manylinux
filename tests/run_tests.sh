@@ -14,6 +14,8 @@ elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
 	apt-get update -qq
 elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
 	PACKAGE_MANAGER=apk
+elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+	PACKAGE_MANAGER=dnf
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
 	exit 1
@@ -65,6 +67,8 @@ elif [ "${PACKAGE_MANAGER}" == "apt" ]; then
 	apt-get install -qq -y --no-install-recommends openssh-client
 elif [ "${PACKAGE_MANAGER}" == "apk" ]; then
 	apk add --no-cache openssh-client
+elif [ "${PACKAGE_MANAGER}" == "dnf" ]; then
+	dnf -y install --allowerasing openssh-clients
 else
 	echo "Unsupported package manager: '${PACKAGE_MANAGER}'"
 	exit 1

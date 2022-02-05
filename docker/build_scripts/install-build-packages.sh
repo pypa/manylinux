@@ -8,8 +8,12 @@ set -exuo pipefail
 # if a devel package is added to COMPILE_DEPS,
 # make sure the corresponding library is added to RUNTIME_DEPS if applicable
 
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
-	PACKAGE_MANAGER=yum
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+	if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+		PACKAGE_MANAGER=dnf
+	else
+		PACKAGE_MANAGER=yum
+	fi
 	COMPILE_DEPS="bzip2-devel ncurses-devel readline-devel tk-devel gdbm-devel libpcap-devel xz-devel openssl openssl-devel keyutils-libs-devel krb5-devel libcom_err-devel libidn-devel curl-devel uuid-devel libffi-devel kernel-headers"
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
 		COMPILE_DEPS="${COMPILE_DEPS} db4-devel"
@@ -40,6 +44,10 @@ elif [ "${PACKAGE_MANAGER}" == "apt" ]; then
 	rm -rf /var/lib/apt/lists/*
 elif [ "${PACKAGE_MANAGER}" == "apk" ]; then
 	apk add --no-cache ${COMPILE_DEPS}
+elif [ "${PACKAGE_MANAGER}" == "dnf" ]; then
+ 	dnf -y install --allowerasing ${COMPILE_DEPS}
+ 	dnf clean all
+ 	rm -rf /var/cache/yum
 else
 	echo "Not implemented"
 	exit 1

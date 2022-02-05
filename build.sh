@@ -62,6 +62,11 @@ elif [ "${POLICY}" == "manylinux_2_24" ]; then
 	DEVTOOLSET_ROOTPATH=
 	PREPEND_PATH=
 	LD_LIBRARY_PATH_ARG=
+elif [ "${POLICY}" == "manylinux_2_28" ]; then
+	BASEIMAGE="${MULTIARCH_PREFIX}almalinux:8"
+	DEVTOOLSET_ROOTPATH="/opt/rh/gcc-toolset-11/root"
+	PREPEND_PATH="${DEVTOOLSET_ROOTPATH}/usr/bin:"
+	LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"
 elif [ "${POLICY}" == "musllinux_1_1" ]; then
 	BASEIMAGE="${MULTIARCH_PREFIX}alpine:3.12"
 	DEVTOOLSET_ROOTPATH=

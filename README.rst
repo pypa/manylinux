@@ -43,7 +43,11 @@ on June 30th, 2024.
 
 PEP 600 has been designed to be "future-proof" and does not enforce specific symbols and a specific distro to build.
 It only states that a wheel tagged ``manylinux_x_y`` shall work on any distro based on ``glibc>=x.y``.
-The manylinux project supports ``manylinux_2_24`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
+The manylinux project supports:
+
+- ``manylinux_2_24`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
+
+- ``manylinux_2_28`` images for ``x86_64``, ``aarch64`` and ``ppc64le``.
 
 
 Wheel packages compliant with those tags can be uploaded to
@@ -55,8 +59,9 @@ pip:
 | ``manylinux`` tag | Client-side pip  | CPython (sources) version  | Distribution default pip compatibility    |
 |                   | version required | embedding a compatible pip |                                           |
 +===================+==================+============================+===========================================+
-| ``manylinux_x_y`` | pip >= 20.3      | 3.8.10+, 3.9.5+, 3.10.0+   | ALT Linux 10+, Debian 11+, Fedora 34+,    |
-|                   |                  |                            | Mageia 8+, Photon OS 3.0 with updates,    |
+| ``manylinux_x_y`` | pip >= 20.3      | 3.8.10+, 3.9.5+, 3.10.0+   | ALT Linux 10+, RHEL 9+, Debian 11+,       |
+|                   |                  |                            | Fedora 34+, Mageia 8+,                    |
+|                   |                  |                            | Photon OS 3.0 with updates,               |
 |                   |                  |                            | Ubuntu 21.04+                             |
 +-------------------+------------------+----------------------------+-------------------------------------------+
 | ``manylinux2014`` | pip >= 19.3      | 3.7.8+, 3.8.4+, 3.9.0+     | CentOS 7 rh-python38, CentOS 8 python38,  |
@@ -97,6 +102,13 @@ etc., we provide `Docker <https://docker.com/>`_ images where we've
 done the work for you. The images are uploaded to `quay.io`_ and are tagged
 for repeatable builds.
 
+
+manylinux_2_28 (AlmaLinux 8 based)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- x86_64 image: ``quay.io/pypa/manylinux_2_24_x86_64``
+- aarch64 image: ``quay.io/pypa/manylinux_2_24_aarch64``
+- ppc64le image: ``quay.io/pypa/manylinux_2_24_ppc64le``
 
 manylinux_2_24 (Debian 9 based)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -147,7 +159,7 @@ Image content
 
 All images currently contain:
 
-- CPython 3.6, 3.7, 3.8, 3.9, 3.10, and PyPy 3.7, 3.8, 3.9 installed in
+- CPython 3.6, 3.7, 3.8, 3.9, 3.10, 3.11, and PyPy 3.7, 3.8, 3.9 installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
   e.g. ``/opt/python/cp37-cp37m`` contains a CPython 3.7 build, and
