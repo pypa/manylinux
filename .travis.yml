@@ -41,6 +41,12 @@ jobs:
     - arch: arm64-graviton2
       virt: vm
       group: edge
+      env: POLICY="manylinux_2_28" PLATFORM="aarch64"
+    - arch: ppc64le
+      env: POLICY="manylinux_2_28" PLATFORM="ppc64le"
+    - arch: arm64-graviton2
+      virt: vm
+      group: edge
       env: POLICY="musllinux_1_1" PLATFORM="aarch64"
     - arch: s390x
       env: POLICY="musllinux_1_1" PLATFORM="s390x"

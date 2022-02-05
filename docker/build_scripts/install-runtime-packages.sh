@@ -32,7 +32,7 @@ source $MY_DIR/build_utils.sh
 
 
 # MANYLINUX_DEPS: Install development packages (except for libgcc which is provided by gcc install)
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
 	MANYLINUX_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel mesa-libGL-devel libICE-devel libSM-devel zlib-devel expat-devel"
 elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
 	MANYLINUX_DEPS="libc6-dev libstdc++-6-dev libglib2.0-dev libx11-dev libxext-dev libxrender-dev libgl1-mesa-dev libice-dev libsm-dev libz-dev libexpat1-dev"
@@ -44,7 +44,7 @@ else
 fi
 
 # RUNTIME_DEPS: Runtime dependencies. c.f. install-build-packages.sh
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
 	RUNTIME_DEPS="zlib bzip2 expat ncurses readline tk gdbm libpcap xz openssl keyutils-libs libkadm5 libcom_err libidn libcurl uuid libffi"
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
 		RUNTIME_DEPS="${RUNTIME_DEPS} db4"
@@ -120,6 +120,22 @@ elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
 	apt-get upgrade -qq -y
 	apt-get install -qq -y --no-install-recommends ca-certificates gpg curl locales
 	TOOLCHAIN_DEPS="binutils gcc g++ gfortran"
+elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+	PACKAGE_MANAGER=dnf
+	BASETOOLS="${BASETOOLS} curl glibc-locale-source glibc-langpack-en hardlink hostname libcurl libxcrypt which"
+	# See https://unix.stackexchange.com/questions/41784/can-yum-express-a-preference-for-x86-64-over-i386-packages
+	echo "multilib_policy=best" >> /etc/yum.conf
+	# Error out if requested packages do not exist
+	echo "skip_missing_names_on_install=False" >> /etc/yum.conf
+	# Make sure that locale will not be removed
+	sed -i '/^override_install_langs=/d' /etc/yum.conf
+	dnf -y upgrade
+	dnf -y install dnf-plugins-core
+	dnf config-manager --set-enabled powertools # for yasm
+	TOOLCHAIN_DEPS="gcc-toolset-11-binutils gcc-toolset-11-gcc gcc-toolset-11-gcc-c++ gcc-toolset-11-gcc-gfortran"
+	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
+		TOOLCHAIN_DEPS="${TOOLCHAIN_DEPS} yasm"
+	fi
 elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
 	TOOLCHAIN_DEPS="binutils gcc g++ gfortran"
 	BASETOOLS="${BASETOOLS} curl util-linux"
@@ -136,6 +152,8 @@ elif [ "${PACKAGE_MANAGER}" == "apt" ]; then
 	apt-get install -qq -y --no-install-recommends ${BASETOOLS} ${TOOLCHAIN_DEPS} ${MANYLINUX_DEPS} ${RUNTIME_DEPS}
 elif [ "${PACKAGE_MANAGER}" == "apk" ]; then
 	apk add --no-cache ${BASETOOLS} ${TOOLCHAIN_DEPS} ${MANYLINUX_DEPS} ${RUNTIME_DEPS}
+elif [ "${PACKAGE_MANAGER}" == "dnf" ]; then
+	dnf -y install --allowerasing ${BASETOOLS} ${TOOLCHAIN_DEPS} ${MANYLINUX_DEPS} ${RUNTIME_DEPS}
 else
 	echo "Not implemented"
 	exit 1

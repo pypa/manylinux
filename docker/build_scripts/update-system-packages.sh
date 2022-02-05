@@ -33,6 +33,10 @@ elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
 		find /etc/ssl/certs -name 'DST_Root_CA_X3.pem' -delete
 		update-ca-certificates
 	fi
+elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+	dnf -y upgrade
+	dnf clean all
+	rm -rf /var/cache/yum
 elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
 	apk upgrade --no-cache
 else
@@ -53,7 +57,7 @@ if [ "${BASE_POLICY}" == "manylinux" ]; then
 		if localedef --list-archive | grep -sq -v -i ^en_US.utf8; then
 			localedef --list-archive | grep -v -i ^en_US.utf8 | xargs localedef --delete-from-archive
 		fi
-		if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
+		if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
 			mv -f ${LOCALE_ARCHIVE} ${LOCALE_ARCHIVE}.tmpl
 			build-locale-archive --install-langs="en_US.utf8"
 		elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
@@ -99,5 +103,10 @@ fi
 if [ -f /usr/local/lib/libcrypt.so.1 ]; then
 	# Remove libcrypt to only use installed libxcrypt instead
 	find /lib* /usr/lib* \( -name 'libcrypt.a' -o -name 'libcrypt.so' -o -name 'libcrypt.so.*' -o -name 'libcrypt-2.*.so' \) -delete
+fi
+
+if [ "${BASE_POLICY}" == "musllinux" ]; then
+	ldconfig /
+elif [ "${BASE_POLICY}" == "manylinux" ]; then
 	ldconfig
 fi
