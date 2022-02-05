@@ -13,15 +13,11 @@ elif [ ${BUILDX_MACHINE} == "aarch64" ]; then
 	BUILDX_MACHINE=arm64
 fi
 
-if [ "${MANYLINUX_BUILD_FRONTEND:-}" == "docker" ]; then
-	exit 0
-fi
-
 if [ "${MANYLINUX_BUILD_FRONTEND:-}" == "buildkit" ]; then
 	sudo apt-get update
 	sudo apt-get remove -y fuse ntfs-3g
 	sudo apt-get install -y --no-install-recommends runc containerd uidmap slirp4netns fuse-overlayfs
-	curl -fsSL "https://github.com/moby/buildkit/releases/download/v0.9.0/buildkit-v0.9.0.linux-${BUILDX_MACHINE}.tar.gz" | sudo tar -C /usr/local -xz
+	curl -fsSL "https://github.com/moby/buildkit/releases/download/v0.9.3/buildkit-v0.9.3.linux-${BUILDX_MACHINE}.tar.gz" | sudo tar -C /usr/local -xz
 	cat <<EOF > /tmp/start-buildkitd.sh
 buildkitd &> /dev/null &
 BUILDKITD_PID=\$!
@@ -52,50 +48,32 @@ fi
 
 # default to docker-buildx frontend
 if [ ${BUILDX_MACHINE} == "ppc64le" ]; then
-	# We need to run a rootless docker daemon due to travis-ci LXD configuration
-	# Update docker, c.f. https://developer.ibm.com/components/ibm-power/tutorials/install-docker-on-linux-on-power/
+	# We need to update docker to get buildx support, c.f. https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
 	sudo systemctl stop docker
 	sudo apt-get update
-	sudo apt-get remove -y docker docker.io containerd runc
-	sudo apt-get install -y --no-install-recommends containerd uidmap slirp4netns fuse-overlayfs
-	# issues with SSL certificate expiring, let's go insecure & check sha256
-	curl --insecure -fsSLO https://oplab9.parqtec.unicamp.br/pub/ppc64el/docker/version-20.10.7/ubuntu-focal/docker-ce-cli_20.10.7~3-0~ubuntu-focal_ppc64el.deb
-	curl --insecure -fsSLO https://oplab9.parqtec.unicamp.br/pub/ppc64el/docker/version-20.10.7/ubuntu-focal/docker-ce_20.10.7~3-0~ubuntu-focal_ppc64el.deb
-	curl --insecure -fsSLO https://oplab9.parqtec.unicamp.br/pub/ppc64el/docker/version-20.10.7/ubuntu-focal/docker-ce-rootless-extras_20.10.7~3-0~ubuntu-focal_ppc64el.deb
-	cat <<EOF > docker-ce-ppc64le.sha256
-c42f4a9c7a5a99ef3c68de63165af9779350dff4cf3d000a399cac4915a2f4d7  docker-ce-cli_20.10.7~3-0~ubuntu-focal_ppc64el.deb
-46b3c3f5886ccbc94aced0e773a7fba38847b1a9f3dcb36bb85e1d05776f66af  docker-ce-rootless-extras_20.10.7~3-0~ubuntu-focal_ppc64el.deb
-c65ffa273ade99ee62690e9f1289cec479849a164a34e5a9e5ce459fad48b485  docker-ce_20.10.7~3-0~ubuntu-focal_ppc64el.deb
-EOF
-	sha256sum -c docker-ce-ppc64le.sha256
-	rm -f docker-ce-ppc64le.sha256
+	sudo apt-get purge -y docker docker.io containerd runc
+	sudo apt-get install -y --no-install-recommends ca-certificates curl gnupg lsb-release
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+	echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+	sudo apt-get update
 	# prevent the docker service to start upon installation
 	echo -e '#!/bin/sh\nexit 101' | sudo tee /usr/sbin/policy-rc.d
 	sudo chmod +x /usr/sbin/policy-rc.d
 	# install docker
-	sudo dpkg -i docker-ce-cli_20.10.7~3-0~ubuntu-focal_ppc64el.deb docker-ce-rootless-extras_20.10.7~3-0~ubuntu-focal_ppc64el.deb docker-ce_20.10.7~3-0~ubuntu-focal_ppc64el.deb
+	sudo apt-get install docker-ce docker-ce-cli docker-ce-rootless-extras
 	# "restore" policy-rc.d
 	sudo rm -f /usr/sbin/policy-rc.d
-	# prepare & start the rootless docker daemon
-	dockerd-rootless-setuptool.sh install --force
-	export XDG_RUNTIME_DIR=/home/travis/.docker/run
-	dockerd-rootless.sh &> /dev/null &
-	DOCKERD_ROOTLESS_PID=$!
-	echo "${DOCKERD_ROOTLESS_PID}" > ${HOME}/dockerd-rootless.pid
-	docker context use rootless
-	DOCKER_WAIT_COUNT=0
-	while ! docker ps -q &>/dev/null; do
-		DOCKER_WAIT_COUNT=$(( ${DOCKER_WAIT_COUNT} + 1 ))
-		if [ ${DOCKER_WAIT_COUNT} -ge 12 ]; then
-			echo "Docker is still not running."
-			kill -15 $(cat ${HOME}/dockerd-rootless.pid)
-			exit 1
-		fi
-		sleep 5
-	done
+	sudo sed -i 's;fd://;unix://;g' /lib/systemd/system/docker.service
+	sudo systemctl daemon-reload
+	sudo systemctl start docker
 fi
+if [ "${MANYLINUX_BUILD_FRONTEND:-}" == "docker" ]; then
+	exit 0
+fi
+
+# update buildx
 mkdir -vp ~/.docker/cli-plugins/
-curl -sSL "https://github.com/docker/buildx/releases/download/v0.6.3/buildx-v0.6.3.linux-${BUILDX_MACHINE}" > ~/.docker/cli-plugins/docker-buildx
+curl -sSL "https://github.com/docker/buildx/releases/download/v0.7.1/buildx-v0.7.1.linux-${BUILDX_MACHINE}" > ~/.docker/cli-plugins/docker-buildx
 chmod a+x ~/.docker/cli-plugins/docker-buildx
 docker buildx version
 

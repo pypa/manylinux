@@ -83,9 +83,13 @@ BUILD_ARGS_COMMON="
 	-f docker/Dockerfile docker/
 "
 
-# Force plain output on CI
 if [ "${CI:-}" == "true" ]; then
+	# Force plain output on CI
 	BUILD_ARGS_COMMON="--progress plain ${BUILD_ARGS_COMMON}"
+	# Workaround issue on ppc64le
+	if [ ${PLATFORM} == "ppc64le" ] && [ "${MANYLINUX_BUILD_FRONTEND}" == "docker" ]; then
+		BUILD_ARGS_COMMON="--network host ${BUILD_ARGS_COMMON}"
+	fi
 fi
 
 if [ "${MANYLINUX_BUILD_FRONTEND}" == "docker" ]; then
