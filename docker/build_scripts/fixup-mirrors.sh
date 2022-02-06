@@ -4,7 +4,7 @@
 # Stop at any error, show all commands
 set -exuo pipefail
 
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	# Centos 6 is EOL and is no longer available from the usual mirrors, so switch
 	# to https://vault.centos.org
 	sed -i 's/enabled=1/enabled=0/g' /etc/yum/pluginconf.d/fastestmirror.conf
