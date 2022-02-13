@@ -32,9 +32,9 @@ tomli==1.2.3 \
     # via
     #   build
     #   pep517
-typing-extensions==4.0.1 \
-    --hash=sha256:4ca091dea149f945ec56afb48dae714f21e8692ef22a395223bcd328961b6a0e \
-    --hash=sha256:7f001e5ac290a0c0401508864c7ec868be4e701886d5b573a9528ed3973d9d3b
+typing-extensions==4.1.0 \
+    --hash=sha256:ba97c5143e5bb067b57793c726dd857b1671d4b02ced273ca0538e71ff009095 \
+    --hash=sha256:c13180fbaa7cd97065a4915ceba012bdb31dc34743e63ddee16360161d358414
     # via importlib-metadata
 wheel==0.37.1 \
     --hash=sha256:4bdcd7d840138086126cd09254dc6195fb4fc6f01c050a1d7236f2630db1d22a \
