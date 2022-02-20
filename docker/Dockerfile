@@ -139,8 +139,8 @@ COPY build_scripts/install-pypy.sh \
      build_scripts/pypy.sha256 \
      build_scripts/finalize-python.sh \
      /build_scripts/
-RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.7 7.3.7
-RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.8 7.3.7
+RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.7 7.3.8
+RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.8 7.3.8
 COPY --from=build_cpython36 /opt/_internal /opt/_internal/
 COPY --from=build_cpython37 /opt/_internal /opt/_internal/
 COPY --from=build_cpython38 /opt/_internal /opt/_internal/
