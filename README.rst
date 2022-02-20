@@ -147,7 +147,7 @@ Image content
 
 All images currently contain:
 
-- CPython 3.6, 3.7, 3.8, 3.9, 3.10, and PyPy 3.7, 3.8 installed in
+- CPython 3.6, 3.7, 3.8, 3.9, 3.10, and PyPy 3.7, 3.8, 3.9 installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
   e.g. ``/opt/python/cp37-cp37m`` contains a CPython 3.7 build, and
