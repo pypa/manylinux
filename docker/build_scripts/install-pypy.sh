@@ -31,7 +31,7 @@ cd /tmp
 case ${AUDITWHEEL_ARCH} in
 	x86_64) PYPY_ARCH=linux64;;
 	i686) PYPY_ARCH=linux32;;
-	aarch64) PYPY_ARCH=aarch64;;
+	aarch64) PYPY_ARCH=aarch64-portable;;
 	*) echo "No PyPy for ${AUDITWHEEL_ARCH}"; exit 0;;
 esac
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
@@ -44,6 +44,7 @@ fi
 
 TARBALL=pypy${PYTHON_VERSION}-v${PYPY_VERSION}-${PYPY_ARCH}.tar.bz2
 TMPDIR=/tmp/${TARBALL/.tar.bz2//}
+TMPDIR=${TMPDIR/-portable//}
 PREFIX="/opt/_internal"
 
 mkdir -p ${PREFIX}
