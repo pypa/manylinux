@@ -31,9 +31,10 @@ cd /tmp
 case ${AUDITWHEEL_ARCH} in
 	x86_64) PYPY_ARCH=linux64;;
 	i686) PYPY_ARCH=linux32;;
-	aarch64) PYPY_ARCH=aarch64-portable;;
+	aarch64) PYPY_ARCH=aarch64;;
 	*) echo "No PyPy for ${AUDITWHEEL_ARCH}"; exit 0;;
 esac
+
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
 	PYPY_VERSION=7.3.7  # versions after this one do not support manylinux2010
 	if [ "${PYTHON_VERSION}" != "3.7" ] && [ "${PYTHON_VERSION}" != "3.8" ]; then
@@ -42,9 +43,15 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
 	fi
 fi
 
-TARBALL=pypy${PYTHON_VERSION}-v${PYPY_VERSION}-${PYPY_ARCH}.tar.bz2
-TMPDIR=/tmp/${TARBALL/.tar.bz2//}
-TMPDIR=${TMPDIR/-portable//}
+if [ "${PYPY_ARCH}-${PYPY_VERSION}" == "aarch64-7.3.8" ]; then
+	TARBALL_FLAVOUR="-portable"
+else
+	TARBALL_FLAVOUR=""
+fi
+
+EXPAND_NAME=pypy${PYTHON_VERSION}-v${PYPY_VERSION}-${PYPY_ARCH}
+TMPDIR=/tmp/${EXPAND_NAME}
+TARBALL=${EXPAND_NAME}${TARBALL_FLAVOUR}.tar.bz2
 PREFIX="/opt/_internal"
 
 mkdir -p ${PREFIX}
