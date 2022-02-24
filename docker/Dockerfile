@@ -139,7 +139,8 @@ COPY build_scripts/install-pypy.sh \
      build_scripts/pypy.sha256 \
      build_scripts/finalize-python.sh \
      /build_scripts/
-RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.7 7.3.8
+# PyPy 3.7 v7.3.8 is broken, see https://foss.heptapod.net/pypy/pypy/-/issues/3688
+RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.7 7.3.7
 RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.8 7.3.8
 RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.9 7.3.8
 COPY --from=build_cpython36 /opt/_internal /opt/_internal/
