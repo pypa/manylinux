@@ -8,9 +8,9 @@ build==0.7.0 \
     --hash=sha256:1aaadcd69338252ade4f7ec1265e1a19184bf916d84c9b7df095f423948cb89f \
     --hash=sha256:21b7ebbd1b22499c4dac536abc7606696ea4d909fd755e00f09f3c0f2c05e3c8
     # via -r requirements.in
-importlib-metadata==4.11.2 \
-    --hash=sha256:b36ffa925fe3139b2f6ff11d6925ffd4fa7bc47870165e3ac260ac7b4f91e6ac \
-    --hash=sha256:d16e8c1deb60de41b8e8ed21c1a7b947b0bc62fab7e1d470bcdf331cea2e6735
+importlib-metadata==4.11.3 \
+    --hash=sha256:1208431ca90a8cca1a6b8af391bb53c1a2db74e5d1cef6ddced95d4b2062edc6 \
+    --hash=sha256:ea4c597ebf37142f827b8f39299579e31685c31d3a438b59f469406afd0f2539
     # via
     #   build
     #   pep517
@@ -48,9 +48,9 @@ zipp==3.7.0 \
     #   pep517
 
 # The following packages are considered to be unsafe in a requirements file:
-pip==22.0.3 \
-    --hash=sha256:c146f331f0805c77017c6bb9740cec4a49a0d4582d0c3cc8244b057f83eca359 \
-    --hash=sha256:f29d589df8c8ab99c060e68ad294c4a9ed896624f6368c5349d70aa581b333d0
+pip==22.0.4 \
+    --hash=sha256:b3a9de2c6ef801e9247d1527a4b16f92f2cc141cd1489f3fffaf6a9e96729764 \
+    --hash=sha256:c6aca0f2f081363f689f041d90dab2a07a9a07fb840284db2218117a52da800b
     # via -r requirements.in
 setuptools==60.9.3 \
     --hash=sha256:2347b2b432c891a863acadca2da9ac101eae6169b1d3dfee2ec605ecd50dbfe5 \
