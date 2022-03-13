@@ -23,6 +23,11 @@ function pyver_dist_dir {
 	echo $1 | awk -F "." '{printf "%d.%d.%d", $1, $2, $3}'
 }
 
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] && [ "${CPYTHON_VERSION}" == "3.11.0b1" ]; then
+	echo "skip CPython 3.11.0b1 on manylinux2010"
+	mkdir /opt/_internal
+	exit 0
+fi
 
 CPYTHON_DIST_DIR=$(pyver_dist_dir ${CPYTHON_VERSION})
 fetch_source Python-${CPYTHON_VERSION}.tgz ${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}

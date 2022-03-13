@@ -10,7 +10,10 @@ jobs:
     name: Update dependencies
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v3
+      with:
+        python-version: "3.11-dev"
     - uses: excitedleigh/setup-nox@4c62aee44396909396d10137c747b2633deeee76
     - name: "Setup bot user"
       run: |
@@ -31,7 +34,7 @@ jobs:
       run: nox --force-color --error-on-missing-interpreters -s update_python_dependencies update_python_tools
     - name: Create Pull Request
       if: github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
-      uses: peter-evans/create-pull-request@v3
+      uses: peter-evans/create-pull-request@v4
       with:
         commit-message: Update python dependencies
         title: '[Bot] Update dependencies'
