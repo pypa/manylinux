@@ -121,7 +121,7 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.13
 
 FROM build_cpython AS build_cpython38
 COPY build_scripts/ambv-pubkey.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.8.12
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.8.13
 
 
 FROM build_cpython AS build_cpython39
