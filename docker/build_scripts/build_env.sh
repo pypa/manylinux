@@ -2,7 +2,7 @@
 
 PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 # of the form <maj>.<min>.<rev> or <maj>.<min>.<rev>rc<n>
-CPYTHON_VERSIONS="2.7.18 3.5.10 3.6.15 3.7.12 3.8.12 3.9.10"
+CPYTHON_VERSIONS="2.7.18 3.5.10 3.6.15 3.7.13 3.8.13 3.9.10"
 
 # perl is needed to build openssl and libxcrypt
 PERL_ROOT=perl-5.34.0
@@ -11,8 +11,8 @@ PERL_DOWNLOAD_URL=https://www.cpan.org/src/5.0
 
 # openssl version to build, with expected sha256 hash of .tar.gz
 # archive.
-OPENSSL_ROOT=openssl-1.1.1m
-OPENSSL_HASH=f89199be8b23ca45fc7cb9f1d8d3ee67312318286ad030f5316aca6462db6c96
+OPENSSL_ROOT=openssl-1.1.1n
+OPENSSL_HASH=40dceb51a4f6a5275bde0e6bf20ef4b91bfc32ed57c0552e2e8e15463372b17a
 OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source
 
 CURL_ROOT=curl-7.82.0
