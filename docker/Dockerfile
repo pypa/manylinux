@@ -95,8 +95,8 @@ RUN export SWIG_ROOT=swig-4.0.2 && \
 
 FROM build_base AS build_cpython
 COPY build_scripts/build-sqlite3.sh /build_scripts/
-RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3380100 && \
-    export SQLITE_AUTOCONF_HASH=8e3a8ceb9794d968399590d2ddf9d5c044a97dd83d38b9613364a245ec8a2fc4 && \
+RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3380200 && \
+    export SQLITE_AUTOCONF_HASH=e7974aa1430bad690a5e9f79a6ee5c8492ada8269dc675875ad0fb747d7cada4 && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2022 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
