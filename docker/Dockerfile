@@ -55,8 +55,8 @@ RUN export AUTOMAKE_ROOT=automake-1.16.5 && \
     manylinux-entrypoint /build_scripts/install-automake.sh
 
 COPY build_scripts/install-libtool.sh /build_scripts/
-RUN export LIBTOOL_ROOT=libtool-2.4.6 && \
-    export LIBTOOL_HASH=e3bd4d5d3d025a36c21dd6af7ea818a2afcd4dfc1ea5a17b39d7854bcd0c06e3 && \
+RUN export LIBTOOL_ROOT=libtool-2.4.7 && \
+    export LIBTOOL_HASH=04e96c2404ea70c590c546eba4202a4e12722c640016c12b9b2f1ce3d481e9a8 && \
     export LIBTOOL_DOWNLOAD_URL=http://ftp.gnu.org/gnu/libtool && \
     manylinux-entrypoint /build_scripts/install-libtool.sh
 
