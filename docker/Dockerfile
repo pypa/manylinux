@@ -55,8 +55,8 @@ RUN export AUTOMAKE_ROOT=automake-1.16.5 && \
     manylinux-entrypoint /build_scripts/install-automake.sh
 
 COPY build_scripts/install-libtool.sh /build_scripts/
-RUN export LIBTOOL_ROOT=libtool-2.4.6 && \
-    export LIBTOOL_HASH=e3bd4d5d3d025a36c21dd6af7ea818a2afcd4dfc1ea5a17b39d7854bcd0c06e3 && \
+RUN export LIBTOOL_ROOT=libtool-2.4.7 && \
+    export LIBTOOL_HASH=04e96c2404ea70c590c546eba4202a4e12722c640016c12b9b2f1ce3d481e9a8 && \
     export LIBTOOL_DOWNLOAD_URL=http://ftp.gnu.org/gnu/libtool && \
     manylinux-entrypoint /build_scripts/install-libtool.sh
 
@@ -95,8 +95,8 @@ RUN export SWIG_ROOT=swig-4.0.2 && \
 
 FROM build_base AS build_cpython
 COPY build_scripts/build-sqlite3.sh /build_scripts/
-RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3380100 && \
-    export SQLITE_AUTOCONF_HASH=8e3a8ceb9794d968399590d2ddf9d5c044a97dd83d38b9613364a245ec8a2fc4 && \
+RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3380200 && \
+    export SQLITE_AUTOCONF_HASH=e7974aa1430bad690a5e9f79a6ee5c8492ada8269dc675875ad0fb747d7cada4 && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2022 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
@@ -126,12 +126,12 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.8.13
 
 FROM build_cpython AS build_cpython39
 COPY build_scripts/ambv-pubkey.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.9.10
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.9.12
 
 
 FROM build_cpython AS build_cpython310
 COPY build_scripts/cpython-pubkey-310-311.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.10.2
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.10.4
 
 
 FROM build_cpython AS all_python
