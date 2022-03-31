@@ -43,15 +43,9 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
 	fi
 fi
 
-if [ "${PYPY_ARCH}-${PYPY_VERSION}" == "aarch64-7.3.8" ]; then
-	TARBALL_FLAVOUR="-portable"
-else
-	TARBALL_FLAVOUR=""
-fi
-
 EXPAND_NAME=pypy${PYTHON_VERSION}-v${PYPY_VERSION}-${PYPY_ARCH}
 TMPDIR=/tmp/${EXPAND_NAME}
-TARBALL=${EXPAND_NAME}${TARBALL_FLAVOUR}.tar.bz2
+TARBALL=${EXPAND_NAME}.tar.bz2
 PREFIX="/opt/_internal"
 
 mkdir -p ${PREFIX}
