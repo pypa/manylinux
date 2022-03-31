@@ -2,7 +2,7 @@
 
 PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 # of the form <maj>.<min>.<rev> or <maj>.<min>.<rev>rc<n>
-CPYTHON_VERSIONS="2.7.18 3.5.10 3.6.15 3.7.13 3.8.13 3.9.10"
+CPYTHON_VERSIONS="2.7.18 3.5.10 3.6.15 3.7.13 3.8.13 3.9.12"
 
 # perl is needed to build openssl and libxcrypt
 PERL_ROOT=perl-5.34.0
@@ -25,12 +25,12 @@ AUTOCONF_DOWNLOAD_URL=http://ftp.gnu.org/gnu/autoconf
 AUTOMAKE_ROOT=automake-1.16.5
 AUTOMAKE_HASH=07bd24ad08a64bc17250ce09ec56e921d6343903943e99ccf63bbf0705e34605
 AUTOMAKE_DOWNLOAD_URL=http://ftp.gnu.org/gnu/automake
-LIBTOOL_ROOT=libtool-2.4.6
-LIBTOOL_HASH=e3bd4d5d3d025a36c21dd6af7ea818a2afcd4dfc1ea5a17b39d7854bcd0c06e3
+LIBTOOL_ROOT=libtool-2.4.7
+LIBTOOL_HASH=04e96c2404ea70c590c546eba4202a4e12722c640016c12b9b2f1ce3d481e9a8
 LIBTOOL_DOWNLOAD_URL=http://ftp.gnu.org/gnu/libtool
 
-SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3380100
-SQLITE_AUTOCONF_HASH=8e3a8ceb9794d968399590d2ddf9d5c044a97dd83d38b9613364a245ec8a2fc4
+SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3380200
+SQLITE_AUTOCONF_HASH=e7974aa1430bad690a5e9f79a6ee5c8492ada8269dc675875ad0fb747d7cada4
 SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2022
 
 LIBXCRYPT_VERSION=4.4.28
