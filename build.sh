@@ -123,3 +123,5 @@ if [ "${MANYLINUX_BUILD_FRONTEND}" != "docker" ]; then
 	fi
 	mv $(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM} $(pwd)/.buildx-cache-${POLICY}_${PLATFORM}
 fi
+docker build --rm -t "ryanhuanli/manylinux2010" -f "docker/Dockerfile-x86_64" docker/
+docker build --rm -t "ryanhuanli/manylinux2010-rust-python" -f "Dockerfile" .
