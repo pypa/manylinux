@@ -60,7 +60,8 @@ def _update_with_root(tool, dry_run):
         "curl": "curl/curl",
     }
     major = {
-        "openssl": "1.1"
+        "openssl": "1.1",
+        "git": "2.35",
     }
     build_env = Path(__file__).parent / "docker" / "build_scripts" / "build_env.sh"
     lines = build_env.read_text().splitlines()
