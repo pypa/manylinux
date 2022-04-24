@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: "3.5"
     - uses: excitedleigh/setup-nox@4c62aee44396909396d10137c747b2633deeee76
     - name: "Setup bot user"
       run: |
