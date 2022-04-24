@@ -11,10 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-      with:
-        python-version: "3.10-dev"
-    - uses: excitedleigh/setup-nox@v2.0.0
+    - uses: excitedleigh/setup-nox@4c62aee44396909396d10137c747b2633deeee76
     - name: "Setup bot user"
       run: |
         git config --global user.name "manylinux-bot[bot]"
@@ -27,11 +24,11 @@ jobs:
         app_id: ${{ secrets.MANYLINUX_BOT_APP_ID }}
         private_key: ${{ secrets.MANYLINUX_BOT_APP_PRIVATE_KEY }}
     - name: "Run update native dependencies"
-      run: nox --force-color -s update_native_dependencies
+      run: nox --force-color --error-on-missing-interpreters -s update_native_dependencies
       env:
         GITHUB_API_TOKEN: ${{ steps.generate-token.outputs.token }}
     - name: "Run update python dependencies"
-      run: nox --force-color -s update_python_dependencies update_python_tools
+      run: nox --force-color --error-on-missing-interpreters -s update_python_dependencies update_python_tools
     - name: Create Pull Request
       if: github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
       uses: peter-evans/create-pull-request@v3
