@@ -76,8 +76,8 @@ RUN manylinux-entrypoint /build_scripts/install-build-packages.sh
 
 FROM build_base AS build_git
 COPY build_scripts/build-git.sh /build_scripts/
-RUN export GIT_ROOT=git-2.36.0 && \
-    export GIT_HASH=9785f8c99daea037b8443d2f7397ac6aafbf8d5ff21fbfe2e5c0d443d126e211 && \
+RUN export GIT_ROOT=git-2.36.1 && \
+    export GIT_HASH=37d936fd17c81aa9ddd3dba4e56e88a45fa534ad0ba946454e8ce818760c6a2c && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     manylinux-entrypoint /build_scripts/build-git.sh
 
@@ -95,14 +95,14 @@ RUN export SWIG_ROOT=swig-4.0.2 && \
 
 FROM build_base AS build_cpython
 COPY build_scripts/build-sqlite3.sh /build_scripts/
-RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3380300 && \
-    export SQLITE_AUTOCONF_HASH=61f2dd93a2e38c33468b7125967c3218bf9f4dd8365def6025e314f905dc942e && \
+RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3380500 && \
+    export SQLITE_AUTOCONF_HASH=5af07de982ba658fd91a03170c945f99c971f6955bc79df3266544373e39869c && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2022 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
 COPY build_scripts/build-openssl.sh /build_scripts/
-RUN export OPENSSL_ROOT=openssl-1.1.1n && \
-    export OPENSSL_HASH=40dceb51a4f6a5275bde0e6bf20ef4b91bfc32ed57c0552e2e8e15463372b17a && \
+RUN export OPENSSL_ROOT=openssl-1.1.1o && \
+    export OPENSSL_HASH=9384a2b0570dd80358841464677115df785edb941c71211f75076d72fe6b438f && \
     export OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source && \
     manylinux-entrypoint /build_scripts/build-openssl.sh
 
