@@ -32,9 +32,9 @@ patchelf==0.14.5.0 \
     --hash=sha256:d433eb851a9b8ab91ee1f4dbae6a8f7af859a44c5e157029cff028efe81922bf \
     --hash=sha256:ee91f192e5009c7c4dc026f86ba2a6a9c6746d4a5535b211554fa4fce8dc8232
     # via -r requirements-tools.in
-pipx==1.0.0 \
-    --hash=sha256:91e2bca934a5e82785d7b4ae44b95553611311691bd87da31915d08a0ad2df1c \
-    --hash=sha256:b106042da7b0b225e3b2f681c7b4703aa964360adcf2deea591ad6e33882d2bc
+pipx==1.1.0 \
+    --hash=sha256:3e561ac5b102ff01d4716740b2bb1bbe1532d937e49dcf89180dc9701b229579 \
+    --hash=sha256:4d2f70daf15f121e90b7394b0730ee82fc39d7da514e50a7bbf8066be88883bb
     # via -r requirements-tools.in
 pyelftools==0.28 \
     --hash=sha256:1509d30756a14a8c9a6670778144fb9a04b311751ddac019dcc0c2f28da03ccc \
