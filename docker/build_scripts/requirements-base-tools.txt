@@ -20,9 +20,9 @@ packaging==21.3 \
     --hash=sha256:dd47c42927d89ab911e606518907cc2d3a1f38bbd026385970643f9c5b8ecfeb \
     --hash=sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522
     # via pipx
-pipx==1.0.0 \
-    --hash=sha256:91e2bca934a5e82785d7b4ae44b95553611311691bd87da31915d08a0ad2df1c \
-    --hash=sha256:b106042da7b0b225e3b2f681c7b4703aa964360adcf2deea591ad6e33882d2bc
+pipx==1.1.0 \
+    --hash=sha256:3e561ac5b102ff01d4716740b2bb1bbe1532d937e49dcf89180dc9701b229579 \
+    --hash=sha256:4d2f70daf15f121e90b7394b0730ee82fc39d7da514e50a7bbf8066be88883bb
     # via -r requirements-base-tools.in
 pyparsing==3.0.9 \
     --hash=sha256:2b020ecf7d21b687f219b71ecad3631f644a47f01403fa1d1036b0c6416d70fb \
