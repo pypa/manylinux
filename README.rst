@@ -106,9 +106,9 @@ for repeatable builds.
 manylinux_2_28 (AlmaLinux 8 based)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- x86_64 image: ``quay.io/pypa/manylinux_2_24_x86_64``
-- aarch64 image: ``quay.io/pypa/manylinux_2_24_aarch64``
-- ppc64le image: ``quay.io/pypa/manylinux_2_24_ppc64le``
+- x86_64 image: ``quay.io/pypa/manylinux_2_28_x86_64``
+- aarch64 image: ``quay.io/pypa/manylinux_2_28_aarch64``
+- ppc64le image: ``quay.io/pypa/manylinux_2_28_ppc64le``
 
 manylinux_2_24 (Debian 9 based)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
