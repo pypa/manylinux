@@ -98,9 +98,9 @@ typing==3.10.0.0 \
     #   build
     #   importlib-resources
     #   pathlib2
-virtualenv==20.14.1 \
-    --hash=sha256:e617f16e25b42eb4f6e74096b9c9e37713cf10bf30168fb4a739f3fa8f898a3a \
-    --hash=sha256:ef589a79795589aada0c1c5b319486797c03b67ac3984c48c669c0e4f50df3a5
+virtualenv==20.15.0 \
+    --hash=sha256:4c44b1d77ca81f8368e2d7414f9b20c428ad16b343ac6d226206c5b84e2b4fcc \
+    --hash=sha256:804cce4de5b8a322f099897e308eecc8f6e2951f1a8e7e2b3598dff865f01336
     # via build
 wheel==0.37.1 \
     --hash=sha256:4bdcd7d840138086126cd09254dc6195fb4fc6f01c050a1d7236f2630db1d22a \
