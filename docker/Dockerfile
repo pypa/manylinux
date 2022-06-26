@@ -95,14 +95,14 @@ RUN export SWIG_ROOT=swig-4.0.2 && \
 
 FROM build_base AS build_cpython
 COPY build_scripts/build-sqlite3.sh /build_scripts/
-RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3380500 && \
-    export SQLITE_AUTOCONF_HASH=5af07de982ba658fd91a03170c945f99c971f6955bc79df3266544373e39869c && \
+RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3390000 && \
+    export SQLITE_AUTOCONF_HASH=e90bcaef6dd5813fcdee4e867f6b65f3c9bfd0aec0f1017f9f3bbce1e4ed09e2 && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2022 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
 COPY build_scripts/build-openssl.sh /build_scripts/
-RUN export OPENSSL_ROOT=openssl-1.1.1o && \
-    export OPENSSL_HASH=9384a2b0570dd80358841464677115df785edb941c71211f75076d72fe6b438f && \
+RUN export OPENSSL_ROOT=openssl-1.1.1p && \
+    export OPENSSL_HASH=bf61b62aaa66c7c7639942a94de4c9ae8280c08f17d4eac2e44644d9fc8ace6f && \
     export OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source && \
     manylinux-entrypoint /build_scripts/build-openssl.sh
 
