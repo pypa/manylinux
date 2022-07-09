@@ -23,8 +23,8 @@ function pyver_dist_dir {
 	echo $1 | awk -F "." '{printf "%d.%d.%d", $1, $2, $3}'
 }
 
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] && [ "${CPYTHON_VERSION}" == "3.11.0b1" ]; then
-	echo "skip CPython 3.11.0b1 on manylinux2010"
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] && [ "${CPYTHON_VERSION:0:4}" == "3.11" ]; then
+	echo "skip CPython 3.11 on manylinux2010"
 	mkdir /opt/_internal
 	exit 0
 fi
