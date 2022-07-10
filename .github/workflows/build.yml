@@ -35,10 +35,6 @@ jobs:
         policy: ["manylinux2014", "manylinux_2_24", "musllinux_1_1"]
         platform: ["i686", "x86_64"]
         include:
-          - policy: "manylinux2010"
-            platform: "i686"
-          - policy: "manylinux2010"
-            platform: "x86_64"
           - policy: "manylinux_2_28"
             platform: "x86_64"
 
