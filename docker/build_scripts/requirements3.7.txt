@@ -40,9 +40,9 @@ wheel==0.37.1 \
     --hash=sha256:4bdcd7d840138086126cd09254dc6195fb4fc6f01c050a1d7236f2630db1d22a \
     --hash=sha256:e9a504e793efbca1b8e0e9cb979a249cf4a0a7b5b8c9e8b65a5e39d49529c1c4
     # via -r requirements.in
-zipp==3.8.0 \
-    --hash=sha256:56bf8aadb83c24db6c4b577e13de374ccfb67da2078beba1d037c17980bf43ad \
-    --hash=sha256:c4f6e5bbf48e74f7a38e7cc5b0480ff42b0ae5178957d564d18932525d5cf099
+zipp==3.8.1 \
+    --hash=sha256:05b45f1ee8f807d0cc928485ca40a07cb491cf092ff587c0df9cb1fd154848d2 \
+    --hash=sha256:47c40d7fe183a6f21403a199b3e4192cca5774656965b0a4988ad2f8feb5f009
     # via
     #   importlib-metadata
     #   pep517
@@ -52,7 +52,7 @@ pip==22.1.2 \
     --hash=sha256:6d55b27e10f506312894a87ccc59f280136bad9061719fac9101bdad5a6bce69 \
     --hash=sha256:a3edacb89022ef5258bf61852728bf866632a394da837ca49eb4303635835f17
     # via -r requirements.in
-setuptools==63.1.0 \
-    --hash=sha256:16923d366ced322712c71ccb97164d07472abeecd13f3a6c283f6d5d26722793 \
-    --hash=sha256:db3b8e2f922b2a910a29804776c643ea609badb6a32c4bcc226fd4fd902cce65
+setuptools==63.2.0 \
+    --hash=sha256:0d33c374d41c7863419fc8f6c10bfe25b7b498aa34164d135c622e52580c6b16 \
+    --hash=sha256:c04b44a57a6265fe34a4a444e965884716d34bae963119a76353434d6f18e450
     # via -r requirements.in

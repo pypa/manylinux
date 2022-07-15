@@ -76,8 +76,8 @@ RUN manylinux-entrypoint /build_scripts/install-build-packages.sh
 
 FROM build_base AS build_git
 COPY build_scripts/build-git.sh /build_scripts/
-RUN export GIT_ROOT=git-2.36.1 && \
-    export GIT_HASH=37d936fd17c81aa9ddd3dba4e56e88a45fa534ad0ba946454e8ce818760c6a2c && \
+RUN export GIT_ROOT=git-2.36.2 && \
+    export GIT_HASH=6dc2cdea5fb23d823ba4871cc23222c1db31dfbb6d6c6ff74c4128700df57c68 && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     manylinux-entrypoint /build_scripts/build-git.sh
 
@@ -95,8 +95,8 @@ RUN export SWIG_ROOT=swig-4.0.2 && \
 
 FROM build_base AS build_cpython
 COPY build_scripts/build-sqlite3.sh /build_scripts/
-RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3390000 && \
-    export SQLITE_AUTOCONF_HASH=e90bcaef6dd5813fcdee4e867f6b65f3c9bfd0aec0f1017f9f3bbce1e4ed09e2 && \
+RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3390100 && \
+    export SQLITE_AUTOCONF_HASH=87c8e7a7fa0c68ab28e208ba49f3a22a56000dbf53a6f90206e2bc5843931cc4 && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2022 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
@@ -135,7 +135,7 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.10.5
 
 FROM build_cpython AS build_cpython311
 COPY build_scripts/cpython-pubkey-310-311.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.11.0b3
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.11.0b4
 
 FROM build_cpython AS all_python
 COPY build_scripts/install-pypy.sh \
