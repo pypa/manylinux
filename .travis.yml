@@ -57,15 +57,24 @@ before_install:
   - if [ -d "${HOME}/buildx-cache/.buildx-cache-${POLICY}_${PLATFORM}" ]; then cp -rlf ${HOME}/buildx-cache/.buildx-cache-${POLICY}_${PLATFORM} ./; fi
 
 install:
+  - uptime
   - nproc
   - free
+  - cat /proc/cpuinfo
   - ./travisci-install-buildx.sh
 
-script:
-  - COMMIT_SHA=${TRAVIS_COMMIT} ./build.sh
-  - if [ -d "${HOME}/buildx-cache" ]; then rm -rf ${HOME}/buildx-cache; fi
-  - mkdir ${HOME}/buildx-cache
-  - if [ "${MANYLINUX_BUILD_FRONTEND}" != "docker" ]; then cp -rlf ./.buildx-cache-* ${HOME}/buildx-cache/; fi
+script: |
+  (while true; do echo "travis_wait"; docker stats --no-stream; free; df -h; sleep 30; done) &
+  WAIT_PID=$!
+  COMMIT_SHA=${TRAVIS_COMMIT} ./build.sh
+  kill -9 ${WAIT_PID}
+  if [ -d "${HOME}/buildx-cache" ]; then
+    rm -rf ${HOME}/buildx-cache
+  fi
+  mkdir ${HOME}/buildx-cache
+  if [ "${MANYLINUX_BUILD_FRONTEND}" != "docker" ]; then
+    cp -rlf ./.buildx-cache-* ${HOME}/buildx-cache/
+  fi
 
 deploy:
   provider: script
