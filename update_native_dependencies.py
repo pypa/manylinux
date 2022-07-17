@@ -52,7 +52,6 @@ def _update_with_root(tool, dry_run):
         "automake": "autotools-mirror/automake",
         "libtool": "autotools-mirror/libtool",
         "git": "git/git",
-        "swig": "swig/swig",
         "openssl": "openssl/openssl",
     }
     major = {
@@ -149,7 +148,7 @@ def main():
     args = parser.parse_args()
     _update_cpython(args.dry_run)
     _update_sqlite(args.dry_run)
-    for tool in ["autoconf", "automake", "libtool", "git", "swig", "openssl"]:
+    for tool in ["autoconf", "automake", "libtool", "git", "openssl"]:
         _update_with_root(tool, args.dry_run)
     for tool in ["libxcrypt"]:
         _update_with_gh(tool, args.dry_run)
