@@ -82,17 +82,6 @@ RUN export GIT_ROOT=git-2.36.2 && \
     manylinux-entrypoint /build_scripts/build-git.sh
 
 
-FROM build_base AS build_swig
-COPY build_scripts/build-swig.sh /build_scripts/
-RUN export SWIG_ROOT=swig-4.0.2 && \
-    export SWIG_HASH=d53be9730d8d58a16bf0cbd1f8ac0c0c3e1090573168bfa151b01eb47fa906fc && \
-    export SWIG_DOWNLOAD_URL=https://sourceforge.net/projects/swig/files/swig/${SWIG_ROOT} && \
-    export PCRE_ROOT=pcre-8.45 && \
-    export PCRE_HASH=4e6ce03e0336e8b4a3d6c2b70b1c5e18590a5673a98186da90d4f33c23defc09 && \
-    export PCRE_DOWNLOAD_URL=https://sourceforge.net/projects/pcre/files/pcre/8.45 && \
-    manylinux-entrypoint /build_scripts/build-swig.sh
-
-
 FROM build_base AS build_cpython
 COPY build_scripts/build-sqlite3.sh /build_scripts/
 RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3390100 && \
@@ -156,7 +145,6 @@ RUN manylinux-entrypoint /build_scripts/finalize-python.sh
 
 FROM runtime_base
 COPY --from=build_git /manylinux-rootfs /
-COPY --from=build_swig /manylinux-rootfs /
 COPY --from=build_cpython /manylinux-rootfs /
 COPY --from=all_python /opt/_internal /opt/_internal/
 COPY build_scripts/finalize.sh \
