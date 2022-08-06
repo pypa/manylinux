@@ -32,7 +32,7 @@ source $MY_DIR/build_utils.sh
 
 
 # MANYLINUX_DEPS: Install development packages (except for libgcc which is provided by gcc install)
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
 	MANYLINUX_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel mesa-libGL-devel libICE-devel libSM-devel zlib-devel expat-devel"
 elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
 	MANYLINUX_DEPS="libc6-dev libstdc++-6-dev libglib2.0-dev libx11-dev libxext-dev libxrender-dev libgl1-mesa-dev libice-dev libsm-dev libz-dev libexpat1-dev"
@@ -44,13 +44,8 @@ else
 fi
 
 # RUNTIME_DEPS: Runtime dependencies. c.f. install-build-packages.sh
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
-	RUNTIME_DEPS="zlib bzip2 expat ncurses readline tk gdbm libpcap xz openssl keyutils-libs libkadm5 libcom_err libidn libcurl uuid libffi"
-	if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
-		RUNTIME_DEPS="${RUNTIME_DEPS} db4"
-	else
-		RUNTIME_DEPS="${RUNTIME_DEPS} libdb"
-	fi
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+	RUNTIME_DEPS="zlib bzip2 expat ncurses readline tk gdbm libpcap xz openssl keyutils-libs libkadm5 libcom_err libidn libcurl uuid libffi libdb"
 elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
 	RUNTIME_DEPS="zlib1g libbz2-1.0 libexpat1 libncurses5 libreadline7 tk libgdbm3 libdb5.3 libpcap0.8 liblzma5 libssl1.1 libkeyutils1 libkrb5-3 libcomerr2 libidn2-0 libcurl3 uuid libffi6"
 elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
@@ -61,28 +56,7 @@ else
 fi
 
 BASETOOLS="autoconf automake bison bzip2 diffutils file make patch unzip"
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
-	PACKAGE_MANAGER=yum
-	BASETOOLS="${BASETOOLS} hardlink which"
-	# See https://unix.stackexchange.com/questions/41784/can-yum-express-a-preference-for-x86-64-over-i386-packages
-	echo "multilib_policy=best" >> /etc/yum.conf
-	fixup-mirrors
-	yum -y update
-	fixup-mirrors
-	yum -y install https://archives.fedoraproject.org/pub/archive/epel/6/x86_64/epel-release-6-8.noarch.rpm curl
-	fixup-mirrors
-	TOOLCHAIN_DEPS="devtoolset-8-binutils devtoolset-8-gcc devtoolset-8-gcc-c++ devtoolset-8-gcc-gfortran yasm"
-	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
-		# Software collection (for devtoolset-8)
-		yum -y install centos-release-scl
-		fixup-mirrors
-	elif [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
-		# Add libgfortran4 for devtoolset-7 compat
-		TOOLCHAIN_DEPS="${TOOLCHAIN_DEPS} libgfortran4"
-		# Install mayeut/devtoolset-8 repo to get devtoolset-8
-		curl -fsSLo /etc/yum.repos.d/mayeut-devtoolset-8.repo https://copr.fedorainfracloud.org/coprs/mayeut/devtoolset-8-i386/repo/custom-1/mayeut-devtoolset-8-i386-custom-1.repo
-	fi
-elif [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	PACKAGE_MANAGER=yum
 	BASETOOLS="${BASETOOLS} hardlink hostname which"
 	# See https://unix.stackexchange.com/questions/41784/can-yum-express-a-preference-for-x86-64-over-i386-packages

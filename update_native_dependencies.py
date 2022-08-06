@@ -56,7 +56,6 @@ def _update_with_root(tool, dry_run):
     }
     major = {
         "openssl": "1.1",
-        "git": "2.36",
     }
     dockerfile = Path(__file__).parent / "docker" / "Dockerfile"
     lines = dockerfile.read_text().splitlines()

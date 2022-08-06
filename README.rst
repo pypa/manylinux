@@ -106,22 +106,17 @@ for repeatable builds.
 manylinux_2_28 (AlmaLinux 8 based)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Toolchain: GCC 11
+
 - x86_64 image: ``quay.io/pypa/manylinux_2_28_x86_64``
 - aarch64 image: ``quay.io/pypa/manylinux_2_28_aarch64``
 - ppc64le image: ``quay.io/pypa/manylinux_2_28_ppc64le``
 
-manylinux_2_24 (Debian 9 based)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- x86_64 image: ``quay.io/pypa/manylinux_2_24_x86_64``
-- i686 image: ``quay.io/pypa/manylinux_2_24_i686``
-- aarch64 image: ``quay.io/pypa/manylinux_2_24_aarch64``
-- ppc64le image: ``quay.io/pypa/manylinux_2_24_ppc64le``
-- s390x image: ``quay.io/pypa/manylinux_2_24_s390x``
-
 
 manylinux2014 (CentOS 7 based)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Toolchain: GCC 10
 
 - x86_64 image: ``quay.io/pypa/manylinux2014_x86_64``
 - i686 image: ``quay.io/pypa/manylinux2014_i686``
@@ -130,8 +125,27 @@ manylinux2014 (CentOS 7 based)
 - s390x image: ``quay.io/pypa/manylinux2014_s390x``
 
 
+manylinux_2_24 (Debian 9 based)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These images have some caveats mentioned in different issues.
+Deprecation for these images is `being discussed <https://github.com/pypa/manylinux/issues/1332>`_.
+
+Toolchain: GCC 6
+
+- x86_64 image: ``quay.io/pypa/manylinux_2_24_x86_64``
+- i686 image: ``quay.io/pypa/manylinux_2_24_i686``
+- aarch64 image: ``quay.io/pypa/manylinux_2_24_aarch64``
+- ppc64le image: ``quay.io/pypa/manylinux_2_24_ppc64le``
+- s390x image: ``quay.io/pypa/manylinux_2_24_s390x``
+
+
 manylinux2010 (CentOS 6 based - EOL)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Support for ``manylinux2010`` has `ended on August 1st, 2022 <https://github.com/pypa/manylinux/issues/1281>`_.
+
+Toolchain: GCC 8
 
 - x86-64 image: ``quay.io/pypa/manylinux2010_x86_64``
 - i686 image: ``quay.io/pypa/manylinux2010_i686``
@@ -143,6 +157,8 @@ manylinux1 (CentOS 5 based - EOL)
 Code and details regarding ``manylinux1`` can be found in the `manylinux1 branch <https://github.com/pypa/manylinux/tree/manylinux1>`_.
 
 Support for ``manylinux1`` will `end on January 1st, 2022 <https://github.com/pypa/manylinux/issues/994>`_.
+
+Toolchain: GCC 4.8
 
 - x86-64 image: ``quay.io/pypa/manylinux1_x86_64``
 - i686 image: ``quay.io/pypa/manylinux1_i686``
