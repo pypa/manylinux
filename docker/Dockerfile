@@ -76,8 +76,8 @@ RUN manylinux-entrypoint /build_scripts/install-build-packages.sh
 
 FROM build_base AS build_git
 COPY build_scripts/build-git.sh /build_scripts/
-RUN export GIT_ROOT=git-2.37.1 && \
-    export GIT_HASH=7dded96a52e7996ce90dd74a187aec175737f680dc063f3f33c8932cf5c8d809 && \
+RUN export GIT_ROOT=git-2.37.2 && \
+    export GIT_HASH=4c428908e3a2dca4174df6ef49acc995a4fdb1b45205a2c79794487a33bc06e5 && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     manylinux-entrypoint /build_scripts/build-git.sh
 
