@@ -8,7 +8,7 @@ auditwheel==5.1.2 \
     --hash=sha256:3ee5830014931ea84af5cd065c637b6614efa03d9b88bd8fbfc924e7ed01d6ba \
     --hash=sha256:4d06aea3ab59a2b8aa733798ac221556a3f5c021fddc42e5de5bcef20201c031
     # via -r .nox/update_python_tools/tmp/auditwheel.in
-pyelftools==0.28 \
-    --hash=sha256:1509d30756a14a8c9a6670778144fb9a04b311751ddac019dcc0c2f28da03ccc \
-    --hash=sha256:53e5609cac016471d40bd88dc410cd90755942c25e58a61021cfdf7abdfeacff
+pyelftools==0.29 \
+    --hash=sha256:519f38cf412f073b2d7393aa4682b0190fa901f7c3fa0bff2b82d537690c7fc1 \
+    --hash=sha256:ec761596aafa16e282a31de188737e5485552469ac63b60cfcccf22263fd24ff
     # via auditwheel
