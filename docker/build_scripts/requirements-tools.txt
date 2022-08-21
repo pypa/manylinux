@@ -36,9 +36,9 @@ pipx==1.1.0 \
     --hash=sha256:3e561ac5b102ff01d4716740b2bb1bbe1532d937e49dcf89180dc9701b229579 \
     --hash=sha256:4d2f70daf15f121e90b7394b0730ee82fc39d7da514e50a7bbf8066be88883bb
     # via -r requirements-tools.in
-pyelftools==0.28 \
-    --hash=sha256:1509d30756a14a8c9a6670778144fb9a04b311751ddac019dcc0c2f28da03ccc \
-    --hash=sha256:53e5609cac016471d40bd88dc410cd90755942c25e58a61021cfdf7abdfeacff
+pyelftools==0.29 \
+    --hash=sha256:519f38cf412f073b2d7393aa4682b0190fa901f7c3fa0bff2b82d537690c7fc1 \
+    --hash=sha256:ec761596aafa16e282a31de188737e5485552469ac63b60cfcccf22263fd24ff
     # via auditwheel
 pyparsing==3.0.9 \
     --hash=sha256:2b020ecf7d21b687f219b71ecad3631f644a47f01403fa1d1036b0c6416d70fb \
