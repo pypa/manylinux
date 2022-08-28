@@ -101,7 +101,6 @@ RUN export TCL_ROOT=tcl8.6.12 && \
     export TCL_DOWNLOAD_URL=https://prdownloads.sourceforge.net/tcl && \
     export TK_ROOT=tk8.6.12 && \
     export TK_HASH=12395c1f3fcb6bed2938689f797ea3cdf41ed5cb6c4766eec8ac949560310630 && \
-    export TK_DOWNLOAD_URL=https://prdownloads.sourceforge.net/tcl && \
     manylinux-entrypoint /build_scripts/build-tcltk.sh
 
 COPY build_scripts/build-cpython.sh /build_scripts/
