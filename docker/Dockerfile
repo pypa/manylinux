@@ -95,6 +95,14 @@ RUN export OPENSSL_ROOT=openssl-1.1.1q && \
     export OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source && \
     manylinux-entrypoint /build_scripts/build-openssl.sh
 
+COPY build_scripts/build-tcltk.sh /build_scripts/
+RUN export TCL_ROOT=tcl8.6.12 && \
+    export TCL_HASH=26c995dd0f167e48b11961d891ee555f680c175f7173ff8cb829f4ebcde4c1a6 && \
+    export TCL_DOWNLOAD_URL=https://prdownloads.sourceforge.net/tcl && \
+    export TK_ROOT=tk8.6.12 && \
+    export TK_HASH=12395c1f3fcb6bed2938689f797ea3cdf41ed5cb6c4766eec8ac949560310630 && \
+    manylinux-entrypoint /build_scripts/build-tcltk.sh
+
 COPY build_scripts/build-cpython.sh /build_scripts/
 
 
