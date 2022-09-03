@@ -47,7 +47,7 @@ The manylinux project supports:
 
 - ``manylinux_2_24`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
 
-- ``manylinux_2_28`` images for ``x86_64``, ``aarch64`` and ``ppc64le``.
+- ``manylinux_2_28`` images for ``x86_64``, ``aarch64``, ``ppc64le`` and ``s390x``.
 
 
 Wheel packages compliant with those tags can be uploaded to
@@ -111,6 +111,7 @@ Toolchain: GCC 11
 - x86_64 image: ``quay.io/pypa/manylinux_2_28_x86_64``
 - aarch64 image: ``quay.io/pypa/manylinux_2_28_aarch64``
 - ppc64le image: ``quay.io/pypa/manylinux_2_28_ppc64le``
+- s390x image: ``quay.io/pypa/manylinux_2_28_s390x``
 
 
 manylinux2014 (CentOS 7 based)
