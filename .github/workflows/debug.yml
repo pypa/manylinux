@@ -1,0 +1,28 @@
+name: debug
+
+on:
+  pull_request:
+
+jobs:
+  qemu:
+    name: Test with qemu ${{ matrix.qemu }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        qemu: ['7.0.0', '6.2.0']
+    steps:
+      - name: Set up QEMU ${{ matrix.qemu }}
+        uses: docker/setup-qemu-action@v2
+        with:
+          image: tonistiigi/binfmt:qemu-v${{ matrix.qemu }}
+      - run: |
+          for version in 3.12 3.13 3.14 3.15 3.16; do
+            docker pull -q ppc64le/alpine:$version 2>&1 1>/dev/null
+            echo "Alpine ${version}:"
+            docker run --rm -t ppc64le/alpine:$version sh -c "apk add -q python3 2>&1 1>/dev/null; python3 -c 'import struct; print(struct.Struct(\"!f\").pack(1.0).hex())'"
+          done
+          docker pull -q quay.io/pypa/musllinux_1_1_ppc64le:latest 2>&1 1>/dev/null
+          for version in 3.6 3.7 3.8 3.9 3.10 3.11; do
+            echo "musllinux python ${version}:"
+            docker run -t --rm quay.io/pypa/musllinux_1_1_ppc64le:latest python${version} -c 'import struct; print(struct.Struct("!f").pack(1.0).hex())'
+          done

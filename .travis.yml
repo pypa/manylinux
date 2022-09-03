@@ -10,79 +10,18 @@ branches:
   except:
     - /^update-dependencies-pr/
 
-cache:
-  directories:
-    - ${HOME}/buildx-cache/
-
-env:
-  global:
-    # QUAY_USERNAME and QUAY_PASSWORD for docker image upload
-    - secure: "lKaTzEL6UNiEfp+BWLOUILG9BMtjwEMpwt6Yag0cQGHix7qJ/ElZ0t3oFw6ZwuDmA5qceAXIdxHLUK9HGVI2MloLk8czGhjvtfJ4XhOxtEJRQ0VkDGPsKN4cfhB4ZjGo6GAPtNqStMyNiY7BZuTrZa7coDLCoUeYcOmTpi6pmd1rrkk725B9QCTuhFHbPhkuL2yu/Jk6WxkHJBKjmuZek+iQa7lRItgMrG0/319PXLvwIGGl00nLFy+Ly5Ciwzux4wuHLTySZQKu0H9FX81A7smM0FW/42kg3ckGa2qLxRw/Pi8Nm/aIk8LD0QXzI5N7HhFfidOTgDS8Mt1HgfxmTk4wUXZ/KvCCshqjimzMc/s9i9wPZX9UqqcfrpZkmwz8dzhm1bndN45ZOCy6xAYT6dzf8T4mLMDjVWSW4+DUoW4sYHRLVujjcMk7ybcwGV43VruPTJnc8XVAhT+VIMQkoPjhQmTOn8h82LRNGYtLa5RReCh9OPKVYB2Quz18FXMWgFt7A6VWudL0c7/8CusLvuo+pLcxt9pnV40rvu1YEohpEj8qR/qTSaDUBZM0J9SVf5zrZR80pZUnXkDF8nm+mcLOTley3YWipU19lCR7dzVyCAiQdVAuNPdnyem3Yk8enGkAJbfLd6eaIDs+p73D0JXh1Nx1px1movVLQH3ohIw="
-    - secure: "w1614pomHLltkBhqWM2bOvbymFWIWKqSqqIBDvaNn9tbQScioItJoELBT7g7+cD7nyU7OvpQ1U2fk0xVkCeNvYU0xS1vP4o/VnZRpup7f7Tkiq+2rf4fjwYr3HHnJjwak1l9bsw6FkgzKaVvSdiUJHMVxiIuLd3fVozR7qjBBhTDxSlWGOpSgd+ttpgMZwU5zQjdaVQr1D7E8M0979ZnWMrNRyLiAUeHaPILS815b+ijgqR+i5nmu0/FTCGM9Ik4KIzIfWq8AdfPdbRiq8c+LrrTPfyKcIQJaHmfduYRM4LycGWwzkXFBNtLrJ7uFLG9RDVemOHuHOWIJX8qCUIV4XuESXxH3fUQr6r+yxquTJbzXxNtoaLa6tBOTQWKDrRjT4z9Mf9Im14F2V59EUDoQowHx5bjunOH5wg3ruYNKYYBFRYra5kx0CkKrqFBzyl8fTUEQLyx1HWTVUC1WTXEeD/aFKOSIxW5DxZr5W4LLlW2+Raa52ZzY28Q6AdueFQCRzoJ70/GsJRlSsBdWNOHN4gSp1cZuToLWY15y64QhAMVDpikB+V4hmkbceLiTqeWzTStNL1sa32RHr6i/9zeFZw1pMD1+eOg9x6fgODfh2sqr/zPbu2oONsHnc4D2jwsEax4o+Dv5QHLvK7jdyWUmu47a9QReoexXK60jZXs3CA="
-
 jobs:
    include:
-    - arch: arm64-graviton2
-      virt: vm
-      group: edge
-      env: POLICY="manylinux2014" PLATFORM="aarch64"
-    - arch: s390x
-      env: POLICY="manylinux2014" PLATFORM="s390x"
     - arch: ppc64le
-      env: POLICY="manylinux2014" PLATFORM="ppc64le"
-    - arch: arm64-graviton2
-      virt: vm
-      group: edge
-      env: POLICY="manylinux_2_24" PLATFORM="aarch64"
-    - arch: s390x
-      env: POLICY="manylinux_2_24" PLATFORM="s390x"
-    - arch: ppc64le
-      env: POLICY="manylinux_2_24" PLATFORM="ppc64le"
-    - arch: arm64-graviton2
-      virt: vm
-      group: edge
-      env: POLICY="manylinux_2_28" PLATFORM="aarch64"
-    - arch: ppc64le
-      env: POLICY="manylinux_2_28" PLATFORM="ppc64le"
-    - arch: arm64-graviton2
-      virt: vm
-      group: edge
-      env: POLICY="musllinux_1_1" PLATFORM="aarch64"
-    - arch: s390x
-      env: POLICY="musllinux_1_1" PLATFORM="s390x"
-    - arch: ppc64le
-      env: POLICY="musllinux_1_1" PLATFORM="ppc64le"
-
-before_install:
-  - if [ -d "${HOME}/buildx-cache/.buildx-cache-${POLICY}_${PLATFORM}" ]; then cp -rlf ${HOME}/buildx-cache/.buildx-cache-${POLICY}_${PLATFORM} ./; fi
-
-install:
-  - uptime
-  - nproc
-  - free
-  - cat /proc/cpuinfo
-  - ./travisci-install-buildx.sh
 
 script: |
-  (while true; do echo "travis_wait"; docker stats --no-stream; free; df -h; sleep 30; done) &
-  WAIT_PID=$!
-  COMMIT_SHA=${TRAVIS_COMMIT} ./build.sh
-  kill -9 ${WAIT_PID}
-  if [ -d "${HOME}/buildx-cache" ]; then
-    rm -rf ${HOME}/buildx-cache
-  fi
-  mkdir ${HOME}/buildx-cache
-  if [ "${MANYLINUX_BUILD_FRONTEND}" != "docker" ]; then
-    cp -rlf ./.buildx-cache-* ${HOME}/buildx-cache/
-  fi
-
-deploy:
-  provider: script
-  script: COMMIT_SHA=${TRAVIS_COMMIT} ./deploy.sh
-  on:
-    branch: main
-    repo: pypa/manylinux
-
-after_script:
-  - if [ -f ${HOME}/dockerd-rootless.pid ]; then kill -15 $(cat ${HOME}/dockerd-rootless.pid); fi
-  - if [ -f /tmp/buildkitd.pid ]; then sudo kill -15 $(cat /tmp/buildkitd.pid); fi
+  for version in 3.12 3.13 3.14 3.15 3.16; do
+    docker pull -q ppc64le/alpine:$version 2>&1 1>/dev/null
+    echo "Alpine ${version}:"
+    docker run --rm -t ppc64le/alpine:$version sh -c "apk add -q python3 2>&1 1>/dev/null; python3 -c 'import struct; print(struct.Struct(\"!f\").pack(1.0).hex())'"
+  done
+  docker pull -q quay.io/pypa/musllinux_1_1_ppc64le:latest 2>&1 1>/dev/null
+  for version in 3.6 3.7 3.8 3.9 3.10 3.11; do
+    echo "musllinux python ${version}:"
+    docker run -t --rm quay.io/pypa/musllinux_1_1_ppc64le:latest python${version} -c 'import struct; print(struct.Struct("!f").pack(1.0).hex())'
+  done
