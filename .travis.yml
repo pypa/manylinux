@@ -42,6 +42,8 @@ jobs:
       virt: vm
       group: edge
       env: POLICY="manylinux_2_28" PLATFORM="aarch64"
+    - arch: s390x
+      env: POLICY="manylinux_2_28" PLATFORM="s390x"
     - arch: ppc64le
       env: POLICY="manylinux_2_28" PLATFORM="ppc64le"
     - arch: arm64-graviton2
