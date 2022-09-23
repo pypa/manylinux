@@ -68,8 +68,5 @@ fi
 # remove debug symbols
 rm ${PREFIX}/bin/*.debug
 
-# We do not need the Python test suites
-find ${PREFIX} -depth \( -type d -a -name test -o -name tests \) | xargs rm -rf
-
 # We do not need precompiled .pyc and .pyo files.
 clean_pyc ${PREFIX}
