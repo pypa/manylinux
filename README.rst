@@ -157,7 +157,7 @@ manylinux1 (CentOS 5 based - EOL)
 
 Code and details regarding ``manylinux1`` can be found in the `manylinux1 branch <https://github.com/pypa/manylinux/tree/manylinux1>`_.
 
-Support for ``manylinux1`` will `end on January 1st, 2022 <https://github.com/pypa/manylinux/issues/994>`_.
+Support for ``manylinux1`` has `ended on January 1st, 2022 <https://github.com/pypa/manylinux/issues/994>`_.
 
 Toolchain: GCC 4.8
 
