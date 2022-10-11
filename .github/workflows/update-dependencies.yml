@@ -11,10 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-python@v3
+    - uses: excitedleigh/setup-nox@2022.8.7
       with:
-        python-version: "3.11-dev"
-    - uses: excitedleigh/setup-nox@4c62aee44396909396d10137c747b2633deeee76
+        python-versions: "3.6, 3.7, 3.8, 3.9, 3.10, 3.11-dev"
     - name: "Setup bot user"
       run: |
         git config --global user.name "manylinux-bot[bot]"
