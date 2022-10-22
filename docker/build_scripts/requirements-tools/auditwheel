@@ -4,9 +4,9 @@
 #
 #    pip-compile --generate-hashes --output-file=docker/build_scripts/requirements-tools/auditwheel .nox/update_python_tools/tmp/auditwheel.in
 #
-auditwheel==5.1.2 \
-    --hash=sha256:3ee5830014931ea84af5cd065c637b6614efa03d9b88bd8fbfc924e7ed01d6ba \
-    --hash=sha256:4d06aea3ab59a2b8aa733798ac221556a3f5c021fddc42e5de5bcef20201c031
+auditwheel==5.2.0 \
+    --hash=sha256:32c8e60d48e39e6d66bd3d49e8a30fbe44d686554420274fb2b9fc4720e91e7f \
+    --hash=sha256:b79c6007ee5df42c8fa1ab6ca36da72f490819b21f210fb12cb802d3acbe82ee
     # via -r .nox/update_python_tools/tmp/auditwheel.in
 pyelftools==0.29 \
     --hash=sha256:519f38cf412f073b2d7393aa4682b0190fa901f7c3fa0bff2b82d537690c7fc1 \
