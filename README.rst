@@ -1,10 +1,6 @@
 manylinux
 =========
 
-Email: wheel-builders@python.org
-
-Archives: https://mail.python.org/mailman/listinfo/wheel-builders
-
 Older archives: https://groups.google.com/forum/#!forum/manylinux-discuss
 
 The goal of the manylinux project is to provide a convenient way to
