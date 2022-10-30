@@ -4,11 +4,11 @@
 #
 #    pip-compile --generate-hashes --output-file=docker/build_scripts/requirements-tools/patchelf .nox/update_python_tools/tmp/patchelf.in
 #
-patchelf==0.15.0.0 \
-    --hash=sha256:08e5e30a9415a8628de47726fbf15bfcd89be35df51c8a0a12372aebd0c5b4f6 \
-    --hash=sha256:0f8dcf0df0ba919ce37e8aef67a08bde5326897098451df94ab3a5eedc9e08d9 \
-    --hash=sha256:4ce9d08119816bc4316c8ecc5f33da42384934fc0fc9cfbdded53a4930705466 \
-    --hash=sha256:52e48c08110f2988a9761a5a383f7ae35b1e8e06a140e320d18386d3510697ed \
-    --hash=sha256:ae19b0f91aabc9af2608a4ca0395533f1df9122e6abc11ef2c8db6e4db0f98c2 \
-    --hash=sha256:f3f87aee44d1d1b2209e38c4227b0316bb03538df68d20b3d96205aa87868d95
+patchelf==0.16.1.0 \
+    --hash=sha256:39cc1d22724f0006ec7497cf40d7996177049411094d7c2217882abde1d81bd7 \
+    --hash=sha256:557be98265cfbb48648a912519044f1add1bcc872713a9e087db5779c22b14c2 \
+    --hash=sha256:b5d38936fdb5256142ba30dc6fe93b1b5cb892bfa5029f32febea0dcfa5ddd13 \
+    --hash=sha256:bbbed2e5a244f122835f700049172d562955b4411a73ed91b18ce342efbfac5b \
+    --hash=sha256:c8345911769ace4e068dfe3ac4c04ec5e4965907954e77781ef031854eb408e8 \
+    --hash=sha256:f363938d86e141ac9a6319e03f49886ec56073bbc4b5fd318d5f511f06636264
     # via -r .nox/update_python_tools/tmp/patchelf.in
