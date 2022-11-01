@@ -90,8 +90,8 @@ RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3390400 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
 COPY build_scripts/build-openssl.sh /build_scripts/
-RUN export OPENSSL_ROOT=openssl-1.1.1q && \
-    export OPENSSL_HASH=d7939ce614029cdff0b6c20f0e2e5703158a489a72b2507b8bd51bf8c8fd10ca && \
+RUN export OPENSSL_ROOT=openssl-1.1.1s && \
+    export OPENSSL_HASH=c5ac01e760ee6ff0dab61d6b2bbd30146724d063eb322180c6f18a6f74e4b6aa && \
     export OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source && \
     manylinux-entrypoint /build_scripts/build-openssl.sh
 
