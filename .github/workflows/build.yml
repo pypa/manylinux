@@ -85,7 +85,7 @@ jobs:
         id: wait-for-travis
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          checkName: Travis CI - Branch
+          checkName: Travis CI - Pull Request
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           intervalSeconds: 10
           timeoutSeconds: 3600
