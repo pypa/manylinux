@@ -73,3 +73,27 @@ jobs:
         env:
           QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
           QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
+
+  publish_multi_platform:
+    name: Publish Multi-platform Images
+    # if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
+    runs-on: ubuntu-latest
+    needs: build_manylinux
+    steps:
+      - name: Wait for Travis CI
+        uses: fountainhead/action-wait-for-check@v1.1.0
+        id: wait-for-travis
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Travis CI - Branch
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          intervalSeconds: 10
+          timeoutSeconds: 3600
+
+      - name: Deploy
+        if: steps.wait-for-travis.outputs.conclusion == 'success'
+        run: ./deploy_multi_platform.sh
+
+      - name: Error on failure
+        if: steps.wait-for-travis.outputs.conclusion != 'success'
+        run: exit 1
