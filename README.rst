@@ -102,7 +102,7 @@ for repeatable builds.
 manylinux_2_28 (AlmaLinux 8 based)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Toolchain: GCC 11
+Toolchain: GCC 12
 
 - x86_64 image: ``quay.io/pypa/manylinux_2_28_x86_64``
 - aarch64 image: ``quay.io/pypa/manylinux_2_28_aarch64``
