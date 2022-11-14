@@ -57,7 +57,7 @@ if [ "${BASE_POLICY}" == "manylinux" ]; then
 		if localedef --list-archive | grep -sq -v -i ^en_US.utf8; then
 			localedef --list-archive | grep -v -i ^en_US.utf8 | xargs localedef --delete-from-archive
 		fi
-		if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+		if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 			mv -f ${LOCALE_ARCHIVE} ${LOCALE_ARCHIVE}.tmpl
 			build-locale-archive --install-langs="en_US.utf8"
 		elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
