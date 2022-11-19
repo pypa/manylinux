@@ -61,8 +61,8 @@ RUN export LIBTOOL_ROOT=libtool-2.4.7 && \
     manylinux-entrypoint /build_scripts/install-libtool.sh
 
 COPY build_scripts/install-libxcrypt.sh /build_scripts/
-RUN export LIBXCRYPT_VERSION=4.4.30 && \
-    export LIBXCRYPT_HASH=5556309d2dcd200da0190aa9bcc1a5bf71059f04423fc7c25dee59bb4355d731 && \
+RUN export LIBXCRYPT_VERSION=4.4.33 && \
+    export LIBXCRYPT_HASH=0a0c06bcd028fd0f0467f89f6a451112e8ec97c36e0f58e7464449a4c04607ed && \
     export LIBXCRYPT_DOWNLOAD_URL=https://github.com/besser82/libxcrypt/archive && \
     export PERL_ROOT=perl-5.34.0 && \
     export PERL_HASH=551efc818b968b05216024fb0b727ef2ad4c100f8cb6b43fab615fa78ae5be9a && \
@@ -84,8 +84,8 @@ RUN export GIT_ROOT=git-2.38.1 && \
 
 FROM build_base AS build_cpython
 COPY build_scripts/build-sqlite3.sh /build_scripts/
-RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3390400 && \
-    export SQLITE_AUTOCONF_HASH=f31d445b48e67e284cf206717cc170ab63cbe4fd7f79a82793b772285e78fdbb && \
+RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3400000 && \
+    export SQLITE_AUTOCONF_HASH=0333552076d2700c75352256e91c78bf5cd62491589ba0c69aed0a81868980e7 && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2022 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
