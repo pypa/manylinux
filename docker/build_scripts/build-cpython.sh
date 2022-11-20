@@ -32,10 +32,17 @@ tar -xzf Python-${CPYTHON_VERSION}.tgz
 pushd Python-${CPYTHON_VERSION}
 PREFIX="/opt/_internal/cpython-${CPYTHON_VERSION}"
 mkdir -p ${PREFIX}/lib
+CFLAGS_EXTRA=""
+if [ "${CPYTHON_VERSION}" == "3.6.15" ]; then
+	# https://github.com/python/cpython/issues/89863
+	# gcc-12+ uses these 2 flags in -O2 but they were only enabled in -O3 with gcc-11
+	CFLAGS_EXTRA="${CFLAGS_EXTRA} -fno-tree-loop-vectorize -fno-tree-slp-vectorize"
+fi
+
 # configure with hardening options only for the interpreter & stdlib C extensions
 # do not change the default for user built extension (yet?)
 ./configure \
-	CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS}" \
+	CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS} ${CFLAGS_EXTRA}" \
 	LDFLAGS_NODIST="${MANYLINUX_LDFLAGS}" \
 	--prefix=${PREFIX} --disable-shared --with-ensurepip=no > /dev/null
 make > /dev/null
