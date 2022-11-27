@@ -37,11 +37,11 @@ done
 
 # Create venv for auditwheel & certifi
 TOOLS_PATH=/opt/_internal/tools
-/opt/python/cp39-cp39/bin/python -m venv $TOOLS_PATH
+/opt/python/cp310-cp310/bin/python -m venv $TOOLS_PATH
 source $TOOLS_PATH/bin/activate
 
 # Install default packages
-pip install -U --require-hashes -r $MY_DIR/requirements3.9.txt
+pip install -U --require-hashes -r $MY_DIR/requirements3.10.txt
 # Install certifi and pipx
 pip install -U --require-hashes -r $MY_DIR/requirements-base-tools.txt
 
