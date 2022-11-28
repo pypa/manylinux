@@ -96,11 +96,11 @@ RUN export OPENSSL_ROOT=openssl-1.1.1s && \
     manylinux-entrypoint /build_scripts/build-openssl.sh
 
 COPY build_scripts/build-tcltk.sh /build_scripts/
-RUN export TCL_ROOT=tcl8.6.12 && \
-    export TCL_HASH=26c995dd0f167e48b11961d891ee555f680c175f7173ff8cb829f4ebcde4c1a6 && \
+RUN export TCL_ROOT=tcl8.6.13 && \
+    export TCL_HASH=43a1fae7412f61ff11de2cfd05d28cfc3a73762f354a417c62370a54e2caf066 && \
     export TCL_DOWNLOAD_URL=https://prdownloads.sourceforge.net/tcl && \
-    export TK_ROOT=tk8.6.12 && \
-    export TK_HASH=12395c1f3fcb6bed2938689f797ea3cdf41ed5cb6c4766eec8ac949560310630 && \
+    export TK_ROOT=tk8.6.13 && \
+    export TK_HASH=2e65fa069a23365440a3c56c556b8673b5e32a283800d8d9b257e3f584ce0675 && \
     manylinux-entrypoint /build_scripts/build-tcltk.sh
 
 COPY build_scripts/build-cpython.sh /build_scripts/
