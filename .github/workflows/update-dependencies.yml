@@ -8,12 +8,12 @@ on:
 jobs:
   update-dependencies:
     name: Update dependencies
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
-    - uses: wntrblm/nox@2022.8.7
+    - uses: wntrblm/nox@2022.11.21
       with:
-        python-versions: "3.6, 3.7, 3.8, 3.9, 3.10, 3.11-dev"
+        python-versions: "3.6, 3.7, 3.8, 3.9, 3.10, 3.11"
     - name: "Setup bot user"
       run: |
         git config --global user.name "manylinux-bot[bot]"
