@@ -113,26 +113,26 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.6.15
 
 FROM build_cpython AS build_cpython37
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.15
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.16
 
 
 FROM build_cpython AS build_cpython38
 COPY build_scripts/ambv-pubkey.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.8.15
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.8.16
 
 
 FROM build_cpython AS build_cpython39
 COPY build_scripts/ambv-pubkey.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.9.15
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.9.16
 
 
 FROM build_cpython AS build_cpython310
 COPY build_scripts/cpython-pubkey-310-311.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.10.8
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.10.9
 
 FROM build_cpython AS build_cpython311
 COPY build_scripts/cpython-pubkey-310-311.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.11.0
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.11.1
 
 FROM build_cpython AS all_python
 COPY build_scripts/install-pypy.sh \
@@ -140,8 +140,8 @@ COPY build_scripts/install-pypy.sh \
      build_scripts/finalize-python.sh \
      /build_scripts/
 RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.7 7.3.9
-RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.8 7.3.9
-RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.9 7.3.9
+RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.8 7.3.10
+RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.9 7.3.10
 COPY --from=build_cpython36 /opt/_internal /opt/_internal/
 COPY --from=build_cpython37 /opt/_internal /opt/_internal/
 COPY --from=build_cpython38 /opt/_internal /opt/_internal/
