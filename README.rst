@@ -122,11 +122,12 @@ Toolchain: GCC 10
 - s390x image: ``quay.io/pypa/manylinux2014_s390x``
 
 
-manylinux_2_24 (Debian 9 based)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+manylinux_2_24 (Debian 9 based) - EOL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Support for ``manylinux_2_24`` has `ended on January 1st, 2023 <https://github.com/pypa/manylinux/issues/1332>`_.
 
 These images have some caveats mentioned in different issues.
-Deprecation for these images is `being discussed <https://github.com/pypa/manylinux/issues/1332>`_.
 
 Toolchain: GCC 6
 

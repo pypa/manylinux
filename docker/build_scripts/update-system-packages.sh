@@ -20,19 +20,6 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	fi
 	yum clean all
 	rm -rf /var/cache/yum
-elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
-	export DEBIAN_FRONTEND=noninteractive
-	apt-get update -qq
-	apt-get upgrade -qq -y
-	apt-get clean -qq
-	rm -rf /var/lib/apt/lists/*
-	if [ "${AUDITWHEEL_ARCH}" == "s390x" ] || [ "${AUDITWHEEL_ARCH}" == "ppc64le" ]; then
-		# those arch are missing some updates
-		# we need to manually delete some certificates...
-		sed -i '/DST_Root_CA_X3.crt$/d' /etc/ca-certificates.conf
-		find /etc/ssl/certs -name 'DST_Root_CA_X3.pem' -delete
-		update-ca-certificates
-	fi
 elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
 	dnf -y upgrade
 	dnf clean all
@@ -60,10 +47,6 @@ if [ "${BASE_POLICY}" == "manylinux" ]; then
 		if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 			mv -f ${LOCALE_ARCHIVE} ${LOCALE_ARCHIVE}.tmpl
 			build-locale-archive --install-langs="en_US.utf8"
-		elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
-			rm ${LOCALE_ARCHIVE}
-			localedef -i en_US -f UTF-8 en_US.UTF-8
-			update-locale LANG=en_US.UTF-8
 		fi
 		touch ${TIMESTAMP_FILE}
 	fi
