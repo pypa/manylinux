@@ -14,7 +14,7 @@ if [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
 	export NO_REGEX=NeedsStartEnd
 fi
 
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	export NO_UNCOMPRESS2=1
 fi
 

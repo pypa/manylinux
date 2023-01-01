@@ -8,10 +8,6 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	PACKAGE_MANAGER=yum
-elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
-	export DEBIAN_FRONTEND=noninteractive
-	PACKAGE_MANAGER=apt
-	apt-get update -qq
 elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
 	PACKAGE_MANAGER=apk
 elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
@@ -63,8 +59,6 @@ nox --version
 # c.f. https://github.com/pypa/manylinux/issues/1022
 if [ "${PACKAGE_MANAGER}" == "yum" ]; then
 	yum -y install openssh-clients
-elif [ "${PACKAGE_MANAGER}" == "apt" ]; then
-	apt-get install -qq -y --no-install-recommends openssh-client
 elif [ "${PACKAGE_MANAGER}" == "apk" ]; then
 	apk add --no-cache openssh-client
 elif [ "${PACKAGE_MANAGER}" == "dnf" ]; then

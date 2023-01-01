@@ -21,7 +21,7 @@ check_var ${TK_HASH}
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] ; then
 	yum erase -y tcl tk
 else
-    exit 0
+	exit 0
 fi
 
 fetch_source ${TCL_ROOT}-src.tar.gz ${TCL_DOWNLOAD_URL}
