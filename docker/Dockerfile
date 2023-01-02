@@ -140,7 +140,7 @@ COPY build_scripts/install-pypy.sh \
      build_scripts/finalize-python.sh \
      /build_scripts/
 RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.7 7.3.9
-RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.8 7.3.10
+RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.8 7.3.11
 RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.9 7.3.10
 COPY --from=build_cpython36 /opt/_internal /opt/_internal/
 COPY --from=build_cpython37 /opt/_internal /opt/_internal/
