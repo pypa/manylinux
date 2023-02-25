@@ -27,6 +27,9 @@ elif [ "${PLATFORM}" == "ppc64le" ]; then
 elif [ "${PLATFORM}" == "s390x" ]; then
 	GOARCH="s390x"
 	MULTIARCH_PREFIX="s390x/"
+elif [ "${PLATFORM}" == "armv7l" ]; then
+	GOARCH="arm/v7"
+	MULTIARCH_PREFIX="arm32v7/"
 else
 	echo "Unsupported platform: '${PLATFORM}'"
 	exit 1
