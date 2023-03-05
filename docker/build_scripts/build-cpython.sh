@@ -38,6 +38,10 @@ if [ "${CPYTHON_VERSION}" == "3.6.15" ]; then
 	# gcc-12+ uses these 2 flags in -O2 but they were only enabled in -O3 with gcc-11
 	CFLAGS_EXTRA="${CFLAGS_EXTRA} -fno-tree-loop-vectorize -fno-tree-slp-vectorize"
 fi
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] ; then
+    # Python 3.11+
+	export TCLTK_LIBS="-ltk8.6 -ltcl8.6"
+fi
 
 # configure with hardening options only for the interpreter & stdlib C extensions
 # do not change the default for user built extension (yet?)
