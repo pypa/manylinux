@@ -66,6 +66,12 @@ deactivate
 pushd $MY_DIR/requirements-tools
 for TOOL_PATH in $(find . -type f); do
 	TOOL=$(basename ${TOOL_PATH})
+	if [ "${AUDITWHEEL_PLAT}" == "musllinux_1_1_armv7l" ]; then
+		case ${TOOL} in
+			swig) apk add --no-cache swig; continue;;
+			cmake) apk add --no-cache cmake; continue;;
+		esac
+	fi
 	pipx install --pip-args="--require-hashes -r" ${TOOL}
 done
 popd
