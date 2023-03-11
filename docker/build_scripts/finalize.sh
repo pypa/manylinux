@@ -68,6 +68,12 @@ export SSL_CERT_FILE=/opt/_internal/certs.pem
 pushd $MY_DIR/requirements-tools
 for TOOL_PATH in $(find . -type f); do
 	TOOL=$(basename ${TOOL_PATH})
+	if [ "${AUDITWHEEL_ARCH}" == "armv7l" ]; then
+		case ${TOOL} in
+			swig) apk add --no-cache swig; continue;;
+			cmake) apk add --no-cache cmake; continue;;
+		esac
+	fi
 	pipx install --pip-args="--require-hashes -r" ${TOOL}
 done
 popd
