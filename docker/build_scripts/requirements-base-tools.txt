@@ -4,9 +4,9 @@
 #
 #    nox -s update_python_tools
 #
-argcomplete==2.0.0 \
-    --hash=sha256:6372ad78c89d662035101418ae253668445b391755cfe94ea52f1b9d22425b20 \
-    --hash=sha256:cffa11ea77999bb0dd27bb25ff6dc142a6796142f68d45b1a26b11f58724561e
+argcomplete==2.1.1 \
+    --hash=sha256:17041f55b8c45099428df6ce6d0d282b892471a78c71375d24f227e21c13f8c5 \
+    --hash=sha256:72e08340852d32544459c0c19aad1b48aa2c3a96de8c6e5742456b4f538ca52f
     # via pipx
 certifi==2022.12.7 \
     --hash=sha256:35824b4c3a97115964b408844d64aa14db1cc518f6562e8d7261699d1350a9e3 \
@@ -20,9 +20,9 @@ packaging==23.0 \
     --hash=sha256:714ac14496c3e68c99c29b00845f7a2b85f3bb6f1078fd9f72fd20f0570002b2 \
     --hash=sha256:b6ad297f8907de0fa2fe1ccbd26fdaf387f5f47c7275fedf8cce89f99446cf97
     # via pipx
-pipx==1.1.0 \
-    --hash=sha256:3e561ac5b102ff01d4716740b2bb1bbe1532d937e49dcf89180dc9701b229579 \
-    --hash=sha256:4d2f70daf15f121e90b7394b0730ee82fc39d7da514e50a7bbf8066be88883bb
+pipx==1.2.0 \
+    --hash=sha256:a94c4bca865cd6e85b37cd6717a22481744890fe36b70db081a78d1feb923ce0 \
+    --hash=sha256:d1908041d24d525cafebeb177efb686133d719499cb55c54f596c95add579286
     # via -r requirements-base-tools.in
 userpath==1.8.0 \
     --hash=sha256:04233d2fcfe5cff911c1e4fb7189755640e1524ff87a4b82ab9d6b875fee5787 \
