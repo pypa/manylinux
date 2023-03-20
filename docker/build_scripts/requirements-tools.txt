@@ -4,9 +4,9 @@
 #
 #    pip-compile --generate-hashes --output-file=docker/build_scripts/requirements-tools.txt requirements-tools.in
 #
-argcomplete==2.1.1 \
-    --hash=sha256:17041f55b8c45099428df6ce6d0d282b892471a78c71375d24f227e21c13f8c5 \
-    --hash=sha256:72e08340852d32544459c0c19aad1b48aa2c3a96de8c6e5742456b4f538ca52f
+argcomplete==3.0.2 \
+    --hash=sha256:ba35518a5640ebbda5fb77d94e1db535233a7eac18ffb905216753749eaff8e1 \
+    --hash=sha256:fb929c2f609f195a2b11dc914924149b45c2b55b9f48283362e18b8d35f855c1
     # via pipx
 auditwheel==5.3.0 \
     --hash=sha256:1da1af54de5badd10149250c257a799be003fd976794716f17914e3d4b4a9fc9 \
