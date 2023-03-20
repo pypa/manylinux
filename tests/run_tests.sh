@@ -55,6 +55,7 @@ sqlite3 --version
 pipx run nox --version
 pipx install --pip-args='--no-python-version-warning --no-input' nox
 nox --version
+tar --version | grep "GNU tar"
 
 # check libcrypt.so.1 can be loaded by some system packages,
 # as LD_LIBRARY_PATH might not be enough.

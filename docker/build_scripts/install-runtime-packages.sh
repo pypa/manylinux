@@ -102,7 +102,7 @@ elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
 	fi
 elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
 	TOOLCHAIN_DEPS="binutils gcc g++ gfortran"
-	BASETOOLS="${BASETOOLS} curl util-linux"
+	BASETOOLS="${BASETOOLS} curl util-linux tar"
 	PACKAGE_MANAGER=apk
 	apk add --no-cache ca-certificates gnupg
 else
