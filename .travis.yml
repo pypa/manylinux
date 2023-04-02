@@ -58,10 +58,14 @@ install:
   - ./travisci-install-buildx.sh
 
 script: |
+  BUILD_STATUS=success
   (while true; do echo "travis_wait"; docker stats --no-stream; free; df -h; sleep 30; done) &
   WAIT_PID=$!
-  COMMIT_SHA=${TRAVIS_COMMIT} ./build.sh
+  COMMIT_SHA=${TRAVIS_COMMIT} ./build.sh || BUILD_STATUS=failed
   kill -9 ${WAIT_PID}
+  if [ "${BUILD_STATUS}" != "success" ]; then
+    exit 1
+  fi
   if [ -d "${HOME}/buildx-cache" ]; then
     rm -rf ${HOME}/buildx-cache
   fi
