@@ -112,7 +112,6 @@ FROM build_cpython_system_ssl AS build_cpython36
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.6.15
 
-
 FROM build_cpython_system_ssl AS build_cpython37
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.17
@@ -122,11 +121,9 @@ FROM build_cpython AS build_cpython38
 COPY build_scripts/ambv-pubkey.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.8.19
 
-
 FROM build_cpython AS build_cpython39
 COPY build_scripts/ambv-pubkey.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.9.19
-
 
 FROM build_cpython AS build_cpython310
 COPY build_scripts/cpython-pubkey-310-311.txt /build_scripts/cpython-pubkeys.txt
@@ -140,8 +137,11 @@ FROM build_cpython AS build_cpython312
 COPY build_scripts/cpython-pubkey-312-313.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.12.3
 
-FROM build_cpython AS all_cpython
-COPY build_scripts/finalize-python.sh /build_scripts/
+
+FROM runtime_base
+COPY --from=build_git /manylinux-rootfs /
+COPY --from=build_cpython_system_ssl /manylinux-rootfs /
+COPY build_scripts /opt/_internal/build_scripts/
 RUN --mount=type=bind,target=/build_cpython36,from=build_cpython36 \
     --mount=type=bind,target=/build_cpython37,from=build_cpython37 \
     --mount=type=bind,target=/build_cpython38,from=build_cpython38 \
@@ -151,20 +151,11 @@ RUN --mount=type=bind,target=/build_cpython36,from=build_cpython36 \
     --mount=type=bind,target=/build_cpython312,from=build_cpython312 \
     mkdir -p /opt/_internal && \
     cp -rf /build_cpython*/opt/_internal/* /opt/_internal/ && \
-    manylinux-entrypoint /build_scripts/finalize-python.sh
-
-
-FROM runtime_base
-COPY --from=build_git /manylinux-rootfs /
-COPY --from=build_cpython /manylinux-rootfs /
-COPY build_scripts /opt/_internal/build_scripts/
-RUN --mount=type=bind,target=/all_cpython,from=all_cpython \
-    cp -rf /all_cpython/opt/_internal/* /opt/_internal/ && \
     manylinux-entrypoint /opt/_internal/build_scripts/finalize.sh \
-    pp37-pypy37_pp73 \
-    pp38-pypy38_pp73 \
-    pp39-pypy39_pp73 \
-    pp310-pypy310_pp73
+      pp37-pypy37_pp73 \
+      pp38-pypy38_pp73 \
+      pp39-pypy39_pp73 \
+      pp310-pypy310_pp73
 
 ENV SSL_CERT_FILE=/opt/_internal/certs.pem
 

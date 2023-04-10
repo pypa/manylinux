@@ -43,16 +43,30 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] ; then
 	export TCLTK_LIBS="-ltk8.6 -ltcl8.6"
 fi
 
+OPENSSL_EXTRA=""
+OPENSSL_PREFIX=$(find /opt/_internal -maxdepth 1 -name 'openssl*')
+if [ "${OPENSSL_PREFIX}" != "" ]; then
+	OPENSSL_EXTRA="--with-openssl=${OPENSSL_PREFIX}"
+	case "${CPYTHON_VERSION}" in
+		3.8.*|3.9.*) export LD_RUN_PATH=${OPENSSL_PREFIX}/lib;;
+		*) OPENSSL_EXTRA="${OPENSSL_EXTRA} --with-openssl-rpath=auto";;
+	esac
+fi
+
 # configure with hardening options only for the interpreter & stdlib C extensions
 # do not change the default for user built extension (yet?)
 ./configure \
 	CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS} ${CFLAGS_EXTRA}" \
-	LDFLAGS_NODIST="${MANYLINUX_LDFLAGS}" \
+	LDFLAGS_NODIST="${MANYLINUX_LDFLAGS}" ${OPENSSL_EXTRA} \
 	--prefix=${PREFIX} --disable-shared --with-ensurepip=no > /dev/null
 make > /dev/null
 make install > /dev/null
 popd
 rm -rf Python-${CPYTHON_VERSION} Python-${CPYTHON_VERSION}.tgz Python-${CPYTHON_VERSION}.tgz.asc
+
+if [ "${OPENSSL_PREFIX}" != "" ]; then
+	rm -rf ${OPENSSL_PREFIX}/bin ${OPENSSL_PREFIX}/include ${OPENSSL_PREFIX}/lib/pkgconfig ${OPENSSL_PREFIX}/lib/*.so
+fi
 
 # We do not need precompiled .pyc and .pyo files.
 clean_pyc ${PREFIX}
