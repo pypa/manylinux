@@ -84,8 +84,8 @@ RUN export GIT_ROOT=git-2.40.1 && \
 
 FROM build_base AS build_cpython
 COPY build_scripts/build-sqlite3.sh /build_scripts/
-RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3410200 && \
-    export SQLITE_AUTOCONF_HASH=e98c100dd1da4e30fa460761dab7c0b91a50b785e167f8c57acc46514fae9499 && \
+RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3420000 && \
+    export SQLITE_AUTOCONF_HASH=7abcfd161c6e2742ca5c6c0895d1f853c940f203304a0b49da4e1eca5d088ca6 && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2023 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
