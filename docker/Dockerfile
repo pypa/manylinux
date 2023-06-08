@@ -61,8 +61,8 @@ RUN export LIBTOOL_ROOT=libtool-2.4.7 && \
     manylinux-entrypoint /build_scripts/install-libtool.sh
 
 COPY build_scripts/install-libxcrypt.sh /build_scripts/
-RUN export LIBXCRYPT_VERSION=4.4.34 && \
-    export LIBXCRYPT_HASH=8888bbe9f8530bbd9f8063d65288018d419f91e9b3e3349abb8cb4d0a0397cc5 && \
+RUN export LIBXCRYPT_VERSION=4.4.35 && \
+    export LIBXCRYPT_HASH=15981f2ffb82d70f07285f9683c485c4774083057564a2e7e74236c19e8e9f7b && \
     export LIBXCRYPT_DOWNLOAD_URL=https://github.com/besser82/libxcrypt/archive && \
     export PERL_ROOT=perl-5.34.0 && \
     export PERL_HASH=551efc818b968b05216024fb0b727ef2ad4c100f8cb6b43fab615fa78ae5be9a && \
@@ -113,30 +113,30 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.6.15
 
 FROM build_cpython AS build_cpython37
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.16
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.17
 
 
 FROM build_cpython AS build_cpython38
 COPY build_scripts/ambv-pubkey.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.8.16
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.8.17
 
 
 FROM build_cpython AS build_cpython39
 COPY build_scripts/ambv-pubkey.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.9.16
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.9.17
 
 
 FROM build_cpython AS build_cpython310
 COPY build_scripts/cpython-pubkey-310-311.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.10.11
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.10.12
 
 FROM build_cpython AS build_cpython311
 COPY build_scripts/cpython-pubkey-310-311.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.11.3
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.11.4
 
 FROM build_cpython AS build_cpython312
 COPY build_scripts/cpython-pubkey-312-313.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.12.0b1
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.12.0b2
 
 FROM build_cpython AS all_python
 COPY build_scripts/install-pypy.sh \
