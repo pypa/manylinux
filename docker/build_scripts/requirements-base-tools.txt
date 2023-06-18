@@ -4,9 +4,9 @@
 #
 #    nox -s update_python_tools
 #
-argcomplete==3.1.0 \
-    --hash=sha256:3a81445fa51c9875c36789ae5386d5e95c5c43d503963a0029a747aea74de1e3 \
-    --hash=sha256:faea1cba05479b66628d7b216fcd23f2b9ad0117b13280aad8ae0b30872cd1f5
+argcomplete==3.1.1 \
+    --hash=sha256:35fa893a88deea85ea7b20d241100e64516d6af6d7b0ae2bed1d263d26f70948 \
+    --hash=sha256:6c4c563f14f01440aaffa3eae13441c5db2357b5eec639abe7c0b15334627dff
     # via pipx
 certifi==2023.5.7 \
     --hash=sha256:0f0d56dc5a6ad56fd4ba36484d6cc34451e1c6548c61daad8c320169f91eddc7 \
