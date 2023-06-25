@@ -10,7 +10,7 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 # Get build utilities
 source $MY_DIR/build_utils.sh
 
-if [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
+if [ "${BASE_POLICY}" == "musllinux" ]; then
 	export NO_REGEX=NeedsStartEnd
 fi
 
