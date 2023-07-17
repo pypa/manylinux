@@ -10,7 +10,7 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source $MY_DIR/build_utils.sh
 
 mkdir /opt/python
-for PREFIX in $(find /opt/_internal/ -mindepth 1 -maxdepth 1 \( -name 'cpython*' -o -name 'pypy*' \)); do
+for PREFIX in $(find /opt/_internal/ -mindepth 1 -maxdepth 1 \( -name 'cpython*' -o -name 'pypy*' -o -name 'graalpy*' \)); do
 	# Some python's install as bin/python3. Make them available as
 	# bin/python.
 	if [ -e ${PREFIX}/bin/python3 ] && [ ! -e ${PREFIX}/bin/python ]; then
@@ -30,6 +30,8 @@ for PREFIX in $(find /opt/_internal/ -mindepth 1 -maxdepth 1 \( -name 'cpython*'
 	# Make versioned python commands available directly in environment.
 	if [[ "${PREFIX}" == *"/pypy"* ]]; then
 		ln -s ${PREFIX}/bin/python /usr/local/bin/pypy${PY_VER}
+	elif [[ "${PREFIX}" == *"/graalpy"* ]]; then
+		ln -s ${PREFIX}/bin/python /usr/local/bin/graalpy${PY_VER}
 	else
 		ln -s ${PREFIX}/bin/python /usr/local/bin/python${PY_VER}
 	fi

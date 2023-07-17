@@ -141,12 +141,15 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.12.0b4
 FROM build_cpython AS all_python
 COPY build_scripts/install-pypy.sh \
      build_scripts/pypy.sha256 \
+     build_scripts/install-graalpy.sh \
+     build_scripts/graalpy.sha256 \
      build_scripts/finalize-python.sh \
      /build_scripts/
 RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.7 7.3.9
 RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.8 7.3.11
 RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.9 7.3.12
 RUN manylinux-entrypoint /build_scripts/install-pypy.sh 3.10 7.3.12
+RUN manylinux-entrypoint /build_scripts/install-graalpy.sh 3.10 graal 23.0.0 graalpython
 COPY --from=build_cpython36 /opt/_internal /opt/_internal/
 COPY --from=build_cpython37 /opt/_internal /opt/_internal/
 COPY --from=build_cpython38 /opt/_internal /opt/_internal/
