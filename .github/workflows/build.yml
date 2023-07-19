@@ -28,16 +28,14 @@ concurrency:
 jobs:
   build_manylinux:
     name: ${{ matrix.policy }}_${{ matrix.platform }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
-        policy: ["manylinux2014", "manylinux_2_24", "musllinux_1_1"]
+        policy: ["manylinux2014", "musllinux_1_1"]
         platform: ["i686", "x86_64"]
         include:
-          - policy: "manylinux2010"
-            platform: "i686"
-          - policy: "manylinux2010"
+          - policy: "manylinux_2_28"
             platform: "x86_64"
 
     env:
@@ -47,20 +45,20 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up emulation
         if: matrix.platform != 'i686' && matrix.platform != 'x86_64'
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v2
         with:
           platforms: ${{ matrix.platform }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
 
       - name: Setup cache
         if: github.event_name != 'workflow_dispatch' || fromJSON(github.event.inputs.useCache)
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
           key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-${{ hashFiles('docker/**') }}
@@ -75,3 +73,9 @@ jobs:
         env:
           QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
           QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
+
+  all_passed:
+    needs: [build_manylinux]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "All jobs passed"

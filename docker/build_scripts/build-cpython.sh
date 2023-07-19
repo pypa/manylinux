@@ -23,7 +23,6 @@ function pyver_dist_dir {
 	echo $1 | awk -F "." '{printf "%d.%d.%d", $1, $2, $3}'
 }
 
-
 CPYTHON_DIST_DIR=$(pyver_dist_dir ${CPYTHON_VERSION})
 fetch_source Python-${CPYTHON_VERSION}.tgz ${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}
 fetch_source Python-${CPYTHON_VERSION}.tgz.asc ${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}
@@ -33,25 +32,25 @@ tar -xzf Python-${CPYTHON_VERSION}.tgz
 pushd Python-${CPYTHON_VERSION}
 PREFIX="/opt/_internal/cpython-${CPYTHON_VERSION}"
 mkdir -p ${PREFIX}/lib
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
-	# The _ctypes stdlib module build started to fail with 3.10.0rc1
-	# No clue what changed exactly yet
-	# This workaround fixes the build
-	LIBFFI_INCLUDEDIR=$(pkg-config --cflags-only-I libffi  | tr -d '[:space:]')
-	LIBFFI_INCLUDEDIR=${LIBFFI_INCLUDEDIR:2}
-	cp ${LIBFFI_INCLUDEDIR}/ffi.h ${LIBFFI_INCLUDEDIR}/ffitarget.h /usr/include/
+CFLAGS_EXTRA=""
+if [ "${CPYTHON_VERSION}" == "3.6.15" ]; then
+	# https://github.com/python/cpython/issues/89863
+	# gcc-12+ uses these 2 flags in -O2 but they were only enabled in -O3 with gcc-11
+	CFLAGS_EXTRA="${CFLAGS_EXTRA} -fno-tree-loop-vectorize -fno-tree-slp-vectorize"
 fi
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] ; then
+    # Python 3.11+
+	export TCLTK_LIBS="-ltk8.6 -ltcl8.6"
+fi
+
 # configure with hardening options only for the interpreter & stdlib C extensions
 # do not change the default for user built extension (yet?)
 ./configure \
-	CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS}" \
+	CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS} ${CFLAGS_EXTRA}" \
 	LDFLAGS_NODIST="${MANYLINUX_LDFLAGS}" \
 	--prefix=${PREFIX} --disable-shared --with-ensurepip=no > /dev/null
 make > /dev/null
 make install > /dev/null
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
-	rm -f /usr/include/ffi.h /usr/include/ffitarget.h
-fi
 popd
 rm -rf Python-${CPYTHON_VERSION} Python-${CPYTHON_VERSION}.tgz Python-${CPYTHON_VERSION}.tgz.asc
 

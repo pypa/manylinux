@@ -17,7 +17,7 @@ if [ "${MANYLINUX_BUILD_FRONTEND:-}" == "buildkit" ]; then
 	sudo apt-get update
 	sudo apt-get remove -y fuse ntfs-3g
 	sudo apt-get install -y --no-install-recommends runc containerd uidmap slirp4netns fuse-overlayfs
-	curl -fsSL "https://github.com/moby/buildkit/releases/download/v0.9.3/buildkit-v0.9.3.linux-${BUILDX_MACHINE}.tar.gz" | sudo tar -C /usr/local -xz
+	curl -fsSL "https://github.com/moby/buildkit/releases/download/v0.11.3/buildkit-v0.11.3.linux-${BUILDX_MACHINE}.tar.gz" | sudo tar -C /usr/local -xz
 	cat <<EOF > /tmp/start-buildkitd.sh
 buildkitd &> /dev/null &
 BUILDKITD_PID=\$!
@@ -73,15 +73,9 @@ fi
 
 # update buildx
 mkdir -vp ~/.docker/cli-plugins/
-curl -sSL "https://github.com/docker/buildx/releases/download/v0.7.1/buildx-v0.7.1.linux-${BUILDX_MACHINE}" > ~/.docker/cli-plugins/docker-buildx
+curl -sSL "https://github.com/docker/buildx/releases/download/v0.10.3/buildx-v0.10.3.linux-${BUILDX_MACHINE}" > ~/.docker/cli-plugins/docker-buildx
 chmod a+x ~/.docker/cli-plugins/docker-buildx
 docker buildx version
-
 docker buildx create --name builder-manylinux --driver docker-container --use
-if [ ${BUILDX_MACHINE} == "ppc64le" ]; then
-	# start the container without --userns=host
-	# https://github.com/docker/buildx/issues/561
-	docker run -d --name buildx_buildkit_builder-manylinux0 --privileged moby/buildkit:buildx-stable-1
-fi
 # Force plain output done with 2>&1 | tee /dev/null
 docker buildx inspect --bootstrap --builder builder-manylinux 2>&1 | tee /dev/null

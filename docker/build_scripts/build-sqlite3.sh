@@ -30,7 +30,11 @@ strip_ /manylinux-rootfs
 
 # Install
 cp -rlf /manylinux-rootfs/* /
-ldconfig /
+if [ "${BASE_POLICY}" == "musllinux" ]; then
+	ldconfig /
+elif [ "${BASE_POLICY}" == "manylinux" ]; then
+	ldconfig
+fi
 
 # Clean-up for runtime
 rm -rf /manylinux-rootfs/usr/local/share

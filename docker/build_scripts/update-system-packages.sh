@@ -11,7 +11,7 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source $MY_DIR/build_utils.sh
 
 fixup-mirrors
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	yum -y update
 	if ! localedef -V &> /dev/null; then
 		# somebody messed up glibc-common package to squeeze image size, reinstall the package
@@ -20,19 +20,10 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == 
 	fi
 	yum clean all
 	rm -rf /var/cache/yum
-elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
-	export DEBIAN_FRONTEND=noninteractive
-	apt-get update -qq
-	apt-get upgrade -qq -y
-	apt-get clean -qq
-	rm -rf /var/lib/apt/lists/*
-	if [ "${AUDITWHEEL_ARCH}" == "s390x" ] || [ "${AUDITWHEEL_ARCH}" == "ppc64le" ]; then
-		# those arch are missing some updates
-		# we need to manually delete some certificates...
-		sed -i '/DST_Root_CA_X3.crt$/d' /etc/ca-certificates.conf
-		find /etc/ssl/certs -name 'DST_Root_CA_X3.pem' -delete
-		update-ca-certificates
-	fi
+elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+	dnf -y upgrade
+	dnf clean all
+	rm -rf /var/cache/yum
 elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
 	apk upgrade --no-cache
 else
@@ -53,13 +44,9 @@ if [ "${BASE_POLICY}" == "manylinux" ]; then
 		if localedef --list-archive | grep -sq -v -i ^en_US.utf8; then
 			localedef --list-archive | grep -v -i ^en_US.utf8 | xargs localedef --delete-from-archive
 		fi
-		if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
+		if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 			mv -f ${LOCALE_ARCHIVE} ${LOCALE_ARCHIVE}.tmpl
 			build-locale-archive --install-langs="en_US.utf8"
-		elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
-			rm ${LOCALE_ARCHIVE}
-			localedef -i en_US -f UTF-8 en_US.UTF-8
-			update-locale LANG=en_US.UTF-8
 		fi
 		touch ${TIMESTAMP_FILE}
 	fi
@@ -99,5 +86,10 @@ fi
 if [ -f /usr/local/lib/libcrypt.so.1 ]; then
 	# Remove libcrypt to only use installed libxcrypt instead
 	find /lib* /usr/lib* \( -name 'libcrypt.a' -o -name 'libcrypt.so' -o -name 'libcrypt.so.*' -o -name 'libcrypt-2.*.so' \) -delete
+fi
+
+if [ "${BASE_POLICY}" == "musllinux" ]; then
+	ldconfig /
+elif [ "${BASE_POLICY}" == "manylinux" ]; then
 	ldconfig
 fi

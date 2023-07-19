@@ -10,7 +10,7 @@ set -exu
 MY_DIR=$(dirname "$0")
 
 
-if [ "${AUDITWHEEL_PLAT}" = "manylinux2010_i686" ] || [ "${AUDITWHEEL_PLAT}" = "manylinux2014_i686" ]; then
+if [ "${AUDITWHEEL_PLAT}" = "manylinux2014_i686" ]; then
 	echo "i386" > /etc/yum/vars/basearch
 	fixup-mirrors
 	yum -y update

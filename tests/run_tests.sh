@@ -6,14 +6,12 @@ set -exuo pipefail
 # Get script directory
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	PACKAGE_MANAGER=yum
-elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
-	export DEBIAN_FRONTEND=noninteractive
-	PACKAGE_MANAGER=apt
-	apt-get update -qq
 elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
 	PACKAGE_MANAGER=apk
+elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+	PACKAGE_MANAGER=dnf
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
 	exit 1
@@ -35,6 +33,8 @@ for PYTHON in /opt/python/*/bin/python; do
 		# Make sure sqlite3 module can be loaded properly and is the manylinux version one
 		# c.f. https://github.com/pypa/manylinux/issues/1030
 		$PYTHON -c 'import sqlite3; print(sqlite3.sqlite_version); assert sqlite3.sqlite_version_info[0:2] >= (3, 34)'
+		# Make sure tkinter module can be loaded properly
+		$PYTHON -c 'import tkinter; print(tkinter.TkVersion); assert tkinter.TkVersion >= 8.6'
 	fi
 	# pythonX.Y / pypyX.Y shall be available directly in PATH
 	LINK_VERSION=$(${LINK_PREFIX}${PYVERS} -V)
@@ -55,16 +55,17 @@ sqlite3 --version
 pipx run nox --version
 pipx install --pip-args='--no-python-version-warning --no-input' nox
 nox --version
+tar --version | grep "GNU tar"
 
 # check libcrypt.so.1 can be loaded by some system packages,
 # as LD_LIBRARY_PATH might not be enough.
 # c.f. https://github.com/pypa/manylinux/issues/1022
 if [ "${PACKAGE_MANAGER}" == "yum" ]; then
 	yum -y install openssh-clients
-elif [ "${PACKAGE_MANAGER}" == "apt" ]; then
-	apt-get install -qq -y --no-install-recommends openssh-client
 elif [ "${PACKAGE_MANAGER}" == "apk" ]; then
 	apk add --no-cache openssh-client
+elif [ "${PACKAGE_MANAGER}" == "dnf" ]; then
+	dnf -y install --allowerasing openssh-clients
 else
 	echo "Unsupported package manager: '${PACKAGE_MANAGER}'"
 	exit 1

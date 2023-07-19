@@ -31,10 +31,8 @@ fi
 
 if which yum; then
 	yum erase -y openssl-devel
-elif which apk; then
-	apk del openssl-dev
 else
-	apt-get remove -y libssl-dev
+	apk del openssl-dev
 fi
 
 fetch_source ${OPENSSL_ROOT}.tar.gz ${OPENSSL_DOWNLOAD_URL}

@@ -35,14 +35,6 @@ case ${AUDITWHEEL_ARCH} in
 	*) echo "No PyPy for ${AUDITWHEEL_ARCH}"; exit 0;;
 esac
 
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2010" ]; then
-	PYPY_VERSION=7.3.7  # versions after this one do not support manylinux2010
-	if [ "${PYTHON_VERSION}" != "3.7" ] && [ "${PYTHON_VERSION}" != "3.8" ]; then
-		echo "No PyPy ${PYTHON_VERSION} for ${AUDITWHEEL_POLICY}"
-		exit 0
-	fi
-fi
-
 EXPAND_NAME=pypy${PYTHON_VERSION}-v${PYPY_VERSION}-${PYPY_ARCH}
 TMPDIR=/tmp/${EXPAND_NAME}
 TARBALL=${EXPAND_NAME}.tar.bz2
@@ -75,9 +67,6 @@ fi
 
 # remove debug symbols
 rm ${PREFIX}/bin/*.debug
-
-# We do not need the Python test suites
-find ${PREFIX} -depth \( -type d -a -name test -o -name tests \) | xargs rm -rf
 
 # We do not need precompiled .pyc and .pyo files.
 clean_pyc ${PREFIX}

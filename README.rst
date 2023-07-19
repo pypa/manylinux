@@ -1,10 +1,6 @@
 manylinux
 =========
 
-Email: wheel-builders@python.org
-
-Archives: https://mail.python.org/mailman/listinfo/wheel-builders
-
 Older archives: https://groups.google.com/forum/#!forum/manylinux-discuss
 
 The goal of the manylinux project is to provide a convenient way to
@@ -43,7 +39,11 @@ on June 30th, 2024.
 
 PEP 600 has been designed to be "future-proof" and does not enforce specific symbols and a specific distro to build.
 It only states that a wheel tagged ``manylinux_x_y`` shall work on any distro based on ``glibc>=x.y``.
-The manylinux project supports ``manylinux_2_24`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
+The manylinux project supports:
+
+- ``manylinux_2_24`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
+
+- ``manylinux_2_28`` images for ``x86_64``, ``aarch64``, ``ppc64le`` and ``s390x``.
 
 
 Wheel packages compliant with those tags can be uploaded to
@@ -55,8 +55,9 @@ pip:
 | ``manylinux`` tag | Client-side pip  | CPython (sources) version  | Distribution default pip compatibility    |
 |                   | version required | embedding a compatible pip |                                           |
 +===================+==================+============================+===========================================+
-| ``manylinux_x_y`` | pip >= 20.3      | 3.8.10+, 3.9.5+, 3.10.0+   | ALT Linux 10+, Debian 11+, Fedora 34+,    |
-|                   |                  |                            | Mageia 8+, Photon OS 3.0 with updates,    |
+| ``manylinux_x_y`` | pip >= 20.3      | 3.8.10+, 3.9.5+, 3.10.0+   | ALT Linux 10+, RHEL 9+, Debian 11+,       |
+|                   |                  |                            | Fedora 34+, Mageia 8+,                    |
+|                   |                  |                            | Photon OS 3.0 with updates,               |
 |                   |                  |                            | Ubuntu 21.04+                             |
 +-------------------+------------------+----------------------------+-------------------------------------------+
 | ``manylinux2014`` | pip >= 19.3      | 3.7.8+, 3.8.4+, 3.9.0+     | CentOS 7 rh-python38, CentOS 8 python38,  |
@@ -98,18 +99,21 @@ done the work for you. The images are uploaded to `quay.io`_ and are tagged
 for repeatable builds.
 
 
-manylinux_2_24 (Debian 9 based)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+manylinux_2_28 (AlmaLinux 8 based)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- x86_64 image: ``quay.io/pypa/manylinux_2_24_x86_64``
-- i686 image: ``quay.io/pypa/manylinux_2_24_i686``
-- aarch64 image: ``quay.io/pypa/manylinux_2_24_aarch64``
-- ppc64le image: ``quay.io/pypa/manylinux_2_24_ppc64le``
-- s390x image: ``quay.io/pypa/manylinux_2_24_s390x``
+Toolchain: GCC 12
+
+- x86_64 image: ``quay.io/pypa/manylinux_2_28_x86_64``
+- aarch64 image: ``quay.io/pypa/manylinux_2_28_aarch64``
+- ppc64le image: ``quay.io/pypa/manylinux_2_28_ppc64le``
+- s390x image: ``quay.io/pypa/manylinux_2_28_s390x``
 
 
 manylinux2014 (CentOS 7 based)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Toolchain: GCC 10
 
 - x86_64 image: ``quay.io/pypa/manylinux2014_x86_64``
 - i686 image: ``quay.io/pypa/manylinux2014_i686``
@@ -118,8 +122,28 @@ manylinux2014 (CentOS 7 based)
 - s390x image: ``quay.io/pypa/manylinux2014_s390x``
 
 
+manylinux_2_24 (Debian 9 based) - EOL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Support for ``manylinux_2_24`` has `ended on January 1st, 2023 <https://github.com/pypa/manylinux/issues/1332>`_.
+
+These images have some caveats mentioned in different issues.
+
+Toolchain: GCC 6
+
+- x86_64 image: ``quay.io/pypa/manylinux_2_24_x86_64``
+- i686 image: ``quay.io/pypa/manylinux_2_24_i686``
+- aarch64 image: ``quay.io/pypa/manylinux_2_24_aarch64``
+- ppc64le image: ``quay.io/pypa/manylinux_2_24_ppc64le``
+- s390x image: ``quay.io/pypa/manylinux_2_24_s390x``
+
+
 manylinux2010 (CentOS 6 based - EOL)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Support for ``manylinux2010`` has `ended on August 1st, 2022 <https://github.com/pypa/manylinux/issues/1281>`_.
+
+Toolchain: GCC 8
 
 - x86-64 image: ``quay.io/pypa/manylinux2010_x86_64``
 - i686 image: ``quay.io/pypa/manylinux2010_i686``
@@ -130,7 +154,9 @@ manylinux1 (CentOS 5 based - EOL)
 
 Code and details regarding ``manylinux1`` can be found in the `manylinux1 branch <https://github.com/pypa/manylinux/tree/manylinux1>`_.
 
-Support for ``manylinux1`` will `end on January 1st, 2022 <https://github.com/pypa/manylinux/issues/994>`_.
+Support for ``manylinux1`` has `ended on January 1st, 2022 <https://github.com/pypa/manylinux/issues/994>`_.
+
+Toolchain: GCC 4.8
 
 - x86-64 image: ``quay.io/pypa/manylinux1_x86_64``
 - i686 image: ``quay.io/pypa/manylinux1_i686``
@@ -147,7 +173,7 @@ Image content
 
 All images currently contain:
 
-- CPython 3.6, 3.7, 3.8, 3.9, 3.10, and PyPy 3.7, 3.8, 3.9 installed in
+- CPython 3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12 and PyPy 3.7, 3.8, 3.9 installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
   e.g. ``/opt/python/cp37-cp37m`` contains a CPython 3.7 build, and
@@ -185,7 +211,7 @@ The requirement files are pinned and controlled by pip-tools compile. To update
 the pins, run nox on a Linux system with all supported versions of Python included.
 For example, using a docker image:
 
-    $ docker run --rm -v $PWD:/nox -t quay.io/pypa/manylinux2010_x86_64:latest pipx run nox -f /nox/noxfile.py -s update_python_dependencies update_python_tools
+    $ docker run --rm -v $PWD:/nox -t quay.io/pypa/manylinux2014_x86_64:latest pipx run nox -f /nox/noxfile.py -s update_python_dependencies update_python_tools
 
 Updating the native dependencies
 --------------------------------

@@ -1,6 +1,9 @@
 name: Update dependencies
 
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/update-dependencies.yml'
   workflow_dispatch:
   schedule:
     - cron: '0 18 * * 0'  # "At 18:00 on Sunday."
@@ -8,13 +11,14 @@ on:
 jobs:
   update-dependencies:
     name: Update dependencies
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
+    - uses: actions/checkout@v3
+    - uses: wntrblm/nox@2022.11.21
       with:
-        python-version: "3.10-dev"
-    - uses: excitedleigh/setup-nox@v2.0.0
+        python-versions: "3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12-dev"
+    - name: "Allow nox to run with python 3.6"
+      run: pipx runpip nox install 'virtualenv<20.22.0'
     - name: "Setup bot user"
       run: |
         git config --global user.name "manylinux-bot[bot]"
@@ -23,18 +27,19 @@ jobs:
     # without rate-limit and PRs get run by GHA.
     - uses: tibdex/github-app-token@v1
       id: generate-token
+      if: github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
       with:
         app_id: ${{ secrets.MANYLINUX_BOT_APP_ID }}
         private_key: ${{ secrets.MANYLINUX_BOT_APP_PRIVATE_KEY }}
     - name: "Run update native dependencies"
-      run: nox --force-color -s update_native_dependencies
+      run: nox --force-color --error-on-missing-interpreters -s update_native_dependencies
       env:
-        GITHUB_API_TOKEN: ${{ steps.generate-token.outputs.token }}
+        GITHUB_API_TOKEN: ${{ steps.generate-token.outputs.token || github.token }}
     - name: "Run update python dependencies"
-      run: nox --force-color -s update_python_dependencies update_python_tools
+      run: nox --force-color --error-on-missing-interpreters -s update_python_dependencies update_python_tools
     - name: Create Pull Request
       if: github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
-      uses: peter-evans/create-pull-request@v3
+      uses: peter-evans/create-pull-request@v4
       with:
         commit-message: Update python dependencies
         title: '[Bot] Update dependencies'

@@ -28,23 +28,7 @@ else
 fi
 
 # setup BASEIMAGE and its specific properties
-if [ "${POLICY}" == "manylinux2010" ]; then
-	if [ "${PLATFORM}" == "x86_64" ]; then
-		BASEIMAGE="quay.io/pypa/manylinux2010_x86_64_centos6_no_vsyscall"
-	elif [ "${PLATFORM}" == "i686" ]; then
-		BASEIMAGE="${MULTIARCH_PREFIX}centos:6"
-	else
-		echo "Policy '${POLICY}' does not support platform '${PLATFORM}'"
-		exit 1
-	fi
-	DEVTOOLSET_ROOTPATH="/opt/rh/devtoolset-8/root"
-	PREPEND_PATH="${DEVTOOLSET_ROOTPATH}/usr/bin:"
-	if [ "${PLATFORM}" == "i686" ]; then
-		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"
-	else
-		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst:/usr/local/lib64"
-	fi
-elif [ "${POLICY}" == "manylinux2014" ]; then
+if [ "${POLICY}" == "manylinux2014" ]; then
 	if [ "${PLATFORM}" == "s390x" ]; then
 		BASEIMAGE="s390x/clefos:7"
 	else
@@ -57,11 +41,11 @@ elif [ "${POLICY}" == "manylinux2014" ]; then
 	else
 		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst:/usr/local/lib64"
 	fi
-elif [ "${POLICY}" == "manylinux_2_24" ]; then
-	BASEIMAGE="${MULTIARCH_PREFIX}debian:9"
-	DEVTOOLSET_ROOTPATH=
-	PREPEND_PATH=
-	LD_LIBRARY_PATH_ARG=
+elif [ "${POLICY}" == "manylinux_2_28" ]; then
+	BASEIMAGE="${MULTIARCH_PREFIX}almalinux:8"
+	DEVTOOLSET_ROOTPATH="/opt/rh/gcc-toolset-12/root"
+	PREPEND_PATH="${DEVTOOLSET_ROOTPATH}/usr/bin:"
+	LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"
 elif [ "${POLICY}" == "musllinux_1_1" ]; then
 	BASEIMAGE="${MULTIARCH_PREFIX}alpine:3.12"
 	DEVTOOLSET_ROOTPATH=
