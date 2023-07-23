@@ -47,26 +47,25 @@ EOF
 fi
 
 # default to docker-buildx frontend
-if [ ${BUILDX_MACHINE} == "ppc64le" ]; then
-	# We need to update docker to get buildx support, c.f. https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
-	sudo systemctl stop docker
-	sudo apt-get update
-	sudo apt-get purge -y docker docker.io containerd runc
-	sudo apt-get install -y --no-install-recommends ca-certificates curl gnupg lsb-release
-	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-	echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-	sudo apt-get update
-	# prevent the docker service to start upon installation
-	echo -e '#!/bin/sh\nexit 101' | sudo tee /usr/sbin/policy-rc.d
-	sudo chmod +x /usr/sbin/policy-rc.d
-	# install docker
-	sudo apt-get install docker-ce docker-ce-cli docker-ce-rootless-extras
-	# "restore" policy-rc.d
-	sudo rm -f /usr/sbin/policy-rc.d
-	sudo sed -i 's;fd://;unix://;g' /lib/systemd/system/docker.service
-	sudo systemctl daemon-reload
-	sudo systemctl start docker
-fi
+# We need to update docker to get buildx support, c.f. https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
+sudo systemctl stop docker
+sudo apt-get update
+sudo apt-get purge -y docker docker.io containerd runc
+sudo apt-get install -y --no-install-recommends ca-certificates curl gnupg lsb-release
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+# prevent the docker service to start upon installation
+echo -e '#!/bin/sh\nexit 101' | sudo tee /usr/sbin/policy-rc.d
+sudo chmod +x /usr/sbin/policy-rc.d
+# install docker
+sudo apt-get install docker-ce docker-ce-cli docker-ce-rootless-extras
+# "restore" policy-rc.d
+sudo rm -f /usr/sbin/policy-rc.d
+sudo sed -i 's;fd://;unix://;g' /lib/systemd/system/docker.service
+sudo systemctl daemon-reload
+sudo systemctl start docker
+
 if [ "${MANYLINUX_BUILD_FRONTEND:-}" == "docker" ]; then
 	exit 0
 fi
