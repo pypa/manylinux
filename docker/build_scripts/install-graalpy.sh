@@ -14,53 +14,38 @@ if [ "${BASE_POLICY}" == "musllinux" ]; then
 	exit 0
 fi
 
+case ${AUDITWHEEL_ARCH} in
+	x86_64) GRAALPY_ARCH=amd64;;
+	aarch64) GRAALPY_ARCH=aarch64;;
+	*) echo "No GraalPy for ${AUDITWHEEL_ARCH}"; exit 0;;
+esac
+
 PYTHON_VERSION=$1
 VERSION_PREFIX=$2
 GRAALPY_VERSION=$3
 ARCHIVE_PREFIX=$4
-GRAALPY_DOWNLOAD_URL=https://github.com/oracle/graalpython/releases/download/${VERSION_PREFIX}-${GRAALPY_VERSION}/
-# graal-23.0.0/graalpython-23.0.0-linux-amd64.tar.gz
-
-
-function get_shortdir {
-    local exe=$1
-    $exe -c 'import sys; print(sys.implementation.cache_tag)'
-}
-
-
-mkdir -p /tmp
-cd /tmp
-
-case ${AUDITWHEEL_ARCH} in
-	x86_64) GRAALPY_ARCH=amd64;;
-	aarch64) GRAALPY_ARCH=aarch64;;
-	*) echo "No PyPy for ${AUDITWHEEL_ARCH}"; exit 0;;
-esac
-
-EXPAND_NAME=graalpy-${GRAALPY_VERSION}-linux-${GRAALPY_ARCH}
-TMPDIR=/tmp/${EXPAND_NAME}
+GRAALPY_DOWNLOAD_URL=https://github.com/oracle/graalpython/releases/download/${VERSION_PREFIX}-${GRAALPY_VERSION}/ # e.g. graal-23.0.0/graalpython-23.0.0-linux-amd64.tar.gz
+TMPDIR=/tmp/
 TARBALL=graalpython-${GRAALPY_VERSION}-linux-${GRAALPY_ARCH}.tar.gz
-PREFIX="/opt/_internal"
+TARBALL_SHA=`grep " ${TARBALL}\$" ${MY_DIR}/graalpy.sha256`
+PREFIX="/opt/_internal/graalpy-${GRAALPY_VERSION}"
 
+# create a download script that will download and extract graalpy. we leave
+# this script in the image to avoid the large distribution to use up space in
+# the default image.
 mkdir -p ${PREFIX}
+cat <<EOF> ${PREFIX}/install-graalpy.sh
+#!/bin/bash
+set -exuo pipefail
+mkdir -p ${PREFIX}
+mkdir -p ${TMPDIR}
+curl -fsSL -o "${TMPDIR}/${TARBALL}" "${GRAALPY_DOWNLOAD_URL}/${TARBALL}"
+cd ${TMPDIR}
+echo "${TARBALL_SHA}" | sha256sum -c
+tar -xf "${TMPDIR}/${TARBALL}" --overwrite --strip-components=1 -C "${PREFIX}"
+rm -f "${TMPDIR}/${TARBALL}"
+EOF
 
-fetch_source ${TARBALL} ${GRAALPY_DOWNLOAD_URL}
-
-# We only want to check the current tarball sha256sum
-grep " ${TARBALL}\$" ${MY_DIR}/graalpy.sha256 > ${TARBALL}.sha256
-# then check sha256 sum
-sha256sum -c ${TARBALL}.sha256
-
-tar -xf ${TARBALL}
-
-# rename the directory to something shorter like graalpy230-310
-PREFIX=${PREFIX}/$(get_shortdir ${TMPDIR}/bin/graalpy)
-mv ${TMPDIR} ${PREFIX}
-
-# add a generic "python" symlink
-if [ ! -f "${PREFIX}/bin/python" ]; then
-	ln -s graalpy ${PREFIX}/bin/python
-fi
-
-# We do not need precompiled .pyc and .pyo files.
-clean_pyc ${PREFIX}
+# call the download script right now.
+chmod +x ${PREFIX}/install-graalpy.sh
+${PREFIX}/install-graalpy.sh

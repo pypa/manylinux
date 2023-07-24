@@ -32,6 +32,13 @@ for PREFIX in $(find /opt/_internal/ -mindepth 1 -maxdepth 1 \( -name 'cpython*'
 		ln -s ${PREFIX}/bin/python /usr/local/bin/pypy${PY_VER}
 	elif [[ "${PREFIX}" == *"/graalpy"* ]]; then
 		ln -s ${PREFIX}/bin/python /usr/local/bin/graalpy${PY_VER}
+		# we remove most of graalpy itself, but symlink the install script to
+		# get the same version (same sha) back in the same place
+		ln -s ${PREFIX}/install-graalpy.sh /usr/local/bin/install-graalpy${PY_VER}
+		rm -rf ${PREFIX}/lib/graalpy*
+		rm -rf ${PREFIX}/lib/sulong*
+		rm -rf ${PREFIX}/lib/llvm*
+		rm -rf ${PREFIX}/lib/*.so
 	else
 		ln -s ${PREFIX}/bin/python /usr/local/bin/python${PY_VER}
 	fi

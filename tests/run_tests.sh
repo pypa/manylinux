@@ -17,6 +17,10 @@ else
 	exit 1
 fi
 
+# make sure all graalpy versions are available for testing
+for INSTALLER in $(find /opt/_internal/ -mindepth 2 -maxdepth 2 \( -name 'install-graalpy.sh' \)); do
+	$INSTALLER
+done
 
 for PYTHON in /opt/python/*/bin/python; do
 	# Smoke test to make sure that our Pythons work, and do indeed detect as
