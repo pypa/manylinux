@@ -34,7 +34,7 @@ source $MY_DIR/build_utils.sh
 # MANYLINUX_DEPS: Install development packages (except for libgcc which is provided by gcc install)
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
 	MANYLINUX_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel mesa-libGL-devel libICE-devel libSM-devel zlib-devel expat-devel"
-elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
+elif [ "${BASE_POLICY}" == "musllinux" ]; then
 	MANYLINUX_DEPS="musl-dev libstdc++ glib-dev libx11-dev libxext-dev libxrender-dev mesa-dev libice-dev libsm-dev zlib-dev expat-dev"
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
@@ -47,8 +47,8 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == 
     if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
         RUNTIME_DEPS="${RUNTIME_DEPS} tk"
     fi
-elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
-	RUNTIME_DEPS="zlib bzip2 expat ncurses5-libs readline tk gdbm db xz openssl keyutils-libs krb5-libs libcom_err libidn2 libcurl libuuid libffi"
+elif [ "${BASE_POLICY}" == "musllinux" ]; then
+	RUNTIME_DEPS="zlib bzip2 expat ncurses-libs readline tk gdbm db xz openssl keyutils-libs krb5-libs libcom_err libidn2 libcurl libuuid libffi"
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
 	exit 1
@@ -100,7 +100,7 @@ elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
 	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
 		TOOLCHAIN_DEPS="${TOOLCHAIN_DEPS} yasm"
 	fi
-elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
+elif [ "${BASE_POLICY}" == "musllinux" ]; then
 	TOOLCHAIN_DEPS="binutils gcc g++ gfortran"
 	BASETOOLS="${BASETOOLS} curl util-linux tar"
 	PACKAGE_MANAGER=apk
