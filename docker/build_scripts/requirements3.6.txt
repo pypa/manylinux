@@ -22,9 +22,9 @@ pep517==0.13.0 \
     --hash=sha256:4ba4446d80aed5b5eac6509ade100bff3e7943a8489de249654a5ae9b33ee35b \
     --hash=sha256:ae69927c5c172be1add9203726d4b84cf3ebad1edcd5f71fcdc746e66e829f59
     # via build
-pyparsing==3.1.0 \
-    --hash=sha256:d554a96d1a7d3ddaf7183104485bc19fd80543ad6ac5bdb6426719d766fb06c1 \
-    --hash=sha256:edb662d6fe322d6e990b1594b5feaeadf806803359e3d4d42f11e295e588f0ea
+pyparsing==3.1.1 \
+    --hash=sha256:32c7c0b711493c72ff18a981d24f28aaf9c1fb7ed5e9667c9e84e3db623bdbfb \
+    --hash=sha256:ede28a1a32462f5a9705e07aea48001a08f7cf81a021585011deba701581a0db
     # via packaging
 tomli==1.2.3 \
     --hash=sha256:05b6166bff487dc068d322585c7ea4ef78deed501cc124060e0f238e89a9231f \

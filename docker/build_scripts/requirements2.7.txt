@@ -19,9 +19,9 @@ contextlib2==0.6.0.post1 \
     #   importlib-metadata
     #   importlib-resources
     #   zipp
-distlib==0.3.6 \
-    --hash=sha256:14bad2d9b04d3a36127ac97f30b12a19268f211063d8f8ee4f47108896e11b46 \
-    --hash=sha256:f35c4b692542ca110de7ef0bea44d73981caeb34ca0b9b6b2e6d7790dda8f80e
+distlib==0.3.7 \
+    --hash=sha256:2e24928bc811348f0feb63014e97aaae3037f2cf48712d51ae61df7fd6075057 \
+    --hash=sha256:9dafe54b34a028eafd95039d5e5d4851a13734540f1331060d31c9916e7147a8
     # via virtualenv
 filelock==3.2.1 \
     --hash=sha256:7f07b08d731907441ff40d0c5b81f9512cd968842e0b6264c8bd18a8ce877760 \
