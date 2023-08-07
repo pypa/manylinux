@@ -32,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        policy: ["manylinux2014", "musllinux_1_1"]
+        policy: ["manylinux2014", "musllinux_1_1", "musllinux_1_2"]
         platform: ["i686", "x86_64"]
         include:
           - policy: "manylinux_2_28"

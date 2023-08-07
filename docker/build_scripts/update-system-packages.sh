@@ -24,7 +24,7 @@ elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
 	dnf -y upgrade
 	dnf clean all
 	rm -rf /var/cache/yum
-elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
+elif [ "${BASE_POLICY}" == "musllinux" ]; then
 	apk upgrade --no-cache
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
