@@ -21,7 +21,10 @@ if [ "${AUDITWHEEL_POLICY:0:10}" == "musllinux_" ]; then
 	EXPECTED_PYTHON_COUNT=7
 	EXPECTED_PYTHON_COUNT_ALL=7
 else
-	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ] || [ "${AUDITWHEEL_ARCH}" == "i686" ] || [ "${AUDITWHEEL_ARCH}" == "aarch64" ]; then
+	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ] || [ "${AUDITWHEEL_ARCH}" == "aarch64" ]; then
+		EXPECTED_PYTHON_COUNT=11
+		EXPECTED_PYTHON_COUNT_ALL=12
+	elif [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
 		EXPECTED_PYTHON_COUNT=11
 		EXPECTED_PYTHON_COUNT_ALL=11
 	else
