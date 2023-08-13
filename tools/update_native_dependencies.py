@@ -11,6 +11,10 @@ from lastversion import latest
 from lastversion.Version import Version
 
 
+PROJECT_ROOT = Path(__file__).parent.parent.resolve(strict=True)
+DOCKERFILE = PROJECT_ROOT / "docker" / "Dockerfile"
+
+
 def _sha256(url):
     response = requests.get(
         url,
@@ -25,8 +29,7 @@ def _sha256(url):
 
 
 def _update_cpython(dry_run):
-    dockerfile = Path(__file__).parent / "docker" / "Dockerfile"
-    lines = dockerfile.read_text().splitlines()
+    lines = DOCKERFILE.read_text().splitlines()
     re_ = re.compile(r"^RUN.*/build-cpython.sh (?P<version>.*)$")
     for i in range(len(lines)):
         match = re_.match(lines[i])
@@ -42,7 +45,7 @@ def _update_cpython(dry_run):
             message = f"Bump CPython {current_version} → {latest_version}"
             print(message)
             if not dry_run:
-                dockerfile.write_text("\n".join(lines) + "\n")
+                DOCKERFILE.write_text("\n".join(lines) + "\n")
                 subprocess.check_call(["git", "commit", "-am", message])
 
 
@@ -57,8 +60,7 @@ def _update_with_root(tool, dry_run):
     major = {
         "openssl": "1.1",
     }
-    dockerfile = Path(__file__).parent / "docker" / "Dockerfile"
-    lines = dockerfile.read_text().splitlines()
+    lines = DOCKERFILE.read_text().splitlines()
     re_ = re.compile(f"^RUN export {tool.upper()}_ROOT={tool}-(?P<version>\\S+) && \\\\$")
     for i in range(len(lines)):
         match = re_.match(lines[i])
@@ -80,14 +82,13 @@ def _update_with_root(tool, dry_run):
             message = f"Bump {tool} {current_version} → {latest_version}"
             print(message)
             if not dry_run:
-                dockerfile.write_text("\n".join(lines) + "\n")
+                DOCKERFILE.write_text("\n".join(lines) + "\n")
                 subprocess.check_call(["git", "commit", "-am", message])
         break
 
 
 def _update_sqlite(dry_run):
-    dockerfile = Path(__file__).parent / "docker" / "Dockerfile"
-    lines = dockerfile.read_text().splitlines()
+    lines = DOCKERFILE.read_text().splitlines()
     re_ = re.compile(f"^RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-(?P<version>\\S+) && \\\\$")
     for i in range(len(lines)):
         match = re_.match(lines[i])
@@ -113,7 +114,7 @@ def _update_sqlite(dry_run):
             message = f"Bump sqlite {current_version} → {latest_version}"
             print(message)
             if not dry_run:
-                dockerfile.write_text("\n".join(lines) + "\n")
+                DOCKERFILE.write_text("\n".join(lines) + "\n")
                 subprocess.check_call(["git", "commit", "-am", message])
         break
 
@@ -122,8 +123,7 @@ def _update_with_gh(tool, dry_run):
     repo = {
         "libxcrypt": "besser82/libxcrypt",
     }
-    dockerfile = Path(__file__).parent / "docker" / "Dockerfile"
-    lines = dockerfile.read_text().splitlines()
+    lines = DOCKERFILE.read_text().splitlines()
     re_ = re.compile(f"^RUN export {tool.upper()}_VERSION=(?P<version>\\S+) && \\\\$")
     for i in range(len(lines)):
         match = re_.match(lines[i])
@@ -140,14 +140,13 @@ def _update_with_gh(tool, dry_run):
             message = f"Bump {tool} {current_version} → {latest_version}"
             print(message)
             if not dry_run:
-                dockerfile.write_text("\n".join(lines) + "\n")
+                DOCKERFILE.write_text("\n".join(lines) + "\n")
                 subprocess.check_call(["git", "commit", "-am", message])
         break
 
 
 def _update_tcltk(dry_run):
-    dockerfile = Path(__file__).parent / "docker" / "Dockerfile"
-    lines = dockerfile.read_text().splitlines()
+    lines = DOCKERFILE.read_text().splitlines()
     re_ = re.compile("^RUN export TCL_ROOT=tcl(?P<version>\\S+) && \\\\$")
     for i in range(len(lines)):
         match = re_.match(lines[i])
@@ -168,7 +167,7 @@ def _update_tcltk(dry_run):
             message = f"Bump Tcl/Tk {current_version} → {latest_version}"
             print(message)
             if not dry_run:
-                dockerfile.write_text("\n".join(lines) + "\n")
+                DOCKERFILE.write_text("\n".join(lines) + "\n")
                 subprocess.check_call(["git", "commit", "-am", message])
         break
 
