@@ -40,6 +40,29 @@ for PYTHON in /opt/python/*/bin/python; do
 	LINK_VERSION=$(${LINK_PREFIX}${PYVERS} -V)
 	REAL_VERSION=$(${PYTHON} -V)
 	test "${LINK_VERSION}" = "${REAL_VERSION}"
+
+	# check a simple project can be built
+	SRC_DIR=/tmp/forty-two-${IMPLEMENTATION}${PYVERS}
+	DIST_DIR=/tmp/dist-${IMPLEMENTATION}${PYVERS}
+	cp -rf ${MY_DIR}/forty-two ${SRC_DIR}
+	PY_ABI_TAGS=$(basename $(dirname $(dirname $PYTHON)))
+	EXPECTED_WHEEL_NAME=forty_two-0.1.0-${PY_ABI_TAGS}-linux_${AUDITWHEEL_ARCH}.whl
+	${PYTHON} -m build -w -o ${DIST_DIR} ${SRC_DIR}
+	if [ ! -f ${DIST_DIR}/${EXPECTED_WHEEL_NAME} ]; then
+		echo "unexcpected wheel built: '$(basename $(find ${DIST_DIR} -name '*.whl'))' instead  of '${EXPECTED_WHEEL_NAME}'"
+		exit 1
+	fi
+	auditwheel repair --only-plat -w ${DIST_DIR} ${DIST_DIR}/${EXPECTED_WHEEL_NAME}
+	REPAIRED_WHEEL=$(find ${DIST_DIR} -name "forty_two-0.1.0-${PY_ABI_TAGS}-*${AUDITWHEEL_POLICY}_${AUDITWHEEL_ARCH}*.whl")
+	if [ ! -f "${REPAIRED_WHEEL}" ]; then
+		echo "invalid repaired wheel name"
+		exit 1
+	fi
+	${PYTHON} -m pip install ${REPAIRED_WHEEL}
+	if [ "$(${PYTHON} -c 'import forty_two; print(forty_two.answer())')" != "42" ]; then
+		echo "invalid answer, expecting 42"
+		exit 1
+	fi
 done
 
 # minimal tests for tools that should be present
