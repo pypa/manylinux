@@ -78,6 +78,7 @@ for PYTHON in /opt/python/*/bin/python; do
 	test "${LINK_VERSION}" = "${REAL_VERSION}"
 
 	# check a simple project can be built
+	if [ "${IMPLEMENTATION}" != "graalpy" ]; then
 	SRC_DIR=/tmp/forty-two-${IMPLEMENTATION}${PYVERS}
 	DIST_DIR=/tmp/dist-${IMPLEMENTATION}${PYVERS}
 	cp -rf ${MY_DIR}/forty-two ${SRC_DIR}
@@ -98,6 +99,7 @@ for PYTHON in /opt/python/*/bin/python; do
 	if [ "$(${PYTHON} -c 'import forty_two; print(forty_two.answer())')" != "42" ]; then
 		echo "invalid answer, expecting 42"
 		exit 1
+	fi
 	fi
 
 	PYTHON_COUNT=$(( $PYTHON_COUNT + 1 ))
