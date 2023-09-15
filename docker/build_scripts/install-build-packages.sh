@@ -17,6 +17,7 @@ if [ "${BASE_POLICY}" == "manylinux" ]; then
 	COMPILE_DEPS="bzip2-devel ncurses-devel readline-devel gdbm-devel libpcap-devel xz-devel openssl openssl-devel keyutils-libs-devel krb5-devel libcom_err-devel libidn-devel curl-devel uuid-devel libffi-devel kernel-headers libdb-devel"
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 		PACKAGE_MANAGER=yum
+		COMPILE_DEPS="${COMPILE_DEPS} libXft-devel"
 	else
 		PACKAGE_MANAGER=dnf
 		COMPILE_DEPS="${COMPILE_DEPS} tk-devel"
