@@ -42,7 +42,8 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] ; then
 	# Python 3.11+
 	export TCLTK_LIBS="-ltk8.6 -ltcl8.6"
 fi
-if [ "${CPYTHON_VERSION%.*}" == "3.6" ] || [ "${CPYTHON_VERSION%.*}" == "3.7" ]; then
+PYVERS="${CPYTHON_VERSION%.*}"
+if ! [ -d /usr/local/openssl3 ] || [ "${PYVERS}" == "3.6" ] || [ "${PYVERS}" == "3.7" ]; then
 	OPENSSL_OPTIONS=""
 else
 	OPENSSL_OPTIONS="--with-openssl=/usr/local/openssl3"

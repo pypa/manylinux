@@ -36,10 +36,8 @@ for PYTHON in /opt/python/*/bin/python; do
 		# Make sure tkinter module can be loaded properly
 		$PYTHON -c 'import tkinter; print(tkinter.TkVersion); assert tkinter.TkVersion >= 8.6'
 		# Make sure openssl module can be loaded properly
-		if [ "${PYVERS}" == "3.6" ] || [ "${PYVERS}" == "3.7" ]; then
+		if [ "${PYVERS}" != "3.6" ] && [ "${PYVERS}" != "3.7" ]; then
 			$PYTHON -c 'import ssl; print(ssl.OPENSSL_VERSION); assert ssl.OPENSSL_VERSION_INFO >= (1, 1, 1)'
-		else
-			$PYTHON -c 'import ssl; print(ssl.OPENSSL_VERSION); assert ssl.OPENSSL_VERSION_INFO >= (3, 0)'
 		fi
 	fi
 	# pythonX.Y / pypyX.Y shall be available directly in PATH
