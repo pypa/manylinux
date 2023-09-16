@@ -55,7 +55,7 @@ def _update_with_root(tool, dry_run):
         "openssl": "openssl/openssl",
     }
     major = {
-        "openssl": "1.1",
+        "openssl": "3.0",
     }
     dockerfile = Path(__file__).parent / "docker" / "Dockerfile"
     lines = dockerfile.read_text().splitlines()
@@ -68,10 +68,6 @@ def _update_with_root(tool, dry_run):
         latest_version = latest(repo[tool], major=major.get(tool, None))
         if latest_version > current_version:
             root = f"{tool}-{latest_version}"
-            if root == "openssl-1.1.1r":
-                # withdrawn version
-                print(f"Skipping {root}")
-                break
             url = re.match(f"^    export {tool.upper()}_DOWNLOAD_URL=(?P<url>\\S+) && \\\\$", lines[i + 2])["url"]
             url = url.replace(f"${{{tool.upper()}_ROOT}}", root)
             sha256 = _sha256(f"{url}/{root}.tar.gz")
