@@ -13,7 +13,7 @@ jobs:
     name: Update dependencies
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: wntrblm/nox@2022.11.21
       with:
         python-versions: "3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12-dev"
@@ -25,7 +25,7 @@ jobs:
         git config --global user.email "89297709+manylinux-bot[bot]@users.noreply.github.com"
     # we use this step to grab a Github App auth token, so that lastversion can query GitHub API
     # without rate-limit and PRs get run by GHA.
-    - uses: tibdex/github-app-token@v1
+    - uses: tibdex/github-app-token@v2
       id: generate-token
       if: github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
       with:
@@ -39,7 +39,7 @@ jobs:
       run: nox --force-color --error-on-missing-interpreters -s update_python_dependencies update_python_tools
     - name: Create Pull Request
       if: github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
-      uses: peter-evans/create-pull-request@v4
+      uses: peter-evans/create-pull-request@v5
       with:
         commit-message: Update python dependencies
         title: '[Bot] Update dependencies'
