@@ -14,7 +14,7 @@ source $MY_DIR/build_utils.sh
 # make sure the corresponding library is added to RUNTIME_DEPS if applicable
 
 if [ "${BASE_POLICY}" == "manylinux" ]; then
-	COMPILE_DEPS="bzip2-devel ncurses-devel readline-devel gdbm-devel libpcap-devel xz-devel openssl openssl-devel keyutils-libs-devel krb5-devel libcom_err-devel libidn-devel curl-devel uuid-devel libffi-devel kernel-headers libdb-devel"
+	COMPILE_DEPS="bzip2-devel ncurses-devel readline-devel gdbm-devel libpcap-devel xz-devel openssl openssl-devel keyutils-libs-devel krb5-devel libcom_err-devel libidn-devel curl-devel uuid-devel libffi-devel kernel-headers libdb-devel perl-IPC-Cmd"
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 		PACKAGE_MANAGER=yum
 		COMPILE_DEPS="${COMPILE_DEPS} libXft-devel"
