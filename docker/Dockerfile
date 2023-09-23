@@ -82,18 +82,12 @@ RUN export GIT_ROOT=git-2.42.0 && \
     manylinux-entrypoint /build_scripts/build-git.sh
 
 
-FROM build_base AS build_cpython
+FROM build_base AS build_cpython_system_ssl
 COPY build_scripts/build-sqlite3.sh /build_scripts/
 RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3430100 && \
     export SQLITE_AUTOCONF_HASH=39116c94e76630f22d54cd82c3cea308565f1715f716d1b2527f1c9c969ba4d9 && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2023 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
-
-COPY build_scripts/build-openssl.sh /build_scripts/
-RUN export OPENSSL_ROOT=openssl-1.1.1w && \
-    export OPENSSL_HASH=cf3098950cb4d853ad95c0841f1f9c6d3dc102dccfcacd521d93925208b76ac8 && \
-    export OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source && \
-    manylinux-entrypoint /build_scripts/build-openssl.sh
 
 COPY build_scripts/build-tcltk.sh /build_scripts/
 RUN export TCL_ROOT=tcl8.6.13 && \
@@ -106,12 +100,20 @@ RUN export TCL_ROOT=tcl8.6.13 && \
 COPY build_scripts/build-cpython.sh /build_scripts/
 
 
-FROM build_cpython AS build_cpython36
+FROM build_cpython_system_ssl AS build_cpython
+COPY build_scripts/build-openssl.sh /build_scripts/
+RUN export OPENSSL_ROOT=openssl-1.1.1w && \
+    export OPENSSL_HASH=cf3098950cb4d853ad95c0841f1f9c6d3dc102dccfcacd521d93925208b76ac8 && \
+    export OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source && \
+    manylinux-entrypoint /build_scripts/build-openssl.sh
+
+
+FROM build_cpython_system_ssl AS build_cpython36
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.6.15
 
 
-FROM build_cpython AS build_cpython37
+FROM build_cpython_system_ssl AS build_cpython37
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.17
 
