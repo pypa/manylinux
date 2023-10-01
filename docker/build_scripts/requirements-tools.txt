@@ -4,9 +4,9 @@
 #
 #    pip-compile --generate-hashes --output-file=docker/build_scripts/requirements-tools.txt requirements-tools.in
 #
-argcomplete==3.1.1 \
-    --hash=sha256:35fa893a88deea85ea7b20d241100e64516d6af6d7b0ae2bed1d263d26f70948 \
-    --hash=sha256:6c4c563f14f01440aaffa3eae13441c5db2357b5eec639abe7c0b15334627dff
+argcomplete==3.1.2 \
+    --hash=sha256:d5d1e5efd41435260b8f85673b74ea2e883affcbec9f4230c582689e8e78251b \
+    --hash=sha256:d97c036d12a752d1079f190bc1521c545b941fda89ad85d15afa909b4d1b9a99
     # via pipx
 auditwheel==5.4.0 \
     --hash=sha256:aaf8153ab7a29cc99a663ce2498804daf1887ea1b7a3231ba0d3fee68a3ccf19 \
@@ -20,9 +20,9 @@ click==8.1.7 \
     --hash=sha256:ae74fb96c20a0277a1d615f1e4d73c8414f5a98db8b799a7931d1582f3390c28 \
     --hash=sha256:ca9853ad459e787e2192211578cc907e7594e294c7ccc834310722b41b9ca6de
     # via userpath
-packaging==23.1 \
-    --hash=sha256:994793af429502c4ea2ebf6bf664629d07c1a9fe974af92966e4b8d2df7edc61 \
-    --hash=sha256:a392980d2b6cffa644431898be54b0045151319d1e7ec34f0cfed48767dd334f
+packaging==23.2 \
+    --hash=sha256:048fb0e9405036518eaaf48a55953c750c11e1a1b68e0dd1a9d62ed0c092cfc5 \
+    --hash=sha256:8c491190033a9af7e1d931d0b5dacc2ef47509b34dd0de67ed209b5203fc88c7
     # via pipx
 patchelf==0.17.2.1 \
     --hash=sha256:3c8d58f0e4c1929b1c7c45ba8da5a84a8f1aa6a82a46e1cfb2e44a4d40f350e5 \
