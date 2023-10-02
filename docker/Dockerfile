@@ -138,7 +138,7 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.11.6
 
 FROM build_cpython AS build_cpython312
 COPY build_scripts/cpython-pubkey-312-313.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.12.0rc3
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.12.0
 
 FROM build_cpython AS all_cpython
 COPY build_scripts/finalize-python.sh /build_scripts/
