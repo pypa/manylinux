@@ -35,6 +35,8 @@ jobs:
       run: nox --force-color --error-on-missing-interpreters -s update_native_dependencies
       env:
         GITHUB_API_TOKEN: ${{ steps.generate-token.outputs.token || github.token }}
+    - name: "Run update downloaded interpreters"
+      run: nox --force-color --error-on-missing-interpreters -s update_interpreters_download
     - name: "Run update python dependencies"
       run: nox --force-color --error-on-missing-interpreters -s update_python_dependencies update_python_tools
     - name: Create Pull Request
