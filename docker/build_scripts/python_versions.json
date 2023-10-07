@@ -35,36 +35,36 @@
   },
   "pp39-pypy39_pp73": {
     "x86_64": {
-      "version": "7.3.12",
-      "download_url": "https://downloads.python.org/pypy/pypy3.9-v7.3.12-linux64.tar.bz2",
-      "sha256": "84c89b966fab2b58f451a482ee30ca7fec3350435bd0b9614615c61dc6da2390"
+      "version": "7.3.13",
+      "download_url": "https://downloads.python.org/pypy/pypy3.9-v7.3.13-linux64.tar.bz2",
+      "sha256": "323b05a9f607e932cda1995cbe77a96e4ea35994631aa6d734c8035e8479b74e"
     },
     "aarch64": {
-      "version": "7.3.12",
-      "download_url": "https://downloads.python.org/pypy/pypy3.9-v7.3.12-aarch64.tar.bz2",
-      "sha256": "e9327fb9edaf2ad91935d5b8563ec5ff24193bddb175c1acaaf772c025af1824"
+      "version": "7.3.13",
+      "download_url": "https://downloads.python.org/pypy/pypy3.9-v7.3.13-aarch64.tar.bz2",
+      "sha256": "317d7876c5825a086f854253648b967a432b993ce87695d2895d3ad6ed0d2716"
     },
     "i686": {
-      "version": "7.3.12",
-      "download_url": "https://downloads.python.org/pypy/pypy3.9-v7.3.12-linux32.tar.bz2",
-      "sha256": "aa04370d38f451683ccc817d76c2b3e0f471dbb879e0bd618d9affbdc9cd37a4"
+      "version": "7.3.13",
+      "download_url": "https://downloads.python.org/pypy/pypy3.9-v7.3.13-linux32.tar.bz2",
+      "sha256": "ac695238b4a3635ac6b482e74e04e2ea78b31acca0decd5de601dfd2f4ebf35a"
     }
   },
   "pp310-pypy310_pp73": {
     "x86_64": {
-      "version": "7.3.12",
-      "download_url": "https://downloads.python.org/pypy/pypy3.10-v7.3.12-linux64.tar.bz2",
-      "sha256": "6c577993160b6f5ee8cab73cd1a807affcefafe2f7441c87bd926c10505e8731"
+      "version": "7.3.13",
+      "download_url": "https://downloads.python.org/pypy/pypy3.10-v7.3.13-linux64.tar.bz2",
+      "sha256": "54936eeafd9350a5ea0375b036272a260871b9bca82e1b0bb3201deea9f5a442"
     },
     "aarch64": {
-      "version": "7.3.12",
-      "download_url": "https://downloads.python.org/pypy/pypy3.10-v7.3.12-aarch64.tar.bz2",
-      "sha256": "26208b5a134d9860a08f74cce60960005758e82dc5f0e3566a48ed863a1f16a1"
+      "version": "7.3.13",
+      "download_url": "https://downloads.python.org/pypy/pypy3.10-v7.3.13-aarch64.tar.bz2",
+      "sha256": "ac476f01c9653358404f2e4b52f62307b2f64ccdb8c96dadcbfe355824d81a63"
     },
     "i686": {
-      "version": "7.3.12",
-      "download_url": "https://downloads.python.org/pypy/pypy3.10-v7.3.12-linux32.tar.bz2",
-      "sha256": "811667825ae58ada4b7c3d8bc1b5055b9f9d6a377e51aedfbe0727966603f60e"
+      "version": "7.3.13",
+      "download_url": "https://downloads.python.org/pypy/pypy3.10-v7.3.13-linux32.tar.bz2",
+      "sha256": "bfba57eb1f859dd0ad0d6fe841bb12e1256f1f023c7fbca083b536cccbc1233b"
     }
   }
 }
