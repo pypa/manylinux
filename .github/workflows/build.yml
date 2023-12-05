@@ -1,20 +1,11 @@
 name: Build
 
 on:
-  workflow_dispatch:
-    inputs:
-      useCache:
-        description: Use GHA cache
-        type: boolean
-        required: false
-        default: true
   push:
-    branches-ignore:
-      - "update-dependencies-pr"
-    paths:
-      - ".github/workflows/build.yml"
-      - "docker/**"
-      - "*.sh"
+    tags:
+      - "v*"
+    branches:
+      - main
   pull_request:
     paths:
       - ".github/workflows/build.yml"
@@ -32,50 +23,27 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        policy: ["manylinux2014", "musllinux_1_1", "musllinux_1_2"]
-        platform: ["i686", "x86_64"]
-        include:
-          - policy: "manylinux_2_28"
-            platform: "x86_64"
+        policy: ["manylinux2014"]
+        platform: ["x86_64"]
 
     env:
       POLICY: ${{ matrix.policy }}
       PLATFORM: ${{ matrix.platform }}
-      COMMIT_SHA: ${{ github.sha }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up emulation
-        if: matrix.platform != 'i686' && matrix.platform != 'x86_64'
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: ${{ matrix.platform }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Setup cache
-        if: github.event_name != 'workflow_dispatch' || fromJSON(github.event.inputs.useCache)
-        uses: actions/cache@v3
-        with:
-          path: .buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
-          key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-${{ hashFiles('docker/**') }}
-          restore-keys: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-
-
       - name: Build
         run: ./build.sh
 
-      - name: Deploy
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
-        run: ./deploy.sh
-        env:
-          QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
-          QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-  all_passed:
-    needs: [build_manylinux]
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "All jobs passed"
+      - name: Push image
+        if: github.ref == 'refs/heads/main'
+        run: docker push ghcr.io/femorph/${POLICY}_${PLATFORM}:python310

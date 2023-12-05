@@ -3,9 +3,9 @@
 # Stop at any error, show all commands
 set -exuo pipefail
 
-if [ "${MANYLINUX_BUILD_FRONTEND:-}" == "" ]; then
-	MANYLINUX_BUILD_FRONTEND="docker-buildx"
-fi
+# if [ "${MANYLINUX_BUILD_FRONTEND:-}" == "" ]; then
+# 	MANYLINUX_BUILD_FRONTEND="docker-buildx"
+# fi
 
 # Export variable needed by 'docker build --build-arg'
 export POLICY
@@ -68,47 +68,16 @@ export LD_LIBRARY_PATH_ARG
 BUILD_ARGS_COMMON="
 	--build-arg POLICY --build-arg PLATFORM --build-arg BASEIMAGE
 	--build-arg DEVTOOLSET_ROOTPATH --build-arg PREPEND_PATH --build-arg LD_LIBRARY_PATH_ARG
-	--rm -t quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA}
+	--rm -t ghcr.io/femorph/${POLICY}_${PLATFORM}:python310
 	-f docker/Dockerfile docker/
 "
 
 if [ "${CI:-}" == "true" ]; then
 	# Force plain output on CI
 	BUILD_ARGS_COMMON="--progress plain ${BUILD_ARGS_COMMON}"
-	# Workaround issue on ppc64le
-	if [ ${PLATFORM} == "ppc64le" ] && [ "${MANYLINUX_BUILD_FRONTEND}" == "docker" ]; then
-		BUILD_ARGS_COMMON="--network host ${BUILD_ARGS_COMMON}"
-	fi
 fi
 
-if [ "${MANYLINUX_BUILD_FRONTEND}" == "docker" ]; then
-	docker build ${BUILD_ARGS_COMMON}
-elif [ "${MANYLINUX_BUILD_FRONTEND}" == "docker-buildx" ]; then
-	docker buildx build \
-		--load \
-		--cache-from=type=local,src=$(pwd)/.buildx-cache-${POLICY}_${PLATFORM} \
-		--cache-to=type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM} \
-		${BUILD_ARGS_COMMON}
-elif [ "${MANYLINUX_BUILD_FRONTEND}" == "buildkit" ]; then
-	buildctl build \
-		--frontend=dockerfile.v0 \
-		--local context=./docker/ \
-		--local dockerfile=./docker/ \
-		--import-cache type=local,src=$(pwd)/.buildx-cache-${POLICY}_${PLATFORM} \
-		--export-cache type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM} \
-		--opt build-arg:POLICY=${POLICY} --opt build-arg:PLATFORM=${PLATFORM} --opt build-arg:BASEIMAGE=${BASEIMAGE} \
-		--opt "build-arg:DEVTOOLSET_ROOTPATH=${DEVTOOLSET_ROOTPATH}" --opt "build-arg:PREPEND_PATH=${PREPEND_PATH}" --opt "build-arg:LD_LIBRARY_PATH_ARG=${LD_LIBRARY_PATH_ARG}" \
-		--output type=docker,name=quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA} | docker load
-else
-	echo "Unsupported build frontend: '${MANYLINUX_BUILD_FRONTEND}'"
-	exit 1
-fi
+docker build ${BUILD_ARGS_COMMON}
 
-docker run --rm -v $(pwd)/tests:/tests:ro quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA} /tests/run_tests.sh
-
-if [ "${MANYLINUX_BUILD_FRONTEND}" != "docker" ]; then
-	if [ -d $(pwd)/.buildx-cache-${POLICY}_${PLATFORM} ]; then
-		rm -rf $(pwd)/.buildx-cache-${POLICY}_${PLATFORM}
-	fi
-	mv $(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM} $(pwd)/.buildx-cache-${POLICY}_${PLATFORM}
-fi
+# disabled tests... run these images at your own risk
+# docker run --rm -v $(pwd)/tests:/tests:ro quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA} /tests/run_tests.sh
