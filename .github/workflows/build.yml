@@ -45,4 +45,5 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push image
+        if: github.ref == 'refs/heads/main'
         run: docker push ghcr.io/femorph/${POLICY}_${PLATFORM}:python310
