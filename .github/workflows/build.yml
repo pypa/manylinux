@@ -2,10 +2,10 @@ name: Build
 
 on:
   push:
-    paths:
-      - ".github/workflows/build.yml"
-      - "docker/**"
-      - "*.sh"
+    tags:
+      - "v*"
+    branches:
+      - main
   pull_request:
     paths:
       - ".github/workflows/build.yml"
@@ -45,4 +45,4 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push image
-        run: ghcr.io/femorph/${POLICY}_${PLATFORM}:python310
+        run: docker push ghcr.io/femorph/${POLICY}_${PLATFORM}:python310
