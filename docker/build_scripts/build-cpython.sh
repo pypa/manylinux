@@ -47,8 +47,8 @@ fi
 # do not change the default for user built extension (yet?)
 ./configure \
 	CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS} ${CFLAGS_EXTRA}" \
-	LDFLAGS_NODIST="${MANYLINUX_LDFLAGS}" \
-	--prefix=${PREFIX} --disable-shared --with-ensurepip=no > /dev/null
+	LDFLAGS_NODIST="${MANYLINUX_LDFLAGS} -Wl,-rpath=${PREFIX}/lib" \
+	--prefix=${PREFIX} --enable-shared --with-ensurepip=no > /dev/null
 make > /dev/null
 make install > /dev/null
 popd
