@@ -40,7 +40,7 @@ def _update_cpython(dry_run):
         if latest_version > current_version:
             root = f"Python-{latest_version}"
             url = f"https://www.python.org/ftp/python/{latest_version.major}.{latest_version.minor}.{latest_version.micro}"
-            _sha256(f"{url}/{root}.tgz")
+            _sha256(f"{url}/{root}.tar.xz")
             lines[i] = lines[i].replace(match["version"], str(latest_version))
             message = f"Bump CPython {current_version} → {latest_version}"
             print(message)

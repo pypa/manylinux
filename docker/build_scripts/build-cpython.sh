@@ -24,11 +24,11 @@ function pyver_dist_dir {
 }
 
 CPYTHON_DIST_DIR=$(pyver_dist_dir ${CPYTHON_VERSION})
-fetch_source Python-${CPYTHON_VERSION}.tgz ${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}
-fetch_source Python-${CPYTHON_VERSION}.tgz.asc ${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}
+fetch_source Python-${CPYTHON_VERSION}.tar.xz ${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}
+fetch_source Python-${CPYTHON_VERSION}.tar.xz.asc ${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}
 gpg --import ${MY_DIR}/cpython-pubkeys.txt
-gpg --verify Python-${CPYTHON_VERSION}.tgz.asc
-tar -xzf Python-${CPYTHON_VERSION}.tgz
+gpg --verify Python-${CPYTHON_VERSION}.tar.xz.asc
+tar -xJf Python-${CPYTHON_VERSION}.tar.xz
 pushd Python-${CPYTHON_VERSION}
 PREFIX="/opt/_internal/cpython-${CPYTHON_VERSION}"
 mkdir -p ${PREFIX}/lib
