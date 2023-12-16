@@ -15,6 +15,7 @@ if [ -e ${PREFIX}/bin/python3 ] && [ ! -e ${PREFIX}/bin/python ]; then
 fi
 PY_VER=$(${PREFIX}/bin/python -c "import sys; print('.'.join(str(v) for v in sys.version_info[:2]))")
 PY_IMPL=$(${PREFIX}/bin/python -c "import sys; print(sys.implementation.name)")
+PY_GIL=$(${PREFIX}/bin/python -c "import sysconfig; print('t' if sysconfig.get_config_vars().get('Py_GIL_DISABLED', 0) else '')")
 
 # Install pinned packages for this python version.
 # Use the already intsalled cpython pip to bootstrap pip if available
@@ -32,6 +33,6 @@ ABI_TAG=$(${PREFIX}/bin/python ${MY_DIR}/python-tag-abi-tag.py)
 ln -s ${PREFIX} /opt/python/${ABI_TAG}
 # Make versioned python commands available directly in environment.
 if [[ "${PY_IMPL}" == "cpython" ]]; then
-	ln -s ${PREFIX}/bin/python /usr/local/bin/python${PY_VER}
+	ln -s ${PREFIX}/bin/python /usr/local/bin/python${PY_VER}${PY_GIL}
 fi
-ln -s ${PREFIX}/bin/python /usr/local/bin/${PY_IMPL}${PY_VER}
+ln -s ${PREFIX}/bin/python /usr/local/bin/${PY_IMPL}${PY_VER}${PY_GIL}

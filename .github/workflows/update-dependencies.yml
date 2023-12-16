@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: wntrblm/nox@2022.11.21
       with:
-        python-versions: "3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12-dev"
+        python-versions: "3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12, 3.13-dev"
     - name: "Allow nox to run with python 3.6"
       run: pipx runpip nox install 'virtualenv<20.22.0'
     - name: "Setup bot user"
