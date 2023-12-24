@@ -144,6 +144,10 @@ FROM build_cpython AS build_cpython313
 COPY build_scripts/cpython-pubkey-312-313.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.0a2
 
+FROM build_cpython AS build_cpython313_nogil
+COPY build_scripts/cpython-pubkey-312-313.txt /build_scripts/cpython-pubkeys.txt
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.0a2 nogil
+
 FROM build_cpython AS all_cpython
 COPY build_scripts/finalize-python.sh /build_scripts/
 RUN --mount=type=bind,target=/build_cpython36,from=build_cpython36 \
@@ -154,6 +158,7 @@ RUN --mount=type=bind,target=/build_cpython36,from=build_cpython36 \
     --mount=type=bind,target=/build_cpython311,from=build_cpython311 \
     --mount=type=bind,target=/build_cpython312,from=build_cpython312 \
     --mount=type=bind,target=/build_cpython313,from=build_cpython313 \
+    --mount=type=bind,target=/build_cpython313_nogil,from=build_cpython313_nogil \
     mkdir -p /opt/_internal && \
     cp -rf /build_cpython*/opt/_internal/* /opt/_internal/ && \
     manylinux-entrypoint /build_scripts/finalize-python.sh

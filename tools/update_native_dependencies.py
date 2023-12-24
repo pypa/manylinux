@@ -3,6 +3,7 @@ import hashlib
 import re
 import subprocess
 
+from collections import defaultdict
 from pathlib import Path
 
 import requests
@@ -30,23 +31,30 @@ def _sha256(url):
 
 def _update_cpython(dry_run):
     lines = DOCKERFILE.read_text().splitlines()
-    re_ = re.compile(r"^RUN.*/build-cpython.sh (?P<version>.*)$")
+    re_ = re.compile(r"^RUN.*/build-cpython.sh .*$")
+    updates = defaultdict(list)
     for i in range(len(lines)):
         match = re_.match(lines[i])
         if match is None:
             continue
-        current_version = Version(match["version"])
+        version = lines[i].strip().split()[3]
+        current_version = Version(version)
         latest_version = latest("python/cpython", major=f'{current_version.major}.{current_version.minor}', pre_ok=current_version.is_prerelease)
         if latest_version > current_version:
-            root = f"Python-{latest_version}"
-            url = f"https://www.python.org/ftp/python/{latest_version.major}.{latest_version.minor}.{latest_version.micro}"
-            _sha256(f"{url}/{root}.tar.xz")
-            lines[i] = lines[i].replace(match["version"], str(latest_version))
-            message = f"Bump CPython {current_version} → {latest_version}"
-            print(message)
-            if not dry_run:
-                DOCKERFILE.write_text("\n".join(lines) + "\n")
-                subprocess.check_call(["git", "commit", "-am", message])
+            key = (version, str(latest_version))
+            if len(updates[key]) == 0:
+                root = f"Python-{latest_version}"
+                url = f"https://www.python.org/ftp/python/{latest_version.major}.{latest_version.minor}.{latest_version.micro}"
+                _sha256(f"{url}/{root}.tar.xz")
+            updates[key].append(i)
+    for key in updates:
+        for i in updates[key]:
+            lines[i] = lines[i].replace(key[0], key[1])
+        message = f"Bump CPython {key[0]} → {key[1]}"
+        print(message)
+        if not dry_run:
+            DOCKERFILE.write_text("\n".join(lines) + "\n")
+            subprocess.check_call(["git", "commit", "-am", message])
 
 
 def _update_with_root(tool, dry_run):

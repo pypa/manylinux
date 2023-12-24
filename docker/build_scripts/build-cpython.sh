@@ -33,6 +33,13 @@ pushd Python-${CPYTHON_VERSION}
 PREFIX="/opt/_internal/cpython-${CPYTHON_VERSION}"
 mkdir -p ${PREFIX}/lib
 CFLAGS_EXTRA=""
+CONFIGURE_ARGS=""
+
+if [ "${2:-}" == "nogil" ]; then
+	PREFIX="${PREFIX}-nogil"
+	CONFIGURE_ARGS="--disable-gil"
+fi
+
 if [ "${CPYTHON_VERSION}" == "3.6.15" ]; then
 	# https://github.com/python/cpython/issues/89863
 	# gcc-12+ uses these 2 flags in -O2 but they were only enabled in -O3 with gcc-11
@@ -48,7 +55,7 @@ fi
 ./configure \
 	CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS} ${CFLAGS_EXTRA}" \
 	LDFLAGS_NODIST="${MANYLINUX_LDFLAGS}" \
-	--prefix=${PREFIX} --disable-shared --with-ensurepip=no > /dev/null
+	--prefix=${PREFIX} --disable-shared --with-ensurepip=no ${CONFIGURE_ARGS} > /dev/null
 make > /dev/null
 make install > /dev/null
 popd
