@@ -43,8 +43,8 @@ RUN manylinux-entrypoint /build_scripts/install-runtime-packages.sh && rm -rf /b
 COPY build_scripts/build_utils.sh /build_scripts/
 
 COPY build_scripts/install-autoconf.sh /build_scripts/
-RUN export AUTOCONF_ROOT=autoconf-2.71 && \
-    export AUTOCONF_HASH=431075ad0bf529ef13cb41e9042c542381103e80015686222b8a9d4abef42a1c && \
+RUN export AUTOCONF_ROOT=autoconf-2.72 && \
+    export AUTOCONF_HASH=afb181a76e1ee72832f6581c0eddf8df032b83e2e0239ef79ebedc4467d92d6e && \
     export AUTOCONF_DOWNLOAD_URL=http://ftp.gnu.org/gnu/autoconf && \
     manylinux-entrypoint /build_scripts/install-autoconf.sh
 
