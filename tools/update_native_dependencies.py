@@ -8,7 +8,7 @@ from pathlib import Path
 import requests
 
 from lastversion import latest
-from lastversion.Version import Version
+from lastversion.version import Version
 
 
 PROJECT_ROOT = Path(__file__).parent.parent.resolve(strict=True)
