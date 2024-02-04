@@ -84,8 +84,8 @@ RUN export GIT_ROOT=git-2.43.0 && \
 
 FROM build_base AS build_cpython_system_ssl
 COPY build_scripts/build-sqlite3.sh /build_scripts/
-RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3450000 && \
-    export SQLITE_AUTOCONF_HASH=72887d57a1d8f89f52be38ef84a6353ce8c3ed55ada7864eb944abd9a495e436 && \
+RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3450100 && \
+    export SQLITE_AUTOCONF_HASH=cd9c27841b7a5932c9897651e20b86c701dd740556989b01ca596fcfa3d49a0a && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2024 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
@@ -102,8 +102,8 @@ COPY build_scripts/build-cpython.sh /build_scripts/
 
 FROM build_cpython_system_ssl AS build_cpython
 COPY build_scripts/build-openssl.sh /build_scripts/
-RUN export OPENSSL_ROOT=openssl-3.0.12 && \
-    export OPENSSL_HASH=f93c9e8edde5e9166119de31755fc87b4aa34863662f67ddfcba14d0b6b69b61 && \
+RUN export OPENSSL_ROOT=openssl-3.0.13 && \
+    export OPENSSL_HASH=88525753f79d3bec27d2fa7c66aa0b92b3aa9498dafd93d7cfa4b3780cdae313 && \
     export OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source && \
     manylinux-entrypoint /build_scripts/build-openssl.sh
 
