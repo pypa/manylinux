@@ -20,7 +20,7 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	fi
 	yum clean all
 	rm -rf /var/cache/yum
-elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ]; then
 	dnf -y upgrade
 	dnf clean all
 	rm -rf /var/cache/yum

@@ -45,6 +45,8 @@ The manylinux project supports:
 
 - ``manylinux_2_28`` images for ``x86_64``, ``aarch64``, ``ppc64le`` and ``s390x``.
 
+- ``manylinux_2_34`` images for ``x86_64``, ``aarch64``, ``ppc64le`` and ``s390x``.
+
 
 Wheel packages compliant with those tags can be uploaded to
 `PyPI <https://pypi.python.org>`_ (for instance with `twine
@@ -97,6 +99,16 @@ Rather than forcing you to install an old distro yourself, install Python,
 etc., we provide `Docker <https://docker.com/>`_ images where we've
 done the work for you. The images are uploaded to `quay.io`_ and are tagged
 for repeatable builds.
+
+manylinux_2_34 (AlmaLinux 9 based)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Toolchain: GCC 12
+
+- x86_64 image: ``quay.io/pypa/manylinux_2_34_x86_64``
+- aarch64 image: ``quay.io/pypa/manylinux_2_34_aarch64``
+- ppc64le image: ``quay.io/pypa/manylinux_2_34_ppc64le``
+- s390x image: ``quay.io/pypa/manylinux_2_34_s390x``
 
 
 manylinux_2_28 (AlmaLinux 8 based)

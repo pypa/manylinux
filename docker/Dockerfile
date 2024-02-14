@@ -1,6 +1,6 @@
 # default to latest supported policy, x86_64
-ARG BASEIMAGE=amd64/almalinux:8
-ARG POLICY=manylinux_2_28
+ARG BASEIMAGE=amd64/almalinux:9
+ARG POLICY=manylinux_2_34
 ARG PLATFORM=x86_64
 ARG DEVTOOLSET_ROOTPATH=/opt/rh/gcc-toolset-12/root
 ARG LD_LIBRARY_PATH_ARG=${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst

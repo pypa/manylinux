@@ -32,7 +32,7 @@ source $MY_DIR/build_utils.sh
 
 
 # MANYLINUX_DEPS: Install development packages (except for libgcc which is provided by gcc install)
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ]; then
 	MANYLINUX_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel mesa-libGL-devel libICE-devel libSM-devel zlib-devel expat-devel"
 elif [ "${BASE_POLICY}" == "musllinux" ]; then
 	MANYLINUX_DEPS="musl-dev libstdc++ glib-dev libx11-dev libxext-dev libxrender-dev mesa-dev libice-dev libsm-dev zlib-dev expat-dev"
@@ -42,11 +42,11 @@ else
 fi
 
 # RUNTIME_DEPS: Runtime dependencies. c.f. install-build-packages.sh
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ]; then
 	RUNTIME_DEPS="zlib bzip2 expat ncurses readline gdbm libpcap xz openssl keyutils-libs libkadm5 libcom_err libidn libcurl uuid libffi libdb"
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 		RUNTIME_DEPS="${RUNTIME_DEPS} libXft"
-	elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+	elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ]; then
 		RUNTIME_DEPS="${RUNTIME_DEPS} tk"
 	fi
 elif [ "${BASE_POLICY}" == "musllinux" ]; then
@@ -86,7 +86,7 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 		# Install mayeut/devtoolset-10 repo to get devtoolset-10
 		curl -fsSLo /etc/yum.repos.d/mayeut-devtoolset-10.repo https://copr.fedorainfracloud.org/coprs/mayeut/devtoolset-10/repo/custom-1/mayeut-devtoolset-10-custom-1.repo
 	fi
-elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ]; then
 	PACKAGE_MANAGER=dnf
 	BASETOOLS="${BASETOOLS} curl glibc-locale-source glibc-langpack-en hardlink hostname libcurl libnsl libxcrypt which"
 	# See https://unix.stackexchange.com/questions/41784/can-yum-express-a-preference-for-x86-64-over-i386-packages
