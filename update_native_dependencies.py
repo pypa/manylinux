@@ -156,7 +156,7 @@ def main():
     args = parser.parse_args()
     _update_cpython(args.dry_run)
     _update_sqlite(args.dry_run)
-    for tool in ["automake", "curl", "libtool", "git", "swig", "openssl"]:
+    for tool in ["automake", "libtool", "git", "swig", "openssl"]:
         _update_with_root(tool, args.dry_run)
     for tool in ["libxcrypt"]:
         _update_with_gh(tool, args.dry_run)
