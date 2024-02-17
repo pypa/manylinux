@@ -8,13 +8,13 @@ argcomplete==3.2.2 \
     --hash=sha256:e44f4e7985883ab3e73a103ef0acd27299dbfe2dfed00142c35d4ddd3005901d \
     --hash=sha256:f3e49e8ea59b4026ee29548e24488af46e30c9de57d48638e24f54a1ea1000a2
     # via pipx
-auditwheel==5.4.0 \
-    --hash=sha256:aaf8153ab7a29cc99a663ce2498804daf1887ea1b7a3231ba0d3fee68a3ccf19 \
-    --hash=sha256:d8410a17523427ba3f7b60c9701d23de28b8f94fa5dab732aa6c30d160df8127
+auditwheel==6.0.0 \
+    --hash=sha256:221793fd4cdcbd70ba5d2b819f0a45fd357da0cf53814d5936d6b9752c2ca6a2 \
+    --hash=sha256:6422c4ab6421d23e355c91e9946926cd532b9fdf46f2b5ffdaf1abfe9ee29e67
     # via -r requirements-tools.in
-certifi==2023.11.17 \
-    --hash=sha256:9b469f3a900bf28dc19b8cfbf8019bf47f7fdd1a65a1d4ffb98fc14166beb4d1 \
-    --hash=sha256:e036ab49d5b79556f99cfc2d9320b34cfbe5be05c5871b51de9329f0603b0474
+certifi==2024.2.2 \
+    --hash=sha256:0569859f95fc761b18b45ef421b1290a0f65f147e92a1e5eb3e635f9a5e4e66f \
+    --hash=sha256:dc383c07b76109f368f6106eee2b593b04a011ea4d55f652c6ca24a754d1cdd1
     # via -r requirements-tools.in
 click==8.1.7 \
     --hash=sha256:ae74fb96c20a0277a1d615f1e4d73c8414f5a98db8b799a7931d1582f3390c28 \
@@ -23,7 +23,9 @@ click==8.1.7 \
 packaging==23.2 \
     --hash=sha256:048fb0e9405036518eaaf48a55953c750c11e1a1b68e0dd1a9d62ed0c092cfc5 \
     --hash=sha256:8c491190033a9af7e1d931d0b5dacc2ef47509b34dd0de67ed209b5203fc88c7
-    # via pipx
+    # via
+    #   auditwheel
+    #   pipx
 patchelf==0.17.2.1 \
     --hash=sha256:3c8d58f0e4c1929b1c7c45ba8da5a84a8f1aa6a82a46e1cfb2e44a4d40f350e5 \
     --hash=sha256:a6eb0dd452ce4127d0d5e1eb26515e39186fa609364274bc1b0b77539cfa7031 \
@@ -37,9 +39,9 @@ pipx==1.4.3 \
     --hash=sha256:aa25c7a7d455daed7597bb88c259389176680e2e7446fbdb6e6696cdd3a5090b \
     --hash=sha256:d214512bccc601b575de096ee84fde8797323717a20752c48f7a55cc1bf062fe
     # via -r requirements-tools.in
-platformdirs==4.1.0 \
-    --hash=sha256:11c8f37bcca40db96d8144522d925583bdb7a31f7b0e37e3ed4318400a8e2380 \
-    --hash=sha256:906d548203468492d432bcb294d4bc2fff751bf84971fbb2c10918cc206ee420
+platformdirs==4.2.0 \
+    --hash=sha256:0614df2a2f37e1a662acbd8e2b25b92ccf8632929bc6d43467e17fe89c75e068 \
+    --hash=sha256:ef0cc731df711022c174543cb70a9b5bd22e5a9337c8624ef2c2ceb8ddad8768
     # via pipx
 pyelftools==0.30 \
     --hash=sha256:2fc92b0d534f8b081f58c7c370967379123d8e00984deb53c209364efd575b40 \
