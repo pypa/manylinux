@@ -98,10 +98,10 @@ elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" 
 	dnf -y upgrade
 	dnf -y install dnf-plugins-core
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ]; then
-    dnf config-manager --set-enabled crb
-  else
-    dnf config-manager --set-enabled powertools # for yasm
-  fi
+		dnf config-manager --set-enabled crb
+	else
+		dnf config-manager --set-enabled powertools # for yasm
+	fi
 	TOOLCHAIN_DEPS="gcc-toolset-12-binutils gcc-toolset-12-gcc gcc-toolset-12-gcc-c++ gcc-toolset-12-gcc-gfortran"
 	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
 		TOOLCHAIN_DEPS="${TOOLCHAIN_DEPS} yasm"
