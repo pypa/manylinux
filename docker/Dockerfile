@@ -90,11 +90,11 @@ RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3450100 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
 COPY build_scripts/build-tcltk.sh /build_scripts/
-RUN export TCL_ROOT=tcl8.6.13 && \
-    export TCL_HASH=43a1fae7412f61ff11de2cfd05d28cfc3a73762f354a417c62370a54e2caf066 && \
+RUN export TCL_ROOT=tcl8.6.14 && \
+    export TCL_HASH=5880225babf7954c58d4fb0f5cf6279104ce1cd6aa9b71e9a6322540e1c4de66 && \
     export TCL_DOWNLOAD_URL=https://prdownloads.sourceforge.net/tcl && \
-    export TK_ROOT=tk8.6.13 && \
-    export TK_HASH=2e65fa069a23365440a3c56c556b8673b5e32a283800d8d9b257e3f584ce0675 && \
+    export TK_ROOT=tk8.6.14 && \
+    export TK_HASH=8ffdb720f47a6ca6107eac2dd877e30b0ef7fac14f3a84ebbd0b3612cee41a94 && \
     manylinux-entrypoint /build_scripts/build-tcltk.sh
 
 COPY build_scripts/build-cpython.sh /build_scripts/
