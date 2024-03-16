@@ -43,7 +43,7 @@ if [ "${POLICY}" == "manylinux2014" ]; then
 	fi
 elif [ "${POLICY}" == "manylinux_2_34" ]; then
 	BASEIMAGE="${MULTIARCH_PREFIX}almalinux:9"
-	DEVTOOLSET_ROOTPATH="/opt/rh/gcc-toolset-12/root"
+	DEVTOOLSET_ROOTPATH="/opt/rh/gcc-toolset-13/root"
 	PREPEND_PATH="${DEVTOOLSET_ROOTPATH}/usr/bin:"
 	LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"
 elif [ "${POLICY}" == "manylinux_2_28" ]; then
