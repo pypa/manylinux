@@ -23,7 +23,7 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ]; then
 	dnf -y upgrade
 	dnf clean all
-	rm -rf /var/cache/yum
+	rm -rf /var/cache/dnf
 elif [ "${BASE_POLICY}" == "musllinux" ]; then
 	apk upgrade --no-cache
 else
