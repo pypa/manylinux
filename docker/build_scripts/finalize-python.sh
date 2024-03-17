@@ -10,4 +10,4 @@ XZ_OPT=-9e tar -cJf static-libs-for-embedding-only.tar.xz cpython-*/lib/libpytho
 popd
 find /opt/_internal -name '*.a' -print0 | xargs -0 rm -f
 
-hardlink -cv /opt/_internal
+hardlink -c /opt/_internal
