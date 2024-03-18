@@ -1,4 +1,16 @@
 {
+  "graalpy310-graalpy231_310_native": {
+    "x86_64": {
+      "version": "23.1.0",
+      "download_url": "https://github.com/oracle/graalpython/releases/download/graal-23.1.0/graalpy-23.1.0-linux-amd64.tar.gz",
+      "sha256": "afbb81f034e77aecf4717fe14f2a7403aa1b82f0abf53a2e55e46bd49efe8c39"
+    },
+    "aarch64": {
+      "version": "23.1.0",
+      "download_url": "https://github.com/oracle/graalpython/releases/download/graal-23.1.0/graalpy-23.1.0-linux-aarch64.tar.gz",
+      "sha256": "be1e21ea245ddbdb9c266e670d6f1e76a55c693f98cee44aa74a76b249e53f96"
+    }
+  },
   "pp37-pypy37_pp73": {
     "x86_64": {
       "version": "7.3.9",
