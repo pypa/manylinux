@@ -39,8 +39,12 @@ if [ "${CPYTHON_VERSION}" == "3.6.15" ]; then
 	CFLAGS_EXTRA="${CFLAGS_EXTRA} -fno-tree-loop-vectorize -fno-tree-slp-vectorize"
 fi
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] ; then
-    # Python 3.11+
+	# Python 3.11+
 	export TCLTK_LIBS="-ltk8.6 -ltcl8.6"
+fi
+CONFIGURE_BUILD=
+if [ "${BASE_POLICY}_${AUDITWHEEL_ARCH}" == "musllinux_armv7l" ]; then
+	CONFIGURE_BUILD="--build=arm-linux-musleabihf"
 fi
 
 # configure with hardening options only for the interpreter & stdlib C extensions
@@ -48,7 +52,7 @@ fi
 ./configure \
 	CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS} ${CFLAGS_EXTRA}" \
 	LDFLAGS_NODIST="${MANYLINUX_LDFLAGS}" \
-	--prefix=${PREFIX} --disable-shared --with-ensurepip=no > /dev/null
+	--prefix=${PREFIX} --disable-shared --with-ensurepip=no ${CONFIGURE_BUILD} > /dev/null
 make > /dev/null
 make install > /dev/null
 popd

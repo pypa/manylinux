@@ -14,14 +14,22 @@ export PLATFORM
 # get docker default multiarch image prefix for PLATFORM
 if [ "${PLATFORM}" == "x86_64" ]; then
 	MULTIARCH_PREFIX="amd64/"
+	BUILDX_PLATFORM="linux/amd64"
 elif [ "${PLATFORM}" == "i686" ]; then
 	MULTIARCH_PREFIX="i386/"
+	BUILDX_PLATFORM="linux/386"
 elif [ "${PLATFORM}" == "aarch64" ]; then
 	MULTIARCH_PREFIX="arm64v8/"
+	BUILDX_PLATFORM="linux/arm64/v8"
 elif [ "${PLATFORM}" == "ppc64le" ]; then
 	MULTIARCH_PREFIX="ppc64le/"
+	BUILDX_PLATFORM="linux/ppc64le"
 elif [ "${PLATFORM}" == "s390x" ]; then
 	MULTIARCH_PREFIX="s390x/"
+	BUILDX_PLATFORM="linux/s390x"
+elif [ "${PLATFORM}" == "armv7l" ]; then
+	MULTIARCH_PREFIX="arm32v7/"
+	BUILDX_PLATFORM="linux/arm/v7"
 else
 	echo "Unsupported platform: '${PLATFORM}'"
 	exit 1
@@ -85,6 +93,7 @@ if [ "${MANYLINUX_BUILD_FRONTEND}" == "docker" ]; then
 	docker build ${BUILD_ARGS_COMMON}
 elif [ "${MANYLINUX_BUILD_FRONTEND}" == "docker-buildx" ]; then
 	docker buildx build \
+		--platform ${BUILDX_PLATFORM} \
 		--load \
 		--cache-from=type=local,src=$(pwd)/.buildx-cache-${POLICY}_${PLATFORM} \
 		--cache-to=type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM} \
