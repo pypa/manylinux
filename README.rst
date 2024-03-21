@@ -252,11 +252,10 @@ details.
 Updating the requirements
 -------------------------
 
-The requirement files are pinned and controlled by pip-tools compile. To update
-the pins, run nox on a Linux system with all supported versions of Python included.
-For example, using a docker image:
+The requirement files are pinned and controlled by uv compile. To update
+the pins, run:
 
-    $ docker run --rm -v $PWD:/nox -t quay.io/pypa/manylinux2014_x86_64:latest pipx run nox -f /nox/noxfile.py -s update_python_dependencies update_python_tools
+    $ nox -s update_python_dependencies
 
 Updating the native dependencies
 --------------------------------
