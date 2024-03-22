@@ -11,14 +11,10 @@ on:
 jobs:
   update-dependencies:
     name: Update dependencies
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: wntrblm/nox@2022.11.21
-      with:
-        python-versions: "3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12-dev"
-    - name: "Allow nox to run with python 3.6"
-      run: pipx runpip nox install 'virtualenv<20.22.0'
+    - uses: wntrblm/nox@2024.03.02
     - name: "Setup bot user"
       run: |
         git config --global user.name "manylinux-bot[bot]"

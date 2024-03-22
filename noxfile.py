@@ -5,34 +5,39 @@ from pathlib import Path
 import nox
 
 
-@nox.session(python=["3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12"])
+@nox.session
 def update_python_dependencies(session):
-    session.install("pip-tools")
+    session.install("uv")
+
     env = os.environ.copy()
     # CUSTOM_COMPILE_COMMAND is a pip-compile option that tells users how to
     # regenerate the constraints files
-    env["CUSTOM_COMPILE_COMMAND"] = f"nox -s {session.name}"
-    session.run(
-        "pip-compile",
-        "--generate-hashes",
-        "requirements.in",
-        "--allow-unsafe",
-        "--upgrade",
-        "--output-file",
-        f"docker/build_scripts/requirements{session.python}.txt",
-        env=env,
-    )
+    env["UV_CUSTOM_COMPILE_COMMAND"] = f"nox -s {session.name}"
+
+    for python in ("3.7", "3.8", "3.9", "3.10", "3.11", "3.12"):
+        session.run(
+            "uv", "pip", "compile",
+            f"--python-version={python}",
+            "--generate-hashes",
+            "requirements.in",
+            "--upgrade",
+            "--output-file",
+            f"docker/build_scripts/requirements{python}.txt",
+            env=env,
+        )
 
 
-@nox.session(python="3.10")
+@nox.session
 def update_python_tools(session):
-    session.install("pip-tools")
+    session.install("uv")
+
     env = os.environ.copy()
     # CUSTOM_COMPILE_COMMAND is a pip-compile option that tells users how to
     # regenerate the constraints files
-    env["CUSTOM_COMPILE_COMMAND"] = f"nox -s {session.name}"
+    env["UV_CUSTOM_COMPILE_COMMAND"] = f"nox -s {session.name}"
     session.run(
-        "pip-compile",
+        "uv", "pip", "compile",
+        "--python-version=3.10",
         "--generate-hashes",
         "requirements-base-tools.in",
         "--upgrade",
@@ -47,7 +52,7 @@ def update_python_tools(session):
         tmp_file = Path(session.create_tmp()) / f"{tool}.in"
         tmp_file.write_text(f"{tool}\n")
         session.run(
-            "pip-compile",
+            "uv", "pip", "compile",
             "--generate-hashes",
             str(tmp_file),
             "--upgrade",
