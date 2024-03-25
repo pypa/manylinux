@@ -2,7 +2,7 @@
 
 PYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 # of the form <maj>.<min>.<rev> or <maj>.<min>.<rev>rc<n>
-CPYTHON_VERSIONS="2.7.18 3.5.10 3.6.15 3.7.17 3.8.18 3.9.18"
+CPYTHON_VERSIONS="2.7.18 3.5.10 3.6.15 3.7.17 3.8.19 3.9.19"
 
 # perl is needed to build openssl and libxcrypt
 PERL_ROOT=perl-5.34.0
@@ -29,8 +29,8 @@ LIBTOOL_ROOT=libtool-2.4.7
 LIBTOOL_HASH=04e96c2404ea70c590c546eba4202a4e12722c640016c12b9b2f1ce3d481e9a8
 LIBTOOL_DOWNLOAD_URL=http://ftp.gnu.org/gnu/libtool
 
-SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3450100
-SQLITE_AUTOCONF_HASH=cd9c27841b7a5932c9897651e20b86c701dd740556989b01ca596fcfa3d49a0a
+SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3450200
+SQLITE_AUTOCONF_HASH=bc9067442eedf3dd39989b5c5cfbfff37ae66cc9c99274e0c3052dc4d4a8f6ae
 SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2024
 
 LIBXCRYPT_VERSION=4.4.36
