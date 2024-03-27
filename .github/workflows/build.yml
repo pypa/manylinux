@@ -37,6 +37,8 @@ jobs:
         include:
           - policy: "manylinux_2_28"
             platform: "x86_64"
+          - policy: "manylinux_2_34"
+            platform: "x86_64"
 
     env:
       POLICY: ${{ matrix.policy }}
