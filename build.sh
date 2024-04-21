@@ -83,6 +83,8 @@ fi
 
 if [ "${MANYLINUX_BUILD_FRONTEND}" == "docker" ]; then
 	docker build ${BUILD_ARGS_COMMON}
+elif [ "${MANYLINUX_BUILD_FRONTEND}" == "podman" ]; then
+	podman build ${BUILD_ARGS_COMMON}
 elif [ "${MANYLINUX_BUILD_FRONTEND}" == "docker-buildx" ]; then
 	docker buildx build \
 		--load \
@@ -106,7 +108,7 @@ fi
 
 docker run --rm -v $(pwd)/tests:/tests:ro quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA} /tests/run_tests.sh
 
-if [ "${MANYLINUX_BUILD_FRONTEND}" != "docker" ]; then
+if ! [[ "${MANYLINUX_BUILD_FRONTEND}" =~ (docker)|(podman) ]]; then
 	if [ -d $(pwd)/.buildx-cache-${POLICY}_${PLATFORM} ]; then
 		rm -rf $(pwd)/.buildx-cache-${POLICY}_${PLATFORM}
 	fi
