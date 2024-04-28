@@ -24,9 +24,9 @@ pipx==1.4.3 \
     --hash=sha256:aa25c7a7d455daed7597bb88c259389176680e2e7446fbdb6e6696cdd3a5090b \
     --hash=sha256:d214512bccc601b575de096ee84fde8797323717a20752c48f7a55cc1bf062fe
     # via -r requirements-base-tools.in
-platformdirs==4.2.0 \
-    --hash=sha256:0614df2a2f37e1a662acbd8e2b25b92ccf8632929bc6d43467e17fe89c75e068 \
-    --hash=sha256:ef0cc731df711022c174543cb70a9b5bd22e5a9337c8624ef2c2ceb8ddad8768
+platformdirs==4.2.1 \
+    --hash=sha256:031cd18d4ec63ec53e82dceaac0417d218a6863f7745dfcc9efe7793b7039bdf \
+    --hash=sha256:17d5a1161b3fd67b390023cb2d3b026bbd40abde6fdb052dfbd3a29c3ba22ee1
     # via pipx
 tomli==2.0.1 \
     --hash=sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc \
