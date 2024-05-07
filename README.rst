@@ -257,7 +257,9 @@ current (root) directory:
 
     $ PLATFORM=$(uname -m) POLICY=manylinux2014 COMMIT_SHA=latest ./build.sh
 
-Please note that the Docker build is using `buildx <https://github.com/docker/buildx>`_.
+Please note that the default Docker build is using `buildx <https://github.com/docker/buildx>`_.
+Other frontends can be selected by defining `MANYLINUX_BUILD_FRONTEND`. See `build.sh` for
+details.
 
 Updating the requirements
 -------------------------

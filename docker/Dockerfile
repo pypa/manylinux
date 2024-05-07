@@ -76,16 +76,16 @@ RUN manylinux-entrypoint /build_scripts/install-build-packages.sh
 
 FROM build_base AS build_git
 COPY build_scripts/build-git.sh /build_scripts/
-RUN export GIT_ROOT=git-2.44.0 && \
-    export GIT_HASH=f9e36f085458fe9688fbbe7846b8c4770b13d161fcd8953655f36b2b85f06b76 && \
+RUN export GIT_ROOT=git-2.45.0 && \
+    export GIT_HASH=a0fc1410878716add0a3c0cf3d35728f3a7c960f751c657656cca0212bf89e65 && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     manylinux-entrypoint /build_scripts/build-git.sh
 
 
 FROM build_base AS build_cpython_system_ssl
 COPY build_scripts/build-sqlite3.sh /build_scripts/
-RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3450200 && \
-    export SQLITE_AUTOCONF_HASH=bc9067442eedf3dd39989b5c5cfbfff37ae66cc9c99274e0c3052dc4d4a8f6ae && \
+RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3450300 && \
+    export SQLITE_AUTOCONF_HASH=b2809ca53124c19c60f42bf627736eae011afdcc205bb48270a5ee9a38191531 && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2024 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
