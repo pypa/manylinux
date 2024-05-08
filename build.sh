@@ -91,7 +91,7 @@ elif [ "${MANYLINUX_BUILD_FRONTEND}" == "docker-buildx" ]; then
 	docker buildx build \
 		--load \
 		--cache-from=type=local,src=$(pwd)/.buildx-cache-${POLICY}_${PLATFORM} \
-		--cache-to=type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM} \
+		--cache-to=type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM},mode=max \
 		${BUILD_ARGS_COMMON}
 elif [ "${MANYLINUX_BUILD_FRONTEND}" == "buildkit" ]; then
 	USE_LOCAL_CACHE=1
@@ -100,7 +100,7 @@ elif [ "${MANYLINUX_BUILD_FRONTEND}" == "buildkit" ]; then
 		--local context=./docker/ \
 		--local dockerfile=./docker/ \
 		--import-cache type=local,src=$(pwd)/.buildx-cache-${POLICY}_${PLATFORM} \
-		--export-cache type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM} \
+		--export-cache type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM},mode=max \
 		--opt build-arg:POLICY=${POLICY} --opt build-arg:PLATFORM=${PLATFORM} --opt build-arg:BASEIMAGE=${BASEIMAGE} \
 		--opt "build-arg:DEVTOOLSET_ROOTPATH=${DEVTOOLSET_ROOTPATH}" --opt "build-arg:PREPEND_PATH=${PREPEND_PATH}" --opt "build-arg:LD_LIBRARY_PATH_ARG=${LD_LIBRARY_PATH_ARG}" \
 		--output type=docker,name=quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA} | docker load
