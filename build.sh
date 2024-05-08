@@ -81,17 +81,20 @@ if [ "${CI:-}" == "true" ]; then
 	fi
 fi
 
+USE_LOCAL_CACHE=0
 if [ "${MANYLINUX_BUILD_FRONTEND}" == "docker" ]; then
 	docker build ${BUILD_ARGS_COMMON}
 elif [ "${MANYLINUX_BUILD_FRONTEND}" == "podman" ]; then
 	podman build ${BUILD_ARGS_COMMON}
 elif [ "${MANYLINUX_BUILD_FRONTEND}" == "docker-buildx" ]; then
+	USE_LOCAL_CACHE=1
 	docker buildx build \
 		--load \
 		--cache-from=type=local,src=$(pwd)/.buildx-cache-${POLICY}_${PLATFORM} \
 		--cache-to=type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM} \
 		${BUILD_ARGS_COMMON}
 elif [ "${MANYLINUX_BUILD_FRONTEND}" == "buildkit" ]; then
+	USE_LOCAL_CACHE=1
 	buildctl build \
 		--frontend=dockerfile.v0 \
 		--local context=./docker/ \
@@ -108,7 +111,7 @@ fi
 
 docker run --rm -v $(pwd)/tests:/tests:ro quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA} /tests/run_tests.sh
 
-if ! [[ "${MANYLINUX_BUILD_FRONTEND}" =~ (docker)|(podman) ]]; then
+if [ ${USE_LOCAL_CACHE} -ne 0 ]; then
 	if [ -d $(pwd)/.buildx-cache-${POLICY}_${PLATFORM} ]; then
 		rm -rf $(pwd)/.buildx-cache-${POLICY}_${PLATFORM}
 	fi
