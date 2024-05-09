@@ -137,6 +137,10 @@ FROM build_cpython AS build_cpython312
 COPY build_scripts/cpython-pubkey-312-313.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.12.3
 
+FROM build_cpython AS build_cpython313
+COPY build_scripts/cpython-pubkey-312-313.txt /build_scripts/cpython-pubkeys.txt
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.0b1
+
 
 FROM runtime_base
 COPY --from=build_git /manylinux-rootfs /
@@ -149,6 +153,7 @@ RUN --mount=type=bind,target=/build_cpython36,from=build_cpython36 \
     --mount=type=bind,target=/build_cpython310,from=build_cpython310 \
     --mount=type=bind,target=/build_cpython311,from=build_cpython311 \
     --mount=type=bind,target=/build_cpython312,from=build_cpython312 \
+    --mount=type=bind,target=/build_cpython313,from=build_cpython313 \
     mkdir -p /opt/_internal && \
     cp -rf /build_cpython*/opt/_internal/* /opt/_internal/ && \
     manylinux-entrypoint /opt/_internal/build_scripts/finalize.sh \
