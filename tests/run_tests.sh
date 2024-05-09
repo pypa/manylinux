@@ -18,15 +18,15 @@ else
 fi
 
 if [ "${AUDITWHEEL_POLICY:0:10}" == "musllinux_" ]; then
-	EXPECTED_PYTHON_COUNT=7
-	EXPECTED_PYTHON_COUNT_ALL=7
+	EXPECTED_PYTHON_COUNT=8
+	EXPECTED_PYTHON_COUNT_ALL=8
 else
 	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ] || [ "${AUDITWHEEL_ARCH}" == "i686" ] || [ "${AUDITWHEEL_ARCH}" == "aarch64" ]; then
-		EXPECTED_PYTHON_COUNT=11
-		EXPECTED_PYTHON_COUNT_ALL=11
+		EXPECTED_PYTHON_COUNT=12
+		EXPECTED_PYTHON_COUNT_ALL=12
 	else
-		EXPECTED_PYTHON_COUNT=7
-		EXPECTED_PYTHON_COUNT_ALL=7
+		EXPECTED_PYTHON_COUNT=8
+		EXPECTED_PYTHON_COUNT_ALL=8
 	fi
 fi
 PYTHON_COUNT=$(manylinux-interpreters list --installed | wc -l)
@@ -58,6 +58,7 @@ for PYTHON in /opt/python/*/bin/python; do
 	$PYTHON $MY_DIR/ssl-check.py
 	IMPLEMENTATION=$(${PYTHON} -c "import sys; print(sys.implementation.name)")
 	PYVERS=$(${PYTHON} -c "import sys; print('.'.join(map(str, sys.version_info[:2])))")
+	PY_GIL=$(${PYTHON} -c "import sysconfig; print('t' if sysconfig.get_config_vars().get('Py_GIL_DISABLED', 0) else '')")
 	if [ "${IMPLEMENTATION}" == "cpython" ]; then
 		# Make sure sqlite3 module can be loaded properly and is the manylinux version one
 		# c.f. https://github.com/pypa/manylinux/issues/1030
@@ -65,20 +66,20 @@ for PYTHON in /opt/python/*/bin/python; do
 		# Make sure tkinter module can be loaded properly
 		$PYTHON -c 'import tkinter; print(tkinter.TkVersion); assert tkinter.TkVersion >= 8.6'
 		# cpython shall be available as python
-		LINK_VERSION=$(python${PYVERS} -VV)
+		LINK_VERSION=$(python${PYVERS}${PY_GIL} -VV)
 		REAL_VERSION=$(${PYTHON} -VV)
 		test "${LINK_VERSION}" = "${REAL_VERSION}"
 	fi
 	# cpythonX.Y / pypyX.Y shall be available directly in PATH
-	LINK_VERSION=$(${IMPLEMENTATION}${PYVERS} -VV)
+	LINK_VERSION=$(${IMPLEMENTATION}${PYVERS}${PY_GIL} -VV)
 	REAL_VERSION=$(${PYTHON} -VV)
 	test "${LINK_VERSION}" = "${REAL_VERSION}"
 
 	# check a simple project can be built
-	SRC_DIR=/tmp/forty-two-${IMPLEMENTATION}${PYVERS}
-	DIST_DIR=/tmp/dist-${IMPLEMENTATION}${PYVERS}
-	cp -rf ${MY_DIR}/forty-two ${SRC_DIR}
 	PY_ABI_TAGS=$(basename $(dirname $(dirname $PYTHON)))
+	SRC_DIR=/tmp/forty-two-${PY_ABI_TAGS}
+	DIST_DIR=/tmp/dist-${PY_ABI_TAGS}
+	cp -rf ${MY_DIR}/forty-two ${SRC_DIR}
 	EXPECTED_WHEEL_NAME=forty_two-0.1.0-${PY_ABI_TAGS}-linux_${AUDITWHEEL_ARCH}.whl
 	${PYTHON} -m build -w -o ${DIST_DIR} ${SRC_DIR}
 	if [ ! -f ${DIST_DIR}/${EXPECTED_WHEEL_NAME} ]; then
