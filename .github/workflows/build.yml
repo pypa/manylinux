@@ -60,7 +60,7 @@ jobs:
 
       - name: Setup cache
         if: github.event_name != 'workflow_dispatch' || fromJSON(github.event.inputs.useCache)
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: .buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
           key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-${{ hashFiles('docker/**') }}
