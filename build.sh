@@ -57,7 +57,7 @@ elif [ "${POLICY}" == "musllinux_1_1" ]; then
 	PREPEND_PATH=
 	LD_LIBRARY_PATH_ARG=
 elif [ "${POLICY}" == "musllinux_1_2" ]; then
-	BASEIMAGE="${MULTIARCH_PREFIX}alpine:3.18"
+	BASEIMAGE="${MULTIARCH_PREFIX}alpine:3.19"
 	DEVTOOLSET_ROOTPATH=
 	PREPEND_PATH=
 	LD_LIBRARY_PATH_ARG=

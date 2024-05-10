@@ -11,14 +11,12 @@ on:
 jobs:
   update-dependencies:
     name: Update dependencies
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: wntrblm/nox@2022.11.21
+    - uses: wntrblm/nox@2024.04.15
       with:
-        python-versions: "3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12, 3.13-dev"
-    - name: "Allow nox to run with python 3.6"
-      run: pipx runpip nox install 'virtualenv<20.22.0'
+        python-versions: "3.12"
     - name: "Setup bot user"
       run: |
         git config --global user.name "manylinux-bot[bot]"
@@ -38,7 +36,7 @@ jobs:
     - name: "Run update downloaded interpreters"
       run: nox --force-color --error-on-missing-interpreters -s update_interpreters_download
     - name: "Run update python dependencies"
-      run: nox --force-color --error-on-missing-interpreters -s update_python_dependencies update_python_tools
+      run: nox --force-color --error-on-missing-interpreters -s update_python_dependencies
     - name: Create Pull Request
       if: github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
       uses: peter-evans/create-pull-request@v5
