@@ -5,34 +5,34 @@ from pathlib import Path
 import nox
 
 
-@nox.session(python=["3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "3.13"])
+@nox.session
 def update_python_dependencies(session):
-    session.install("pip-tools")
+    if getattr(session.virtualenv, "venv_backend", "") != "uv":
+        session.install("uv>=0.1.23")
+
     env = os.environ.copy()
     # CUSTOM_COMPILE_COMMAND is a pip-compile option that tells users how to
     # regenerate the constraints files
-    env["CUSTOM_COMPILE_COMMAND"] = f"nox -s {session.name}"
-    session.run(
-        "pip-compile",
-        "--generate-hashes",
-        "requirements.in",
-        "--allow-unsafe",
-        "--upgrade",
-        "--output-file",
-        f"docker/build_scripts/requirements{session.python}.txt",
-        env=env,
-    )
+    env["UV_CUSTOM_COMPILE_COMMAND"] = f"nox -s {session.name}"
 
+    for python_minor in range(7, 14):
+        python_version = f"3.{python_minor}"
+        session.run(
+            "uv", "pip", "compile",
+            f"--python-version={python_version}",
+            "--generate-hashes",
+            "requirements.in",
+            "--upgrade",
+            "--output-file",
+            f"docker/build_scripts/requirements{python_version}.txt",
+            env=env,
+        )
 
-@nox.session(python="3.10")
-def update_python_tools(session):
-    session.install("pip-tools")
-    env = os.environ.copy()
-    # CUSTOM_COMPILE_COMMAND is a pip-compile option that tells users how to
-    # regenerate the constraints files
-    env["CUSTOM_COMPILE_COMMAND"] = f"nox -s {session.name}"
+    # tools
+    python_version = "3.10"
     session.run(
-        "pip-compile",
+        "uv", "pip", "compile",
+        f"--python-version={python_version}",
         "--generate-hashes",
         "requirements-base-tools.in",
         "--upgrade",
@@ -47,7 +47,8 @@ def update_python_tools(session):
         tmp_file = Path(session.create_tmp()) / f"{tool}.in"
         tmp_file.write_text(f"{tool}\n")
         session.run(
-            "pip-compile",
+            "uv", "pip", "compile",
+            f"--python-version={python_version}",
             "--generate-hashes",
             str(tmp_file),
             "--upgrade",
