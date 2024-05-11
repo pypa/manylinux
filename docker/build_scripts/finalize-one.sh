@@ -17,6 +17,11 @@ PY_VER=$(${PREFIX}/bin/python -c "import sys; print('.'.join(str(v) for v in sys
 PY_IMPL=$(${PREFIX}/bin/python -c "import sys; print(sys.implementation.name)")
 PY_GIL=$(${PREFIX}/bin/python -c "import sysconfig; print('t' if sysconfig.get_config_vars().get('Py_GIL_DISABLED', 0) else '')")
 
+# disable some pip warnings
+export PIP_ROOT_USER_ACTION=ignore
+export PIP_DISABLE_PIP_VERSION_CHECK=1
+export PIP_NO_WARN_SCRIPT_LOCATION=0
+
 # Install pinned packages for this python version.
 # Use the already intsalled cpython pip to bootstrap pip if available
 if [ -f /usr/local/bin/python${PY_VER} ]; then
