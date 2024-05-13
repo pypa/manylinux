@@ -5,7 +5,7 @@ import sys
 
 def is_manylinux1_compatible():
     # Only Linux, and only x86-64 / i686
-    from distutils.util import get_platform
+    from sysconfig import get_platform
     if get_platform() not in ["linux-x86_64", "linux-i686"]:
         return False
 
@@ -23,7 +23,7 @@ def is_manylinux1_compatible():
 
 def is_manylinux2010_compatible():
     # Only Linux, and only x86-64 / i686
-    from distutils.util import get_platform
+    from sysconfig import get_platform
     if get_platform() not in ["linux-x86_64", "linux-i686"]:
         return False
 
@@ -41,7 +41,7 @@ def is_manylinux2010_compatible():
 
 def is_manylinux2014_compatible():
     # Only Linux, and only supported architectures
-    from distutils.util import get_platform
+    from sysconfig import get_platform
     if get_platform() not in [
         "linux-x86_64",
         "linux-i686",

@@ -16,6 +16,13 @@ XZ_OPT=-9e tar -cJf static-libs-for-embedding-only.tar.xz cpython-*/lib/libpytho
 popd
 find /opt/_internal -name '*.a' -print0 | xargs -0 rm -f
 
+# disable some pip warnings
+export PIP_ROOT_USER_ACTION=ignore
+export PIP_DISABLE_PIP_VERSION_CHECK=1
+export PIP_NO_WARN_SCRIPT_LOCATION=0
+# all cache goes to /tmp
+export PIP_CACHE_DIR=/tmp/pip_cache
+
 # update package, create symlinks for each python
 mkdir /opt/python
 for PREFIX in $(find /opt/_internal/ -mindepth 1 -maxdepth 1 \( -name 'cpython*' -o -name 'pypy*' \)); do
@@ -51,6 +58,7 @@ set -euo pipefail
 if [ \$(id -u) -eq 0 ]; then
 	export PIPX_HOME=/opt/_internal/pipx
 	export PIPX_BIN_DIR=/usr/local/bin
+	export PIPX_MAN_DIR=/usr/local/share/man
 fi
 ${TOOLS_PATH}/bin/pipx "\$@"
 EOF
@@ -64,19 +72,20 @@ ln -s $(${TOOLS_PATH}/bin/python -c 'import certifi; print(certifi.where())') /o
 # If you modify this line you also have to modify the versions in the Dockerfiles:
 export SSL_CERT_FILE=/opt/_internal/certs.pem
 
+# initialize shared library, pip is not pinned in pipx
+pipx install pip
+pipx uninstall pip
+
 # install other tools with pipx
-pushd $MY_DIR/requirements-tools
-for TOOL_PATH in $(find . -type f); do
+for TOOL_PATH in $(find ${MY_DIR}/requirements-tools -type f); do
 	TOOL=$(basename ${TOOL_PATH})
-	pipx install --pip-args="--require-hashes -r" ${TOOL}
+	pipx install --pip-args="--require-hashes -r ${TOOL_PATH} --only-binary" ${TOOL}
 done
-popd
 
 # We do not need the precompiled .pyc and .pyo files.
 clean_pyc /opt/_internal
 
 # remove cache
-rm -rf /root/.cache
 rm -rf /tmp/* || true
 
 hardlink -c /opt/_internal

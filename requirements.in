@@ -1,5 +1,6 @@
-pip
-setuptools
-wheel
+pip>=24.1b1 ; python_version >= '3.13'
+pip ; python_version < '3.13'
+setuptools ; python_version < '3.13'
+wheel ; python_version < '3.13'
 build
 packaging

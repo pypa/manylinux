@@ -7,8 +7,9 @@ The goal of the manylinux project is to provide a convenient way to
 distribute binary Python extensions as wheels on Linux.
 This effort has produced `PEP 513 <https://www.python.org/dev/peps/pep-0513/>`_ (manylinux1),
 `PEP 571 <https://www.python.org/dev/peps/pep-0571/>`_ (manylinux2010),
-`PEP 599 <https://www.python.org/dev/peps/pep-0599/>`_ (manylinux2014) and
-`PEP 600 <https://www.python.org/dev/peps/pep-0600/>`_ (manylinux_x_y).
+`PEP 599 <https://www.python.org/dev/peps/pep-0599/>`_ (manylinux2014),
+`PEP 600 <https://www.python.org/dev/peps/pep-0600/>`_ (manylinux_x_y) and
+`PEP 656 <https://www.python.org/dev/peps/pep-0656/>`_ (musllinux_x_y).
 
 PEP 513 defined ``manylinux1_x86_64`` and ``manylinux1_i686`` platform tags
 and the wheels were built on Centos5. Centos5 reached End of Life (EOL) on
@@ -38,7 +39,8 @@ Wheels are built on CentOS 7 which will reach End of Life (EOL)
 on June 30th, 2024.
 
 PEP 600 has been designed to be "future-proof" and does not enforce specific symbols and a specific distro to build.
-It only states that a wheel tagged ``manylinux_x_y`` shall work on any distro based on ``glibc>=x.y``.
+It only states that a wheel tagged ``manylinux_x_y`` shall work on any distro based on ``glibc>=x.y``. PEP 656 added
+``musllinux_x_y`` tags for ``musl>=x.y``.
 The manylinux project supports:
 
 - ``manylinux_2_24`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
@@ -46,6 +48,10 @@ The manylinux project supports:
 - ``manylinux_2_28`` images for ``x86_64``, ``aarch64``, ``ppc64le`` and ``s390x``.
 
 - ``manylinux_2_34`` images for ``x86_64``, ``aarch64``, ``ppc64le`` and ``s390x``.
+
+- ``musllinux_1_1`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
+
+- ``musllinux_1_2`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
 
 
 Wheel packages compliant with those tags can be uploaded to
@@ -100,6 +106,28 @@ etc., we provide `Docker <https://docker.com/>`_ images where we've
 done the work for you. The images are uploaded to `quay.io`_ and are tagged
 for repeatable builds.
 
+musllinux_1_2 (Alpine Linux 3.19 based, 3.13+ compatible)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Toolchain: GCC 13
+
+- x86_64 image: ``quay.io/pypa/musllinux_1_2_x86_64``
+- i686 image: ``quay.io/pypa/musllinux_1_2_i686``
+- aarch64 image: ``quay.io/pypa/musllinux_1_2_aarch64``
+- ppc64le image: ``quay.io/pypa/musllinux_1_2_ppc64le``
+- s390x image: ``quay.io/pypa/musllinux_1_2_s390x``
+
+musllinux_1_1 (Alpine Linux 2.12 based)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Toolchain: GCC 9
+
+- x86_64 image: ``quay.io/pypa/musllinux_1_1_x86_64``
+- i686 image: ``quay.io/pypa/musllinux_1_1_i686``
+- aarch64 image: ``quay.io/pypa/musllinux_1_1_aarch64``
+- ppc64le image: ``quay.io/pypa/musllinux_1_1_ppc64le``
+- s390x image: ``quay.io/pypa/musllinux_1_1_s390x``
+
 manylinux_2_34 (AlmaLinux 9 based)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -109,7 +137,6 @@ Toolchain: GCC 13
 - aarch64 image: ``quay.io/pypa/manylinux_2_34_aarch64``
 - ppc64le image: ``quay.io/pypa/manylinux_2_34_ppc64le``
 - s390x image: ``quay.io/pypa/manylinux_2_34_s390x``
-
 
 manylinux_2_28 (AlmaLinux 8 based)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -185,7 +212,7 @@ Image content
 
 All images currently contain:
 
-- CPython 3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12 and PyPy 3.7, 3.8, 3.9, 3.10 installed in
+- CPython 3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12, 3.13 and PyPy 3.7, 3.8, 3.9, 3.10 installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
   e.g. ``/opt/python/cp37-cp37m`` contains a CPython 3.7 build, and
@@ -247,7 +274,7 @@ default ``sys.abiflags`` became an empty string: the ``m`` flag for pymalloc
 became useless (builds with and without pymalloc are ABI compatible) and so has
 been removed. (e.g. ``/opt/python/cp38-cp38``)
 
-Note that PyPy is not available on ppc64le & s390x.
+Note that PyPy is not available on ppc64le & s390x or on the musllinux images.
 
 Building Docker images
 ----------------------
