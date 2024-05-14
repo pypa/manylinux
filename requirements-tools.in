@@ -2,3 +2,4 @@ auditwheel
 cmake
 patchelf
 swig
+uv

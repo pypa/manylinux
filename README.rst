@@ -210,7 +210,18 @@ All images currently contain:
 
 - Development packages for all the libraries that PEP 571/599 list. One should not assume the presence of any other development package.
 
-- The `auditwheel <https://pypi.python.org/pypi/auditwheel>`_ tool
+- The following development tools, installed via `pipx <https://pypi.org/p/pipx>`_ (which is also available):
+   - `auditwheel <https://pypi.org/p/auditwheel>`_
+   - `cmake <https://pypi.org/p/cmake>`_
+   - `patchelf <https://pypi.org/p/patchelf>`_
+   - `swig <https://pypi.org/p/swig>`_
+   - `uv <https://pypi.org/p/uv>`_ (not available on ``musllinux s390x`` and ``muslllinux powerpc64le`` yet due to Rust limitations)
+
+- All Python interpreters have the following packages pre-installed:
+  - `pip <https://pypi.org/p/pip>`_
+  - `build <https://pypi.org/p/build>`_
+  - `packaging <https://pypi.org/p/packaging>`_
+  - Before Python 3.12, `setuptools <https://pypi.org/p/setuptools>`_ and `wheel <https://pypi.org/p/wheel>`_ are also available. (Currently 3.12 too, but will be removed after 3.13 is released.)
 
 - The manylinux-interpreters tool which allows to list all available interpreters & install ones missing from the image
 

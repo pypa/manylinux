@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+
+# /// script
+# dependencies = ["packaging", "requests"]
+# ///
+
 from __future__ import annotations
 
 import argparse

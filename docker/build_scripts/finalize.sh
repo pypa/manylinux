@@ -79,7 +79,10 @@ pipx uninstall pip
 # install other tools with pipx
 for TOOL_PATH in $(find ${MY_DIR}/requirements-tools -type f); do
 	TOOL=$(basename ${TOOL_PATH})
-	pipx install --pip-args="--require-hashes -r ${TOOL_PATH} --only-binary" ${TOOL}
+    # uv doesn't provide musl s390x wheels due to Rust issues
+	if [[ "$TOOL" != "uv" || "$AUDITWHEEL_POLICY" != musllinux* || "$AUDITWHEEL_ARCH" != "s390x" ]]; then
+		pipx install --pip-args="--require-hashes -r ${TOOL_PATH} --only-binary" ${TOOL}
+	fi
 done
 
 # We do not need the precompiled .pyc and .pyo files.
