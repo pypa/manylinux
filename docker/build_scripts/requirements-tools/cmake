@@ -18,3 +18,4 @@ cmake==3.29.3 \
     --hash=sha256:d04adb1a8b878e92a734742cb0db9c59e3828abcf8ec9c930eb8a01faa00c9df \
     --hash=sha256:dd8aaffe5d8dc2dd41421dc63c39b64df30a7109392e276e2b6d021805b770e9 \
     --hash=sha256:e1fd53ca2f24dc0aad54934c2472cb83e273b94b4bad23fcdbd438515881f5a7
+    # via -r .nox/update_python_dependencies/tmp/cmake.in
