@@ -79,8 +79,8 @@ pipx uninstall pip
 # install other tools with pipx
 for TOOL_PATH in $(find ${MY_DIR}/requirements-tools -type f); do
 	TOOL=$(basename ${TOOL_PATH})
-    # uv doesn't provide musl s390x wheels due to Rust issues
-	if [[ "$TOOL" != "uv" || "$AUDITWHEEL_POLICY" != musllinux* || "$AUDITWHEEL_ARCH" != "s390x" ]]; then
+	# uv doesn't provide musl s390x wheels due to Rust issues
+	if [[ "${TOOL}" != "uv" || "${BASE_POLICY}-${AUDITWHEEL_ARCH}" != "musllinux-s390x" ]]; then
 		pipx install --pip-args="--require-hashes -r ${TOOL_PATH} --only-binary" ${TOOL}
 	fi
 done
