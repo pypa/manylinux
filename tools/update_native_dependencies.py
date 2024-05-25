@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+
+# /// script
+# dependencies = ["lastversion>=3.5.0", "packaging", "requests"]
+# ///
+
 import argparse
 import hashlib
 import re

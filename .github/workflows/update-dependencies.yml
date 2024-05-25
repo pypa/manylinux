@@ -8,6 +8,9 @@ on:
   schedule:
     - cron: '0 18 * * 0'  # "At 18:00 on Sunday."
 
+env:
+  FORCE_COLOR: '1'
+
 jobs:
   update-dependencies:
     name: Update dependencies
@@ -17,6 +20,8 @@ jobs:
     - uses: wntrblm/nox@2024.04.15
       with:
         python-versions: "3.12"
+    - name: "Install uv"
+      run: pipx install uv
     - name: "Setup bot user"
       run: |
         git config --global user.name "manylinux-bot[bot]"
@@ -30,13 +35,13 @@ jobs:
         app_id: ${{ secrets.MANYLINUX_BOT_APP_ID }}
         private_key: ${{ secrets.MANYLINUX_BOT_APP_PRIVATE_KEY }}
     - name: "Run update native dependencies"
-      run: nox --force-color --error-on-missing-interpreters -s update_native_dependencies
+      run: nox -s update_native_dependencies
       env:
         GITHUB_API_TOKEN: ${{ steps.generate-token.outputs.token || github.token }}
     - name: "Run update downloaded interpreters"
-      run: nox --force-color --error-on-missing-interpreters -s update_interpreters_download
+      run: nox -s update_interpreters_download
     - name: "Run update python dependencies"
-      run: nox --force-color --error-on-missing-interpreters -s update_python_dependencies
+      run: nox -s update_python_dependencies
     - name: Create Pull Request
       if: github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
       uses: peter-evans/create-pull-request@v5
