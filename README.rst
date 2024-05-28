@@ -19,31 +19,19 @@ PEP 571 defined ``manylinux2010_x86_64`` and ``manylinux2010_i686`` platform
 tags and the wheels were built on Centos6. Centos6 reached End of Life (EOL)
 on November 30th, 2020.
 
-PEP 599 defines the following platform tags:
-
-- ``manylinux2014_x86_64``
-
-- ``manylinux2014_i686``
-
-- ``manylinux2014_aarch64``
-
-- ``manylinux2014_armv7l``
-
-- ``manylinux2014_ppc64``
-
-- ``manylinux2014_ppc64le``
-
-- ``manylinux2014_s390x``
-
-Wheels are built on CentOS 7 which will reach End of Life (EOL)
-on June 30th, 2024.
+PEP 599 defines the following platform tags: ``manylinux2014_x86_64``,
+``manylinux2014_i686``, ``manylinux2014_aarch64``, ``manylinux2014_armv7l``,
+``manylinux2014_ppc64``, ``manylinux2014_ppc64le`` and ``manylinux2014_s390x``.
+Wheels are built on CentOS 7 which will reach End of Life (EOL) on June 30th,
+2024.
 
 PEP 600 has been designed to be "future-proof" and does not enforce specific symbols and a specific distro to build.
 It only states that a wheel tagged ``manylinux_x_y`` shall work on any distro based on ``glibc>=x.y``. PEP 656 added
 ``musllinux_x_y`` tags for ``musl>=x.y``.
+
 The manylinux project supports:
 
-- ``manylinux_2_24`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
+- ``manylinux2014`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
 
 - ``manylinux_2_28`` images for ``x86_64``, ``aarch64``, ``ppc64le`` and ``s390x``.
 
@@ -138,8 +126,8 @@ Toolchain: GCC 12
 - s390x image: ``quay.io/pypa/manylinux_2_28_s390x``
 
 
-manylinux2014 (CentOS 7 based)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+manylinux2014 (CentOS 7 based, glibc 2.17)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Toolchain: GCC 10
 
@@ -166,8 +154,8 @@ Toolchain: GCC 6
 - s390x image: ``quay.io/pypa/manylinux_2_24_s390x``
 
 
-manylinux2010 (CentOS 6 based - EOL)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+manylinux2010 (CentOS 6 based, glibc 2.12 - EOL)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Support for ``manylinux2010`` has `ended on August 1st, 2022 <https://github.com/pypa/manylinux/issues/1281>`_.
 
@@ -177,8 +165,8 @@ Toolchain: GCC 8
 - i686 image: ``quay.io/pypa/manylinux2010_i686``
 
 
-manylinux1 (CentOS 5 based - EOL)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+manylinux1 (CentOS 5 based, glibc 2.5 - EOL)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Code and details regarding ``manylinux1`` can be found in the `manylinux1 branch <https://github.com/pypa/manylinux/tree/manylinux1>`_.
 
@@ -201,7 +189,7 @@ Image content
 
 All images currently contain:
 
-- CPython 3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12, 3.13 and PyPy 3.7, 3.8, 3.9, 3.10 installed in
+- CPython 3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.13t and PyPy 3.7, 3.8, 3.9, 3.10 installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
   e.g. ``/opt/python/cp37-cp37m`` contains a CPython 3.7 build, and
