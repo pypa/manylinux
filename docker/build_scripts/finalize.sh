@@ -72,9 +72,10 @@ ln -s $(${TOOLS_PATH}/bin/python -c 'import certifi; print(certifi.where())') /o
 # If you modify this line you also have to modify the versions in the Dockerfiles:
 export SSL_CERT_FILE=/opt/_internal/certs.pem
 
-# initialize shared library, pip is not pinned in pipx
-pipx install pip
-pipx uninstall pip
+# initialize shared library
+# workaround https://github.com/pypa/pip/issues/9243
+/opt/python/cp310-cp310/bin/python -m pip download --dest /tmp/pinned-wheels --require-hashes -r /opt/_internal/build_scripts/requirements3.10.txt
+pipx upgrade-shared --pip-args="--no-index --find-links=/tmp/pinned-wheels"
 
 # install other tools with pipx
 for TOOL_PATH in $(find ${MY_DIR}/requirements-tools -type f); do
