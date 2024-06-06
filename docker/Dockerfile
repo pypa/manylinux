@@ -102,8 +102,8 @@ COPY build_scripts/build-cpython.sh /build_scripts/
 
 FROM build_cpython_system_ssl AS build_cpython
 COPY build_scripts/build-openssl.sh /build_scripts/
-RUN export OPENSSL_ROOT=openssl-3.0.13 && \
-    export OPENSSL_HASH=88525753f79d3bec27d2fa7c66aa0b92b3aa9498dafd93d7cfa4b3780cdae313 && \
+RUN export OPENSSL_ROOT=openssl-3.0.14 && \
+    export OPENSSL_HASH=eeca035d4dd4e84fc25846d952da6297484afa0650a6f84c682e39df3a4123ca && \
     export OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source && \
     manylinux-entrypoint /build_scripts/build-openssl.sh
 
