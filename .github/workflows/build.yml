@@ -67,8 +67,12 @@ jobs:
       - name: Build
         run: ./build.sh
 
+      - name: Deploy (dry-run)
+        run: ./deploy.sh --dry-run
+
       - name: Deploy
-        run: ./deploy.sh ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux') && '' || '--dry-run' }}
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
+        run: ./deploy.sh
         env:
           QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
           QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
