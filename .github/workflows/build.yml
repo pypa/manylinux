@@ -19,7 +19,7 @@ on:
     paths:
       - ".github/workflows/build.yml"
       - "docker/**"
-      - "build.sh"
+      - "*.sh"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
@@ -68,8 +68,7 @@ jobs:
         run: ./build.sh
 
       - name: Deploy
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
-        run: ./deploy.sh
+        run: ./deploy.sh ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux') && '' || '--dry-run' }}
         env:
           QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
           QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
