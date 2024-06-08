@@ -19,7 +19,7 @@ BUILD_ID=${COMMIT_DATE}-${COMMIT_ABBREV_SHA}
 if $(git rev-parse --is-shallow-repository); then
   git fetch --shallow-since=${COMMIT_DATE}T00:00:00Z --all
 fi
-BUILD_NUMBER=$(git rev-list --since=${COMMIT_DATE}T00:00:00Z --count ${COMMIT_SHA})
+BUILD_NUMBER=$(git rev-list --since=${COMMIT_DATE}T00:00:00Z --first-parent --count ${COMMIT_SHA})
 BUILD_ID2=${COMMIT_DATE//-/.}.${BUILD_NUMBER}
 
 docker tag ${TAG}:${COMMIT_SHA} ${TAG}:${BUILD_ID}
