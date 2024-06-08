@@ -81,6 +81,7 @@ script: |
   if [ "${MANYLINUX_BUILD_FRONTEND}" != "docker" ]; then
     cp -rlf ./.buildx-cache-* ${HOME}/buildx-cache/
   fi
+  COMMIT_SHA=${TRAVIS_COMMIT} ./deploy.sh --dry-run
 
 deploy:
   provider: script

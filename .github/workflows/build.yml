@@ -19,7 +19,7 @@ on:
     paths:
       - ".github/workflows/build.yml"
       - "docker/**"
-      - "build.sh"
+      - "*.sh"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
@@ -46,6 +46,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
 
       - name: Set up emulation
         if: matrix.platform != 'i686' && matrix.platform != 'x86_64'
@@ -66,6 +68,9 @@ jobs:
 
       - name: Build
         run: ./build.sh
+
+      - name: Deploy (dry-run)
+        run: ./deploy.sh --dry-run
 
       - name: Deploy
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
