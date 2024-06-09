@@ -76,16 +76,16 @@ RUN manylinux-entrypoint /build_scripts/install-build-packages.sh
 
 FROM build_base AS build_git
 COPY build_scripts/build-git.sh /build_scripts/
-RUN export GIT_ROOT=git-2.45.0 && \
-    export GIT_HASH=a0fc1410878716add0a3c0cf3d35728f3a7c960f751c657656cca0212bf89e65 && \
+RUN export GIT_ROOT=git-2.45.2 && \
+    export GIT_HASH=98b26090ed667099a3691b93698d1e213e1ded73d36a2fde7e9125fce28ba234 && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     manylinux-entrypoint /build_scripts/build-git.sh
 
 
 FROM build_base AS build_cpython_system_ssl
 COPY build_scripts/build-sqlite3.sh /build_scripts/
-RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3450300 && \
-    export SQLITE_AUTOCONF_HASH=b2809ca53124c19c60f42bf627736eae011afdcc205bb48270a5ee9a38191531 && \
+RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3460000 && \
+    export SQLITE_AUTOCONF_HASH=6f8e6a7b335273748816f9b3b62bbdc372a889de8782d7f048c653a447417a7d && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2024 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
@@ -102,8 +102,8 @@ COPY build_scripts/build-cpython.sh /build_scripts/
 
 FROM build_cpython_system_ssl AS build_cpython
 COPY build_scripts/build-openssl.sh /build_scripts/
-RUN export OPENSSL_ROOT=openssl-3.0.13 && \
-    export OPENSSL_HASH=88525753f79d3bec27d2fa7c66aa0b92b3aa9498dafd93d7cfa4b3780cdae313 && \
+RUN export OPENSSL_ROOT=openssl-3.0.14 && \
+    export OPENSSL_HASH=eeca035d4dd4e84fc25846d952da6297484afa0650a6f84c682e39df3a4123ca && \
     export OPENSSL_DOWNLOAD_URL=https://www.openssl.org/source && \
     manylinux-entrypoint /build_scripts/build-openssl.sh
 
@@ -135,15 +135,15 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.11.9
 
 FROM build_cpython AS build_cpython312
 COPY build_scripts/cpython-pubkey-312-313.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.12.3
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.12.4
 
 FROM build_cpython AS build_cpython313
 COPY build_scripts/cpython-pubkey-312-313.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.0b1
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.0b2
 
 FROM build_cpython AS build_cpython313_nogil
 COPY build_scripts/cpython-pubkey-312-313.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.0b1 nogil
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.0b2 nogil
 
 
 FROM runtime_base

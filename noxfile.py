@@ -4,9 +4,13 @@ from pathlib import Path
 
 import nox
 
+nox.needs_version = ">=2024.4.15"
+nox.options.default_venv_backend = "uv|virtualenv"
+
 
 @nox.session
 def update_python_dependencies(session):
+    "Update the base and per-python dependencies lockfiles"
     if getattr(session.virtualenv, "venv_backend", "") != "uv":
         session.install("uv>=0.1.23")
 
@@ -60,11 +64,17 @@ def update_python_dependencies(session):
 
 @nox.session(python="3.11", reuse_venv=True)
 def update_native_dependencies(session):
-    session.install("lastversion>=3.5.0", "packaging", "requests")
-    session.run("python", "tools/update_native_dependencies.py", *session.posargs)
+    "Update the native dependencies"
+    script = "tools/update_native_dependencies.py"
+    deps = nox.project.load_toml(script)["dependencies"]
+    session.install(*deps)
+    session.run("python", script, *session.posargs)
 
 
 @nox.session(python="3.11", reuse_venv=True)
 def update_interpreters_download(session):
-    session.install("packaging", "requests")
-    session.run("python", "tools/update_interpreters_download.py", *session.posargs)
+    "Update all the Python interpreters"
+    script = "tools/update_interpreters_download.py"
+    deps = nox.project.load_toml(script)["dependencies"]
+    session.install(*deps)
+    session.run("python", script, *session.posargs)

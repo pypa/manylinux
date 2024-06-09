@@ -3,6 +3,7 @@
 auditwheel==6.0.0 \
     --hash=sha256:221793fd4cdcbd70ba5d2b819f0a45fd357da0cf53814d5936d6b9752c2ca6a2 \
     --hash=sha256:6422c4ab6421d23e355c91e9946926cd532b9fdf46f2b5ffdaf1abfe9ee29e67
+    # via -r .nox/update_python_dependencies/tmp/auditwheel.in
 packaging==24.0 \
     --hash=sha256:2ddfb553fdf02fb784c234c7ba6ccc288296ceabec964ad2eae3777778130bc5 \
     --hash=sha256:eb82c5e3e56209074766e6885bb04b8c38a0c015d0a30036ebe7ece34c9989e9
