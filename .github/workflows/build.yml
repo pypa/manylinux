@@ -60,18 +60,17 @@ jobs:
 
       - name: Restore cache
         if: github.event_name != 'workflow_dispatch' || fromJSON(github.event.inputs.useCache)
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: .buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
           key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}
-          restore-keys: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}
 
       - name: Build
         run: ./build.sh
 
       - name: Save cache
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         with:
           path: .buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
           key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}
