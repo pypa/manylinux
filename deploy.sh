@@ -18,7 +18,7 @@ BUILD_ID=${COMMIT_DATE}-${COMMIT_ABBREV_SHA}
 # Dependabot does not work with the BUILD_ID format
 # Use a version like tag
 if $(git rev-parse --is-shallow-repository); then
-  git fetch --shallow-since=${COMMIT_DATE}T00:00:00Z --all
+  git fetch --unshallow
 fi
 BUILD_NUMBER=$(git rev-list --since=${COMMIT_DATE}T00:00:00Z --first-parent --count ${COMMIT_SHA})
 BUILD_ID2=${COMMIT_DATE//-/.}.${BUILD_NUMBER}
