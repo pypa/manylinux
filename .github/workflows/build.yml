@@ -58,16 +58,23 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Setup cache
+      - name: Restore cache
         if: github.event_name != 'workflow_dispatch' || fromJSON(github.event.inputs.useCache)
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v3
         with:
           path: .buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
-          key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-${{ hashFiles('docker/**') }}
-          restore-keys: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-
+          key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}
+          restore-keys: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}
 
       - name: Build
         run: ./build.sh
+
+      - name: Save cache
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/cache/save@v3
+        with:
+          path: .buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
+          key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}
 
       - name: Deploy
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
