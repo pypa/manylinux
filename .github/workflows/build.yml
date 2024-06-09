@@ -63,8 +63,8 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: .buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
-          key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-${{ hashFiles('docker/**') }}
-          restore-keys: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-
+          key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}
+          restore-keys: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}
 
       - name: Build
         run: ./build.sh
@@ -74,7 +74,7 @@ jobs:
         uses: actions/cache/save@v3
         with:
           path: .buildx-cache-${{ matrix.policy }}_${{ matrix.platform }}/*
-          key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}-${{ hashFiles('docker/**') }}
+          key: buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}
 
       - name: Deploy
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
