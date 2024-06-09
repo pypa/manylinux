@@ -69,9 +69,6 @@ jobs:
       - name: Build
         run: ./build.sh
 
-      - name: Deploy (dry-run)
-        run: ./deploy.sh --dry-run
-
       - name: Deploy
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
         run: ./deploy.sh
