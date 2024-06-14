@@ -103,6 +103,7 @@ Toolchain: GCC 13
 - ppc64le image: ``quay.io/pypa/musllinux_1_2_ppc64le``
 - s390x image: ``quay.io/pypa/musllinux_1_2_s390x``
 
+
 musllinux_1_1 (Alpine Linux 2.12 based)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -125,6 +126,14 @@ Toolchain: GCC 12
 - ppc64le image: ``quay.io/pypa/manylinux_2_28_ppc64le``
 - s390x image: ``quay.io/pypa/manylinux_2_28_s390x``
 
+Built wheels are also expected to be compatible with other
+distros using glibc 2.28 or later, including:
+
+- Debian 10+
+- Ubuntu 20.04+
+- Fedora 29+
+- CentOS/RHEL 8+
+
 
 manylinux2014 (CentOS 7 based, glibc 2.17)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -136,6 +145,14 @@ Toolchain: GCC 10
 - aarch64 image: ``quay.io/pypa/manylinux2014_aarch64``
 - ppc64le image: ``quay.io/pypa/manylinux2014_ppc64le``
 - s390x image: ``quay.io/pypa/manylinux2014_s390x``
+
+Built wheels are also expected to be compatible with other
+distros using glibc 2.17 or later, including:
+
+- Debian 8+
+- Ubuntu 16.04+
+- Fedora 19+
+- RHEL 7+
 
 
 manylinux_2_24 (Debian 9 based) - EOL
