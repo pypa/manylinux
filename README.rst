@@ -130,7 +130,7 @@ Built wheels are also expected to be compatible with other
 distros using glibc 2.28 or later, including:
 
 - Debian 10+
-- Ubuntu 20.04+
+- Ubuntu 18.10+
 - Fedora 29+
 - CentOS/RHEL 8+
 
