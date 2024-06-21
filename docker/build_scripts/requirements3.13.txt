@@ -10,9 +10,9 @@ packaging==24.1 \
     # via
     #   -r requirements.in
     #   build
-pip==24.1b2 \
-    --hash=sha256:7b4ae01a2af4bfae0386860c5a12c035fcc228364ddef89192a1c31d48d263a1 \
-    --hash=sha256:926201900a0e26929387023907bf395c9a6c0d37bbea176942ca5e1b6b27e815
+pip==24.1 \
+    --hash=sha256:a775837439bf5da2c1a0c2fa43d5744854497c689ddbd9344cf3ea6d00598540 \
+    --hash=sha256:bdae551038c0ce6a83030b4aedef27fc95f0daa683593fea22fa05e55ed8e317
     # via -r requirements.in
 pyproject-hooks==1.1.0 \
     --hash=sha256:4b37730834edbd6bd37f26ece6b44802fb1c1ee2ece0e54ddff8bfc06db86965 \
