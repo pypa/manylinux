@@ -44,7 +44,7 @@ jobs:
       run: nox -s update_python_dependencies
     - name: Create Pull Request
       if: github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
-      uses: peter-evans/create-pull-request@v5
+      uses: peter-evans/create-pull-request@v6
       with:
         commit-message: Update python dependencies
         title: '[Bot] Update dependencies'
