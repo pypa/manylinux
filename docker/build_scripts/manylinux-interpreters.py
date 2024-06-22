@@ -21,6 +21,8 @@ def sort_key(tag):
     python_tag, _ = tag.split("-")
     if python_tag.startswith(("cp", "pp")):
         return python_tag[:2], int(python_tag[2]), int(python_tag[3:])
+    if python_tag.startswith("graalpy"):
+        return python_tag[:7], int(python_tag[7]), int(python_tag[8:])
     raise LookupError(tag)
 
 
@@ -81,6 +83,12 @@ def get_info_from_tag(tag):
         return {
             "pv": f"{python_tag[2]}.{python_tag[3:]}",
             "i": "pypy",
+            "iv": PYTHON_TAGS[tag][ARCH]["version"]
+        }
+    if python_tag.startswith("graalpy"):
+        return {
+            "pv": f"{python_tag[7]}.{python_tag[8:]}",
+            "i": "graalpy",
             "iv": PYTHON_TAGS[tag][ARCH]["version"]
         }
     raise LookupError(tag)
