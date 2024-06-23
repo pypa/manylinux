@@ -123,8 +123,9 @@ pipx run nox --version
 pipx install --pip-args='--no-python-version-warning --no-input' nox
 nox --version
 tar --version | grep "GNU tar"
-if [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ]; then
+if [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ] && [ "${AUDITWHEEL_ARCH}" != "ppc64le" ]; then
 	# no uv on musllinux s390x
+	# FIXME, ppc64le test fails on Travis CI but works with qemu
 	uv version
 	mkdir /tmp/uv-test
 	pushd /tmp/uv-test
