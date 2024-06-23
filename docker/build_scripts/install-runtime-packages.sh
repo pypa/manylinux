@@ -50,6 +50,8 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == 
 		RUNTIME_DEPS="${RUNTIME_DEPS} libidn tk"
 	else
 		RUNTIME_DEPS="${RUNTIME_DEPS} libidn2 tk"
+		# for graalpy
+		RUNTIME_DEPS="${RUNTIME_DEPS} libxcrypt-compat"
 	fi
 elif [ "${BASE_POLICY}" == "musllinux" ]; then
 	RUNTIME_DEPS="zlib bzip2 expat ncurses-libs readline tk gdbm db xz openssl keyutils-libs krb5-libs libcom_err libidn2 libcurl libuuid libffi"
