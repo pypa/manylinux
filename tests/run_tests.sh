@@ -21,7 +21,10 @@ if [ "${AUDITWHEEL_POLICY:0:10}" == "musllinux_" ]; then
 	EXPECTED_PYTHON_COUNT=9
 	EXPECTED_PYTHON_COUNT_ALL=9
 else
-	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ] || [ "${AUDITWHEEL_ARCH}" == "i686" ] || [ "${AUDITWHEEL_ARCH}" == "aarch64" ]; then
+	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ] || [ "${AUDITWHEEL_ARCH}" == "aarch64" ]; then
+		EXPECTED_PYTHON_COUNT=13
+		EXPECTED_PYTHON_COUNT_ALL=14
+	elif [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
 		EXPECTED_PYTHON_COUNT=13
 		EXPECTED_PYTHON_COUNT_ALL=13
 	else
@@ -120,6 +123,16 @@ pipx run nox --version
 pipx install --pip-args='--no-python-version-warning --no-input' nox
 nox --version
 tar --version | grep "GNU tar"
+if [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ] && [ "${AUDITWHEEL_ARCH}" != "ppc64le" ]; then
+	# no uv on musllinux s390x
+	# FIXME, ppc64le test fails on Travis CI but works with qemu
+	uv version
+	mkdir /tmp/uv-test
+	pushd /tmp/uv-test
+	uv venv --python python3.12
+	uv pip install -r /opt/_internal/build_scripts/requirements3.12.txt
+	popd
+fi
 
 # check libcrypt.so.1 can be loaded by some system packages,
 # as LD_LIBRARY_PATH might not be enough.

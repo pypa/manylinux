@@ -29,6 +29,8 @@ PEP 600 has been designed to be "future-proof" and does not enforce specific sym
 It only states that a wheel tagged ``manylinux_x_y`` shall work on any distro based on ``glibc>=x.y``. PEP 656 added
 ``musllinux_x_y`` tags for ``musl>=x.y``.
 
+An overview of distros per glibc version is available at `pep600_compliance <https://github.com/mayeut/pep600_compliance?tab=readme-ov-file#distro-compatibility>`_.
+
 The manylinux project supports:
 
 - ``manylinux2014`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
@@ -94,27 +96,6 @@ etc., we provide `Docker <https://docker.com/>`_ images where we've
 done the work for you. The images are uploaded to `quay.io`_ and are tagged
 for repeatable builds.
 
-musllinux_1_2 (Alpine Linux 3.19 based, 3.13+ compatible)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Toolchain: GCC 13
-
-- x86_64 image: ``quay.io/pypa/musllinux_1_2_x86_64``
-- i686 image: ``quay.io/pypa/musllinux_1_2_i686``
-- aarch64 image: ``quay.io/pypa/musllinux_1_2_aarch64``
-- ppc64le image: ``quay.io/pypa/musllinux_1_2_ppc64le``
-- s390x image: ``quay.io/pypa/musllinux_1_2_s390x``
-
-musllinux_1_1 (Alpine Linux 2.12 based)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Toolchain: GCC 9
-
-- x86_64 image: ``quay.io/pypa/musllinux_1_1_x86_64``
-- i686 image: ``quay.io/pypa/musllinux_1_1_i686``
-- aarch64 image: ``quay.io/pypa/musllinux_1_1_aarch64``
-- ppc64le image: ``quay.io/pypa/musllinux_1_1_ppc64le``
-- s390x image: ``quay.io/pypa/musllinux_1_1_s390x``
 
 manylinux_2_34 (AlmaLinux 9 based)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -136,6 +117,14 @@ Toolchain: GCC 12
 - ppc64le image: ``quay.io/pypa/manylinux_2_28_ppc64le``
 - s390x image: ``quay.io/pypa/manylinux_2_28_s390x``
 
+Built wheels are also expected to be compatible with other
+distros using glibc 2.28 or later, including:
+
+- Debian 10+
+- Ubuntu 18.10+
+- Fedora 29+
+- CentOS/RHEL 8+
+
 
 manylinux2014 (CentOS 7 based, glibc 2.17)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -147,6 +136,14 @@ Toolchain: GCC 10
 - aarch64 image: ``quay.io/pypa/manylinux2014_aarch64``
 - ppc64le image: ``quay.io/pypa/manylinux2014_ppc64le``
 - s390x image: ``quay.io/pypa/manylinux2014_s390x``
+
+Built wheels are also expected to be compatible with other
+distros using glibc 2.17 or later, including:
+
+- Debian 8+
+- Ubuntu 13.10+
+- Fedora 19+
+- RHEL 7+
 
 
 manylinux_2_24 (Debian 9 based) - EOL
@@ -187,6 +184,30 @@ Toolchain: GCC 4.8
 
 - x86-64 image: ``quay.io/pypa/manylinux1_x86_64``
 - i686 image: ``quay.io/pypa/manylinux1_i686``
+
+
+musllinux_1_2 (Alpine Linux 3.19 based, 3.13+ compatible)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Toolchain: GCC 13
+
+- x86_64 image: ``quay.io/pypa/musllinux_1_2_x86_64``
+- i686 image: ``quay.io/pypa/musllinux_1_2_i686``
+- aarch64 image: ``quay.io/pypa/musllinux_1_2_aarch64``
+- ppc64le image: ``quay.io/pypa/musllinux_1_2_ppc64le``
+- s390x image: ``quay.io/pypa/musllinux_1_2_s390x``
+
+
+musllinux_1_1 (Alpine Linux 2.12 based)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Toolchain: GCC 9
+
+- x86_64 image: ``quay.io/pypa/musllinux_1_1_x86_64``
+- i686 image: ``quay.io/pypa/musllinux_1_1_i686``
+- aarch64 image: ``quay.io/pypa/musllinux_1_1_aarch64``
+- ppc64le image: ``quay.io/pypa/musllinux_1_1_ppc64le``
+- s390x image: ``quay.io/pypa/musllinux_1_1_s390x``
 
 
 All images are rebuilt using GitHub Actions / Travis-CI on every commit to this
