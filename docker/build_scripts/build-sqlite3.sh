@@ -36,7 +36,7 @@ strip_ /manylinux-rootfs
 # Install
 cp -rlf /manylinux-rootfs/* /
 
-if [ "${PREFIX}" == "/usr/local/" ]; then
+if [ "${PREFIX}" == "/usr/local" ]; then
 	if [ "${BASE_POLICY}" == "musllinux" ]; then
 		ldconfig /
 	elif [ "${BASE_POLICY}" == "manylinux" ]; then
