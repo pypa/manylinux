@@ -25,8 +25,7 @@ tar xfz ${SQLITE_AUTOCONF_ROOT}.tar.gz
 pushd ${SQLITE_AUTOCONF_ROOT}
 # add rpath
 sed -i "s|^Libs:|Libs: -Wl,--enable-new-dtags,-rpath=\${libdir} |g" sqlite3.pc.in
-export CFLAGS="-Wall -fno-strict-aliasing -DSQLITE_ENABLE_FTS3_PARENTHESIS=1 -DSQLITE_ENABLE_FTS4=1 -DSQLITE_ENABLE_FTS5=1 -DSQLITE_ENABLE_RTREE=1 -DSQLITE_OMIT_AUTOINIT -DSQLITE_TCL=0"
-DESTDIR=/manylinux-rootfs do_standard_install --prefix=${PREFIX} --enable-threadsafe --enable-shared=yes --enable-static=no --enable-fts4 --enable-fts5 --disable-dependency-tracking
+DESTDIR=/manylinux-rootfs do_standard_install --prefix=${PREFIX}
 popd
 rm -rf ${SQLITE_AUTOCONF_ROOT} ${SQLITE_AUTOCONF_ROOT}.tar.gz
 
