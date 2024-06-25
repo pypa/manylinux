@@ -109,6 +109,9 @@ if [ ${EXPECTED_PYTHON_COUNT_ALL} -ne ${PYTHON_COUNT} ]; then
 	exit 1
 fi
 
+# we stopped installing sqlite3 in manylinux_2_34
+SQLITE_PREFIX=$(find /opt/_internal -maxdepth 1 -name 'sqlite*')
+
 # minimal tests for tools that should be present
 auditwheel --version
 autoconf --version
@@ -118,7 +121,9 @@ patchelf --version
 git --version
 cmake --version
 swig -version
-sqlite3 --version
+if [ "${SQLITE_PREFIX}" == "" ]; then
+	sqlite3 --version
+fi
 pipx run nox --version
 pipx install --pip-args='--no-python-version-warning --no-input' nox
 nox --version
@@ -150,13 +155,15 @@ fi
 eval "$(ssh-agent)"
 eval "$(ssh-agent -k)"
 
-# compilation tests, intended to ensure appropriate headers, pkg_config, etc.
-# are available for downstream compile against installed tools
-source_dir="${MY_DIR}/ctest"
-build_dir="$(mktemp -d)"
-cmake -S "${source_dir}" -B "${build_dir}"
-cmake --build "${build_dir}"
-(cd "${build_dir}"; ctest --output-on-failure)
+if [ "${SQLITE_PREFIX}" == "" ]; then
+	# compilation tests, intended to ensure appropriate headers, pkg_config, etc.
+	# are available for downstream compile against installed tools
+	source_dir="${MY_DIR}/ctest"
+	build_dir="$(mktemp -d)"
+	cmake -S "${source_dir}" -B "${build_dir}"
+	cmake --build "${build_dir}"
+	(cd "${build_dir}"; ctest --output-on-failure)
+fi
 
 # https://github.com/pypa/manylinux/issues/1060
 # wrong /usr/local/man symlink
