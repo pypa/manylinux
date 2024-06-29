@@ -31,6 +31,8 @@ jobs:
   build_manylinux:
     name: ${{ matrix.policy }}_${{ matrix.platform }}
     runs-on: ubuntu-22.04
+    permissions:
+      actions: write # this permission is needed to delete cache
     strategy:
       fail-fast: false
       matrix:
@@ -69,6 +71,12 @@ jobs:
 
       - name: Build
         run: ./build.sh
+
+      - name: Delete cache
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          KEY="buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}"
+          gh cache delete ${KEY} || true
 
       - name: Save cache
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
