@@ -77,6 +77,8 @@ jobs:
         run: |
           KEY="buildx-cache-${{ matrix.policy }}-${{ matrix.platform }}"
           gh cache delete ${KEY} || true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Save cache
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
