@@ -107,6 +107,14 @@ Toolchain: GCC 13
 - ppc64le image: ``quay.io/pypa/manylinux_2_34_ppc64le``
 - s390x image: ``quay.io/pypa/manylinux_2_34_s390x``
 
+Built wheels are also expected to be compatible with other
+distros using glibc 2.34 or later, including:
+
+- Debian 12+
+- Ubuntu 21.10+
+- Fedora 35+
+- CentOS/RHEL 9+
+
 manylinux_2_28 (AlmaLinux 8 based)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
