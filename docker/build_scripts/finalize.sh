@@ -92,7 +92,7 @@ clean_pyc /opt/_internal
 # remove cache
 rm -rf /tmp/* || true
 
-hardlink -cv /opt/_internal
+hardlink -c /opt/_internal
 
 # update system packages
 LC_ALL=C ${MY_DIR}/update-system-packages.sh

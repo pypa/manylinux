@@ -50,6 +50,14 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] ; then
 	export TCLTK_LIBS="-ltk8.6 -ltcl8.6"
 fi
 
+SQLITE_PREFIX=$(find /opt/_internal -maxdepth 1 -name 'sqlite*')
+if [ "${SQLITE_PREFIX}" != "" ]; then
+	case "${CPYTHON_VERSION}" in
+		3.6.*|3.7.*|3.8.*|3.9.*|3.10.*) sed -i "s|/usr/local/include/sqlite3|/opt/_internal/sqlite3/include|g ; s|sqlite_extra_link_args = ()|sqlite_extra_link_args = ('-Wl,--enable-new-dtags,-rpath=/opt/_internal/sqlite3/lib',)|g" setup.py;;
+		*) ;;
+	esac
+fi
+
 OPENSSL_PREFIX=$(find /opt/_internal -maxdepth 1 -name 'openssl*')
 if [ "${OPENSSL_PREFIX}" != "" ]; then
 	CONFIGURE_ARGS="${CONFIGURE_ARGS} --with-openssl=${OPENSSL_PREFIX}"
