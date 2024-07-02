@@ -70,9 +70,9 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	echo "skip_missing_names_on_install=False" >> /etc/yum.conf
 	# Make sure that locale will not be removed
 	sed -i '/^override_install_langs=/d' /etc/yum.conf
-	# Exclude mirror holding broken package metadata
-	echo "exclude = d36uatko69830t.cloudfront.net" >> /etc/yum/pluginconf.d/fastestmirror.conf
+	fixup-mirrors
 	yum -y update
+	fixup-mirrors
 	yum -y install yum-utils curl
 	yum-config-manager --enable extras
 	TOOLCHAIN_DEPS="devtoolset-10-binutils devtoolset-10-gcc devtoolset-10-gcc-c++ devtoolset-10-gcc-gfortran"
@@ -90,6 +90,7 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 		# Install mayeut/devtoolset-10 repo to get devtoolset-10
 		curl -fsSLo /etc/yum.repos.d/mayeut-devtoolset-10.repo https://copr.fedorainfracloud.org/coprs/mayeut/devtoolset-10/repo/custom-1/mayeut-devtoolset-10-custom-1.repo
 	fi
+	fixup-mirrors
 elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ]; then
 	PACKAGE_MANAGER=dnf
 	BASETOOLS="${BASETOOLS} curl glibc-locale-source glibc-langpack-en hardlink hostname libcurl libnsl libxcrypt which"
