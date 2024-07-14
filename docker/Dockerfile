@@ -49,8 +49,8 @@ RUN export AUTOCONF_ROOT=autoconf-2.72 && \
     manylinux-entrypoint /build_scripts/install-autoconf.sh
 
 COPY build_scripts/install-automake.sh /build_scripts/
-RUN export AUTOMAKE_ROOT=automake-1.16.5 && \
-    export AUTOMAKE_HASH=07bd24ad08a64bc17250ce09ec56e921d6343903943e99ccf63bbf0705e34605 && \
+RUN export AUTOMAKE_ROOT=automake-1.17 && \
+    export AUTOMAKE_HASH=397767d4db3018dd4440825b60c64258b636eaf6bf99ac8b0897f06c89310acd && \
     export AUTOMAKE_DOWNLOAD_URL=http://ftp.gnu.org/gnu/automake && \
     manylinux-entrypoint /build_scripts/install-automake.sh
 
