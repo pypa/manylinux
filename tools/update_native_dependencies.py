@@ -78,7 +78,7 @@ def _update_with_root(tool, dry_run):
         "autoconf": "~v?[0-9]+\.[0-9]+(\.[0-9]+)?$",
     }
     exclude = {
-        "libtool": "2.5.0",  # pre-release
+        "libtool": "~2\.5\.[0-1]$",  # pre-release
     }
     lines = DOCKERFILE.read_text().splitlines()
     re_ = re.compile(f"^RUN export {tool.upper()}_ROOT={tool}-(?P<version>\\S+) && \\\\$")
