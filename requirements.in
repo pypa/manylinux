@@ -1,5 +1,5 @@
-pip
-setuptools ; python_version < '3.13'
+pip ; implementation_name != 'graalpy'
+setuptools ; python_version < '3.13' and implementation_name != 'graalpy'
 wheel ; python_version < '3.13'
 build
 packaging

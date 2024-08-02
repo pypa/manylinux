@@ -23,8 +23,12 @@ export PIP_DISABLE_PIP_VERSION_CHECK=1
 export PIP_NO_WARN_SCRIPT_LOCATION=0
 
 # Install pinned packages for this python version.
-# Use the already intsalled cpython pip to bootstrap pip if available
-if [ -f /usr/local/bin/python${PY_VER} ]; then
+if [ "${PY_IMPL}" == "graalpy" ]; then
+	# GraalPy doesn't update pip/setuptools because it uses a patched version of pip/setuptools
+	${PREFIX}/bin/python -m ensurepip --default-pip
+	${PREFIX}/bin/python -m pip install -U --require-hashes -r ${MY_DIR}/requirements${PY_VER}.txt
+elif [ -f /usr/local/bin/python${PY_VER} ]; then
+	# Use the already intsalled cpython pip to bootstrap pip if available
 	/usr/local/bin/python${PY_VER} -m pip --python ${PREFIX}/bin/python install -U --require-hashes -r ${MY_DIR}/requirements${PY_VER}.txt
 else
 	${PREFIX}/bin/python -m ensurepip
