@@ -25,6 +25,7 @@ def update_python_dependencies(session):
             "uv", "pip", "compile",
             f"--python-version={python_version}",
             "--generate-hashes",
+            "--no-strip-markers",
             "requirements.in",
             "--upgrade",
             "--output-file",
