@@ -36,11 +36,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        policy: ["manylinux2014", "musllinux_1_1", "musllinux_1_2"]
-        platform: ["i686", "x86_64"]
+        policy: ["manylinux2014", "manylinux_2_28", "musllinux_1_1", "musllinux_1_2"]
+        platform: ["x86_64", "s390x", "ppc64le"]
         include:
-          - policy: "manylinux_2_28"
-            platform: "x86_64"
+          - policy: "manylinux2014"
+            platform: "i686"
+          - policy: "musllinux_1_1"
+            platform: "i686"
+          - policy: "musllinux_1_2"
+            platform: "i686"
 
     env:
       POLICY: ${{ matrix.policy }}
