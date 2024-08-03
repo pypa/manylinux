@@ -80,7 +80,7 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 		# Software collection (for devtoolset-10)
 		yum -y install centos-release-scl-rh
 		# EPEL support (for yasm)
-		yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+		yum -y install https://archives.fedoraproject.org/pub/archive/epel/7/x86_64/Packages/e/epel-release-7-14.noarch.rpm
 		TOOLCHAIN_DEPS="${TOOLCHAIN_DEPS} yasm"
 	elif [ "${AUDITWHEEL_ARCH}" == "aarch64" ] || [ "${AUDITWHEEL_ARCH}" == "ppc64le" ] || [ "${AUDITWHEEL_ARCH}" == "s390x" ]; then
 		# Software collection (for devtoolset-10)

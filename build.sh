@@ -13,14 +13,19 @@ export PLATFORM
 
 # get docker default multiarch image prefix for PLATFORM
 if [ "${PLATFORM}" == "x86_64" ]; then
+	GOARCH="amd64"
 	MULTIARCH_PREFIX="amd64/"
 elif [ "${PLATFORM}" == "i686" ]; then
+	GOARCH="386"
 	MULTIARCH_PREFIX="i386/"
 elif [ "${PLATFORM}" == "aarch64" ]; then
+	GOARCH="arm64"
 	MULTIARCH_PREFIX="arm64v8/"
 elif [ "${PLATFORM}" == "ppc64le" ]; then
+	GOARCH="ppc64le"
 	MULTIARCH_PREFIX="ppc64le/"
 elif [ "${PLATFORM}" == "s390x" ]; then
+	GOARCH="s390x"
 	MULTIARCH_PREFIX="s390x/"
 else
 	echo "Unsupported platform: '${PLATFORM}'"
@@ -71,6 +76,7 @@ export PREPEND_PATH
 export LD_LIBRARY_PATH_ARG
 
 BUILD_ARGS_COMMON="
+	--platform=linux/${GOARCH}
 	--build-arg POLICY --build-arg PLATFORM --build-arg BASEIMAGE
 	--build-arg DEVTOOLSET_ROOTPATH --build-arg PREPEND_PATH --build-arg LD_LIBRARY_PATH_ARG
 	--rm -t quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA}

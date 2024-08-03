@@ -100,7 +100,17 @@ for PYTHON in /opt/python/*/bin/python; do
 		echo "invalid answer, expecting 42"
 		exit 1
 	fi
-
+	if [ "${PYVERS}" != "3.6" ] && [ "${PYVERS}" != "3.7" ] && [ "${IMPLEMENTATION}" != "graalpy" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ] && [ "${AUDITWHEEL_ARCH}" != "ppc64le" ]; then
+		# no uv on musllinux s390x
+		# FIXME, ppc64le test fails on Travis CI but works with qemu
+		UV_PYTHON=/tmp/uv-test-${IMPLEMENTATION}${PYVERS}/bin/python
+		uv venv --python ${PYTHON} /tmp/uv-test-${IMPLEMENTATION}${PYVERS}
+		uv pip install --python ${UV_PYTHON} ${REPAIRED_WHEEL}
+		if [ "$(${UV_PYTHON} -c 'import forty_two; print(forty_two.answer())')" != "42" ]; then
+			echo "invalid answer, expecting 42"
+			exit 1
+		fi
+	fi
 	PYTHON_COUNT=$(( $PYTHON_COUNT + 1 ))
 done
 if [ ${EXPECTED_PYTHON_COUNT_ALL} -ne ${PYTHON_COUNT} ]; then
@@ -128,16 +138,6 @@ pipx run nox --version
 pipx install --pip-args='--no-python-version-warning --no-input' nox
 nox --version
 tar --version | grep "GNU tar"
-if [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ] && [ "${AUDITWHEEL_ARCH}" != "ppc64le" ]; then
-	# no uv on musllinux s390x
-	# FIXME, ppc64le test fails on Travis CI but works with qemu
-	uv version
-	mkdir /tmp/uv-test
-	pushd /tmp/uv-test
-	uv venv --python python3.12
-	uv pip install -r /opt/_internal/build_scripts/requirements3.12.txt
-	popd
-fi
 
 # check libcrypt.so.1 can be loaded by some system packages,
 # as LD_LIBRARY_PATH might not be enough.
