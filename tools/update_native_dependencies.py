@@ -79,6 +79,7 @@ def _update_with_root(tool, dry_run):
     }
     exclude = {
         "libtool": "~2\.5\.[0-1]$",  # pre-release
+        "git": "2.46.0",  # can't build on CentOS 7
     }
     lines = DOCKERFILE.read_text().splitlines()
     re_ = re.compile(f"^RUN export {tool.upper()}_ROOT={tool}-(?P<version>\\S+) && \\\\$")
