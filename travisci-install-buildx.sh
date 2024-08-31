@@ -72,7 +72,7 @@ fi
 
 # update buildx
 mkdir -vp ~/.docker/cli-plugins/
-curl -sSL "https://github.com/docker/buildx/releases/download/v0.10.3/buildx-v0.10.3.linux-${BUILDX_MACHINE}" > ~/.docker/cli-plugins/docker-buildx
+curl -sSL "https://github.com/docker/buildx/releases/download/v0.16.2/buildx-v0.16.2.linux-${BUILDX_MACHINE}" > ~/.docker/cli-plugins/docker-buildx
 chmod a+x ~/.docker/cli-plugins/docker-buildx
 docker buildx version
 docker buildx create --name builder-manylinux --driver docker-container --use
