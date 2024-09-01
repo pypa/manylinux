@@ -22,9 +22,9 @@ pyproject-hooks==1.1.0 \
     --hash=sha256:4b37730834edbd6bd37f26ece6b44802fb1c1ee2ece0e54ddff8bfc06db86965 \
     --hash=sha256:7ceeefe9aec63a1064c18d939bdc3adf2d8aa1988a510afec15151578b232aa2
     # via build
-setuptools==73.0.1 ; python_full_version < '3.13' and implementation_name != 'graalpy' \
-    --hash=sha256:b208925fcb9f7af924ed2dc04708ea89791e24bde0d3020b27df0e116088b34e \
-    --hash=sha256:d59a3e788ab7e012ab2c4baed1b376da6366883ee20d7a5fc426816e3d7b1193
+setuptools==74.0.0 ; python_full_version < '3.13' and implementation_name != 'graalpy' \
+    --hash=sha256:0274581a0037b638b9fc1c6883cc71c0210865aaa76073f7882376b641b84e8f \
+    --hash=sha256:a85e96b8be2b906f3e3e789adec6a9323abf79758ecfa3065bd740d81158b11e
     # via -r requirements.in
 tomli==2.0.1 ; python_full_version < '3.11' \
     --hash=sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc \
@@ -34,7 +34,7 @@ wheel==0.44.0 ; python_full_version < '3.13' \
     --hash=sha256:2376a90c98cc337d18623527a97c31797bd02bad0033d41547043a1cbfbe448f \
     --hash=sha256:a29c3f2817e95ab89aa4660681ad547c0e9547f20e75b0562fe7723c9a2a9d49
     # via -r requirements.in
-zipp==3.20.0 ; python_full_version < '3.10.2' \
-    --hash=sha256:0145e43d89664cfe1a2e533adc75adafed82fe2da404b4bbb6b026c0157bdb31 \
-    --hash=sha256:58da6168be89f0be59beb194da1250516fdaa062ccebd30127ac65d30045e10d
+zipp==3.20.1 ; python_full_version < '3.10.2' \
+    --hash=sha256:9960cd8967c8f85a56f920d5d507274e74f9ff813a0ab8889a5b5be2daf44064 \
+    --hash=sha256:c22b14cc4763c5a5b04134207736c107db42e9d3ef2d9779d465f5f1bcba572b
     # via importlib-metadata
