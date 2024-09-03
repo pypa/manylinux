@@ -122,10 +122,6 @@ RUN export OPENSSL_ROOT=openssl-3.0.15 && \
     manylinux-entrypoint /build_scripts/build-openssl.sh
 
 
-FROM build_cpython_system_ssl AS build_cpython36
-COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.6.15
-
 FROM build_cpython_system_ssl AS build_cpython37
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.17
@@ -165,8 +161,7 @@ COPY --from=build_mpdecimal /manylinux-rootfs /
 COPY --from=build_sqlite3 /manylinux-rootfs /
 COPY --from=build_git /manylinux-rootfs /
 COPY build_scripts /opt/_internal/build_scripts/
-RUN --mount=type=bind,target=/build_cpython36,from=build_cpython36 \
-    --mount=type=bind,target=/build_cpython37,from=build_cpython37 \
+RUN --mount=type=bind,target=/build_cpython37,from=build_cpython37 \
     --mount=type=bind,target=/build_cpython38,from=build_cpython38 \
     --mount=type=bind,target=/build_cpython39,from=build_cpython39 \
     --mount=type=bind,target=/build_cpython310,from=build_cpython310 \
