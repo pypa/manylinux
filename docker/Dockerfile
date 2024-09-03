@@ -79,7 +79,7 @@ RUN export GIT_ROOT=git-2.45.2 && \
     manylinux-entrypoint /build_scripts/build-git.sh
 
 
-FROM build_base AS build_cpython_system_ssl
+FROM build_base AS build_cpython
 COPY build_scripts/build-sqlite3.sh /build_scripts/
 RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3460100 && \
     export SQLITE_AUTOCONF_HASH=67d3fe6d268e6eaddcae3727fce58fcc8e9c53869bdd07a0c61e38ddf2965071 && \
@@ -94,20 +94,13 @@ RUN export TCL_ROOT=tcl8.6.14 && \
     export TK_HASH=8ffdb720f47a6ca6107eac2dd877e30b0ef7fac14f3a84ebbd0b3612cee41a94 && \
     manylinux-entrypoint /build_scripts/build-tcltk.sh
 
-COPY build_scripts/build-cpython.sh /build_scripts/
-
-
-FROM build_cpython_system_ssl AS build_cpython
 COPY build_scripts/build-openssl.sh /build_scripts/
 RUN export OPENSSL_ROOT=openssl-3.0.15 && \
     export OPENSSL_HASH=23c666d0edf20f14249b3d8f0368acaee9ab585b09e1de82107c66e1f3ec9533 && \
     export OPENSSL_DOWNLOAD_URL=https://github.com/openssl/openssl/releases/download/${OPENSSL_ROOT} && \
     manylinux-entrypoint /build_scripts/build-openssl.sh
 
-
-FROM build_cpython_system_ssl AS build_cpython37
-COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.17
+COPY build_scripts/build-cpython.sh /build_scripts/
 
 
 FROM build_cpython AS build_cpython38
@@ -141,10 +134,9 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.0rc2 nogil
 
 FROM runtime_base
 COPY --from=build_git /manylinux-rootfs /
-COPY --from=build_cpython_system_ssl /manylinux-rootfs /
+COPY --from=build_cpython /manylinux-rootfs /
 COPY build_scripts /opt/_internal/build_scripts/
-RUN --mount=type=bind,target=/build_cpython37,from=build_cpython37 \
-    --mount=type=bind,target=/build_cpython38,from=build_cpython38 \
+RUN --mount=type=bind,target=/build_cpython38,from=build_cpython38 \
     --mount=type=bind,target=/build_cpython39,from=build_cpython39 \
     --mount=type=bind,target=/build_cpython310,from=build_cpython310 \
     --mount=type=bind,target=/build_cpython311,from=build_cpython311 \
