@@ -107,24 +107,17 @@ RUN export MPDECIMAL_ROOT=mpdecimal-4.0.0 && \
     manylinux-entrypoint /build_scripts/build-mpdecimal.sh
 
 
-FROM build_base AS build_cpython_system_ssl
+FROM build_base AS build_cpython
 COPY --from=build_tcl_tk /manylinux-buildfs /
 COPY --from=build_mpdecimal /manylinux-buildfs /
 COPY --from=build_sqlite3 /manylinux-buildfs /
-COPY build_scripts/build-cpython.sh /build_scripts/
 RUN if command -v apk >/dev/null 2>&1; then ldconfig /; else ldconfig; fi
-
-FROM build_cpython_system_ssl AS build_cpython
 COPY build_scripts/build-openssl.sh /build_scripts/
 RUN export OPENSSL_ROOT=openssl-3.0.15 && \
     export OPENSSL_HASH=23c666d0edf20f14249b3d8f0368acaee9ab585b09e1de82107c66e1f3ec9533 && \
     export OPENSSL_DOWNLOAD_URL=https://github.com/openssl/openssl/releases/download/${OPENSSL_ROOT} && \
     manylinux-entrypoint /build_scripts/build-openssl.sh
-
-
-FROM build_cpython_system_ssl AS build_cpython37
-COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.17
+COPY build_scripts/build-cpython.sh /build_scripts/
 
 FROM build_cpython AS build_cpython38
 COPY build_scripts/ambv-pubkey.txt /build_scripts/cpython-pubkeys.txt
@@ -161,8 +154,7 @@ COPY --from=build_mpdecimal /manylinux-rootfs /
 COPY --from=build_sqlite3 /manylinux-rootfs /
 COPY --from=build_git /manylinux-rootfs /
 COPY build_scripts /opt/_internal/build_scripts/
-RUN --mount=type=bind,target=/build_cpython37,from=build_cpython37 \
-    --mount=type=bind,target=/build_cpython38,from=build_cpython38 \
+RUN --mount=type=bind,target=/build_cpython38,from=build_cpython38 \
     --mount=type=bind,target=/build_cpython39,from=build_cpython39 \
     --mount=type=bind,target=/build_cpython310,from=build_cpython310 \
     --mount=type=bind,target=/build_cpython311,from=build_cpython311 \
