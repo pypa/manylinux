@@ -37,9 +37,7 @@ The manylinux project supports:
 
 - ``manylinux_2_28`` images for ``x86_64``, ``aarch64``, ``ppc64le`` and ``s390x``.
 
-- ``musllinux_1_1`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
-
-- ``musllinux_1_2`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
+- ``musllinux_1_2`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le``, ``s390x`` and ``armv7l``.
 
 
 Wheel packages compliant with those tags can be uploaded to
@@ -187,8 +185,10 @@ Toolchain: GCC 13
 - armv7l image: ``quay.io/pypa/musllinux_1_2_armv7l``
 
 
-musllinux_1_1 (Alpine Linux 3.12 based)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+musllinux_1_1 (Alpine Linux 3.12 based - EOL)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Support for ``musllinux_1_1`` has `ended on November 1st, 2024 <https://github.com/pypa/manylinux/issues/1629>`_.
 
 Toolchain: GCC 9
 
@@ -199,7 +199,7 @@ Toolchain: GCC 9
 - s390x image: ``quay.io/pypa/musllinux_1_1_s390x``
 
 
-All images are rebuilt using GitHub Actions / Travis-CI on every commit to this
+All supported images are rebuilt using GitHub Actions / Travis-CI on every commit to this
 repository; see the
 `docker/ <https://github.com/pypa/manylinux/tree/main/docker>`_
 directory for source code.
@@ -208,7 +208,7 @@ directory for source code.
 Image content
 ~~~~~~~~~~~~~
 
-All images currently contain:
+All supported images currently contain:
 
 - CPython 3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.13t and PyPy 3.7, 3.8, 3.9, 3.10 installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
