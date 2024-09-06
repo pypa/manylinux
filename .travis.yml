@@ -1,6 +1,13 @@
 language: c
 os: linux
 dist: focal
+addons:
+  apt:
+    sources:
+      - sourceline: 'deb https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable'
+        key_url: 'https://download.docker.com/linux/ubuntu/gpg'
+    packages:
+    - docker-ce docker-ce-cli containerd.io docker-buildx-plugin
 services:
   - docker
 
@@ -67,11 +74,10 @@ before_install:
   - if [ -d "${HOME}/buildx-cache/.buildx-cache-${POLICY}_${PLATFORM}" ]; then cp -rlf ${HOME}/buildx-cache/.buildx-cache-${POLICY}_${PLATFORM} ./; fi
 
 install:
-  - uptime
-  - nproc
-  - free
-  - cat /proc/cpuinfo
-  - ./travisci-install-buildx.sh
+  - docker version
+  - docker buildx version
+  - docker buildx create --name builder-manylinux --driver docker-container --use
+  - docker buildx inspect --bootstrap --builder builder-manylinux 2>&1 | tee /dev/null
 
 script: |
   BUILD_STATUS=success
@@ -96,7 +102,3 @@ deploy:
   on:
     branch: main
     repo: pypa/manylinux
-
-after_script:
-  - if [ -f ${HOME}/dockerd-rootless.pid ]; then kill -15 $(cat ${HOME}/dockerd-rootless.pid); fi
-  - if [ -f /tmp/buildkitd.pid ]; then sudo kill -15 $(cat /tmp/buildkitd.pid); fi
