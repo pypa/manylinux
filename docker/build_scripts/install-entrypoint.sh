@@ -23,6 +23,6 @@ if [ "${AUDITWHEEL_PLAT}" = "manylinux2014_i686" ]; then
 	LC_ALL=C "${MY_DIR}/update-system-packages.sh"
 fi
 
-if [ "${AUDITWHEEL_POLICY}" = "musllinux_1_1" ] || [ "${AUDITWHEEL_POLICY}" = "musllinux_1_2" ]; then
+if [ "${AUDITWHEEL_POLICY:0:10}" == "musllinux_" ]; then
 	apk add --no-cache bash
 fi
