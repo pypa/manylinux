@@ -11,7 +11,9 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source $MY_DIR/build_utils.sh
 
 fixup-mirrors
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
+if [ "${BASE_POLICY}" == "musllinux" ]; then
+	apk upgrade --no-cache
+elif [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	yum -y update
 	if ! localedef -V &> /dev/null; then
 		# somebody messed up glibc-common package to squeeze image size, reinstall the package
@@ -20,15 +22,10 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	fi
 	yum clean all
 	rm -rf /var/cache/yum
-elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ]; then
+else
 	dnf -y upgrade
 	dnf clean all
 	rm -rf /var/cache/dnf
-elif [ "${BASE_POLICY}" == "musllinux" ]; then
-	apk upgrade --no-cache
-else
-	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
-	exit 1
 fi
 fixup-mirrors
 
