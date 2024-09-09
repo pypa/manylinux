@@ -1,5 +1,4 @@
 import os
-import re
 from pathlib import Path
 
 import nox
@@ -34,7 +33,7 @@ def update_python_dependencies(session):
         )
 
     # tools
-    python_version = "3.10"
+    python_version = "3.12"
     session.run(
         "uv", "pip", "compile",
         f"--python-version={python_version}",
@@ -63,7 +62,7 @@ def update_python_dependencies(session):
         )
 
 
-@nox.session(python="3.11", reuse_venv=True)
+@nox.session(python="3.12", reuse_venv=True)
 def update_native_dependencies(session):
     "Update the native dependencies"
     script = "tools/update_native_dependencies.py"
@@ -72,7 +71,7 @@ def update_native_dependencies(session):
     session.run("python", script, *session.posargs)
 
 
-@nox.session(python="3.11", reuse_venv=True)
+@nox.session(python="3.12", reuse_venv=True)
 def update_interpreters_download(session):
     "Update all the Python interpreters"
     script = "tools/update_interpreters_download.py"
