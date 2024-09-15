@@ -75,11 +75,11 @@ def _update_with_root(tool, dry_run):
         "openssl": "3.0",
     }
     only = {
-        "autoconf": "~v?[0-9]+\.[0-9]+(\.[0-9]+)?$",
+        "autoconf": r"~v?[0-9]+\.[0-9]+(\.[0-9]+)?$",
     }
     exclude = {
-        "libtool": "~2\.5\.[0-2]$",  # pre-release
-        "git": "2.46.0",  # can't build on CentOS 7
+        "libtool": r"~2\.5\.[0-2]$",  # pre-release
+        "git": r"~2\.46\.[0-1]$",  # can't build on CentOS 7
     }
     lines = DOCKERFILE.read_text().splitlines()
     re_ = re.compile(f"^RUN export {tool.upper()}_ROOT={tool}-(?P<version>\\S+) && \\\\$")
@@ -171,7 +171,7 @@ def _update_tcltk(dry_run):
             continue
         current_version = Version(match["version"])
         latest_version = latest("tcltk/tcl", only="core-8-6-")
-        if latest_version > current_version:
+        if latest_version > current_version and str(latest_version) != "8.6.15":
             root = f"tcl{latest_version}"
             url = re.match("^    export TCL_DOWNLOAD_URL=(?P<url>\\S+) && \\\\$", lines[i + 2])["url"]
             sha256 = _sha256(f"{url}/{root}-src.tar.gz")
