@@ -104,6 +104,7 @@ for PYTHON in /opt/python/*/bin/python; do
 		# no uv on musllinux s390x
 		# FIXME, ppc64le test fails on Travis CI but works with qemu
 		UV_PYTHON=/tmp/uv-test-${IMPLEMENTATION}${PYVERS}/bin/python
+		export RUST_LOG=trace
 		uv venv --python ${PYTHON} /tmp/uv-test-${IMPLEMENTATION}${PYVERS}
 		uv pip install --python ${UV_PYTHON} ${REPAIRED_WHEEL}
 		if [ "$(${UV_PYTHON} -c 'import forty_two; print(forty_two.answer())')" != "42" ]; then
