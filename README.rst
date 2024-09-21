@@ -184,6 +184,7 @@ Toolchain: GCC 13
 - aarch64 image: ``quay.io/pypa/musllinux_1_2_aarch64``
 - ppc64le image: ``quay.io/pypa/musllinux_1_2_ppc64le``
 - s390x image: ``quay.io/pypa/musllinux_1_2_s390x``
+- armv7l image: ``quay.io/pypa/musllinux_1_2_armv7l``
 
 
 musllinux_1_1 (Alpine Linux 2.12 based)
