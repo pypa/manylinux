@@ -6,7 +6,7 @@ on:
       - '.github/workflows/update-dependencies.yml'
   workflow_dispatch:
   schedule:
-    - cron: '0 18 * * 0'  # "At 18:00 on Sunday."
+    - cron: '0 18 * * 5'  # "At 18:00 on Friday."
 
 env:
   FORCE_COLOR: '1'
