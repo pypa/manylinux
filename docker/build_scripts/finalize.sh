@@ -80,10 +80,12 @@ pipx upgrade-shared --pip-args="--no-index --find-links=/tmp/pinned-wheels"
 # install other tools with pipx
 for TOOL_PATH in $(find ${MY_DIR}/requirements-tools -type f); do
 	TOOL=$(basename ${TOOL_PATH})
-	# uv doesn't provide musl s390x wheels due to Rust issues
-	if [[ "${TOOL}" != "uv" || "${BASE_POLICY}-${AUDITWHEEL_ARCH}" != "musllinux-s390x" ]]; then
-		pipx install --pip-args="--require-hashes -r ${TOOL_PATH} --only-binary" ${TOOL}
-	fi
+	case ${AUDITWHEEL_PLAT}-${TOOL} in
+		musllinux*_armv7l-swig) apk add --no-cache swig;;
+		musllinux*_armv7l-cmake) apk add --no-cache cmake;;
+		musllinux*_s390x-uv) continue;;  # uv doesn't provide musl s390x wheels due to Rust issues
+		*) pipx install --pip-args="--require-hashes -r ${TOOL_PATH} --only-binary" ${TOOL};;
+	esac
 done
 
 # We do not need the precompiled .pyc and .pyo files.

@@ -46,8 +46,12 @@ if [ "${CPYTHON_VERSION}" == "3.6.15" ]; then
 	CFLAGS_EXTRA="${CFLAGS_EXTRA} -fno-tree-loop-vectorize -fno-tree-slp-vectorize"
 fi
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] ; then
-    # Python 3.11+
+	# Python 3.11+
 	export TCLTK_LIBS="-ltk8.6 -ltcl8.6"
+fi
+
+if [ "${BASE_POLICY}_${AUDITWHEEL_ARCH}" == "musllinux_armv7l" ]; then
+	CONFIGURE_ARGS="${CONFIGURE_ARGS} --build=arm-linux-musleabihf"
 fi
 
 SQLITE_PREFIX=$(find /opt/_internal -maxdepth 1 -name 'sqlite*')
