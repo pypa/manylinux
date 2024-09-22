@@ -18,9 +18,9 @@ pyproject-hooks==1.1.0 \
     --hash=sha256:4b37730834edbd6bd37f26ece6b44802fb1c1ee2ece0e54ddff8bfc06db86965 \
     --hash=sha256:7ceeefe9aec63a1064c18d939bdc3adf2d8aa1988a510afec15151578b232aa2
     # via build
-setuptools==75.0.0 ; python_full_version < '3.13' and implementation_name != 'graalpy' \
-    --hash=sha256:25af69c809d9334cd8e653d385277abeb5a102dca255954005a7092d282575ea \
-    --hash=sha256:791ae94f04f78c880b5e614e560dd32d4b4af5d151bd9e7483e3377846caf90a
+setuptools==75.1.0 ; python_full_version < '3.13' and implementation_name != 'graalpy' \
+    --hash=sha256:35ab7fd3bcd95e6b7fd704e4a1539513edad446c097797f2985e0e4b960772f2 \
+    --hash=sha256:d59a21b17a275fb872a9c3dae73963160ae079f1049ed956880cd7c09b120538
     # via -r requirements.in
 wheel==0.44.0 ; python_full_version < '3.13' \
     --hash=sha256:2376a90c98cc337d18623527a97c31797bd02bad0033d41547043a1cbfbe448f \

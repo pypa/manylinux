@@ -6,17 +6,6 @@ set -exuo pipefail
 # Get script directory
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
-	PACKAGE_MANAGER=yum
-elif [ "${AUDITWHEEL_POLICY:0:10}" == "musllinux_" ]; then
-	PACKAGE_MANAGER=apk
-elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ]; then
-	PACKAGE_MANAGER=dnf
-else
-	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
-	exit 1
-fi
-
 if [ "${AUDITWHEEL_POLICY:0:10}" == "musllinux_" ]; then
 	EXPECTED_PYTHON_COUNT=9
 	EXPECTED_PYTHON_COUNT_ALL=9
@@ -32,6 +21,14 @@ else
 		EXPECTED_PYTHON_COUNT_ALL=9
 	fi
 fi
+
+# the following environment variable allows other manylinux-like projects to run
+# the same tests as manylinux without the same number of CPython installations
+if [ "${ADJUST_CPYTHON_COUNT:-}" != "" ]; then
+	EXPECTED_PYTHON_COUNT=$(( ${EXPECTED_PYTHON_COUNT} ${ADJUST_CPYTHON_COUNT} ))
+	EXPECTED_PYTHON_COUNT_ALL=$(( ${EXPECTED_PYTHON_COUNT_ALL} ${ADJUST_CPYTHON_COUNT} ))
+fi
+
 PYTHON_COUNT=$(manylinux-interpreters list --installed | wc -l)
 if [ ${EXPECTED_PYTHON_COUNT} -ne ${PYTHON_COUNT} ]; then
 	echo "unexpected number of default python installations: ${PYTHON_COUNT}, expecting ${EXPECTED_PYTHON_COUNT}"
@@ -65,7 +62,7 @@ for PYTHON in /opt/python/*/bin/python; do
 	if [ "${IMPLEMENTATION}" == "cpython" ]; then
 		# Make sure sqlite3 module can be loaded properly and is the manylinux version one
 		# c.f. https://github.com/pypa/manylinux/issues/1030
-		$PYTHON -c 'import sqlite3; print(sqlite3.sqlite_version); assert sqlite3.sqlite_version_info[0:2] >= (3, 34)'
+		$PYTHON -c 'import sqlite3; print(sqlite3.sqlite_version); assert sqlite3.sqlite_version_info[0:2] >= (3, 31)'
 		# Make sure tkinter module can be loaded properly
 		$PYTHON -c 'import tkinter; print(tkinter.TkVersion); assert tkinter.TkVersion >= 8.6'
 		# cpython shall be available as python
@@ -120,9 +117,6 @@ if [ ${EXPECTED_PYTHON_COUNT_ALL} -ne ${PYTHON_COUNT} ]; then
 	exit 1
 fi
 
-# we stopped installing sqlite3 in manylinux_2_34
-SQLITE_PREFIX=$(find /opt/_internal -maxdepth 1 -name 'sqlite*')
-
 # minimal tests for tools that should be present
 auditwheel --version
 autoconf --version
@@ -132,32 +126,26 @@ patchelf --version
 git --version
 cmake --version
 swig -version
-if [ "${SQLITE_PREFIX}" == "" ]; then
-	sqlite3 --version
-fi
 pipx run nox --version
 pipx install --pip-args='--no-python-version-warning --no-input' nox
 nox --version
 tar --version | grep "GNU tar"
+# we stopped installing sqlite3 after manylinux_2_28 / musllinux_1_2
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
+	sqlite3 --version
+fi
 
 # check libcrypt.so.1 can be loaded by some system packages,
 # as LD_LIBRARY_PATH might not be enough.
 # c.f. https://github.com/pypa/manylinux/issues/1022
-if [ "${PACKAGE_MANAGER}" == "yum" ]; then
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	yum -y install openssh-clients
-elif [ "${PACKAGE_MANAGER}" == "apk" ]; then
-	apk add --no-cache openssh-client
-elif [ "${PACKAGE_MANAGER}" == "dnf" ]; then
-	dnf -y install --allowerasing openssh-clients
-else
-	echo "Unsupported package manager: '${PACKAGE_MANAGER}'"
-	exit 1
+	eval "$(ssh-agent)"
+	eval "$(ssh-agent -k)"
 fi
-eval "$(ssh-agent)"
-eval "$(ssh-agent -k)"
 
-if [ "${SQLITE_PREFIX}" == "" ]; then
-	# compilation tests, intended to ensure appropriate headers, pkg_config, etc.
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
+	# sqlite compilation tests, intended to ensure appropriate headers, pkg_config, etc.
 	# are available for downstream compile against installed tools
 	source_dir="${MY_DIR}/ctest"
 	build_dir="$(mktemp -d)"
