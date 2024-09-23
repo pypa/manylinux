@@ -50,6 +50,7 @@ def is_manylinux2014_compatible():
         "linux-ppc64",
         "linux-ppc64le",
         "linux-s390x",
+        "linux-riscv64",
     ]:
         return False
 

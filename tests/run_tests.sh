@@ -97,7 +97,7 @@ for PYTHON in /opt/python/*/bin/python; do
 		echo "invalid answer, expecting 42"
 		exit 1
 	fi
-	if [ "${PYVERS}" != "3.6" ] && [ "${PYVERS}" != "3.7" ] && [ "${IMPLEMENTATION}" != "graalpy" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ] && [ "${AUDITWHEEL_ARCH}" != "ppc64le" ] && [ "${AUDITWHEEL_ARCH}" != "armv7l" ]; then
+	if [ "${PYVERS}" != "3.6" ] && [ "${PYVERS}" != "3.7" ] && [ "${IMPLEMENTATION}" != "graalpy" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ] && [ "${AUDITWHEEL_ARCH}" != "ppc64le" ] && [ "${AUDITWHEEL_ARCH}" != "armv7l" ] && [ "${AUDITWHEEL_ARCH}" != "riscv64" ]; then
 		# no uv on musllinux s390x
 		# FIXME,  armv7l test fails on Travis CI but works with qemu (maybe armv8l vs armv7l ?)
 		# FIXME, ppc64le test fails on Travis CI but works with qemu
