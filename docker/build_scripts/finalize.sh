@@ -11,9 +11,11 @@ source $MY_DIR/build_utils.sh
 
 # most people don't need libpython*.a, and they're many megabytes.
 # compress them all together for best efficiency
-pushd /opt/_internal
-XZ_OPT=-9e tar -cJf static-libs-for-embedding-only.tar.xz cpython-*/lib/libpython*.a
-popd
+if [ $(find /opt/_internal -path '/opt/_internal/cpython-*/lib/libpython*.a' | wc -l) -ne 0 ]; then
+	pushd /opt/_internal
+	XZ_OPT=-9e tar -cJf static-libs-for-embedding-only.tar.xz cpython-*/lib/libpython*.a
+	popd
+fi
 find /opt/_internal -name '*.a' -print0 | xargs -0 rm -f
 
 # disable some pip warnings
@@ -25,7 +27,7 @@ export PIP_CACHE_DIR=/tmp/pip_cache
 
 # update package, create symlinks for each python
 mkdir /opt/python
-for PREFIX in $(find /opt/_internal/ -mindepth 1 -maxdepth 1 \( -name 'cpython*' -o -name 'pypy*' \)); do
+for PREFIX in $(find /opt/_internal/ -mindepth 1 -maxdepth 1 -name 'cpython*'); do
 	${MY_DIR}/finalize-one.sh ${PREFIX}
 done
 
@@ -81,8 +83,7 @@ pipx upgrade-shared --pip-args="--no-index --find-links=/tmp/pinned-wheels"
 for TOOL_PATH in $(find ${MY_DIR}/requirements-tools -type f); do
 	TOOL=$(basename ${TOOL_PATH})
 	case ${AUDITWHEEL_PLAT}-${TOOL} in
-		musllinux*_armv7l-swig) apk add --no-cache swig;;
-		musllinux*_armv7l-cmake) apk add --no-cache cmake;;
+		musllinux*_armv7l-cmake|musllinux*_armv7l-swig) apk add --no-cache ${TOOL};;
 		musllinux*_s390x-uv) continue;;  # uv doesn't provide musl s390x wheels due to Rust issues
 		*) pipx install --pip-args="--require-hashes -r ${TOOL_PATH} --only-binary" ${TOOL};;
 	esac
