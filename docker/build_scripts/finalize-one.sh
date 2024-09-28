@@ -27,9 +27,9 @@ if [ "${PY_IMPL}" == "graalpy" ]; then
 	# GraalPy doesn't update pip/setuptools because it uses a patched version of pip/setuptools
 	${PREFIX}/bin/python -m ensurepip --default-pip
 	${PREFIX}/bin/python -m pip install -U --require-hashes -r ${MY_DIR}/requirements${PY_VER}.txt
-elif [ -f /usr/local/bin/python${PY_VER} ]; then
+elif [ -f /usr/local/bin/cpython${PY_VER} ]; then
 	# Use the already intsalled cpython pip to bootstrap pip if available
-	/usr/local/bin/python${PY_VER} -m pip --python ${PREFIX}/bin/python install -U --require-hashes -r ${MY_DIR}/requirements${PY_VER}.txt
+	/usr/local/bin/cpython${PY_VER} -m pip --python ${PREFIX}/bin/python install -U --require-hashes -r ${MY_DIR}/requirements${PY_VER}.txt
 else
 	${PREFIX}/bin/python -m ensurepip
 	${PREFIX}/bin/python -m pip install -U --require-hashes -r ${MY_DIR}/requirements${PY_VER}.txt
@@ -40,8 +40,14 @@ fi
 # Create a symlink to PREFIX using the ABI_TAG in /opt/python/
 ABI_TAG=$(${PREFIX}/bin/python ${MY_DIR}/python-tag-abi-tag.py)
 ln -s ${PREFIX} /opt/python/${ABI_TAG}
+
 # Make versioned python commands available directly in environment.
+# Don't use symlinks: c.f. https://github.com/python/cpython/issues/106045
+cat <<EOF > /usr/local/bin/${PY_IMPL}${PY_VER}${PY_GIL}
+#!/bin/sh
+exec /opt/python/${ABI_TAG}/bin/python "\$@"
+EOF
+chmod +x /usr/local/bin/${PY_IMPL}${PY_VER}${PY_GIL}
 if [[ "${PY_IMPL}" == "cpython" ]]; then
-	ln -s ${PREFIX}/bin/python /usr/local/bin/python${PY_VER}${PY_GIL}
+	ln -s ${PY_IMPL}${PY_VER}${PY_GIL} /usr/local/bin/python${PY_VER}${PY_GIL}
 fi
-ln -s ${PREFIX}/bin/python /usr/local/bin/${PY_IMPL}${PY_VER}${PY_GIL}
