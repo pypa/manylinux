@@ -73,13 +73,13 @@ def _update_with_root(tool, dry_run):
     }
     major = {
         "openssl": "3.0",
+        "git": "2.45",  # 2.46+ can't build on CentOS 7
     }
     only = {
         "autoconf": r"~v?[0-9]+\.[0-9]+(\.[0-9]+)?$",
     }
     exclude = {
         "libtool": r"~2\.5\.[0-2]$",  # pre-release
-        "git": r"~2\.46\.[0-1]$",  # can't build on CentOS 7
     }
     lines = DOCKERFILE.read_text().splitlines()
     re_ = re.compile(f"^RUN export {tool.upper()}_ROOT={tool}-(?P<version>\\S+) && \\\\$")
