@@ -7,18 +7,18 @@ set -exuo pipefail
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
 if [ "${AUDITWHEEL_POLICY:0:10}" == "musllinux_" ]; then
-	EXPECTED_PYTHON_COUNT=9
-	EXPECTED_PYTHON_COUNT_ALL=9
+	EXPECTED_PYTHON_COUNT=7
+	EXPECTED_PYTHON_COUNT_ALL=7
 else
 	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ] || [ "${AUDITWHEEL_ARCH}" == "aarch64" ]; then
-		EXPECTED_PYTHON_COUNT=11
-		EXPECTED_PYTHON_COUNT_ALL=14
+		EXPECTED_PYTHON_COUNT=8
+		EXPECTED_PYTHON_COUNT_ALL=11
 	elif [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
-		EXPECTED_PYTHON_COUNT=11
-		EXPECTED_PYTHON_COUNT_ALL=13
+		EXPECTED_PYTHON_COUNT=8
+		EXPECTED_PYTHON_COUNT_ALL=10
 	else
-		EXPECTED_PYTHON_COUNT=9
-		EXPECTED_PYTHON_COUNT_ALL=9
+		EXPECTED_PYTHON_COUNT=7
+		EXPECTED_PYTHON_COUNT_ALL=7
 	fi
 fi
 
@@ -97,7 +97,7 @@ for PYTHON in /opt/python/*/bin/python; do
 		echo "invalid answer, expecting 42"
 		exit 1
 	fi
-	if [ "${PYVERS}" != "3.6" ] && [ "${PYVERS}" != "3.7" ] && [ "${IMPLEMENTATION}" != "graalpy" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ] && [ "${AUDITWHEEL_ARCH}" != "ppc64le" ] && [ "${AUDITWHEEL_ARCH}" != "armv7l" ] && [ "${AUDITWHEEL_ARCH}" != "riscv64" ]; then
+	if [ "${IMPLEMENTATION}" != "graalpy" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ] && [ "${AUDITWHEEL_ARCH}" != "ppc64le" ] && [ "${AUDITWHEEL_ARCH}" != "armv7l" ] && [ "${AUDITWHEEL_ARCH}" != "riscv64" ]; then
 		# no uv on musllinux s390x
 		# FIXME,  armv7l test fails on Travis CI but works with qemu (maybe armv8l vs armv7l ?)
 		# FIXME, ppc64le test fails on Travis CI but works with qemu
@@ -131,7 +131,7 @@ pipx install --pip-args='--no-python-version-warning --no-input' nox
 nox --version
 tar --version | grep "GNU tar"
 # we stopped installing sqlite3 after manylinux_2_28 / musllinux_1_2
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
 	sqlite3 --version
 fi
 
@@ -144,7 +144,7 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	eval "$(ssh-agent -k)"
 fi
 
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
 	# sqlite compilation tests, intended to ensure appropriate headers, pkg_config, etc.
 	# are available for downstream compile against installed tools
 	source_dir="${MY_DIR}/ctest"
