@@ -55,8 +55,8 @@ RUN export AUTOMAKE_ROOT=automake-1.17 && \
     manylinux-entrypoint /build_scripts/install-automake.sh
 
 COPY build_scripts/install-libtool.sh /build_scripts/
-RUN export LIBTOOL_ROOT=libtool-2.4.7 && \
-    export LIBTOOL_HASH=04e96c2404ea70c590c546eba4202a4e12722c640016c12b9b2f1ce3d481e9a8 && \
+RUN export LIBTOOL_ROOT=libtool-2.5.3 && \
+    export LIBTOOL_HASH=9322bd8f6bc848fda3e385899dd1934957169652acef716d19d19d24053abb95 && \
     export LIBTOOL_DOWNLOAD_URL=http://ftp.gnu.org/gnu/libtool && \
     manylinux-entrypoint /build_scripts/install-libtool.sh
 
@@ -132,15 +132,15 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.11.10
 
 FROM build_cpython AS build_cpython312
 COPY build_scripts/cpython-pubkey-312-313.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.12.6
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.12.7
 
 FROM build_cpython AS build_cpython313
 COPY build_scripts/cpython-pubkey-312-313.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.0rc2
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.0rc3
 
 FROM build_cpython AS build_cpython313_nogil
 COPY build_scripts/cpython-pubkey-312-313.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.0rc2 nogil
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.0rc3 nogil
 
 
 FROM runtime_base
