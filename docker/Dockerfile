@@ -136,11 +136,11 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.12.7
 
 FROM build_cpython AS build_cpython313
 COPY build_scripts/cpython-pubkey-312-313.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.0rc3
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.0
 
 FROM build_cpython AS build_cpython313_nogil
 COPY build_scripts/cpython-pubkey-312-313.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.0rc3 nogil
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.0 nogil
 
 
 FROM runtime_base
