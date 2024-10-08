@@ -11,10 +11,10 @@ if [ "${AUDITWHEEL_POLICY:0:10}" == "musllinux_" ]; then
 	EXPECTED_PYTHON_COUNT_ALL=9
 else
 	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ] || [ "${AUDITWHEEL_ARCH}" == "aarch64" ]; then
-		EXPECTED_PYTHON_COUNT=11
+		EXPECTED_PYTHON_COUNT=10
 		EXPECTED_PYTHON_COUNT_ALL=14
 	elif [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
-		EXPECTED_PYTHON_COUNT=11
+		EXPECTED_PYTHON_COUNT=10
 		EXPECTED_PYTHON_COUNT_ALL=13
 	else
 		EXPECTED_PYTHON_COUNT=9
@@ -131,7 +131,7 @@ pipx install --pip-args='--no-python-version-warning --no-input' nox
 nox --version
 tar --version | grep "GNU tar"
 # we stopped installing sqlite3 after manylinux_2_28 / musllinux_1_2
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
 	sqlite3 --version
 fi
 
@@ -144,7 +144,7 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	eval "$(ssh-agent -k)"
 fi
 
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
 	# sqlite compilation tests, intended to ensure appropriate headers, pkg_config, etc.
 	# are available for downstream compile against installed tools
 	source_dir="${MY_DIR}/ctest"
