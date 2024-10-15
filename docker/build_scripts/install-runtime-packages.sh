@@ -105,7 +105,7 @@ elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
 	fi
 elif [ "${BASE_POLICY}" == "musllinux" ]; then
 	TOOLCHAIN_DEPS="binutils gcc g++ gfortran"
-	BASETOOLS="${BASETOOLS} curl util-linux tar"
+	BASETOOLS="${BASETOOLS} curl util-linux shadow tar"
 	PACKAGE_MANAGER=apk
 	apk add --no-cache ca-certificates gnupg
 else
@@ -137,4 +137,8 @@ if [ "${BASE_POLICY}" == "manylinux" ]; then
 	# c.f. https://github.com/pypa/manylinux/issues/1022
 	echo "/usr/local/lib" > /etc/ld.so.conf.d/00-manylinux.conf
 	ldconfig
+else
+	# set the default shell to bash
+	chsh -s /bin/bash root
+	useradd -D -s /bin/bash
 fi
