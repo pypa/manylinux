@@ -160,5 +160,8 @@ if [ -L /usr/local/man ]; then
 	test -d /usr/local/man
 fi
 
+# check the default shell is /bin/bash
+test "$SHELL" = "/bin/bash"
+
 # final report
 echo "run_tests successful!"
