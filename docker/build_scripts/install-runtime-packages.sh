@@ -138,15 +138,6 @@ if [ "${BASE_POLICY}" == "manylinux" ]; then
 	echo "/usr/local/lib" > /etc/ld.so.conf.d/00-manylinux.conf
 	ldconfig
 else
-	if [ ! -f /etc/pam.d/chsh ]; then
-		cat <<EOF > /etc/pam.d/chsh
-#%PAM-1.0
-auth         sufficient    pam_rootok.so
-auth         sufficient    pam_shells.so
-account      required      pam_permit.so
-password     include       base-password
-EOF
-	fi
 	# set the default shell to bash
 	chsh -s /bin/bash root
 	useradd -D -s /bin/bash
