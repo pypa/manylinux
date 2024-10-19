@@ -1,13 +1,10 @@
 language: c
 os: linux
-dist: focal
+dist: jammy
 addons:
   apt:
-    sources:
-      - sourceline: 'deb https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable'
-        key_url: 'https://download.docker.com/linux/ubuntu/gpg'
     packages:
-    - docker-ce docker-ce-cli containerd.io docker-buildx-plugin
+    - docker-buildx
 services:
   - docker
 
