@@ -102,6 +102,7 @@ script: |
 
 deploy:
   provider: script
+  dpl_version: 1.10.16
   script: COMMIT_SHA=${TRAVIS_COMMIT} ./deploy.sh
   on:
     branch: main
