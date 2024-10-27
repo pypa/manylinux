@@ -32,9 +32,9 @@ source $MY_DIR/build_utils.sh
 
 
 # MANYLINUX_DEPS: Install development packages (except for libgcc which is provided by gcc install)
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+if [ "${OS_ID_LIKE}" == "rhel" ]; then
 	MANYLINUX_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel mesa-libGL-devel libICE-devel libSM-devel zlib-devel expat-devel"
-elif [ "${BASE_POLICY}" == "musllinux" ]; then
+elif [ "${OS_ID_LIKE}" == "alpine" ]; then
 	MANYLINUX_DEPS="musl-dev libstdc++ glib-dev libx11-dev libxext-dev libxrender-dev mesa-dev libice-dev libsm-dev zlib-dev expat-dev"
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
@@ -42,23 +42,26 @@ else
 fi
 
 # RUNTIME_DEPS: Runtime dependencies. c.f. install-build-packages.sh
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
-	RUNTIME_DEPS="zlib bzip2 expat ncurses readline gdbm libpcap xz openssl keyutils-libs libkadm5 libcom_err libidn libcurl uuid libffi libdb"
+if [ "${OS_ID_LIKE}" == "rhel" ]; then
+	RUNTIME_DEPS="zlib bzip2 expat ncurses readline gdbm libpcap xz openssl keyutils-libs libkadm5 libcom_err libcurl uuid libffi libdb"
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
-		RUNTIME_DEPS="${RUNTIME_DEPS} libXft"
+		RUNTIME_DEPS="${RUNTIME_DEPS} libidn libXft"
 	elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
-		RUNTIME_DEPS="${RUNTIME_DEPS} tk"
+		RUNTIME_DEPS="${RUNTIME_DEPS} libidn tk"
+	else
+		RUNTIME_DEPS="${RUNTIME_DEPS} libidn2 tk"
+		# for graalpy
+		RUNTIME_DEPS="${RUNTIME_DEPS} libxcrypt-compat"
 	fi
-elif [ "${BASE_POLICY}" == "musllinux" ]; then
+elif [ "${OS_ID_LIKE}" == "alpine" ]; then
 	RUNTIME_DEPS="zlib bzip2 expat ncurses-libs readline tk gdbm db xz openssl keyutils-libs krb5-libs libcom_err libidn2 libcurl libuuid libffi"
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
 	exit 1
 fi
 
-BASETOOLS="autoconf automake bison bzip2 diffutils file make patch unzip"
+BASETOOLS="autoconf automake bison bzip2 ca-certificates curl diffutils file make patch unzip"
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
-	PACKAGE_MANAGER=yum
 	BASETOOLS="${BASETOOLS} hardlink hostname which"
 	# See https://unix.stackexchange.com/questions/41784/can-yum-express-a-preference-for-x86-64-over-i386-packages
 	echo "multilib_policy=best" >> /etc/yum.conf
@@ -102,37 +105,30 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 		curl -fsSLo /etc/yum.repos.d/mayeut-devtoolset-10.repo https://copr.fedorainfracloud.org/coprs/mayeut/devtoolset-10/repo/custom-1/mayeut-devtoolset-10-custom-1.repo
 	fi
 	fixup-mirrors
-elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
-	PACKAGE_MANAGER=dnf
-	BASETOOLS="${BASETOOLS} curl glibc-locale-source glibc-langpack-en hardlink hostname libcurl libnsl libxcrypt which"
+elif [ "${OS_ID_LIKE}" == "rhel" ]; then
+	BASETOOLS="${BASETOOLS} glibc-locale-source glibc-langpack-en hardlink hostname libcurl libnsl libxcrypt which"
 	echo "tsflags=nodocs" >> /etc/dnf/dnf.conf
 	dnf -y upgrade
-	dnf -y install dnf-plugins-core
-	dnf config-manager --set-enabled powertools # for yasm
-	TOOLCHAIN_DEPS="gcc-toolset-13-binutils gcc-toolset-13-gcc gcc-toolset-13-gcc-c++ gcc-toolset-13-gcc-gfortran"
+	dnf -y install dnf-plugins-core epel-release
+	if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+		dnf config-manager --set-enabled powertools
+		TOOLCHAIN_DEPS="gcc-toolset-13-binutils gcc-toolset-13-gcc gcc-toolset-13-gcc-c++ gcc-toolset-13-gcc-gfortran"
+	else
+		dnf config-manager --set-enabled crb
+		TOOLCHAIN_DEPS="gcc-toolset-14-binutils gcc-toolset-14-gcc gcc-toolset-14-gcc-c++ gcc-toolset-14-gcc-gfortran"
+	fi
 	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
 		TOOLCHAIN_DEPS="${TOOLCHAIN_DEPS} yasm"
 	fi
-elif [ "${BASE_POLICY}" == "musllinux" ]; then
+elif [ "${OS_ID_LIKE}" == "alpine" ]; then
 	TOOLCHAIN_DEPS="binutils gcc g++ gfortran"
-	BASETOOLS="${BASETOOLS} curl util-linux shadow tar"
-	PACKAGE_MANAGER=apk
-	apk add --no-cache ca-certificates gnupg
+	BASETOOLS="${BASETOOLS} gnupg util-linux shadow tar"
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
 	exit 1
 fi
 
-if [ "${PACKAGE_MANAGER}" == "yum" ]; then
-	yum -y install ${BASETOOLS} ${TOOLCHAIN_DEPS} ${MANYLINUX_DEPS} ${RUNTIME_DEPS}
-elif [ "${PACKAGE_MANAGER}" == "apk" ]; then
-	apk add --no-cache ${BASETOOLS} ${TOOLCHAIN_DEPS} ${MANYLINUX_DEPS} ${RUNTIME_DEPS}
-elif [ "${PACKAGE_MANAGER}" == "dnf" ]; then
-	dnf -y install --allowerasing ${BASETOOLS} ${TOOLCHAIN_DEPS} ${MANYLINUX_DEPS} ${RUNTIME_DEPS}
-else
-	echo "Not implemented"
-	exit 1
-fi
+manylinux_pkg_install ${BASETOOLS} ${TOOLCHAIN_DEPS} ${MANYLINUX_DEPS} ${RUNTIME_DEPS}
 
 # update system packages, we already updated them but
 # the following script takes care of cleaning-up some things

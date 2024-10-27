@@ -11,29 +11,26 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source $MY_DIR/build_utils.sh
 
 fixup-mirrors
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
+if [ "${PACKAGE_MANAGER}" == "yum" ]; then
 	yum -y update
 	if ! localedef -V &> /dev/null; then
 		# somebody messed up glibc-common package to squeeze image size, reinstall the package
 		fixup-mirrors
 		yum -y reinstall glibc-common
 	fi
-	yum clean all
-	rm -rf /var/cache/yum
-elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+elif [ "${PACKAGE_MANAGER}" == "dnf" ]; then
 	dnf -y upgrade
-	dnf clean all
-	rm -rf /var/cache/yum
-elif [ "${BASE_POLICY}" == "musllinux" ]; then
+elif [ "${PACKAGE_MANAGER}" == "apk" ]; then
 	apk upgrade --no-cache
 else
-	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
+	echo "Unsupported package manager: '${PACKAGE_MANAGER}'"
 	exit 1
 fi
+manylinux_pkg_clean
 fixup-mirrors
 
 # do we want to update locales ?
-if [ "${BASE_POLICY}" == "manylinux" ]; then
+if [ "${OS_ID_LIKE}" == "rhel" ]; then
 	LOCALE_ARCHIVE=/usr/lib/locale/locale-archive
 	TIMESTAMP_FILE=${LOCALE_ARCHIVE}.ml.timestamp
 	if [ ! -f ${TIMESTAMP_FILE} ] || [ ${LOCALE_ARCHIVE} -nt ${TIMESTAMP_FILE} ]; then
