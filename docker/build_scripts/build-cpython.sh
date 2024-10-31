@@ -51,7 +51,9 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] ; then
 	export TCLTK_LIBS="-ltk8.6 -ltcl8.6"
 fi
 
-if [ "${BASE_POLICY}_${AUDITWHEEL_ARCH}" == "musllinux_armv7l" ]; then
+if [ "${BASE_POLICY}_${AUDITWHEEL_ARCH}" == "manylinux_armv7l" ]; then
+	CONFIGURE_ARGS+=(--build=armv7l-unknown-linux-gnueabihf)
+elif [ "${BASE_POLICY}_${AUDITWHEEL_ARCH}" == "musllinux_armv7l" ]; then
 	CONFIGURE_ARGS+=(--build=arm-linux-musleabihf)
 fi
 

@@ -21,6 +21,9 @@ if [ "${PACKAGE_MANAGER}" == "yum" ]; then
 	fi
 elif [ "${PACKAGE_MANAGER}" == "dnf" ]; then
 	dnf -y upgrade
+elif [ "${PACKAGE_MANAGER}" == "apt" ]; then
+	DEBIAN_FRONTEND=noninteractive apt-get update -qq
+	DEBIAN_FRONTEND=noninteractive apt-get upgrade -qq -y
 elif [ "${PACKAGE_MANAGER}" == "apk" ]; then
 	apk upgrade --no-cache
 else
@@ -31,7 +34,7 @@ manylinux_pkg_clean
 fixup-mirrors
 
 # do we want to update locales ?
-if [ "${OS_ID_LIKE}" == "rhel" ]; then
+if [ "${OS_ID_LIKE}" == "rhel" ] || [ "${OS_ID_LIKE}" == "debian" ]; then
 	LOCALE_ARCHIVE=/usr/lib/locale/locale-archive
 	TIMESTAMP_FILE=${LOCALE_ARCHIVE}.ml.timestamp
 	if [ ! -f "${TIMESTAMP_FILE}" ] || [ "${LOCALE_ARCHIVE}" -nt "${TIMESTAMP_FILE}" ]; then
@@ -39,12 +42,16 @@ if [ "${OS_ID_LIKE}" == "rhel" ]; then
 		localedef -i en_US -f UTF-8 en_US.UTF-8
 
 		# if we updated glibc, we need to strip locales again...
-		if localedef --list-archive | grep -sq -v -i ^en_US.utf8; then
-			localedef --list-archive | grep -v -i ^en_US.utf8 | xargs localedef --delete-from-archive
-		fi
-		if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
-			mv -f "${LOCALE_ARCHIVE}" "${LOCALE_ARCHIVE}.tmpl"
-			build-locale-archive --install-langs="en_US.utf8"
+		if [ "${OS_ID_LIKE}" == "rhel" ]; then
+			if localedef --list-archive | grep -sq -v -i ^en_US.utf8; then
+				localedef --list-archive | grep -v -i ^en_US.utf8 | xargs localedef --delete-from-archive
+			fi
+			if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
+				mv -f "${LOCALE_ARCHIVE}" "${LOCALE_ARCHIVE}.tmpl"
+				build-locale-archive --install-langs="en_US.utf8"
+			fi
+		elif [ "${OS_ID_LIKE}" == "debian" ]; then
+			update-locale LANG=en_US.UTF-8
 		fi
 		touch ${TIMESTAMP_FILE}
 	fi

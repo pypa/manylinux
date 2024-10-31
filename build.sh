@@ -37,6 +37,11 @@ elif [ "${POLICY}" == "manylinux_2_28" ]; then
 	DEVTOOLSET_ROOTPATH="/opt/rh/gcc-toolset-14/root"
 	PREPEND_PATH="${DEVTOOLSET_ROOTPATH}/usr/bin:"
 	LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"
+elif [ "${POLICY}" == "manylinux_2_31" ]; then
+	BASEIMAGE="ubuntu:20.04"
+	DEVTOOLSET_ROOTPATH=
+	PREPEND_PATH=
+	LD_LIBRARY_PATH_ARG=
 elif [ "${POLICY}" == "manylinux_2_34" ]; then
 	BASEIMAGE="almalinux:9"
 	DEVTOOLSET_ROOTPATH="/opt/rh/gcc-toolset-14/root"
