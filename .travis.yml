@@ -48,6 +48,10 @@ jobs:
     - arch: arm64-graviton2
       virt: vm
       group: edge
+      env: POLICY="manylinux_2_31" PLATFORM="armv7l"
+    - arch: arm64-graviton2
+      virt: vm
+      group: edge
       env: POLICY="manylinux_2_34" PLATFORM="aarch64"
     - arch: s390x
       env: POLICY="manylinux_2_34" PLATFORM="s390x"
