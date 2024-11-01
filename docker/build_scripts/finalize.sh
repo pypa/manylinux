@@ -83,7 +83,6 @@ pipx upgrade-shared --pip-args="--no-index --find-links=/tmp/pinned-wheels"
 for TOOL_PATH in $(find ${MY_DIR}/requirements-tools -type f); do
 	TOOL=$(basename ${TOOL_PATH})
 	case ${AUDITWHEEL_PLAT}-${TOOL} in
-		musllinux*_armv7l-swig) apk add --no-cache ${TOOL};;
 		musllinux*_s390x-uv) continue;;  # uv doesn't provide musl s390x wheels due to Rust issues
 		*) pipx install --pip-args="--require-hashes -r ${TOOL_PATH} --only-binary" ${TOOL};;
 	esac
