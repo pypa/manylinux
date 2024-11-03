@@ -66,6 +66,19 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	echo "skip_missing_names_on_install=False" >> /etc/yum.conf
 	# Make sure that locale will not be removed
 	sed -i '/^override_install_langs=/d' /etc/yum.conf
+
+	# we don't need those in the first place & updates are taking a lot of space on aarch64
+	# the intent is in the upstream image creation but it got messed up at some point
+	# https://github.com/CentOS/sig-cloud-instance-build/blob/98aa8c6f0290feeb94d86b52c561d70eabc7d942/docker/centos-7-x86_64.ks#L43
+	if rpm -q kernel-modules; then
+		rpm -e kernel-modules
+	fi
+	if rpm -q kernel-core; then
+		rpm -e --noscripts kernel-core
+	fi
+	if rpm -q bind-license; then
+		yum -y erase bind-license qemu-guest-agent
+	fi
 	fixup-mirrors
 	yum -y update
 	fixup-mirrors
@@ -90,12 +103,7 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
 	PACKAGE_MANAGER=dnf
 	BASETOOLS="${BASETOOLS} curl glibc-locale-source glibc-langpack-en hardlink hostname libcurl libnsl libxcrypt which"
-	# See https://unix.stackexchange.com/questions/41784/can-yum-express-a-preference-for-x86-64-over-i386-packages
-	echo "multilib_policy=best" >> /etc/yum.conf
-	# Error out if requested packages do not exist
-	echo "skip_missing_names_on_install=False" >> /etc/yum.conf
-	# Make sure that locale will not be removed
-	sed -i '/^override_install_langs=/d' /etc/yum.conf
+	echo "tsflags=nodocs" >> /etc/dnf/dnf.conf
 	dnf -y upgrade
 	dnf -y install dnf-plugins-core
 	dnf config-manager --set-enabled powertools # for yasm
