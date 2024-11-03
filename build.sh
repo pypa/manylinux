@@ -37,11 +37,7 @@ fi
 
 # setup BASEIMAGE and its specific properties
 if [ "${POLICY}" == "manylinux2014" ]; then
-	if [ "${PLATFORM}" == "s390x" ]; then
-		BASEIMAGE="s390x/clefos:7"
-	else
-		BASEIMAGE="${MULTIARCH_PREFIX}centos:7"
-	fi
+	BASEIMAGE="quay.io/pypa/manylinux2014_base:2024.11.03-3"
 	DEVTOOLSET_ROOTPATH="/opt/rh/devtoolset-10/root"
 	PREPEND_PATH="${DEVTOOLSET_ROOTPATH}/usr/bin:"
 	if [ "${PLATFORM}" == "i686" ]; then
