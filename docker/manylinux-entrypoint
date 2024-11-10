@@ -6,7 +6,7 @@ if [ "${AUDITWHEEL_ARCH}" == "i686" ] && [ "$(uname -m)" == "x86_64" ]; then
 	linux32 "$@"
 elif [ "${AUDITWHEEL_ARCH}" == "armv7l" ] && [ "$(uname -m)" != "armv7l" ]; then
 	if [ "$(linux32 uname -m)" == "armv8l" ]; then
-		export _PYTHON_HOST_PLATFORM="linux_armv7l"
+		export _PYTHON_HOST_PLATFORM="linux-armv7l"
 	fi
 	linux32 "$@"
 else
