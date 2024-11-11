@@ -21,6 +21,8 @@ check_var ${TK_HASH}
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] ; then
 	yum erase -y tcl tk
 else
+	mkdir -p /manylinux-rootfs
+	mkdir -p /manylinux-buildfs
 	exit 0
 fi
 
@@ -50,13 +52,9 @@ rm /manylinux-rootfs/usr/local/lib/libtkstub8.6.a
 # Strip what we can
 strip_ /manylinux-rootfs
 
-# Install
-cp -rlf /manylinux-rootfs/* /
-if [ "${BASE_POLICY}" == "musllinux" ]; then
-	ldconfig /
-elif [ "${BASE_POLICY}" == "manylinux" ]; then
-	ldconfig
-fi
+# Install for build
+mkdir /manylinux-buildfs
+cp -rlf /manylinux-rootfs/* /manylinux-buildfs/
 
 # Clean-up for runtime
 rm -rf /manylinux-rootfs/usr/local/share
