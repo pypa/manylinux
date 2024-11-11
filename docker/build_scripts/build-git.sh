@@ -18,6 +18,14 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	export NO_UNCOMPRESS2=1
 fi
 
+if [ -d /opt/_internal ]; then
+	CURL_PREFIX=$(find /opt/_internal -maxdepth 1 -name 'curl-*')
+	if [ "${CURL_PREFIX}" != "" ]; then
+		export CURLDIR=${CURL_PREFIX}
+		export CURL_LDFLAGS="-Wl,-rpath=${CURL_PREFIX}/lib $(${CURL_PREFIX}/bin/curl-config --libs)"
+	fi
+fi
+
 # Install newest git
 check_var ${GIT_ROOT}
 check_var ${GIT_HASH}

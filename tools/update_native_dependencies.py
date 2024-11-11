@@ -70,10 +70,10 @@ def _update_with_root(tool, dry_run):
         "libtool": "autotools-mirror/libtool",
         "git": "git/git",
         "openssl": "openssl/openssl",
+        "curl": "curl/curl",
     }
     major = {
         "openssl": "3.0",
-        "git": "2.45",  # 2.46+ can't build on CentOS 7
     }
     only = {
         "autoconf": r"~v?[0-9]+\.[0-9]+(\.[0-9]+)?$",
@@ -196,7 +196,7 @@ def main():
     _update_cpython(args.dry_run)
     _update_sqlite(args.dry_run)
     _update_tcltk(args.dry_run)
-    for tool in ["autoconf", "automake", "libtool", "git", "openssl"]:
+    for tool in ["autoconf", "automake", "libtool", "git", "openssl", "curl"]:
         _update_with_root(tool, args.dry_run)
     for tool in ["libxcrypt"]:
         _update_with_gh(tool, args.dry_run)
