@@ -83,14 +83,14 @@ RUN export GIT_ROOT=git-2.47.0 && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     manylinux-entrypoint /build_scripts/build-git.sh
 
-
-FROM build_base AS build_cpython_system_ssl
+FROM build_base AS build_sqlite3
 COPY build_scripts/build-sqlite3.sh /build_scripts/
 RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3470000 && \
     export SQLITE_AUTOCONF_HASH=83eb21a6f6a649f506df8bd3aab85a08f7556ceed5dbd8dea743ea003fc3a957 && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2024 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
+FROM build_base AS build_tcl_tk
 COPY build_scripts/build-tcltk.sh /build_scripts/
 RUN export TCL_ROOT=tcl8.6.14 && \
     export TCL_HASH=5880225babf7954c58d4fb0f5cf6279104ce1cd6aa9b71e9a6322540e1c4de66 && \
@@ -99,8 +99,20 @@ RUN export TCL_ROOT=tcl8.6.14 && \
     export TK_HASH=8ffdb720f47a6ca6107eac2dd877e30b0ef7fac14f3a84ebbd0b3612cee41a94 && \
     manylinux-entrypoint /build_scripts/build-tcltk.sh
 
-COPY build_scripts/build-cpython.sh /build_scripts/
+FROM build_base AS build_mpdecimal
+COPY build_scripts/build-mpdecimal.sh /build_scripts/
+RUN export MPDECIMAL_ROOT=mpdecimal-4.0.0 && \
+    export MPDECIMAL_HASH=942445c3245b22730fd41a67a7c5c231d11cb1b9936b9c0f76334fb7d0b4468c && \
+    export MPDECIMAL_DOWNLOAD_URL=https://www.bytereef.org/software/mpdecimal/releases && \
+    manylinux-entrypoint /build_scripts/build-mpdecimal.sh
 
+
+FROM build_base AS build_cpython_system_ssl
+COPY --from=build_tcl_tk /manylinux-buildfs /
+COPY --from=build_mpdecimal /manylinux-buildfs /
+COPY --from=build_sqlite3 /manylinux-buildfs /
+COPY build_scripts/build-cpython.sh /build_scripts/
+RUN if command -v apk >/dev/null 2>&1; then ldconfig /; else ldconfig; fi
 
 FROM build_cpython_system_ssl AS build_cpython
 COPY build_scripts/build-openssl.sh /build_scripts/
@@ -117,7 +129,6 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.6.15
 FROM build_cpython_system_ssl AS build_cpython37
 COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.7.17
-
 
 FROM build_cpython AS build_cpython38
 COPY build_scripts/ambv-pubkey.txt /build_scripts/cpython-pubkeys.txt
@@ -149,8 +160,10 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.0 nogil
 
 
 FROM runtime_base
+COPY --from=build_tcl_tk /manylinux-rootfs /
+COPY --from=build_mpdecimal /manylinux-rootfs /
+COPY --from=build_sqlite3 /manylinux-rootfs /
 COPY --from=build_git /manylinux-rootfs /
-COPY --from=build_cpython_system_ssl /manylinux-rootfs /
 COPY build_scripts /opt/_internal/build_scripts/
 RUN --mount=type=bind,target=/build_cpython36,from=build_cpython36 \
     --mount=type=bind,target=/build_cpython37,from=build_cpython37 \
