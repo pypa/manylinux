@@ -14,22 +14,16 @@ export PLATFORM
 # get docker default multiarch image prefix for PLATFORM
 if [ "${PLATFORM}" == "x86_64" ]; then
 	GOARCH="amd64"
-	MULTIARCH_PREFIX="amd64/"
 elif [ "${PLATFORM}" == "i686" ]; then
 	GOARCH="386"
-	MULTIARCH_PREFIX="i386/"
 elif [ "${PLATFORM}" == "aarch64" ]; then
 	GOARCH="arm64"
-	MULTIARCH_PREFIX="arm64v8/"
 elif [ "${PLATFORM}" == "ppc64le" ]; then
 	GOARCH="ppc64le"
-	MULTIARCH_PREFIX="ppc64le/"
 elif [ "${PLATFORM}" == "s390x" ]; then
 	GOARCH="s390x"
-	MULTIARCH_PREFIX="s390x/"
 elif [ "${PLATFORM}" == "armv7l" ]; then
 	GOARCH="arm/v7"
-	MULTIARCH_PREFIX="arm32v7/"
 else
 	echo "Unsupported platform: '${PLATFORM}'"
 	exit 1
@@ -46,12 +40,17 @@ if [ "${POLICY}" == "manylinux2014" ]; then
 		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst:/usr/local/lib64"
 	fi
 elif [ "${POLICY}" == "manylinux_2_28" ]; then
-	BASEIMAGE="${MULTIARCH_PREFIX}almalinux:8"
+	BASEIMAGE="almalinux:8"
 	DEVTOOLSET_ROOTPATH="/opt/rh/gcc-toolset-13/root"
 	PREPEND_PATH="${DEVTOOLSET_ROOTPATH}/usr/bin:"
 	LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"
+elif [ "${POLICY}" == "manylinux_2_34" ]; then
+	BASEIMAGE="almalinux:9"
+	DEVTOOLSET_ROOTPATH="/opt/rh/gcc-toolset-14/root"
+	PREPEND_PATH="${DEVTOOLSET_ROOTPATH}/usr/bin:"
+	LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"
 elif [ "${POLICY}" == "musllinux_1_2" ]; then
-	BASEIMAGE="${MULTIARCH_PREFIX}alpine:3.20"
+	BASEIMAGE="alpine:3.20"
 	DEVTOOLSET_ROOTPATH=
 	PREPEND_PATH=
 	LD_LIBRARY_PATH_ARG=

@@ -37,6 +37,8 @@ The manylinux project supports:
 
 - ``manylinux_2_28`` images for ``x86_64``, ``aarch64``, ``ppc64le`` and ``s390x``.
 
+- ``manylinux_2_34`` images for ``x86_64``, ``aarch64``, ``ppc64le`` and ``s390x``.
+
 - ``musllinux_1_2`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le``, ``s390x`` and ``armv7l``.
 
 
@@ -91,6 +93,24 @@ Rather than forcing you to install an old distro yourself, install Python,
 etc., we provide `Docker <https://docker.com/>`_ images where we've
 done the work for you. The images are uploaded to `quay.io`_ and are tagged
 for repeatable builds.
+
+manylinux_2_34 (AlmaLinux 9 based)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Toolchain: GCC 14
+
+- x86_64 image: ``quay.io/pypa/manylinux_2_34_x86_64``
+- aarch64 image: ``quay.io/pypa/manylinux_2_34_aarch64``
+- ppc64le image: ``quay.io/pypa/manylinux_2_34_ppc64le``
+- s390x image: ``quay.io/pypa/manylinux_2_34_s390x``
+
+Built wheels are also expected to be compatible with other
+distros using glibc 2.34 or later, including:
+
+- Debian 12+
+- Ubuntu 21.10+
+- Fedora 35+
+- CentOS/RHEL 9+
 
 
 manylinux_2_28 (AlmaLinux 8 based)

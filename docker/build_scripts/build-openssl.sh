@@ -29,10 +29,10 @@ if [ "${SMALLEST}" = "${OPENSSL_MIN_VERSION}" ]; then
 	exit 0
 fi
 
-if which yum; then
-	yum erase -y openssl-devel
-else
-	apk del openssl-dev
+if [ "${OS_ID_LIKE}" = "rhel" ];then
+	manylinux_pkg_remove openssl-devel
+elif [ "${OS_ID_LIKE}" = "alpine" ]; then
+	manylinux_pkg_remove openssl-dev
 fi
 
 PREFIX=/opt/_internal/openssl-${OPENSSL_VERSION%.*}
