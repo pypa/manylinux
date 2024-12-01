@@ -124,7 +124,7 @@ distros using glibc 2.34 or later, including:
 manylinux_2_28 (AlmaLinux 8 based)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Toolchain: GCC 13
+Toolchain: GCC 14
 
 - x86_64 image: ``quay.io/pypa/manylinux_2_28_x86_64``
 - aarch64 image: ``quay.io/pypa/manylinux_2_28_aarch64``
