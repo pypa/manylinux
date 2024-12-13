@@ -73,8 +73,8 @@ RUN manylinux-entrypoint /build_scripts/install-build-packages.sh
 
 FROM build_base AS build_git
 COPY build_scripts/build-curl.sh /build_scripts/
-RUN export CURL_ROOT=curl-8.11.0 && \
-    export CURL_HASH=264537d90e58d2b09dddc50944baf3c38e7089151c8986715e2aaeaaf2b8118f && \
+RUN export CURL_ROOT=curl-8.11.1 && \
+    export CURL_HASH=a889ac9dbba3644271bd9d1302b5c22a088893719b72be3487bc3d401e5c4e80 && \
     export CURL_DOWNLOAD_URL=https://curl.haxx.se/download && \
     manylinux-entrypoint /build_scripts/build-curl.sh
 COPY build_scripts/build-git.sh /build_scripts/
@@ -85,18 +85,18 @@ RUN export GIT_ROOT=git-2.47.1 && \
 
 FROM build_base AS build_sqlite3
 COPY build_scripts/build-sqlite3.sh /build_scripts/
-RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3470100 && \
-    export SQLITE_AUTOCONF_HASH=416a6f45bf2cacd494b208fdee1beda509abda951d5f47bc4f2792126f01b452 && \
+RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3470200 && \
+    export SQLITE_AUTOCONF_HASH=f1b2ee412c28d7472bc95ba996368d6f0cdcf00362affdadb27ed286c179540b && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2024 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
 FROM build_base AS build_tcl_tk
 COPY build_scripts/build-tcltk.sh /build_scripts/
-RUN export TCL_ROOT=tcl8.6.14 && \
-    export TCL_HASH=5880225babf7954c58d4fb0f5cf6279104ce1cd6aa9b71e9a6322540e1c4de66 && \
+RUN export TCL_ROOT=tcl8.6.16 && \
+    export TCL_HASH=91cb8fa61771c63c262efb553059b7c7ad6757afa5857af6265e4b0bdc2a14a5 && \
     export TCL_DOWNLOAD_URL=https://prdownloads.sourceforge.net/tcl && \
-    export TK_ROOT=tk8.6.14 && \
-    export TK_HASH=8ffdb720f47a6ca6107eac2dd877e30b0ef7fac14f3a84ebbd0b3612cee41a94 && \
+    export TK_ROOT=tk8.6.16 && \
+    export TK_HASH=be9f94d3575d4b3099d84bc3c10de8994df2d7aa405208173c709cc404a7e5fe && \
     manylinux-entrypoint /build_scripts/build-tcltk.sh
 
 FROM build_base AS build_mpdecimal
