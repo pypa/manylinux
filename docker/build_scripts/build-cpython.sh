@@ -73,6 +73,10 @@ fi
 
 unset _PYTHON_HOST_PLATFORM
 
+if [ "${AUDITWHEEL_ARCH}" == "x86_64" ] && echo | gcc -S -x c -v - 2>&1 | grep 'march=x86-64-v' > /dev/null; then
+	export EXTRA_CFLAGS="-mtune=generic -march=x86-64"
+fi
+
 # configure with hardening options only for the interpreter & stdlib C extensions
 # do not change the default for user built extension (yet?)
 ./configure \

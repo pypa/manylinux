@@ -97,6 +97,14 @@ for repeatable builds.
 manylinux_2_34 (AlmaLinux 9 based)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Caveat:
+On x86_64, RHEL 9+ derivatives are using x86-64-v2 target architecture.
+While manylinux worked around that when building from sources by intercepting compiler calls to target
+x86_64 instead, every library installed with dnf will most likely target the more recent x86-64-v2 which, if
+grafted into a wheel, will fail to run on older hardware. There's no PEP to handle micro-architecture variants
+yet when it comes to packaging or installing wheels. Auditwheel doesn't detect this either.
+See https://github.com/pypa/manylinux/issues/1725
+
 Toolchain: GCC 14
 
 - x86_64 image: ``quay.io/pypa/manylinux_2_34_x86_64``

@@ -161,5 +161,16 @@ fi
 # check the default shell is /bin/bash
 test "$SHELL" = "/bin/bash"
 
+# https://github.com/pypa/manylinux/issues/1725
+# check the compiler does not default to x86-64-v?
+if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
+	which gcc
+	gcc --version
+	if echo | gcc -S -x c -v - 2>&1 | grep 'march=x86-64-v'; then
+		echo "wrong target architecture"
+		exit 1
+	fi
+fi
+
 # final report
 echo "run_tests successful!"

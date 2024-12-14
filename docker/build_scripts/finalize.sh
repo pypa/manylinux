@@ -98,3 +98,6 @@ hardlink -c /opt/_internal
 
 # update system packages
 LC_ALL=C ${MY_DIR}/update-system-packages.sh
+
+# wrap compilers (see https://github.com/pypa/manylinux/issues/1725)
+${MY_DIR}/install-gcc-wrapper.sh
