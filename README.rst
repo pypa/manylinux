@@ -252,7 +252,7 @@ All supported images currently contain:
    - `cmake <https://pypi.org/p/cmake>`_
    - `patchelf <https://pypi.org/p/patchelf>`_
    - `swig <https://pypi.org/p/swig>`_
-   - `uv <https://pypi.org/p/uv>`_ (not available on ``musllinux s390x`` yet due to Rust limitations)
+   - `uv <https://pypi.org/p/uv>`_ (not available on ``musllinux ppc64le`` & ``musllinux s390x`` yet due to Rust limitations)
 
 - All Python interpreters have the following packages pre-installed:
    - `pip <https://pypi.org/p/pip>`_
