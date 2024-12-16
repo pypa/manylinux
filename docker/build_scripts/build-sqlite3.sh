@@ -8,7 +8,8 @@ set -exuo pipefail
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
 # Get build utilities
-source $MY_DIR/build_utils.sh
+# shellcheck source-path=SCRIPTDIR
+source "${MY_DIR}/build_utils.sh"
 
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
 	PREFIX=/usr/local
@@ -17,18 +18,18 @@ else
 fi
 
 # Install a more recent SQLite3
-check_var ${SQLITE_AUTOCONF_ROOT}
-check_var ${SQLITE_AUTOCONF_HASH}
-check_var ${SQLITE_AUTOCONF_DOWNLOAD_URL}
-fetch_source ${SQLITE_AUTOCONF_ROOT}.tar.gz ${SQLITE_AUTOCONF_DOWNLOAD_URL}
-check_sha256sum ${SQLITE_AUTOCONF_ROOT}.tar.gz ${SQLITE_AUTOCONF_HASH}
-tar xfz ${SQLITE_AUTOCONF_ROOT}.tar.gz
-pushd ${SQLITE_AUTOCONF_ROOT}
+check_var "${SQLITE_AUTOCONF_ROOT}"
+check_var "${SQLITE_AUTOCONF_HASH}"
+check_var "${SQLITE_AUTOCONF_DOWNLOAD_URL}"
+fetch_source "${SQLITE_AUTOCONF_ROOT}.tar.gz" "${SQLITE_AUTOCONF_DOWNLOAD_URL}"
+check_sha256sum "${SQLITE_AUTOCONF_ROOT}.tar.gz" "${SQLITE_AUTOCONF_HASH}"
+tar xfz "${SQLITE_AUTOCONF_ROOT}.tar.gz"
+pushd "${SQLITE_AUTOCONF_ROOT}"
 # add rpath
 sed -i "s|^Libs:|Libs: -Wl,--enable-new-dtags,-rpath=\${libdir} |g" sqlite3.pc.in
 DESTDIR=/manylinux-rootfs do_standard_install --prefix=${PREFIX}
 popd
-rm -rf ${SQLITE_AUTOCONF_ROOT} ${SQLITE_AUTOCONF_ROOT}.tar.gz
+rm -rf "${SQLITE_AUTOCONF_ROOT}" "${SQLITE_AUTOCONF_ROOT}.tar.gz"
 
 # Remove unused files
 rm /manylinux-rootfs${PREFIX}/lib/libsqlite3.a

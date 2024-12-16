@@ -8,7 +8,8 @@ set -exuo pipefail
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
 # Get build utilities
-source $MY_DIR/build_utils.sh
+# shellcheck source-path=SCRIPTDIR
+source "${MY_DIR}/build_utils.sh"
 
 # Libraries that are allowed as part of the manylinux2014 profile
 # Extract from PEP: https://www.python.org/dev/peps/pep-0599/#the-manylinux2014-policy
@@ -33,9 +34,9 @@ source $MY_DIR/build_utils.sh
 
 # MANYLINUX_DEPS: Install development packages (except for libgcc which is provided by gcc install)
 if [ "${OS_ID_LIKE}" == "rhel" ]; then
-	MANYLINUX_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel mesa-libGL-devel libICE-devel libSM-devel zlib-devel expat-devel"
+	MANYLINUX_DEPS=(glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel mesa-libGL-devel libICE-devel libSM-devel zlib-devel expat-devel)
 elif [ "${OS_ID_LIKE}" == "alpine" ]; then
-	MANYLINUX_DEPS="musl-dev libstdc++ glib-dev libx11-dev libxext-dev libxrender-dev mesa-dev libice-dev libsm-dev zlib-dev expat-dev"
+	MANYLINUX_DEPS=(musl-dev libstdc++ glib-dev libx11-dev libxext-dev libxrender-dev mesa-dev libice-dev libsm-dev zlib-dev expat-dev)
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
 	exit 1
@@ -43,26 +44,26 @@ fi
 
 # RUNTIME_DEPS: Runtime dependencies. c.f. install-build-packages.sh
 if [ "${OS_ID_LIKE}" == "rhel" ]; then
-	RUNTIME_DEPS="zlib bzip2 expat ncurses readline gdbm libpcap xz openssl keyutils-libs libkadm5 libcom_err libcurl uuid libffi libdb"
+	RUNTIME_DEPS=(zlib bzip2 expat ncurses readline gdbm libpcap xz openssl keyutils-libs libkadm5 libcom_err libcurl uuid libffi libdb)
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
-		RUNTIME_DEPS="${RUNTIME_DEPS} libidn libXft"
+		RUNTIME_DEPS+=(libidn libXft)
 	elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
-		RUNTIME_DEPS="${RUNTIME_DEPS} libidn tk"
+		RUNTIME_DEPS+=(libidn tk)
 	else
-		RUNTIME_DEPS="${RUNTIME_DEPS} libidn2 tk"
+		RUNTIME_DEPS+=(libidn2 tk)
 		# for graalpy
-		RUNTIME_DEPS="${RUNTIME_DEPS} libxcrypt-compat"
+		RUNTIME_DEPS+=(libxcrypt-compat)
 	fi
 elif [ "${OS_ID_LIKE}" == "alpine" ]; then
-	RUNTIME_DEPS="zlib bzip2 expat ncurses-libs readline tk gdbm db xz openssl keyutils-libs krb5-libs libcom_err libidn2 libcurl libuuid libffi"
+	RUNTIME_DEPS=(zlib bzip2 expat ncurses-libs readline tk gdbm db xz openssl keyutils-libs krb5-libs libcom_err libidn2 libcurl libuuid libffi)
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
 	exit 1
 fi
 
-BASETOOLS="autoconf automake bison bzip2 ca-certificates curl diffutils file make patch unzip"
+BASE_TOOLS=(autoconf automake bison bzip2 ca-certificates curl diffutils file make patch unzip)
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
-	BASETOOLS="${BASETOOLS} hardlink hostname which"
+	BASE_TOOLS+=(hardlink hostname which)
 	# See https://unix.stackexchange.com/questions/41784/can-yum-express-a-preference-for-x86-64-over-i386-packages
 	echo "multilib_policy=best" >> /etc/yum.conf
 	# Error out if requested packages do not exist
@@ -87,7 +88,7 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	fixup-mirrors
 	yum -y install yum-utils curl
 	yum-config-manager --enable extras
-	TOOLCHAIN_DEPS="devtoolset-10-binutils devtoolset-10-gcc devtoolset-10-gcc-c++ devtoolset-10-gcc-gfortran"
+	TOOLCHAIN_DEPS=(devtoolset-10-binutils devtoolset-10-gcc devtoolset-10-gcc-c++ devtoolset-10-gcc-gfortran)
 	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
 		# Software collection (for devtoolset-10)
 		yum -y install centos-release-scl-rh
@@ -95,7 +96,7 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 			# EPEL support (for yasm)
 			yum -y install https://archives.fedoraproject.org/pub/archive/epel/7/x86_64/Packages/e/epel-release-7-14.noarch.rpm
 		fi
-		TOOLCHAIN_DEPS="${TOOLCHAIN_DEPS} yasm"
+		TOOLCHAIN_DEPS+=(yasm)
 	elif [ "${AUDITWHEEL_ARCH}" == "aarch64" ] || [ "${AUDITWHEEL_ARCH}" == "ppc64le" ] || [ "${AUDITWHEEL_ARCH}" == "s390x" ]; then
 		# Software collection (for devtoolset-10)
 		yum -y install centos-release-scl-rh
@@ -106,7 +107,7 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	fi
 	fixup-mirrors
 elif [ "${OS_ID_LIKE}" == "rhel" ]; then
-	BASETOOLS="${BASETOOLS} glibc-locale-source glibc-langpack-en hardlink hostname libcurl libnsl libxcrypt which"
+	BASE_TOOLS+=(glibc-locale-source glibc-langpack-en hardlink hostname libcurl libnsl libxcrypt which)
 	echo "tsflags=nodocs" >> /etc/dnf/dnf.conf
 	dnf -y upgrade
 	dnf -y install dnf-plugins-core epel-release
@@ -115,25 +116,25 @@ elif [ "${OS_ID_LIKE}" == "rhel" ]; then
 	else
 		dnf config-manager --set-enabled crb
 	fi
-	TOOLCHAIN_DEPS="gcc-toolset-14-binutils gcc-toolset-14-gcc gcc-toolset-14-gcc-c++ gcc-toolset-14-gcc-gfortran"
+	TOOLCHAIN_DEPS=(gcc-toolset-14-binutils gcc-toolset-14-gcc gcc-toolset-14-gcc-c++ gcc-toolset-14-gcc-gfortran)
 	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
-		TOOLCHAIN_DEPS="${TOOLCHAIN_DEPS} yasm"
+		TOOLCHAIN_DEPS+=(yasm)
 	fi
 elif [ "${OS_ID_LIKE}" == "alpine" ]; then
-	TOOLCHAIN_DEPS="binutils gcc g++ gfortran"
-	BASETOOLS="${BASETOOLS} gnupg util-linux shadow tar"
+	TOOLCHAIN_DEPS=(binutils gcc g++ gfortran)
+	BASE_TOOLS+=(gnupg util-linux shadow tar)
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
 	exit 1
 fi
 
-manylinux_pkg_install ${BASETOOLS} ${TOOLCHAIN_DEPS} ${MANYLINUX_DEPS} ${RUNTIME_DEPS}
+manylinux_pkg_install "${BASE_TOOLS[@]}" "${TOOLCHAIN_DEPS[@]}" "${MANYLINUX_DEPS[@]}" "${RUNTIME_DEPS[@]}"
 
 # update system packages, we already updated them but
 # the following script takes care of cleaning-up some things
 # and since it's also needed in the finalize step, everything's
 # centralized in this script to avoid code duplication
-LC_ALL=C ${MY_DIR}/update-system-packages.sh
+LC_ALL=C "${MY_DIR}/update-system-packages.sh"
 
 if [ "${BASE_POLICY}" == "manylinux" ]; then
 	# we'll be removing libcrypt.so.1 later on

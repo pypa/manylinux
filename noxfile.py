@@ -5,11 +5,12 @@ import nox
 
 nox.needs_version = ">=2024.4.15"
 nox.options.default_venv_backend = "uv|virtualenv"
+nox.options.sessions = ["lint"]
 
 
 @nox.session
 def update_python_dependencies(session):
-    "Update the base and per-python dependencies lockfiles"
+    """Update the base and per-python dependencies lock files"""
     if getattr(session.virtualenv, "venv_backend", "") != "uv":
         session.install("uv>=0.1.23")
 
@@ -21,7 +22,9 @@ def update_python_dependencies(session):
     for python_minor in range(7, 14):
         python_version = f"3.{python_minor}"
         session.run(
-            "uv", "pip", "compile",
+            "uv",
+            "pip",
+            "compile",
             f"--python-version={python_version}",
             "--generate-hashes",
             "--no-strip-markers",
@@ -35,7 +38,9 @@ def update_python_dependencies(session):
     # tools
     python_version = "3.12"
     session.run(
-        "uv", "pip", "compile",
+        "uv",
+        "pip",
+        "compile",
         f"--python-version={python_version}",
         "--generate-hashes",
         "requirements-base-tools.in",
@@ -51,7 +56,9 @@ def update_python_dependencies(session):
         tmp_file = Path(session.create_tmp()) / f"{tool}.in"
         tmp_file.write_text(f"{tool}\n")
         session.run(
-            "uv", "pip", "compile",
+            "uv",
+            "pip",
+            "compile",
             f"--python-version={python_version}",
             "--generate-hashes",
             str(tmp_file),
@@ -64,7 +71,7 @@ def update_python_dependencies(session):
 
 @nox.session(python="3.12", reuse_venv=True)
 def update_native_dependencies(session):
-    "Update the native dependencies"
+    """Update the native dependencies"""
     script = "tools/update_native_dependencies.py"
     deps = nox.project.load_toml(script)["dependencies"]
     session.install(*deps)
@@ -73,8 +80,15 @@ def update_native_dependencies(session):
 
 @nox.session(python="3.12", reuse_venv=True)
 def update_interpreters_download(session):
-    "Update all the Python interpreters"
+    """Update all the Python interpreters"""
     script = "tools/update_interpreters_download.py"
     deps = nox.project.load_toml(script)["dependencies"]
     session.install(*deps)
     session.run("python", script, *session.posargs)
+
+
+@nox.session(python="3.12", reuse_venv=True)
+def lint(session: nox.Session) -> None:
+    """Run linters on the codebase."""
+    session.install("pre-commit")
+    session.run("pre-commit", "run", "--all-files")
