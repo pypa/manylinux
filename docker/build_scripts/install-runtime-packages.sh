@@ -112,11 +112,10 @@ elif [ "${OS_ID_LIKE}" == "rhel" ]; then
 	dnf -y install dnf-plugins-core epel-release
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
 		dnf config-manager --set-enabled powertools
-		TOOLCHAIN_DEPS="gcc-toolset-13-binutils gcc-toolset-13-gcc gcc-toolset-13-gcc-c++ gcc-toolset-13-gcc-gfortran"
 	else
 		dnf config-manager --set-enabled crb
-		TOOLCHAIN_DEPS="gcc-toolset-14-binutils gcc-toolset-14-gcc gcc-toolset-14-gcc-c++ gcc-toolset-14-gcc-gfortran"
 	fi
+	TOOLCHAIN_DEPS="gcc-toolset-14-binutils gcc-toolset-14-gcc gcc-toolset-14-gcc-c++ gcc-toolset-14-gcc-gfortran"
 	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
 		TOOLCHAIN_DEPS="${TOOLCHAIN_DEPS} yasm"
 	fi
