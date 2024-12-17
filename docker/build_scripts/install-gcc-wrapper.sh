@@ -15,6 +15,7 @@ fi
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
 # Get build utilities
+# shellcheck source-path=SCRIPTDIR
 source "${MY_DIR}/build_utils.sh"
 
 # create wrapper to override default -march=x86-64-v? and replace it with -march=x86-64
@@ -83,6 +84,7 @@ int main(int argc, char* argv[]) {
 }
 EOF
 
+# shellcheck disable=SC2086
 gcc ${MANYLINUX_CFLAGS} -std=c11 -Os -s -Werror -o /usr/local/bin/manylinux-gcc-wrapper /tmp/manylinux-gcc-wrapper.c
 
 for EXE in "${DEVTOOLSET_ROOTPATH}"/usr/bin/*; do

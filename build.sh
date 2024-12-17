@@ -12,22 +12,15 @@ export POLICY
 export PLATFORM
 
 # get docker default multiarch image prefix for PLATFORM
-if [ "${PLATFORM}" == "x86_64" ]; then
-	GOARCH="amd64"
-elif [ "${PLATFORM}" == "i686" ]; then
-	GOARCH="386"
-elif [ "${PLATFORM}" == "aarch64" ]; then
-	GOARCH="arm64"
-elif [ "${PLATFORM}" == "ppc64le" ]; then
-	GOARCH="ppc64le"
-elif [ "${PLATFORM}" == "s390x" ]; then
-	GOARCH="s390x"
-elif [ "${PLATFORM}" == "armv7l" ]; then
-	GOARCH="arm/v7"
-else
-	echo "Unsupported platform: '${PLATFORM}'"
-	exit 1
-fi
+case "${PLATFORM}" in
+	x86_64) GOARCH="amd64";;
+	i686) GOARCH="386";;
+	aarch64) GOARCH="arm64";;
+	ppc64le) GOARCH="ppc64le";;
+	s390x) GOARCH="s390x";;
+	armv7l) GOARCH="arm/v7";;
+	*) echo "Unsupported platform: '${PLATFORM}'"; exit 1;;
+esac
 
 # setup BASEIMAGE and its specific properties
 if [ "${POLICY}" == "manylinux2014" ]; then
@@ -63,45 +56,45 @@ export DEVTOOLSET_ROOTPATH
 export PREPEND_PATH
 export LD_LIBRARY_PATH_ARG
 
-BUILD_ARGS_COMMON="
-	--platform=linux/${GOARCH}
+BUILD_ARGS_COMMON=(
+	"--platform=linux/${GOARCH}"
 	--build-arg POLICY --build-arg PLATFORM --build-arg BASEIMAGE
 	--build-arg DEVTOOLSET_ROOTPATH --build-arg PREPEND_PATH --build-arg LD_LIBRARY_PATH_ARG
-	--rm -t quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA}
+	--rm -t "quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA}"
 	-f docker/Dockerfile docker/
-"
+)
 
 if [ "${CI:-}" == "true" ]; then
 	# Force plain output on CI
-	BUILD_ARGS_COMMON="--progress plain ${BUILD_ARGS_COMMON}"
+	BUILD_ARGS_COMMON=(--progress plain "${BUILD_ARGS_COMMON[@]}")
 	# Workaround issue on ppc64le
-	if [ ${PLATFORM} == "ppc64le" ] && [ "${MANYLINUX_BUILD_FRONTEND}" == "docker" ]; then
-		BUILD_ARGS_COMMON="--network host ${BUILD_ARGS_COMMON}"
+	if [ "${PLATFORM}" == "ppc64le" ] && [ "${MANYLINUX_BUILD_FRONTEND}" == "docker" ]; then
+		BUILD_ARGS_COMMON=(--network host "${BUILD_ARGS_COMMON[@]}")
 	fi
 fi
 
 USE_LOCAL_CACHE=0
 if [ "${MANYLINUX_BUILD_FRONTEND}" == "docker" ]; then
-	docker build ${BUILD_ARGS_COMMON}
+	docker build "${BUILD_ARGS_COMMON[@]}"
 elif [ "${MANYLINUX_BUILD_FRONTEND}" == "podman" ]; then
-	podman build ${BUILD_ARGS_COMMON}
+	podman build "${BUILD_ARGS_COMMON[@]}"
 elif [ "${MANYLINUX_BUILD_FRONTEND}" == "docker-buildx" ]; then
 	USE_LOCAL_CACHE=1
 	docker buildx build \
 		--load \
-		--cache-from=type=local,src=$(pwd)/.buildx-cache-${POLICY}_${PLATFORM} \
-		--cache-to=type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM},mode=max \
-		${BUILD_ARGS_COMMON}
+		"--cache-from=type=local,src=$(pwd)/.buildx-cache-${POLICY}_${PLATFORM}" \
+		"--cache-to=type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM},mode=max" \
+		"${BUILD_ARGS_COMMON[@]}"
 else
 	echo "Unsupported build frontend: '${MANYLINUX_BUILD_FRONTEND}'"
 	exit 1
 fi
 
-docker run --rm -v $(pwd)/tests:/tests:ro quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA} /tests/run_tests.sh
+docker run --rm -v "$(pwd)/tests:/tests:ro" "quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA}" /tests/run_tests.sh
 
 if [ ${USE_LOCAL_CACHE} -ne 0 ]; then
-	if [ -d $(pwd)/.buildx-cache-${POLICY}_${PLATFORM} ]; then
-		rm -rf $(pwd)/.buildx-cache-${POLICY}_${PLATFORM}
+	if [ -d "$(pwd)/.buildx-cache-${POLICY}_${PLATFORM}" ]; then
+		rm -rf "$(pwd)/.buildx-cache-${POLICY}_${PLATFORM}"
 	fi
-	mv $(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM} $(pwd)/.buildx-cache-${POLICY}_${PLATFORM}
+	mv "$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM}" "$(pwd)/.buildx-cache-${POLICY}_${PLATFORM}"
 fi

@@ -8,7 +8,8 @@ set -exuo pipefail
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
 # Get build utilities
-source $MY_DIR/build_utils.sh
+# shellcheck source-path=SCRIPTDIR
+source "${MY_DIR}/build_utils.sh"
 
 fixup-mirrors
 if [ "${PACKAGE_MANAGER}" == "yum" ]; then
@@ -33,7 +34,7 @@ fixup-mirrors
 if [ "${OS_ID_LIKE}" == "rhel" ]; then
 	LOCALE_ARCHIVE=/usr/lib/locale/locale-archive
 	TIMESTAMP_FILE=${LOCALE_ARCHIVE}.ml.timestamp
-	if [ ! -f ${TIMESTAMP_FILE} ] || [ ${LOCALE_ARCHIVE} -nt ${TIMESTAMP_FILE} ]; then
+	if [ ! -f "${TIMESTAMP_FILE}" ] || [ "${LOCALE_ARCHIVE}" -nt "${TIMESTAMP_FILE}" ]; then
 		# upgrading glibc-common can end with removal on en_US.UTF-8 locale
 		localedef -i en_US -f UTF-8 en_US.UTF-8
 
@@ -42,7 +43,7 @@ if [ "${OS_ID_LIKE}" == "rhel" ]; then
 			localedef --list-archive | grep -v -i ^en_US.utf8 | xargs localedef --delete-from-archive
 		fi
 		if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
-			mv -f ${LOCALE_ARCHIVE} ${LOCALE_ARCHIVE}.tmpl
+			mv -f "${LOCALE_ARCHIVE}" "${LOCALE_ARCHIVE}.tmpl"
 			build-locale-archive --install-langs="en_US.utf8"
 		fi
 		touch ${TIMESTAMP_FILE}
@@ -50,10 +51,10 @@ if [ "${OS_ID_LIKE}" == "rhel" ]; then
 fi
 
 if [ -d /usr/share/locale ]; then
-	find /usr/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
+	find /usr/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) -print0 | xargs -0 rm -rf
 fi
 if [ -d /usr/local/share/locale ]; then
-	find /usr/local/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
+	find /usr/local/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) -print0 | xargs -0 rm -rf
 fi
 
 # Fix libc headers to remain compatible with C99 compilers.
@@ -61,11 +62,11 @@ find /usr/include/ -type f -exec sed -i 's/\bextern _*inline_*\b/extern __inline
 
 if [ "${DEVTOOLSET_ROOTPATH:-}" != "" ]; then
 	# remove useless things that have been installed/updated by devtoolset
-	if [ -d $DEVTOOLSET_ROOTPATH/usr/share/man ]; then
-		rm -rf $DEVTOOLSET_ROOTPATH/usr/share/man
+	if [ -d "${DEVTOOLSET_ROOTPATH}/usr/share/man" ]; then
+		rm -rf "${DEVTOOLSET_ROOTPATH}/usr/share/man"
 	fi
-	if [ -d $DEVTOOLSET_ROOTPATH/usr/share/locale ]; then
-		find $DEVTOOLSET_ROOTPATH/usr/share/locale -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) | xargs rm -rf
+	if [ -d "${DEVTOOLSET_ROOTPATH}/usr/share/locale" ]; then
+		find "${DEVTOOLSET_ROOTPATH}/usr/share/locale" -mindepth 1 -maxdepth 1 -not \( -name 'en*' -or -name 'locale.alias' \) -print0 | xargs -0 rm -rf
 	fi
 fi
 

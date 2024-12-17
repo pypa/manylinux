@@ -1,0 +1,44 @@
+repos:
+
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v5.0.0
+  hooks:
+  - id: check-case-conflict
+  - id: check-merge-conflict
+  - id: check-yaml
+  - id: check-toml
+  - id: debug-statements
+  - id: end-of-file-fixer
+    exclude: docker/build_scripts/python_versions.json
+  - id: mixed-line-ending
+  - id: trailing-whitespace
+
+- repo: https://github.com/shellcheck-py/shellcheck-py
+  rev: v0.10.0.1
+  hooks:
+  - id: shellcheck
+
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.8.0
+  hooks:
+  - id: ruff
+    args: ["--fix", "--show-fixes", "--target-version=py37"]
+    exclude: ^tools/.*.py|docker/build_scripts/manylinux-interpreters.py$
+  - id: ruff-format
+    args: ["--target-version=py37"]
+    exclude: ^tools/.*.py|docker/build_scripts/manylinux-interpreters.py$
+  - id: ruff
+    name: ruff on python 3.12 tools
+    files: ^tools/.*.py|docker/build_scripts/manylinux-interpreters.py$
+    args: ["--fix", "--show-fixes", "--target-version=py312"]
+  - id: ruff-format
+    name: ruff-format on python 3.12 tools
+    files: ^tools/.*.py|docker/build_scripts/manylinux-interpreters.py$
+    args: ["--target-version=py312"]
+
+- repo: https://github.com/codespell-project/codespell
+  rev: v2.3.0
+  hooks:
+  - id: codespell
+    args: ["-w"]
+    exclude: ^docker/build_scripts/.*pubkey.*.txt$
