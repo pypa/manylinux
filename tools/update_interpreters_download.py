@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # /// script
 # dependencies = ["packaging", "requests"]
 # ///
@@ -16,7 +14,6 @@ from pathlib import Path
 import requests
 from packaging.specifiers import Specifier
 from packaging.version import Version
-
 
 PROJECT_ROOT = Path(__file__).parent.parent.resolve(strict=True)
 PYTHON_VERSIONS = PROJECT_ROOT / "docker" / "build_scripts" / "python_versions.json"
@@ -45,8 +42,7 @@ def update_pypy_version(releases, py_spec, pp_spec, tag, arch, version_dict, upd
             continue
         try:
             file = next(
-                f for f in r["files"]
-                if f["arch"] == pypy_arch and f["platform"] == "linux"
+                f for f in r["files"] if f["arch"] == pypy_arch and f["platform"] == "linux"
             )
         except StopIteration:
             continue
@@ -69,7 +65,8 @@ def update_pypy_versions(versions, updates):
         release["python_version"] = Version(f"{py_version.major}.{py_version.minor}")
     # filter-out pre-release
     releases = [
-        r for r in releases
+        r
+        for r in releases
         if not r["pypy_version"].is_prerelease and not r["pypy_version"].is_devrelease
     ]
     releases.sort(key=lambda r: r["pypy_version"], reverse=True)
@@ -88,9 +85,7 @@ def update_pypy_versions(versions, updates):
         py_spec = Specifier(f"=={py_major}.{py_minor}.*")
         pp_spec = Specifier(f"=={pp_major}.{pp_minor}.*")
         for arch in versions[tag]:
-            update_pypy_version(
-                releases, py_spec, pp_spec, tag, arch, versions[tag][arch], updates
-            )
+            update_pypy_version(releases, py_spec, pp_spec, tag, arch, versions[tag][arch], updates)
 
 
 def update_graalpy_version(releases, graalpy_spec, tag, arch, version_dict, updates):
@@ -99,7 +94,7 @@ def update_graalpy_version(releases, graalpy_spec, tag, arch, version_dict, upda
     if "version" in version_dict:
         current_version = Version(version_dict["version"])
     for r in releases:
-        version = Version(r["tag_name"].split('-')[1])
+        version = Version(r["tag_name"].split("-")[1])
         if current_version is not None and current_version >= version:
             continue
         if not graalpy_spec.contains(version):
@@ -129,6 +124,7 @@ def get_next_page_link(response):
             for param in split[1:]:
                 if re.match(r'rel="?next"?', param):
                     return url
+    return None
 
 
 def update_graalpy_versions(versions, updates):
@@ -145,14 +141,12 @@ def update_graalpy_versions(versions, updates):
         _, abi_tag = tag.split("-")
         graalpy_ver, _, _ = abi_tag.split("_")
         assert graalpy_ver.startswith("graalpy")
-        graalpy_ver = graalpy_ver[len("graalpy"):]
+        graalpy_ver = graalpy_ver[len("graalpy") :]
         graalpy_major = int(graalpy_ver[:2])
         graalpy_minor = int(graalpy_ver[2:])
         graalpy_spec = Specifier(f"=={graalpy_major}.{graalpy_minor}.*")
         for arch in versions[tag]:
-            update_graalpy_version(
-                releases, graalpy_spec, tag, arch, versions[tag][arch], updates
-            )
+            update_graalpy_version(releases, graalpy_spec, tag, arch, versions[tag][arch], updates)
 
 
 def main():

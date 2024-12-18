@@ -28,21 +28,49 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  pre_commit:
+    name: Pre-commit checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - uses: pre-commit/action@v3.0.1
+
+  build_matrix:
+    needs: pre_commit
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - id: matrix
+        name: build matrix
+        shell: python
+        run: |
+          import os
+          import json
+          reduced = [
+              ("x86_64", "ubuntu-22.04", ("manylinux2014", "manylinux_2_28", "manylinux_2_34", "musllinux_1_2")),
+              ("aarch64", "ubuntu-22.04", ("manylinux2014", "manylinux_2_28", "manylinux_2_34", "musllinux_1_2")),
+              ("i686", "ubuntu-22.04", ("manylinux2014", "musllinux_1_2")),
+              ("armv7l", "ubuntu-22.04", ("manylinux_2_31", "musllinux_1_2")),
+          ]
+          expanded = [{"policy": policy, "platform": platform, "runner": runner} for platform, runner, policies in reduced for policy in policies]
+          print(json.dumps(expanded, indent=2))
+          with open(os.environ["GITHUB_OUTPUT"], "at") as f:
+              f.write(f"matrix={json.dumps(expanded)}")
+
   build_manylinux:
     name: ${{ matrix.policy }}_${{ matrix.platform }}
-    runs-on: ubuntu-22.04
+    needs: build_matrix
+    runs-on: ${{ matrix.runner }}
     permissions:
       actions: write # this permission is needed to delete cache
     strategy:
       fail-fast: false
       matrix:
-        policy: ["manylinux2014", "manylinux_2_28", "manylinux_2_34", "musllinux_1_2"]
-        platform: ["x86_64"]
-        include:
-          - policy: "manylinux2014"
-            platform: "i686"
-          - policy: "musllinux_1_2"
-            platform: "i686"
+        include: ${{ fromJson(needs.build_matrix.outputs.matrix) }}
     env:
       POLICY: ${{ matrix.policy }}
       PLATFORM: ${{ matrix.platform }}
@@ -57,8 +85,6 @@ jobs:
       - name: Set up emulation
         if: matrix.platform != 'i686' && matrix.platform != 'x86_64'
         uses: docker/setup-qemu-action@v3
-        with:
-          platforms: ${{ matrix.platform }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
