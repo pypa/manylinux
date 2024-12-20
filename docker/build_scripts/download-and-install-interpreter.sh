@@ -20,11 +20,11 @@ case ${DOWNLOAD_URL} in
   *) echo "unsupported archive"; exit 1;;
 esac
 
-mkdir ${PREFIX}
+mkdir "${PREFIX}"
 
-curl -fsSL ${DOWNLOAD_URL} | tee >(tar -C ${PREFIX} --strip-components 1 -x${COMP}f -) | sha256sum -c <(echo "${SHA256} -")
+curl -fsSL "${DOWNLOAD_URL}" | tee >(tar -C "${PREFIX}" --strip-components 1 -x${COMP}f -) | sha256sum -c <(echo "${SHA256} -")
 
 # remove debug symbols if any
-find ${PREFIX}/bin -name '*.debug' -delete
+find "${PREFIX}/bin" -name '*.debug' -delete
 
-${MY_DIR}/finalize-one.sh ${PREFIX}
+"${MY_DIR}/finalize-one.sh" "${PREFIX}"
