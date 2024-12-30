@@ -35,6 +35,8 @@ source "${MY_DIR}/build_utils.sh"
 # MANYLINUX_DEPS: Install development packages (except for libgcc which is provided by gcc install)
 if [ "${OS_ID_LIKE}" == "rhel" ]; then
 	MANYLINUX_DEPS=(glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel mesa-libGL-devel libICE-devel libSM-devel zlib-devel expat-devel)
+elif [ "${OS_ID_LIKE}" == "debian" ]; then
+  MANYLINUX_DEPS=(libc6-dev libglib2.0-dev libx11-dev libxext-dev libxrender-dev libgl1-mesa-dev libice-dev libsm-dev zlib1g-dev libexpat1-dev libssl-dev)
 elif [ "${OS_ID_LIKE}" == "alpine" ]; then
 	MANYLINUX_DEPS=(musl-dev libstdc++ glib-dev libx11-dev libxext-dev libxrender-dev mesa-dev libice-dev libsm-dev zlib-dev expat-dev)
 else
@@ -54,6 +56,13 @@ if [ "${OS_ID_LIKE}" == "rhel" ]; then
 		# for graalpy
 		RUNTIME_DEPS+=(libxcrypt-compat)
 	fi
+elif [ "${OS_ID_LIKE}" == "debian" ]; then
+  RUNTIME_DEPS=(zlib1g libbz2-1.0 libexpat1 libncurses6 libreadline8 tk libgdbm6 libdb5.3 libpcap0.8 liblzma5 libkeyutils1 libkrb5-3 libcom-err2 libidn2-0 libcurl4 uuid)
+  if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_31" ]; then
+  	RUNTIME_DEPS+=(libffi7 libssl1.1)
+  else
+  	RUNTIME_DEPS+=(libffi8 libssl3)
+  fi
 elif [ "${OS_ID_LIKE}" == "alpine" ]; then
 	RUNTIME_DEPS=(zlib bzip2 expat ncurses-libs readline tk gdbm db xz openssl keyutils-libs krb5-libs libcom_err libidn2 libcurl libuuid libffi)
 else
@@ -120,6 +129,9 @@ elif [ "${OS_ID_LIKE}" == "rhel" ]; then
 	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
 		TOOLCHAIN_DEPS+=(yasm)
 	fi
+elif [ "${OS_ID_LIKE}" == "debian" ]; then
+	TOOLCHAIN_DEPS+=(binutils gcc g++ gfortran)
+	BASE_TOOLS+=(gpg gpg-agent hardlink hostname locales xz-utils)
 elif [ "${OS_ID_LIKE}" == "alpine" ]; then
 	TOOLCHAIN_DEPS=(binutils gcc g++ gfortran)
 	BASE_TOOLS+=(gnupg util-linux shadow tar)
