@@ -7,18 +7,18 @@ set -exuo pipefail
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
 if [ "${AUDITWHEEL_POLICY:0:10}" == "musllinux_" ]; then
-	EXPECTED_PYTHON_COUNT=9
-	EXPECTED_PYTHON_COUNT_ALL=9
+	EXPECTED_PYTHON_COUNT=7
+	EXPECTED_PYTHON_COUNT_ALL=7
 else
 	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ] || [ "${AUDITWHEEL_ARCH}" == "aarch64" ]; then
-		EXPECTED_PYTHON_COUNT=10
-		EXPECTED_PYTHON_COUNT_ALL=14
+		EXPECTED_PYTHON_COUNT=8
+		EXPECTED_PYTHON_COUNT_ALL=11
 	elif [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
-		EXPECTED_PYTHON_COUNT=10
-		EXPECTED_PYTHON_COUNT_ALL=13
+		EXPECTED_PYTHON_COUNT=8
+		EXPECTED_PYTHON_COUNT_ALL=10
 	else
-		EXPECTED_PYTHON_COUNT=9
-		EXPECTED_PYTHON_COUNT_ALL=9
+		EXPECTED_PYTHON_COUNT=7
+		EXPECTED_PYTHON_COUNT_ALL=7
 	fi
 fi
 
@@ -97,7 +97,7 @@ for PYTHON in /opt/python/*/bin/python; do
 		echo "invalid answer, expecting 42"
 		exit 1
 	fi
-	if [ "${PYVERS}" != "3.6" ] && [ "${PYVERS}" != "3.7" ] && [ "${IMPLEMENTATION}" != "graalpy" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_ppc64le" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ] && [ "${AUDITWHEEL_ARCH}" != "riscv64" ]; then
+	if [ "${IMPLEMENTATION}" != "graalpy" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_ppc64le" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ] && [ "${AUDITWHEEL_ARCH}" != "riscv64" ]; then
 		# no uv on musllinux ppc64le / s390x
 		UV_PYTHON=/tmp/uv-test-${IMPLEMENTATION}${PYVERS}/bin/python
 		uv venv --python "${PYTHON}" "/tmp/uv-test-${IMPLEMENTATION}${PYVERS}"

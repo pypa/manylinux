@@ -41,17 +41,14 @@ if [ "${2:-}" == "nogil" ]; then
 	CONFIGURE_ARGS+=(--disable-gil)
 fi
 
-if [ "${CPYTHON_VERSION}" == "3.6.15" ]; then
-	# https://github.com/python/cpython/issues/89863
-	# gcc-12+ uses these 2 flags in -O2 but they were only enabled in -O3 with gcc-11
-	CFLAGS_EXTRA="${CFLAGS_EXTRA} -fno-tree-loop-vectorize -fno-tree-slp-vectorize"
-fi
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] ; then
 	# Python 3.11+
 	export TCLTK_LIBS="-ltk8.6 -ltcl8.6"
 fi
 
-if [ "${BASE_POLICY}_${AUDITWHEEL_ARCH}" == "musllinux_armv7l" ]; then
+if [ "${BASE_POLICY}_${AUDITWHEEL_ARCH}" == "manylinux_armv7l" ]; then
+	CONFIGURE_ARGS+=(--build=armv7l-unknown-linux-gnueabihf)
+elif [ "${BASE_POLICY}_${AUDITWHEEL_ARCH}" == "musllinux_armv7l" ]; then
 	CONFIGURE_ARGS+=(--build=arm-linux-musleabihf)
 fi
 
