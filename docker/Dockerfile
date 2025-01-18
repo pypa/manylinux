@@ -78,16 +78,16 @@ RUN export CURL_ROOT=curl-8.11.1 && \
     export CURL_DOWNLOAD_URL=https://curl.haxx.se/download && \
     manylinux-entrypoint /build_scripts/build-curl.sh
 COPY build_scripts/build-git.sh /build_scripts/
-RUN export GIT_ROOT=git-2.47.1 && \
-    export GIT_HASH=f4c4e98667800585d218dfdf415eb72f73baa7abcac4569e2ce497970f8d6665 && \
+RUN export GIT_ROOT=git-2.48.1 && \
+    export GIT_HASH=51b4d03b1e311ba673591210f94f24a4c5781453e1eb188822e3d9cdc04c2212 && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     manylinux-entrypoint /build_scripts/build-git.sh
 
 FROM build_base AS build_sqlite3
 COPY build_scripts/build-sqlite3.sh /build_scripts/
-RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3470200 && \
-    export SQLITE_AUTOCONF_HASH=f1b2ee412c28d7472bc95ba996368d6f0cdcf00362affdadb27ed286c179540b && \
-    export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2024 && \
+RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3480000 && \
+    export SQLITE_AUTOCONF_HASH=ac992f7fca3989de7ed1fe99c16363f848794c8c32a158dafd4eb927a2e02fd5 && \
+    export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2025 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
 FROM build_base AS build_tcl_tk
