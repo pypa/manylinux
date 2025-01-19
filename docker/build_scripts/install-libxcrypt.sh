@@ -20,11 +20,12 @@ fi
 check_var "${LIBXCRYPT_VERSION}"
 check_var "${LIBXCRYPT_HASH}"
 check_var "${LIBXCRYPT_DOWNLOAD_URL}"
-fetch_source "v${LIBXCRYPT_VERSION}.tar.gz" "${LIBXCRYPT_DOWNLOAD_URL}"
-check_sha256sum "v${LIBXCRYPT_VERSION}.tar.gz" "${LIBXCRYPT_HASH}"
-tar xfz "v${LIBXCRYPT_VERSION}.tar.gz"
-pushd "libxcrypt-${LIBXCRYPT_VERSION}"
-./autogen.sh > /dev/null
+LIBXCRYPT_ROOT="libxcrypt-${LIBXCRYPT_VERSION}"
+
+fetch_source "${LIBXCRYPT_ROOT}.tar.xz" "${LIBXCRYPT_DOWNLOAD_URL}/v${LIBXCRYPT_VERSION}"
+check_sha256sum "${LIBXCRYPT_ROOT}.tar.xz" "${LIBXCRYPT_HASH}"
+tar xfJ "${LIBXCRYPT_ROOT}.tar.xz"
+pushd "${LIBXCRYPT_ROOT}"
 DESTDIR=/manylinux-rootfs do_standard_install \
 	--disable-obsolete-api \
 	--enable-hashes=all \
@@ -41,7 +42,7 @@ DESTDIR=/manylinux-rootfs/so.1 do_standard_install \
 cp -P /manylinux-rootfs/so.1/usr/local/lib/libcrypt.so.1* /manylinux-rootfs/usr/local/lib/
 rm -rf /manylinux-rootfs/so.1
 popd
-rm -rf "v${LIBXCRYPT_VERSION}.tar.gz" "libxcrypt-${LIBXCRYPT_VERSION}"
+rm -rf "${LIBXCRYPT_ROOT}.tar.xz" "${LIBXCRYPT_ROOT}"
 
 # Strip what we can
 strip_ /manylinux-rootfs

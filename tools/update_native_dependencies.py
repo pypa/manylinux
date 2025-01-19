@@ -158,7 +158,7 @@ def _update_with_gh(tool, dry_run):
             url = re.match(
                 f"^    export {tool.upper()}_DOWNLOAD_URL=(?P<url>\\S+) && \\\\$", lines[i + 2]
             )["url"]
-            sha256 = _sha256(f"{url}/{latest_tag}.tar.gz")
+            sha256 = _sha256(f"{url}/{latest_tag}/libxcrypt-{latest_version}.tar.xz")
             lines[i + 0] = f"RUN export {tool.upper()}_VERSION={latest_version} && \\"
             lines[i + 1] = f"    export {tool.upper()}_HASH={sha256} && \\"
             message = f"Bump {tool} {current_version} → {latest_version}"
