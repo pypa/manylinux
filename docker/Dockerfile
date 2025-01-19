@@ -61,8 +61,8 @@ RUN export LIBTOOL_ROOT=libtool-2.5.3 && \
     manylinux-entrypoint /build_scripts/install-libtool.sh
 
 COPY build_scripts/install-libxcrypt.sh /build_scripts/
-RUN export LIBXCRYPT_VERSION=4.4.37 && \
-    export LIBXCRYPT_HASH=e02e1150f43de89c65f331f50b3c008fe47967bbbf62e7171c7a335583a4bd74 && \
+RUN export LIBXCRYPT_VERSION=4.4.38 && \
+    export LIBXCRYPT_HASH=9fb45586b2e83727934fbe046a4fef4804017577f1d048f91d56d0d830a5a98e && \
     export LIBXCRYPT_DOWNLOAD_URL=https://github.com/besser82/libxcrypt/archive && \
     manylinux-entrypoint /build_scripts/install-libxcrypt.sh
 
