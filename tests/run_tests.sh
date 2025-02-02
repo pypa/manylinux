@@ -125,7 +125,7 @@ git --version
 cmake --version
 swig -version
 pipx run nox --version
-pipx install --pip-args='--no-python-version-warning --no-input' nox
+pipx install --pip-args='--no-input' nox
 nox --version
 tar --version | grep "GNU tar"
 # we stopped installing sqlite3 after manylinux_2_28 / musllinux_1_2
