@@ -43,7 +43,7 @@ elif [ "${POLICY}" == "manylinux_2_34" ]; then
 	PREPEND_PATH="/usr/local/bin:${DEVTOOLSET_ROOTPATH}/usr/bin:"
 	LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"
 elif [ "${POLICY}" == "musllinux_1_2" ]; then
-	BASEIMAGE="alpine:3.20"
+	BASEIMAGE="alpine:3.21"
 	DEVTOOLSET_ROOTPATH=
 	PREPEND_PATH=
 	LD_LIBRARY_PATH_ARG=

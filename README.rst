@@ -22,8 +22,7 @@ on November 30th, 2020.
 PEP 599 defines the following platform tags: ``manylinux2014_x86_64``,
 ``manylinux2014_i686``, ``manylinux2014_aarch64``, ``manylinux2014_armv7l``,
 ``manylinux2014_ppc64``, ``manylinux2014_ppc64le`` and ``manylinux2014_s390x``.
-Wheels are built on CentOS 7 which will reach End of Life (EOL) on June 30th,
-2024.
+Wheels are built on CentOS 7. CentOS 7 reached End of Life (EOL) on June 30th, 2024.
 
 PEP 600 has been designed to be "future-proof" and does not enforce specific symbols and a specific distro to build.
 It only states that a wheel tagged ``manylinux_x_y`` shall work on any distro based on ``glibc>=x.y``. PEP 656 added
@@ -94,8 +93,8 @@ etc., we provide `Docker <https://docker.com/>`_ images where we've
 done the work for you. The images are uploaded to `quay.io`_ and are tagged
 for repeatable builds.
 
-manylinux_2_34 (AlmaLinux 9 based)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+manylinux_2_34 (AlmaLinux 9 based) - ALPHA
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Caveat:
 On x86_64, RHEL 9+ derivatives are using x86-64-v2 target architecture.
@@ -200,10 +199,10 @@ Toolchain: GCC 4.8
 - i686 image: ``quay.io/pypa/manylinux1_i686``
 
 
-musllinux_1_2 (Alpine Linux 3.20 based, 3.13+ compatible)
+musllinux_1_2 (Alpine Linux 3.21 based, 3.13+ compatible)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Toolchain: GCC 13
+Toolchain: GCC 14
 
 - x86_64 image: ``quay.io/pypa/musllinux_1_2_x86_64``
 - i686 image: ``quay.io/pypa/musllinux_1_2_i686``
