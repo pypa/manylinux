@@ -78,5 +78,22 @@
       "download_url": "https://downloads.python.org/pypy/pypy3.10-v7.3.18-linux32.tar.bz2",
       "sha256": "34ef09a481254aad0f22bf09fd7c99efb65ffef4f79f5b4222505f55f8d9c22e"
     }
+  },
+  "pp311-pypy311_pp73": {
+    "x86_64": {
+      "version": "7.3.18",
+      "download_url": "https://downloads.python.org/pypy/pypy3.11-v7.3.18-linux64.tar.bz2",
+      "sha256": "df5fa534800ff09d990e50ca4fdb02d8a06b9ed948dbcb3a09bea0739ef42de7"
+    },
+    "aarch64": {
+      "version": "7.3.18",
+      "download_url": "https://downloads.python.org/pypy/pypy3.11-v7.3.18-aarch64.tar.bz2",
+      "sha256": "95bc3021cb9be2aa766ecb776c215e97ae8c0dda99dd48840b40b5b87d90bc45"
+    },
+    "i686": {
+      "version": "7.3.18",
+      "download_url": "https://downloads.python.org/pypy/pypy3.11-v7.3.18-linux32.tar.bz2",
+      "sha256": "70357a69cdbf4ce449b5743901fcd36208e0a89eadcfb4d2ebdc9b4711a0612c"
+    }
   }
 }
