@@ -73,8 +73,8 @@ RUN manylinux-entrypoint /build_scripts/install-build-packages.sh
 
 FROM build_base AS build_git
 COPY build_scripts/build-curl.sh /build_scripts/
-RUN export CURL_ROOT=curl-8.11.1 && \
-    export CURL_HASH=a889ac9dbba3644271bd9d1302b5c22a088893719b72be3487bc3d401e5c4e80 && \
+RUN export CURL_ROOT=curl-8.12.0 && \
+    export CURL_HASH=b72ec874e403c90462dc3019c5b24cc3cdd895247402bf23893b3b59419353bc && \
     export CURL_DOWNLOAD_URL=https://curl.haxx.se/download && \
     manylinux-entrypoint /build_scripts/build-curl.sh
 COPY build_scripts/build-git.sh /build_scripts/
@@ -85,8 +85,8 @@ RUN export GIT_ROOT=git-2.48.1 && \
 
 FROM build_base AS build_sqlite3
 COPY build_scripts/build-sqlite3.sh /build_scripts/
-RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3480000 && \
-    export SQLITE_AUTOCONF_HASH=ac992f7fca3989de7ed1fe99c16363f848794c8c32a158dafd4eb927a2e02fd5 && \
+RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3490000 && \
+    export SQLITE_AUTOCONF_HASH=4d8bfa0b55e36951f6e5a9fb8c99f3b58990ab785c57b4f84f37d163a0672759 && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2025 && \
     manylinux-entrypoint /build_scripts/build-sqlite3.sh
 
@@ -148,15 +148,15 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.11.11
 
 FROM build_cpython AS build_cpython312
 COPY build_scripts/cpython-pubkey-312-313.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.12.8
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.12.9
 
 FROM build_cpython AS build_cpython313
 COPY build_scripts/cpython-pubkey-312-313.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.1
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.2
 
 FROM build_cpython AS build_cpython313_nogil
 COPY build_scripts/cpython-pubkey-312-313.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.1 nogil
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh 3.13.2 nogil
 
 
 FROM runtime_base
@@ -177,7 +177,7 @@ RUN --mount=type=bind,target=/build_cpython36,from=build_cpython36 \
     mkdir -p /opt/_internal && \
     cp -rf /build_cpython*/opt/_internal/* /opt/_internal/ && \
     manylinux-entrypoint /opt/_internal/build_scripts/finalize.sh \
-      pp310-pypy310_pp73
+      pp310-pypy310_pp73 pp311-pypy311_pp73
 
 ENV SSL_CERT_FILE=/opt/_internal/certs.pem
 
