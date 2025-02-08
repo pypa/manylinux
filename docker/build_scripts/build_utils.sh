@@ -19,6 +19,8 @@ else
 		PACKAGE_MANAGER=dnf
 	elif command -v yum >/dev/null 2>&1; then
 		PACKAGE_MANAGER=yum
+	elif command -v apt-get >/dev/null 2>&1; then
+		PACKAGE_MANAGER=apt
 	else
 		echo "unsupported image"
 		exit 1
@@ -29,6 +31,7 @@ fi
 OS_ID_LIKE=$(. /etc/os-release; echo "${ID} ${ID_LIKE:-}")
 case "${OS_ID_LIKE}" in
 	*rhel*) OS_ID_LIKE=rhel;;
+	*debian) OS_ID_LIKE=debian;;
 	*alpine*) OS_ID_LIKE=alpine;;
 	*) echo "unsupported image"; exit 1;;
 esac
@@ -89,6 +92,9 @@ function manylinux_pkg_install {
 		yum -y install "$@"
 	elif [ "${PACKAGE_MANAGER}" = "dnf" ]; then
 		dnf -y install --allowerasing "$@"
+	elif  [ "${PACKAGE_MANAGER}" = "apt" ]; then
+		DEBIAN_FRONTEND=noninteractive apt-get update -qq
+		DEBIAN_FRONTEND=noninteractive apt-get install -qq -y --no-install-recommends "$@"
 	elif [ "${PACKAGE_MANAGER}" = "apk" ]; then
 		apk add --no-cache "$@"
 	else
@@ -101,6 +107,8 @@ function manylinux_pkg_remove {
 		yum erase -y "$@"
 	elif [ "${PACKAGE_MANAGER}" = "dnf" ];then
 		dnf erase -y "$@"
+	elif [ "${PACKAGE_MANAGER}" = "apt" ];then
+		DEBIAN_FRONTEND=noninteractive apt-get remove -y "$@"
 	elif [ "${PACKAGE_MANAGER}" = "apk" ]; then
 		apk del "$@"
 	else
@@ -115,6 +123,9 @@ function manylinux_pkg_clean {
 	elif [ "${PACKAGE_MANAGER}" = "dnf" ]; then
 		dnf clean all
 		rm -rf /var/cache/dnf
+	elif  [ "${PACKAGE_MANAGER}" = "apt" ]; then
+		DEBIAN_FRONTEND=noninteractive apt-get clean -qq
+		rm -rf /var/lib/apt/lists/*
 	elif [ "${PACKAGE_MANAGER}" = "apk" ]; then
 		:
 	else

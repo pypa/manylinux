@@ -23,6 +23,8 @@ if [ "${OS_ID_LIKE}" = "rhel" ]; then
 	else
 		COMPILE_DEPS+=(libidn2-devel tk-devel)
 	fi
+elif [ "${OS_ID_LIKE}" == "debian" ]; then
+	COMPILE_DEPS=(libbz2-dev libncurses-dev libreadline-dev tk-dev libgdbm-dev libdb-dev libpcap-dev liblzma-dev openssl libssl-dev libkeyutils-dev libkrb5-dev comerr-dev libidn2-0-dev libcurl4-openssl-dev uuid-dev libffi-dev linux-headers-generic)
 elif [ "${OS_ID_LIKE}" == "alpine" ]; then
 	COMPILE_DEPS=(bzip2-dev ncurses-dev readline-dev tk-dev gdbm-dev libpcap-dev xz-dev openssl openssl-dev keyutils-dev krb5-dev libcom_err libidn-dev curl-dev util-linux-dev libffi-dev linux-headers)
 else
