@@ -9,8 +9,8 @@ on:
         required: false
         default: true
   push:
-    branches-ignore:
-      - "update-dependencies-pr"
+    branches:
+      - main
     paths:
       - ".github/workflows/build.yml"
       - "docker/**"
