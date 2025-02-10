@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: wntrblm/nox@2024.10.09
+    - uses: wntrblm/nox@2025.02.09
       with:
         python-versions: "3.12"
     - name: "Install uv"
