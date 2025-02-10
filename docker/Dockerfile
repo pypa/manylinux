@@ -143,6 +143,11 @@ RUN manylinux-entrypoint /build_scripts/build-cpython.sh thomas@python.org https
 FROM build_cpython AS build_cpython313_nogil
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.3 nogil
 
+FROM build_cpython AS build_cpython314
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.0b1
+
+FROM build_cpython AS build_cpython314_nogil
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.0b1 nogil
 
 FROM runtime_base
 COPY --from=build_tcl_tk /manylinux-rootfs /
@@ -157,6 +162,8 @@ RUN --mount=type=bind,target=/build_cpython38,from=build_cpython38 \
     --mount=type=bind,target=/build_cpython312,from=build_cpython312 \
     --mount=type=bind,target=/build_cpython313,from=build_cpython313 \
     --mount=type=bind,target=/build_cpython313_nogil,from=build_cpython313_nogil \
+    --mount=type=bind,target=/build_cpython314,from=build_cpython314 \
+    --mount=type=bind,target=/build_cpython314_nogil,from=build_cpython314_nogil \
     mkdir -p /opt/_internal && \
     cp -rf /build_cpython*/opt/_internal/* /opt/_internal/ && \
     manylinux-entrypoint /opt/_internal/build_scripts/finalize.sh \
