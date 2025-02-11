@@ -12,7 +12,9 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source "${MY_DIR}/build_utils.sh"
 
 
-CPYTHON_VERSION=$1
+CERT_IDENTITY=$1
+CERT_OIDC_ISSUER=$2
+CPYTHON_VERSION=$3
 CPYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 
 
@@ -26,9 +28,9 @@ function pyver_dist_dir {
 
 CPYTHON_DIST_DIR=$(pyver_dist_dir "${CPYTHON_VERSION}")
 fetch_source "Python-${CPYTHON_VERSION}.tar.xz" "${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}"
-fetch_source "Python-${CPYTHON_VERSION}.tar.xz.asc" "${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}"
-gpg --import "${MY_DIR}/cpython-pubkeys.txt"
-gpg --verify "Python-${CPYTHON_VERSION}.tar.xz.asc"
+fetch_source "Python-${CPYTHON_VERSION}.tar.xz.sigstore" "${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}"
+cosign  verify-blob "Python-${CPYTHON_VERSION}.tar.xz" --bundle "Python-${CPYTHON_VERSION}.tar.xz.sigstore" --certificate-identity="${CERT_IDENTITY}" --certificate-oidc-issuer="${CERT_OIDC_ISSUER}"
+
 tar -xJf "Python-${CPYTHON_VERSION}.tar.xz"
 pushd "Python-${CPYTHON_VERSION}"
 PREFIX="/opt/_internal/cpython-${CPYTHON_VERSION}"
@@ -36,16 +38,11 @@ mkdir -p "${PREFIX}/lib"
 CFLAGS_EXTRA=""
 CONFIGURE_ARGS=(--disable-shared --with-ensurepip=no)
 
-if [ "${2:-}" == "nogil" ]; then
+if [ "${4:-}" == "nogil" ]; then
 	PREFIX="${PREFIX}-nogil"
 	CONFIGURE_ARGS+=(--disable-gil)
 fi
 
-if [ "${CPYTHON_VERSION}" == "3.6.15" ]; then
-	# https://github.com/python/cpython/issues/89863
-	# gcc-12+ uses these 2 flags in -O2 but they were only enabled in -O3 with gcc-11
-	CFLAGS_EXTRA="${CFLAGS_EXTRA} -fno-tree-loop-vectorize -fno-tree-slp-vectorize"
-fi
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] ; then
 	# Python 3.11+
 	export TCLTK_LIBS="-ltk8.6 -ltcl8.6"
@@ -60,7 +57,7 @@ fi
 SQLITE_PREFIX=$(find /opt/_internal -maxdepth 1 -name 'sqlite*')
 if [ "${SQLITE_PREFIX}" != "" ]; then
 	case "${CPYTHON_VERSION}" in
-		3.6.*|3.7.*|3.8.*|3.9.*|3.10.*) sed -i "s|/usr/local/include/sqlite3|/opt/_internal/sqlite3/include|g ; s|sqlite_extra_link_args = ()|sqlite_extra_link_args = ('-Wl,--enable-new-dtags,-rpath=/opt/_internal/sqlite3/lib',)|g" setup.py;;
+		3.8.*|3.9.*|3.10.*) sed -i "s|/usr/local/include/sqlite3|/opt/_internal/sqlite3/include|g ; s|sqlite_extra_link_args = ()|sqlite_extra_link_args = ('-Wl,--enable-new-dtags,-rpath=/opt/_internal/sqlite3/lib',)|g" setup.py;;
 		*) ;;
 	esac
 fi
@@ -89,7 +86,7 @@ fi
 make > /dev/null
 make install > /dev/null
 popd
-rm -rf "Python-${CPYTHON_VERSION}" "Python-${CPYTHON_VERSION}.tgz" "Python-${CPYTHON_VERSION}.tgz.asc"
+rm -rf "Python-${CPYTHON_VERSION}" "Python-${CPYTHON_VERSION}.tar.xz" "Python-${CPYTHON_VERSION}.tar.xz.sigstore"
 
 if [ "${OPENSSL_PREFIX}" != "" ]; then
 	rm -rf "${OPENSSL_PREFIX:?}/bin" "${OPENSSL_PREFIX}/include" "${OPENSSL_PREFIX}/lib/pkgconfig" "${OPENSSL_PREFIX}/lib/*.so"
