@@ -12,7 +12,9 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source "${MY_DIR}/build_utils.sh"
 
 
-CPYTHON_VERSION=$1
+CERT_IDENTITY=$1
+CERT_OIDC_ISSUER=$2
+CPYTHON_VERSION=$3
 CPYTHON_DOWNLOAD_URL=https://www.python.org/ftp/python
 
 
@@ -26,9 +28,15 @@ function pyver_dist_dir {
 
 CPYTHON_DIST_DIR=$(pyver_dist_dir "${CPYTHON_VERSION}")
 fetch_source "Python-${CPYTHON_VERSION}.tar.xz" "${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}"
-fetch_source "Python-${CPYTHON_VERSION}.tar.xz.asc" "${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}"
-gpg --import "${MY_DIR}/cpython-pubkeys.txt"
-gpg --verify "Python-${CPYTHON_VERSION}.tar.xz.asc"
+if [ "${CERT_IDENTITY}" == "" ]; then
+	fetch_source "Python-${CPYTHON_VERSION}.tar.xz.asc" "${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}"
+	gpg --import "${MY_DIR}/cpython-pubkeys.txt"
+	gpg --verify "Python-${CPYTHON_VERSION}.tar.xz.asc"
+else
+	fetch_source "Python-${CPYTHON_VERSION}.tar.xz.sigstore" "${CPYTHON_DOWNLOAD_URL}/${CPYTHON_DIST_DIR}"
+	cosign  verify-blob "Python-${CPYTHON_VERSION}.tar.xz" --bundle "Python-${CPYTHON_VERSION}.tar.xz.sigstore" --certificate-identity="${CERT_IDENTITY}" --certificate-oidc-issuer="${CERT_OIDC_ISSUER}"
+fi
+
 tar -xJf "Python-${CPYTHON_VERSION}.tar.xz"
 pushd "Python-${CPYTHON_VERSION}"
 PREFIX="/opt/_internal/cpython-${CPYTHON_VERSION}"
@@ -36,7 +44,7 @@ mkdir -p "${PREFIX}/lib"
 CFLAGS_EXTRA=""
 CONFIGURE_ARGS=(--disable-shared --with-ensurepip=no)
 
-if [ "${2:-}" == "nogil" ]; then
+if [ "${4:-}" == "nogil" ]; then
 	PREFIX="${PREFIX}-nogil"
 	CONFIGURE_ARGS+=(--disable-gil)
 fi
@@ -89,7 +97,7 @@ fi
 make > /dev/null
 make install > /dev/null
 popd
-rm -rf "Python-${CPYTHON_VERSION}" "Python-${CPYTHON_VERSION}.tgz" "Python-${CPYTHON_VERSION}.tgz.asc"
+rm -rf "Python-${CPYTHON_VERSION}" "Python-${CPYTHON_VERSION}.tar.xz" "Python-${CPYTHON_VERSION}.tar.xz.sigstore"  "Python-${CPYTHON_VERSION}.tar.xz.asc"
 
 if [ "${OPENSSL_PREFIX}" != "" ]; then
 	rm -rf "${OPENSSL_PREFIX:?}/bin" "${OPENSSL_PREFIX}/include" "${OPENSSL_PREFIX}/lib/pkgconfig" "${OPENSSL_PREFIX}/lib/*.so"

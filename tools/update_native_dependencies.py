@@ -36,7 +36,7 @@ def _update_cpython(dry_run):
         match = re_.match(lines[i])
         if match is None:
             continue
-        version = lines[i].strip().split()[3]
+        version = lines[i].strip().split()[5]
         current_version = Version(version)
         latest_version = latest(
             "python/cpython",
