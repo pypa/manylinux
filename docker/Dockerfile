@@ -109,28 +109,18 @@ RUN export MPDECIMAL_ROOT=mpdecimal-4.0.0 && \
 
 FROM --platform=${BUILDPLATFORM} ghcr.io/sigstore/cosign/cosign:v2.4.2 AS cosign-bin
 
-FROM build_base AS build_cpython_system_ssl
+FROM build_base AS build_cpython
 COPY --from=build_tcl_tk /manylinux-buildfs /
 COPY --from=build_mpdecimal /manylinux-buildfs /
 COPY --from=build_sqlite3 /manylinux-buildfs /
-COPY build_scripts/build-cpython.sh /build_scripts/
 RUN if command -v apk >/dev/null 2>&1; then ldconfig /; else ldconfig; fi
-COPY --from=cosign-bin /ko-app/cosign /usr/local/bin/cosign
-
-FROM build_cpython_system_ssl AS build_cpython
 COPY build_scripts/build-openssl.sh /build_scripts/
 RUN export OPENSSL_ROOT=openssl-3.0.16 && \
     export OPENSSL_HASH=57e03c50feab5d31b152af2b764f10379aecd8ee92f16c985983ce4a99f7ef86 && \
     export OPENSSL_DOWNLOAD_URL=https://github.com/openssl/openssl/releases/download/${OPENSSL_ROOT} && \
     manylinux-entrypoint /build_scripts/build-openssl.sh
-
-
-FROM build_cpython_system_ssl AS build_cpython36
-COPY build_scripts/cpython-pubkeys.txt /build_scripts/cpython-pubkeys.txt
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh "" "" 3.6.15
-
-FROM build_cpython_system_ssl AS build_cpython37
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh nad@python.org https://github.com/login/oauth 3.7.17
+COPY --from=cosign-bin /ko-app/cosign /usr/local/bin/cosign
+COPY build_scripts/build-cpython.sh /build_scripts/
 
 FROM build_cpython AS build_cpython38
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh lukasz@langa.pl https://github.com/login/oauth 3.8.20
@@ -160,9 +150,7 @@ COPY --from=build_mpdecimal /manylinux-rootfs /
 COPY --from=build_sqlite3 /manylinux-rootfs /
 COPY --from=build_git /manylinux-rootfs /
 COPY build_scripts /opt/_internal/build_scripts/
-RUN --mount=type=bind,target=/build_cpython36,from=build_cpython36 \
-    --mount=type=bind,target=/build_cpython37,from=build_cpython37 \
-    --mount=type=bind,target=/build_cpython38,from=build_cpython38 \
+RUN --mount=type=bind,target=/build_cpython38,from=build_cpython38 \
     --mount=type=bind,target=/build_cpython39,from=build_cpython39 \
     --mount=type=bind,target=/build_cpython310,from=build_cpython310 \
     --mount=type=bind,target=/build_cpython311,from=build_cpython311 \
