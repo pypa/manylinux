@@ -97,7 +97,7 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	fixup-mirrors
 	yum -y install yum-utils curl
 	yum-config-manager --enable extras
-	TOOLCHAIN_DEPS=(devtoolset-10-binutils devtoolset-10-gcc devtoolset-10-gcc-c++ devtoolset-10-gcc-gfortran)
+	TOOLCHAIN_DEPS=(devtoolset-10-binutils devtoolset-10-gcc devtoolset-10-gcc-c++ devtoolset-10-gcc-gfortran devtoolset-10-libatomic-devel)
 	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
 		# Software collection (for devtoolset-10)
 		yum -y install centos-release-scl-rh
@@ -125,15 +125,15 @@ elif [ "${OS_ID_LIKE}" == "rhel" ]; then
 	else
 		dnf config-manager --set-enabled crb
 	fi
-	TOOLCHAIN_DEPS=(gcc-toolset-14-binutils gcc-toolset-14-gcc gcc-toolset-14-gcc-c++ gcc-toolset-14-gcc-gfortran)
+	TOOLCHAIN_DEPS=(gcc-toolset-14-binutils gcc-toolset-14-gcc gcc-toolset-14-gcc-c++ gcc-toolset-14-gcc-gfortran gcc-toolset-14-libatomic-devel)
 	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
 		TOOLCHAIN_DEPS+=(yasm)
 	fi
 elif [ "${OS_ID_LIKE}" == "debian" ]; then
-	TOOLCHAIN_DEPS+=(binutils gcc g++ gfortran)
+	TOOLCHAIN_DEPS+=(binutils gcc g++ gfortran libatomic1)
 	BASE_TOOLS+=(gpg gpg-agent hardlink hostname locales xz-utils)
 elif [ "${OS_ID_LIKE}" == "alpine" ]; then
-	TOOLCHAIN_DEPS=(binutils gcc g++ gfortran)
+	TOOLCHAIN_DEPS=(binutils gcc g++ gfortran libatomic)
 	BASE_TOOLS+=(gnupg util-linux shadow tar)
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
