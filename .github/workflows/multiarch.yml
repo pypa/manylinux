@@ -1,0 +1,25 @@
+name: Deploy multi-arch images
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 5 * * *"  # every day, at 5:30
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy multi-arch images
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ORAS
+        run: sudo snap install oras --classic
+      - name: Deploy
+        if: github.repository == 'pypa/manylinux'
+        run: ./deploy_multiarch.sh
+        env:
+          QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
+          QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
