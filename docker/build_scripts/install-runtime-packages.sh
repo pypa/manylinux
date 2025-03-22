@@ -36,7 +36,7 @@ source "${MY_DIR}/build_utils.sh"
 if [ "${OS_ID_LIKE}" == "rhel" ]; then
 	MANYLINUX_DEPS=(glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel mesa-libGL-devel libICE-devel libSM-devel zlib-devel expat-devel)
 elif [ "${OS_ID_LIKE}" == "debian" ]; then
-  MANYLINUX_DEPS=(libc6-dev libglib2.0-dev libx11-dev libxext-dev libxrender-dev libgl1-mesa-dev libice-dev libsm-dev zlib1g-dev libexpat1-dev libssl-dev)
+  MANYLINUX_DEPS=(libc6-dev libglib2.0-dev libx11-dev libxext-dev libxrender-dev libgl1-mesa-dev libice-dev libsm-dev zlib1g-dev libexpat1-dev)
 elif [ "${OS_ID_LIKE}" == "alpine" ]; then
 	MANYLINUX_DEPS=(musl-dev libstdc++ glib-dev libx11-dev libxext-dev libxrender-dev mesa-dev libice-dev libsm-dev zlib-dev expat-dev)
 else
