@@ -172,5 +172,19 @@ if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
 	fi
 fi
 
+# https://github.com/pypa/manylinux/issues/1760
+g++ -o /tmp/repro -x c++ -D_GLIBCXX_ASSERTIONS -fPIC -Wl,--as-needed - << EOF
+#include <array>
+#include <cstdio>
+
+int main(int argc, char* argv[])
+{
+  std::array<int, 3> a = {1, 2, 3};
+  printf("repro %d\n", a[0]);
+  return 0;
+}
+EOF
+/tmp/repro
+
 # final report
 echo "run_tests successful!"

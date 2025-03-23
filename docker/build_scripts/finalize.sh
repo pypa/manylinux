@@ -103,3 +103,9 @@ LC_ALL=C "${MY_DIR}/update-system-packages.sh"
 
 # wrap compilers (see https://github.com/pypa/manylinux/issues/1725)
 "${MY_DIR}/install-gcc-wrapper.sh"
+
+# patch libstdc++.so  (see https://github.com/pypa/manylinux/issues/1760)
+if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+	LIBSTDCXX=$(find "${DEVTOOLSET_ROOTPATH}" -name 'libstdc++.so')
+	sed -i 's/INPUT\s*(\s*\([^ ]\+\)\s*\([^ ]\+\)\s*)/INPUT ( \1 \2 \1 )/g' "${LIBSTDCXX}"
+fi
