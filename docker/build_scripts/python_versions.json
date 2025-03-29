@@ -1,14 +1,14 @@
 {
-  "graalpy311-graalpy241_311_native": {
+  "graalpy311-graalpy242_311_native": {
     "x86_64": {
-      "version": "24.1.2",
-      "download_url": "https://github.com/oracle/graalpython/releases/download/graal-24.1.2/graalpy-24.1.2-linux-amd64.tar.gz",
-      "sha256": "859292dddb7deb47280e445afa61aa58326900e15fbf0d3fa8044f1a1ce23594"
+      "version": "24.2.0",
+      "download_url": "https://github.com/oracle/graalpython/releases/download/graal-24.2.0/graalpy-24.2.0-linux-amd64.tar.gz",
+      "sha256": "06381ebe89a242bbb66afdc7dc35d21ae537f7eb130f16db1f0e94c2a65249ba"
     },
     "aarch64": {
-      "version": "24.1.2",
-      "download_url": "https://github.com/oracle/graalpython/releases/download/graal-24.1.2/graalpy-24.1.2-linux-aarch64.tar.gz",
-      "sha256": "5ad46ba7ef58f2b3871cb99aa244ef9bf6e6e4206770e027603e3c323ba3e67b"
+      "version": "24.2.0",
+      "download_url": "https://github.com/oracle/graalpython/releases/download/graal-24.2.0/graalpy-24.2.0-linux-aarch64.tar.gz",
+      "sha256": "a80f4fe8c4b2ad53af6e5090bab462c7d0797b9b281e35bfc8284b703610c5cf"
     }
   },
   "pp37-pypy37_pp73": {
