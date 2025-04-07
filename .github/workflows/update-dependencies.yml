@@ -28,7 +28,7 @@ jobs:
         git config --global user.email "89297709+manylinux-bot[bot]@users.noreply.github.com"
     # we use this step to grab a Github App auth token, so that lastversion can query GitHub API
     # without rate-limit and PRs get run by GHA.
-    - uses: actions/create-github-app-token@v1
+    - uses: actions/create-github-app-token@v2
       id: generate-token
       if: github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
       with:
