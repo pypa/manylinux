@@ -268,12 +268,12 @@ Image content
 
 All supported images currently contain:
 
-- CPython 3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.13t and PyPy 3.7, 3.8, 3.9, 3.10 installed in
+- CPython 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.13t and PyPy 3.8, 3.9, 3.10 installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
-  e.g. ``/opt/python/cp37-cp37m`` contains a CPython 3.7 build, and
+  e.g. ``/opt/python/cp313-cp313`` contains a CPython 3.13 build, and
   can be used to produce wheels named like
-  ``<pkg>-<version>-cp37-cp37m-<arch>.whl``.
+  ``<pkg>-<version>-cp313-cp313-<arch>.whl``.
 
 - Development packages for all the libraries that PEP 571/599 list. One should not assume the presence of any other development package.
 

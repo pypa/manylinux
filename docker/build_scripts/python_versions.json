@@ -11,23 +11,6 @@
       "sha256": "a80f4fe8c4b2ad53af6e5090bab462c7d0797b9b281e35bfc8284b703610c5cf"
     }
   },
-  "pp37-pypy37_pp73": {
-    "x86_64": {
-      "version": "7.3.9",
-      "download_url": "https://downloads.python.org/pypy/pypy3.7-v7.3.9-linux64.tar.bz2",
-      "sha256": "c58195124d807ecc527499ee19bc511ed753f4f2e418203ca51bc7e3b124d5d1"
-    },
-    "aarch64": {
-      "version": "7.3.9",
-      "download_url": "https://downloads.python.org/pypy/pypy3.7-v7.3.9-aarch64.tar.bz2",
-      "sha256": "dfc62f2c453fb851d10a1879c6e75c31ffebbf2a44d181bb06fcac4750d023fc"
-    },
-    "i686": {
-      "version": "7.3.9",
-      "download_url": "https://downloads.python.org/pypy/pypy3.7-v7.3.9-linux32.tar.bz2",
-      "sha256": "3398cece0167b81baa219c9cd54a549443d8c0a6b553ec8ec13236281e0d86cd"
-    }
-  },
   "pp38-pypy38_pp73": {
     "x86_64": {
       "version": "7.3.11",
