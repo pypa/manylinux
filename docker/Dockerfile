@@ -148,10 +148,10 @@ FROM build_cpython AS build_cpython312
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.12.10
 
 FROM build_cpython AS build_cpython313
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.2
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.3
 
 FROM build_cpython AS build_cpython313_nogil
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.2 nogil
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.3 nogil
 
 
 FROM runtime_base
