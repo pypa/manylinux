@@ -38,8 +38,6 @@ jobs:
       env: POLICY="manylinux_2_34" PLATFORM="s390x"
     - arch: ppc64le
       env: POLICY="manylinux_2_34" PLATFORM="ppc64le"
-    - arch: s390x
-      env: POLICY="musllinux_1_2" PLATFORM="s390x"
     - arch: ppc64le
       env: POLICY="musllinux_1_2" PLATFORM="ppc64le"
 
@@ -53,10 +51,11 @@ install:
   - docker buildx inspect --bootstrap --builder builder-manylinux 2>&1 | tee /dev/null
 
 script: |
-  BUILD_STATUS=success
   (while true; do echo "travis_wait"; docker stats --no-stream; free; df -h; sleep 30; done) &
   WAIT_PID=$!
-  COMMIT_SHA=${TRAVIS_COMMIT} ./build.sh || BUILD_STATUS=failed
+  disown
+  BUILD_STATUS=success
+  COMMIT_SHA=${TRAVIS_COMMIT} ./build.sh 2>&1 || BUILD_STATUS=failed
   kill -9 ${WAIT_PID}
   if [ "${BUILD_STATUS}" != "success" ]; then
     exit 1
