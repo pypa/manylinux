@@ -50,7 +50,6 @@ jobs:
               ("i686", "ubuntu-24.04", ("manylinux2014", "manylinux_2_28", "manylinux_2_34", "musllinux_1_2")),
               ("armv7l", "ubuntu-24.04-arm", ("manylinux_2_31", "musllinux_1_2")),
               ("riscv64", "ubuntu-24.04", ("manylinux_2_39", "musllinux_1_2")),
-              ("s390x", "ubuntu-24.04", ("musllinux_1_2",)),
           ]
           expanded = [{"policy": policy, "platform": platform, "runner": runner} for platform, runner, policies in reduced for policy in policies]
           print(json.dumps(expanded, indent=2))
@@ -80,7 +79,7 @@ jobs:
           fetch-depth: 50
 
       - name: Set up QEMU
-        if: matrix.platform == 's390x' || matrix.platform == 'riscv64'
+        if: matrix.platform == 'riscv64'
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
