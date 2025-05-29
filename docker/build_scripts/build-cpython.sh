@@ -36,6 +36,7 @@ pushd "Python-${CPYTHON_VERSION}"
 PREFIX="/opt/_internal/cpython-${CPYTHON_VERSION}"
 mkdir -p "${PREFIX}/lib"
 CFLAGS_EXTRA=""
+LDFLAGS_EXTRA=""
 CONFIGURE_ARGS=(--disable-shared --with-ensurepip=no)
 
 if [ "${4:-}" == "nogil" ]; then
@@ -74,11 +75,17 @@ if [ "${AUDITWHEEL_ARCH}" == "x86_64" ] && echo | gcc -S -x c -v - 2>&1 | grep '
 	export EXTRA_CFLAGS="-mtune=generic -march=x86-64"
 fi
 
+if [ "${BASE_POLICY}" == "musllinux" ]; then
+	STACK_SIZE=0x200000
+	CFLAGS_EXTRA="${CFLAGS_EXTRA} -DTHREAD_STACK_SIZE=${STACK_SIZE}"
+	LDFLAGS_EXTRA="${LDFLAGS_EXTRA} -Wl,-z,stack-size=${STACK_SIZE}"
+fi
+
 # configure with hardening options only for the interpreter & stdlib C extensions
 # do not change the default for user built extension (yet?)
 ./configure \
 	CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS} ${CFLAGS_EXTRA}" \
-	LDFLAGS_NODIST="${MANYLINUX_LDFLAGS}" \
+	LDFLAGS_NODIST="${MANYLINUX_LDFLAGS} ${LDFLAGS_EXTRA}" \
 	"--prefix=${PREFIX}" "${CONFIGURE_ARGS[@]}" > /dev/null
 make > /dev/null
 make install > /dev/null
