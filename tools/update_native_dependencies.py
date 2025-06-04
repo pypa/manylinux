@@ -70,7 +70,7 @@ def _update_with_root(tool, dry_run):
         "curl": "curl/curl",
     }
     major = {
-        "openssl": "3.0",
+        "openssl": "3.5",
     }
     only = {
         "autoconf": r"~v?[0-9]+\.[0-9]+(\.[0-9]+)?$",
