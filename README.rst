@@ -230,7 +230,7 @@ Toolchain: GCC 4.8
 - i686 image: ``quay.io/pypa/manylinux1_i686``
 
 
-musllinux_1_2 (Alpine Linux 3.21 based, 3.13+ compatible)
+musllinux_1_2 (Alpine Linux 3.22 based, 3.13+ compatible)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Toolchain: GCC 14
@@ -268,7 +268,7 @@ Image content
 
 All supported images currently contain:
 
-- CPython 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.13t and PyPy 3.8, 3.9, 3.10 installed in
+- CPython 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.13t, 3.14, 3.14t and PyPy 3.10, 3.11 installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
   e.g. ``/opt/python/cp313-cp313`` contains a CPython 3.13 build, and

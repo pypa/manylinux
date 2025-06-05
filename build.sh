@@ -54,7 +54,7 @@ elif [ "${POLICY}" == "manylinux_2_35" ]; then
 	PREPEND_PATH=
 	LD_LIBRARY_PATH_ARG=
 elif [ "${POLICY}" == "musllinux_1_2" ]; then
-	BASEIMAGE="alpine:3.21"
+	BASEIMAGE="alpine:3.22"
 	DEVTOOLSET_ROOTPATH=
 	PREPEND_PATH=
 	LD_LIBRARY_PATH_ARG=
