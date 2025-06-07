@@ -23,10 +23,15 @@ if automake --version > /dev/null 2>&1; then
 	INSTALLED=$( (automake --version | head -1 || test $? -eq 141) | awk '{ print $NF }')
 	SMALLEST=$(echo -e "${INSTALLED}\n${AUTOMAKE_VERSION}" | sort -t. -k 1,1n -k 2,2n -k 3,3n -k 4,4n | head -1 || test $? -eq 141)
 	if [ "${SMALLEST}" == "${AUTOMAKE_VERSION}" ]; then
+		# add local aclocal files to system automake
+		echo "/usr/local/share/aclocal" >> "$(aclocal --print-ac-dir)/dirlist"
 		echo "skipping installation of automake ${AUTOMAKE_VERSION}, system provides automake ${INSTALLED}"
 		exit 0
 	fi
 fi
+
+# keep system aclocal files with local automake
+aclocal --print-ac-dir >> "/usr/local/share/aclocal/dirlist"
 
 fetch_source "${AUTOMAKE_ROOT}.tar.gz" "${AUTOMAKE_DOWNLOAD_URL}"
 check_sha256sum "${AUTOMAKE_ROOT}.tar.gz" "${AUTOMAKE_HASH}"
