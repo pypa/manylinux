@@ -30,8 +30,7 @@ if automake --version > /dev/null 2>&1; then
 	fi
 fi
 
-# keep system aclocal files with local automake
-aclocal --print-ac-dir >> "/usr/local/share/aclocal/dirlist"
+SYSTEM_ACLOCAL="$(which aclocal)"
 
 fetch_source "${AUTOMAKE_ROOT}.tar.gz" "${AUTOMAKE_DOWNLOAD_URL}"
 check_sha256sum "${AUTOMAKE_ROOT}.tar.gz" "${AUTOMAKE_HASH}"
@@ -49,6 +48,9 @@ cp -rlf /manylinux-rootfs/* /
 
 # Remove temporary rootfs
 rm -rf /manylinux-rootfs
+
+# keep system aclocal files with local automake
+"${SYSTEM_ACLOCAL}" --print-ac-dir >> "/usr/local/share/aclocal/dirlist"
 
 hash -r
 automake --version
