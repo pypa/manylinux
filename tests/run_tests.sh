@@ -186,5 +186,12 @@ int main(int argc, char* argv[])
 EOF
 /tmp/repro
 
+# check autotools
+pushd "$(mktemp -d)"
+cp -rf "${MY_DIR}/autotools"/* ./
+autoreconf -ifv
+./configure
+popd
+
 # final report
 echo "run_tests successful!"
