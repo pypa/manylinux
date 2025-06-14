@@ -67,11 +67,14 @@ export DEVTOOLSET_ROOTPATH
 export PREPEND_PATH
 export LD_LIBRARY_PATH_ARG
 
+MANYLINUX_IMAGE="quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA}"
+
 BUILD_ARGS_COMMON=(
 	"--platform=linux/${GOARCH}"
+	"--pull=true"
 	--build-arg POLICY --build-arg PLATFORM --build-arg BASEIMAGE
 	--build-arg DEVTOOLSET_ROOTPATH --build-arg PREPEND_PATH --build-arg LD_LIBRARY_PATH_ARG
-	--rm -t "quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA}"
+	--rm -t "${MANYLINUX_IMAGE}"
 	-f docker/Dockerfile docker/
 )
 
@@ -85,9 +88,11 @@ if [ "${CI:-}" == "true" ]; then
 fi
 
 USE_LOCAL_CACHE=0
+TEST_COMMAND="docker"
 if [ "${MANYLINUX_BUILD_FRONTEND}" == "docker" ]; then
 	docker build "${BUILD_ARGS_COMMON[@]}"
 elif [ "${MANYLINUX_BUILD_FRONTEND}" == "podman" ]; then
+	TEST_COMMAND="podman"
 	podman build "${BUILD_ARGS_COMMON[@]}"
 elif [ "${MANYLINUX_BUILD_FRONTEND}" == "docker-buildx" ]; then
 	USE_LOCAL_CACHE=1
@@ -101,7 +106,7 @@ else
 	exit 1
 fi
 
-docker run --rm -v "$(pwd)/tests:/tests:ro" "quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA}" /tests/run_tests.sh
+${TEST_COMMAND} run --rm "${MANYLINUX_IMAGE}" /opt/_internal/tests/run_tests.sh
 
 if [ ${USE_LOCAL_CACHE} -ne 0 ]; then
 	if [ -d "$(pwd)/.buildx-cache-${POLICY}_${PLATFORM}" ]; then
