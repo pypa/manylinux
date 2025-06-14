@@ -66,29 +66,44 @@ export BASEIMAGE
 export DEVTOOLSET_ROOTPATH
 export PREPEND_PATH
 export LD_LIBRARY_PATH_ARG
+export MANYLINUX_IMAGE="quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA}"
 
 BUILD_ARGS_COMMON=(
 	"--platform=linux/${GOARCH}"
+	"--pull=true"
 	--build-arg POLICY --build-arg PLATFORM --build-arg BASEIMAGE
 	--build-arg DEVTOOLSET_ROOTPATH --build-arg PREPEND_PATH --build-arg LD_LIBRARY_PATH_ARG
-	--rm -t "quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA}"
+	--rm -t "${MANYLINUX_IMAGE}"
 	-f docker/Dockerfile docker/
+)
+TEST_ARGS_COMMON=(
+	"--platform=linux/${GOARCH}"
+	"--pull=false"
+	--build-arg MANYLINUX_IMAGE
+	--rm -t "${MANYLINUX_IMAGE}-tests"
+	-f tests/Dockerfile tests/
 )
 
 if [ "${CI:-}" == "true" ]; then
 	# Force plain output on CI
 	BUILD_ARGS_COMMON=(--progress plain "${BUILD_ARGS_COMMON[@]}")
+	TEST_ARGS_COMMON=(--progress plain "${TEST_ARGS_COMMON[@]}")
 	# Workaround issue on ppc64le
 	if [ "${PLATFORM}" == "ppc64le" ] && [ "${MANYLINUX_BUILD_FRONTEND}" == "docker" ]; then
 		BUILD_ARGS_COMMON=(--network host "${BUILD_ARGS_COMMON[@]}")
+		TEST_ARGS_COMMON=(--network host "${TEST_ARGS_COMMON[@]}")
 	fi
 fi
 
 USE_LOCAL_CACHE=0
+TEST_COMMAND="docker"
 if [ "${MANYLINUX_BUILD_FRONTEND}" == "docker" ]; then
 	docker build "${BUILD_ARGS_COMMON[@]}"
+	docker build "${TEST_ARGS_COMMON[@]}"
 elif [ "${MANYLINUX_BUILD_FRONTEND}" == "podman" ]; then
+	TEST_COMMAND="podman"
 	podman build "${BUILD_ARGS_COMMON[@]}"
+	podman build "${TEST_ARGS_COMMON[@]}"
 elif [ "${MANYLINUX_BUILD_FRONTEND}" == "docker-buildx" ]; then
 	USE_LOCAL_CACHE=1
 	docker buildx build \
@@ -96,12 +111,13 @@ elif [ "${MANYLINUX_BUILD_FRONTEND}" == "docker-buildx" ]; then
 		"--cache-from=type=local,src=$(pwd)/.buildx-cache-${POLICY}_${PLATFORM}" \
 		"--cache-to=type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM},mode=max" \
 		"${BUILD_ARGS_COMMON[@]}"
+	docker buildx build --load "${TEST_ARGS_COMMON[@]}"
 else
 	echo "Unsupported build frontend: '${MANYLINUX_BUILD_FRONTEND}'"
 	exit 1
 fi
 
-docker run --rm -v "$(pwd)/tests:/tests:ro" "quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA}" /tests/run_tests.sh
+${TEST_COMMAND} run --rm "${MANYLINUX_IMAGE}-tests" /tests/run_tests.sh
 
 if [ ${USE_LOCAL_CACHE} -ne 0 ]; then
 	if [ -d "$(pwd)/.buildx-cache-${POLICY}_${PLATFORM}" ]; then
