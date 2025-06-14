@@ -22,13 +22,11 @@ for IMAGE in "${IMAGES[@]}"; do
 		TAGS_TO_PUSH+=("$LINE");
 	done < <(oras repo tags --last "${LAST_TAG}" "quay.io/pypa/${REF_IMAGE}" | grep -v "^20[0-9][0-9]-" | grep -v "latest")
 	if [ ${#TAGS_TO_PUSH[@]} -eq 0 ]; then
-		echo "${IMAGE}: up-to-date"
+		echo "no new tags to push"
 		echo "::endgroup::"
 		continue
 	fi
-
-	echo "${IMAGE}: adding tags ${TAGS_TO_PUSH[*]}"
-
+	echo "pushing tags ${TAGS_TO_PUSH[*]}"
 	# no nested groups in GHA
 	echo "::endgroup::"
 
