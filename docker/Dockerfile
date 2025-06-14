@@ -169,6 +169,8 @@ RUN --mount=type=bind,target=/build_cpython38,from=build_cpython38 \
     manylinux-entrypoint /opt/_internal/build_scripts/finalize.sh \
       pp310-pypy310_pp73 pp311-pypy311_pp73
 
+COPY tests /opt/_internal/tests/
+
 ENV SSL_CERT_FILE=/opt/_internal/certs.pem
 
 CMD ["/bin/bash"]
