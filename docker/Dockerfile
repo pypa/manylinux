@@ -107,7 +107,7 @@ RUN export MPDECIMAL_ROOT=mpdecimal-4.0.0 && \
     manylinux-entrypoint /build_scripts/build-mpdecimal.sh
 
 
-FROM --platform=${BUILDPLATFORM} ghcr.io/sigstore/cosign/cosign:v2.4.2 AS cosign-bin
+FROM --platform=${BUILDPLATFORM} ghcr.io/sigstore/cosign/cosign:v2.5.0 AS cosign-bin
 
 FROM build_base AS build_cpython
 COPY --from=build_tcl_tk /manylinux-buildfs /
