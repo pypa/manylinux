@@ -34,7 +34,7 @@ The manylinux project supports:
 
 - ``manylinux2014`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
 
-- ``manylinux_2_28`` images for ``x86_64``, ``aarch64``, ``ppc64le`` and ``s390x``.
+- ``manylinux_2_28`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
 
 - ``manylinux_2_34`` images for ``x86_64``, ``aarch64``, ``ppc64le`` and ``s390x``.
 
@@ -157,6 +157,7 @@ manylinux_2_28 (AlmaLinux 8 based)
 Toolchain: GCC 14
 
 - x86_64 image: ``quay.io/pypa/manylinux_2_28_x86_64``
+- i686 image: ``quay.io/pypa/manylinux_2_28_i686``
 - aarch64 image: ``quay.io/pypa/manylinux_2_28_aarch64``
 - ppc64le image: ``quay.io/pypa/manylinux_2_28_ppc64le``
 - s390x image: ``quay.io/pypa/manylinux_2_28_s390x``

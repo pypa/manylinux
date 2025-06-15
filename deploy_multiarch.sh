@@ -32,6 +32,7 @@ for IMAGE in "${IMAGES[@]}"; do
 
 	case ${IMAGE} in
 		manylinux_2_31) ARCHS=("armv7l");;
+		manylinux_2_28) ARCHS=("x86_64" "i686" "aarch64" "ppc64le" "s390x");;
 		manylinux2014) ARCHS=("x86_64" "i686" "aarch64" "ppc64le" "s390x");;
 		musllinux_1_2) ARCHS=("x86_64" "i686" "aarch64" "armv7l" "ppc64le" "s390x");;
 		*) ARCHS=("x86_64" "aarch64" "ppc64le" "s390x");;

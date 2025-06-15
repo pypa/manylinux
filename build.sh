@@ -34,7 +34,7 @@ if [ "${POLICY}" == "manylinux2014" ]; then
 		LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst:/usr/local/lib64"
 	fi
 elif [ "${POLICY}" == "manylinux_2_28" ]; then
-	BASEIMAGE="almalinux:8"
+	BASEIMAGE="quay.io/almalinuxorg/almalinux:8"
 	DEVTOOLSET_ROOTPATH="/opt/rh/gcc-toolset-14/root"
 	PREPEND_PATH="${DEVTOOLSET_ROOTPATH}/usr/bin:"
 	LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"

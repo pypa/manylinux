@@ -119,7 +119,11 @@ elif [ "${OS_ID_LIKE}" == "rhel" ]; then
 	BASE_TOOLS+=(glibc-locale-source glibc-langpack-en hardlink hostname libcurl libnsl libxcrypt which)
 	echo "tsflags=nodocs" >> /etc/dnf/dnf.conf
 	dnf -y upgrade
-	dnf -y install dnf-plugins-core epel-release
+	EPEL=epel-release
+	if [ "${AUDITWHEEL_PLAT}" == "manylinux_2_28_i686" ]; then
+		EPEL=
+	fi
+	dnf -y install dnf-plugins-core ${EPEL}
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
 		dnf config-manager --set-enabled powertools
 	else
