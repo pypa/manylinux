@@ -7,12 +7,12 @@ IMAGES=(manylinux2014 manylinux_2_28 manylinux_2_31 manylinux_2_34 musllinux_1_2
 podman login -u "${QUAY_USERNAME}" -p "${QUAY_PASSWORD}" quay.io
 
 for IMAGE in "${IMAGES[@]}"; do
-	echo "::group::${IMAGE}"
-	LAST_TAG="$(oras repo tags --last "2025.02.23-1" "quay.io/pypa/${IMAGE}" | tail -2 | head -1)"
+	echo "::group::${IMAGE} check"
+	LAST_TAG="$(oras repo tags --last "2025.06.08-1" "quay.io/pypa/${IMAGE}" | tail -2 | head -1)"
 	if [ "${LAST_TAG}" == "" ]; then
-		 LAST_TAG=2025.02.23-1
+		 LAST_TAG=2025.06.08-1
 	fi
-	echo "${IMAGE}: last tag is ${LAST_TAG}"
+	echo "last tag is ${LAST_TAG}"
 	case ${IMAGE} in
 		manylinux_2_31) REF_IMAGE=manylinux_2_31_armv7l;;
 		*) REF_IMAGE=${IMAGE}_x86_64;;
@@ -22,12 +22,14 @@ for IMAGE in "${IMAGES[@]}"; do
 		TAGS_TO_PUSH+=("$LINE");
 	done < <(oras repo tags --last "${LAST_TAG}" "quay.io/pypa/${REF_IMAGE}" | grep -v "^20[0-9][0-9]-" | grep -v "latest")
 	if [ ${#TAGS_TO_PUSH[@]} -eq 0 ]; then
-		echo "${IMAGE}: up-to-date"
+		echo "no new tags to push"
 		echo "::endgroup::"
 		continue
 	fi
+	echo "pushing tags ${TAGS_TO_PUSH[*]}"
+	# no nested groups in GHA
+	echo "::endgroup::"
 
-	echo "${IMAGE}: adding tags ${TAGS_TO_PUSH[*]}"
 	case ${IMAGE} in
 		manylinux_2_31) ARCHS=("armv7l");;
 		manylinux2014) ARCHS=("x86_64" "i686" "aarch64" "ppc64le" "s390x");;
@@ -37,7 +39,7 @@ for IMAGE in "${IMAGES[@]}"; do
 
 	LATEST_MANIFEST=
 	for TAG_TO_PUSH in "${TAGS_TO_PUSH[@]}"; do
-		echo "::group::${TAG_TO_PUSH}"
+		echo "::group::${IMAGE}:${TAG_TO_PUSH}"
 		SRC_IMAGES=()
 		for ARCH in "${ARCHS[@]}"; do
 				SRC_IMAGES+=("docker://quay.io/pypa/${IMAGE}_${ARCH}:${TAG_TO_PUSH}")
@@ -54,6 +56,8 @@ for IMAGE in "${IMAGES[@]}"; do
 		fi
 		echo "::endgroup::"
 	done
+
+	echo "::group::${IMAGE}:latest"
 	if [ "${LATEST_MANIFEST}" == "" ]; then
 		echo "::warning ::${IMAGE}: skipping latest due to previous errors"
 	else
