@@ -120,7 +120,7 @@ elif [ "${OS_ID_LIKE}" == "rhel" ]; then
 	echo "tsflags=nodocs" >> /etc/dnf/dnf.conf
 	dnf -y upgrade
 	EPEL=epel-release
-	if [ "${AUDITWHEEL_PLAT}" == "manylinux_2_28_i686" ]; then
+	if [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
 		EPEL=
 	fi
 	dnf -y install dnf-plugins-core ${EPEL}
@@ -163,4 +163,8 @@ else
 	# set the default shell to bash
 	chsh -s /bin/bash root
 	useradd -D -s /bin/bash
+fi
+
+if [ "${OS_ID_LIKE}-${AUDITWHEEL_ARCH}" == "rhel-i686" ] && [ -f /usr/bin/i686-redhat-linux-gnu-pkg-config ] && [ ! -f /usr/bin/i386-redhat-linux-gnu-pkg-config ]; then
+	ln -s i686-redhat-linux-gnu-pkg-config /usr/bin/i386-redhat-linux-gnu-pkg-config
 fi
