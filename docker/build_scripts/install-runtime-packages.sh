@@ -119,7 +119,11 @@ elif [ "${OS_ID_LIKE}" == "rhel" ]; then
 	BASE_TOOLS+=(glibc-locale-source glibc-langpack-en hardlink hostname libcurl libnsl libxcrypt which)
 	echo "tsflags=nodocs" >> /etc/dnf/dnf.conf
 	dnf -y upgrade
-	dnf -y install dnf-plugins-core epel-release
+	EPEL=epel-release
+	if [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
+		EPEL=
+	fi
+	dnf -y install dnf-plugins-core ${EPEL}
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
 		dnf config-manager --set-enabled powertools
 	else
@@ -159,4 +163,8 @@ else
 	# set the default shell to bash
 	chsh -s /bin/bash root
 	useradd -D -s /bin/bash
+fi
+
+if [ "${OS_ID_LIKE}-${AUDITWHEEL_ARCH}" == "rhel-i686" ] && [ -f /usr/bin/i686-redhat-linux-gnu-pkg-config ] && [ ! -f /usr/bin/i386-redhat-linux-gnu-pkg-config ]; then
+	ln -s i686-redhat-linux-gnu-pkg-config /usr/bin/i386-redhat-linux-gnu-pkg-config
 fi
