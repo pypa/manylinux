@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-IMAGES=(manylinux2014 manylinux_2_28 manylinux_2_31 manylinux_2_34 musllinux_1_2)
+IMAGES=(manylinux2014 manylinux_2_28 manylinux_2_31 manylinux_2_34 manylinux_2_35 musllinux_1_2)
 
 podman login -u "${QUAY_USERNAME}" -p "${QUAY_PASSWORD}" quay.io
 
@@ -31,9 +31,10 @@ for IMAGE in "${IMAGES[@]}"; do
 	echo "::endgroup::"
 
 	case ${IMAGE} in
-		manylinux_2_31) ARCHS=("armv7l");;
+		manylinux_2_31) ARCHS=("armv7l" "riscv64");;
+		manylinux_2_35) ARCHS=("armv7l" "riscv64");;
 		manylinux2014) ARCHS=("x86_64" "i686" "aarch64" "ppc64le" "s390x");;
-		musllinux_1_2) ARCHS=("x86_64" "i686" "aarch64" "armv7l" "ppc64le" "s390x");;
+		musllinux_1_2) ARCHS=("x86_64" "i686" "aarch64" "armv7l" "ppc64le" "s390x" "riscv64");;
 		*) ARCHS=("x86_64" "aarch64" "ppc64le" "s390x");;
 	esac
 
