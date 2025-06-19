@@ -11,11 +11,7 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 # shellcheck source-path=SCRIPTDIR
 source "${MY_DIR}/build_utils.sh"
 
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
-	PREFIX=/usr/local
-else
-	PREFIX=/opt/_internal/sqlite3
-fi
+PREFIX=/opt/_internal/sqlite3
 
 # Install a more recent SQLite3
 check_var "${SQLITE_AUTOCONF_ROOT}"
@@ -42,8 +38,12 @@ strip_ /manylinux-rootfs
 mkdir /manylinux-buildfs
 cp -rlf /manylinux-rootfs/* /manylinux-buildfs/
 
-if [ "${PREFIX}" == "/opt/_internal/sqlite3" ]; then
-	# python >= 3.11
-	mkdir -p /manylinux-buildfs/usr/local/lib/pkgconfig/
-	ln -s ${PREFIX}/lib/pkgconfig/sqlite3.pc /manylinux-buildfs/usr/local/lib/pkgconfig/sqlite3.pc
+# python >= 3.11
+mkdir -p /manylinux-buildfs/usr/local/lib/pkgconfig/
+ln -s ${PREFIX}/lib/pkgconfig/sqlite3.pc /manylinux-buildfs/usr/local/lib/pkgconfig/sqlite3.pc
+
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
+	# we still expose our custom libsqlite3 for dev in runtime images
+	mkdir -p /manylinux-rootfs/usr/local/lib/pkgconfig/
+	ln -s ${PREFIX}/lib/pkgconfig/sqlite3.pc /manylinux-rootfs/usr/local/lib/pkgconfig/sqlite3.pc
 fi
