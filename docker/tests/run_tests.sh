@@ -62,7 +62,7 @@ for PYTHON in /opt/python/*/bin/python; do
 	if [ "${IMPLEMENTATION}" == "cpython" ]; then
 		# Make sure sqlite3 module can be loaded properly and is the manylinux version one
 		# c.f. https://github.com/pypa/manylinux/issues/1030
-		$PYTHON -c 'import sqlite3; print(sqlite3.sqlite_version); assert sqlite3.sqlite_version_info[0:2] >= (3, 31)'
+		$PYTHON -c 'import sqlite3; print(sqlite3.sqlite_version); assert sqlite3.sqlite_version_info[0:2] >= (3, 50)'
 		# Make sure tkinter module can be loaded properly
 		$PYTHON -c 'import tkinter; print(tkinter.TkVersion); assert tkinter.TkVersion >= 8.6'
 		# cpython shall be available as python
@@ -128,10 +128,6 @@ pipx run nox --version
 pipx install --pip-args='--no-input' nox
 nox --version
 tar --version | grep "GNU tar"
-# we stopped installing sqlite3 after manylinux_2_28 / musllinux_1_2
-if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
-	sqlite3 --version
-fi
 
 # check libcrypt.so.1 can be loaded by some system packages,
 # as LD_LIBRARY_PATH might not be enough.
@@ -143,6 +139,8 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 fi
 
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
+	# we stopped installing sqlite3 after manylinux_2_28 / musllinux_1_2 & this is becoming an internal detail
+	/opt/_internal/sqlite3/bin/sqlite3 --version
 	# sqlite compilation tests, intended to ensure appropriate headers, pkg_config, etc.
 	# are available for downstream compile against installed tools
 	source_dir="${MY_DIR}/ctest"

@@ -54,13 +54,10 @@ elif [ "${BASE_POLICY}_${AUDITWHEEL_ARCH}" == "musllinux_armv7l" ]; then
 	CONFIGURE_ARGS+=(--build=arm-linux-musleabihf)
 fi
 
-SQLITE_PREFIX=$(find /opt/_internal -maxdepth 1 -name 'sqlite*')
-if [ "${SQLITE_PREFIX}" != "" ]; then
-	case "${CPYTHON_VERSION}" in
-		3.8.*|3.9.*|3.10.*) sed -i "s|/usr/local/include/sqlite3|/opt/_internal/sqlite3/include|g ; s|sqlite_extra_link_args = ()|sqlite_extra_link_args = ('-Wl,--enable-new-dtags,-rpath=/opt/_internal/sqlite3/lib',)|g" setup.py;;
-		*) ;;
-	esac
-fi
+case "${CPYTHON_VERSION}" in
+	3.8.*|3.9.*|3.10.*) sed -i "s|/usr/local/include/sqlite3|/opt/_internal/sqlite3/include|g ; s|sqlite_extra_link_args = ()|sqlite_extra_link_args = ('-Wl,--enable-new-dtags,-rpath=/opt/_internal/sqlite3/lib',)|g" setup.py;;
+	*) ;;
+esac
 
 OPENSSL_PREFIX=$(find /opt/_internal -maxdepth 1 -name 'openssl*')
 if [ "${OPENSSL_PREFIX}" != "" ]; then
