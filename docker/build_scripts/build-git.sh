@@ -17,6 +17,13 @@ fi
 
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	export NO_UNCOMPRESS2=1
+	CSPRNG_METHOD=urandom
+	# workaround build issue when openssl gets included
+	# git provides its own implementation of ctypes which conflicts
+	# with the one in CentOS 7. Just use the one from git.
+	echo "" > /usr/include/ctype.h
+else
+	CSPRNG_METHOD=getrandom
 fi
 
 if [ -d /opt/_internal ]; then
@@ -37,7 +44,7 @@ fetch_source "${GIT_ROOT}.tar.gz" "${GIT_DOWNLOAD_URL}"
 check_sha256sum "${GIT_ROOT}.tar.gz" "${GIT_HASH}"
 tar -xzf "${GIT_ROOT}.tar.gz"
 pushd "${GIT_ROOT}"
-make install prefix=/usr/local NO_GETTEXT=1 NO_TCLTK=1 DESTDIR=/manylinux-rootfs CPPFLAGS="${MANYLINUX_CPPFLAGS}" CFLAGS="${MANYLINUX_CFLAGS}" CXXFLAGS="${MANYLINUX_CXXFLAGS}" LDFLAGS="${MANYLINUX_LDFLAGS}"
+make install prefix=/usr/local NO_GETTEXT=1 NO_TCLTK=1 DESTDIR=/manylinux-rootfs CSPRNG_METHOD=${CSPRNG_METHOD} CPPFLAGS="${MANYLINUX_CPPFLAGS}" CFLAGS="${MANYLINUX_CFLAGS}" CXXFLAGS="${MANYLINUX_CXXFLAGS}" LDFLAGS="${MANYLINUX_LDFLAGS}"
 popd
 rm -rf "${GIT_ROOT}" "${GIT_ROOT}.tar.gz"
 
