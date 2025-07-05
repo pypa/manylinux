@@ -65,6 +65,8 @@ for PYTHON in /opt/python/*/bin/python; do
 		$PYTHON -c 'import sqlite3; print(sqlite3.sqlite_version); assert sqlite3.sqlite_version_info[0:2] >= (3, 50)'
 		# Make sure tkinter module can be loaded properly
 		$PYTHON -c 'import tkinter; print(tkinter.TkVersion); assert tkinter.TkVersion >= 8.6'
+		# check other modules
+		$PYTHON -c 'import dbm.gnu; import dbm.ndbm; import readline; import curses; print(curses.ncurses_version)'
 		# cpython shall be available as python
 		LINK_VERSION=$("python${PYVERS}${PY_GIL}" -VV)
 		REAL_VERSION=$(${PYTHON} -VV)

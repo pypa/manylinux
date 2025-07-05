@@ -46,7 +46,7 @@ fi
 
 # RUNTIME_DEPS: Runtime dependencies. c.f. install-build-packages.sh
 if [ "${OS_ID_LIKE}" == "rhel" ]; then
-	RUNTIME_DEPS=(zlib bzip2 expat ncurses readline gdbm libpcap xz openssl keyutils-libs libkadm5 libcom_err libcurl uuid libffi libdb)
+	RUNTIME_DEPS=(zlib bzip2 expat ncurses readline gdbm libpcap xz openssl keyutils-libs libkadm5 libcom_err libcurl uuid libffi)
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 		RUNTIME_DEPS+=(libidn libXft)
 	elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
@@ -64,7 +64,7 @@ elif [ "${OS_ID_LIKE}" == "debian" ]; then
   	RUNTIME_DEPS+=(libffi8 libssl3)
   fi
 elif [ "${OS_ID_LIKE}" == "alpine" ]; then
-	RUNTIME_DEPS=(zlib bzip2 expat ncurses-libs readline tk gdbm db xz openssl keyutils-libs krb5-libs libcom_err libidn2 libcurl libuuid libffi)
+	RUNTIME_DEPS=(zlib bzip2 expat ncurses-libs readline tk gdbm xz openssl keyutils-libs krb5-libs libcom_err libidn2 libcurl libuuid libffi)
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
 	exit 1
@@ -116,11 +116,11 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	fi
 	fixup-mirrors
 elif [ "${OS_ID_LIKE}" == "rhel" ]; then
-	BASE_TOOLS+=(glibc-locale-source glibc-langpack-en hardlink hostname libcurl libnsl libxcrypt which)
+	BASE_TOOLS+=(glibc-locale-source glibc-langpack-en gzip hardlink hostname libcurl libnsl libxcrypt which)
 	echo "tsflags=nodocs" >> /etc/dnf/dnf.conf
 	dnf -y upgrade
 	EPEL=epel-release
-	if [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
+	if [ "${AUDITWHEEL_ARCH}" == "i686" ] || [ "${AUDITWHEEL_ARCH}" == "riscv64" ]; then
 		EPEL=
 	fi
 	dnf -y install dnf-plugins-core ${EPEL}
@@ -129,7 +129,12 @@ elif [ "${OS_ID_LIKE}" == "rhel" ]; then
 	else
 		dnf config-manager --set-enabled crb
 	fi
-	TOOLCHAIN_DEPS=(gcc-toolset-14-binutils gcc-toolset-14-gcc gcc-toolset-14-gcc-c++ gcc-toolset-14-gcc-gfortran gcc-toolset-14-libatomic-devel)
+	if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ]; then
+		TOOLCHAIN_DEPS=(gcc-toolset-14-binutils gcc-toolset-14-gcc gcc-toolset-14-gcc-c++ gcc-toolset-14-gcc-gfortran gcc-toolset-14-libatomic-devel)
+	else
+		# TOOLCHAIN_DEPS=(gcc-toolset-15-binutils gcc-toolset-15-gcc gcc-toolset-15-gcc-c++ gcc-toolset-15-gcc-gfortran gcc-toolset-15-libatomic-devel)
+		TOOLCHAIN_DEPS=(binutils gcc gcc-c++ gcc-gfortran libatomic)
+	fi
 	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
 		TOOLCHAIN_DEPS+=(yasm)
 	fi

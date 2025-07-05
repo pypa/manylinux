@@ -15,7 +15,7 @@ source "${MY_DIR}/build_utils.sh"
 # make sure the corresponding library is added to RUNTIME_DEPS if applicable
 
 if [ "${OS_ID_LIKE}" = "rhel" ]; then
-	COMPILE_DEPS=(bzip2-devel ncurses-devel readline-devel gdbm-devel libpcap-devel xz-devel openssl openssl-devel keyutils-libs-devel krb5-devel libcom_err-devel curl-devel uuid-devel libffi-devel kernel-headers libdb-devel perl-IPC-Cmd)
+	COMPILE_DEPS=(bzip2-devel ncurses-devel readline-devel gdbm-devel libpcap-devel xz-devel openssl openssl-devel keyutils-libs-devel krb5-devel libcom_err-devel curl-devel uuid-devel libffi-devel kernel-headers perl-IPC-Cmd)
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 		COMPILE_DEPS+=(libidn-devel libXft-devel)
 	elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
