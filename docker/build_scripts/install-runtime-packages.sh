@@ -120,7 +120,7 @@ elif [ "${OS_ID_LIKE}" == "rhel" ]; then
 	echo "tsflags=nodocs" >> /etc/dnf/dnf.conf
 	dnf -y upgrade
 	EPEL=epel-release
-	if [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
+	if [ "${AUDITWHEEL_ARCH}" == "i686" ] || [ "${AUDITWHEEL_ARCH}" == "riscv64" ]; then
 		EPEL=
 	fi
 	dnf -y install dnf-plugins-core ${EPEL}
