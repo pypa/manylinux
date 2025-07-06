@@ -99,7 +99,7 @@ elif [ "${MANYLINUX_BUILD_FRONTEND}" == "docker-buildx" ]; then
 	docker buildx build \
 		--load \
 		"--cache-from=type=local,src=$(pwd)/.buildx-cache-${POLICY}_${PLATFORM}" \
-		"--cache-to=type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM},mode=max" \
+		"--cache-to=type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM},mode=max,compression=zstd,compression-level=22,force-compression=true" \
 		"${BUILD_ARGS_COMMON[@]}"
 else
 	echo "Unsupported build frontend: '${MANYLINUX_BUILD_FRONTEND}'"
