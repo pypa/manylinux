@@ -46,25 +46,26 @@ fi
 
 # RUNTIME_DEPS: Runtime dependencies. c.f. install-build-packages.sh
 if [ "${OS_ID_LIKE}" == "rhel" ]; then
-	RUNTIME_DEPS=(zlib bzip2 expat ncurses readline gdbm libpcap xz openssl keyutils-libs libkadm5 libcom_err libcurl uuid libffi libdb)
+	RUNTIME_DEPS=(zlib bzip2 expat ncurses readline gdbm xz openssl libcurl uuid libffi)
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
-		RUNTIME_DEPS+=(libidn libXft)
+		RUNTIME_DEPS+=(libXft)
+		RUNTIME_DEPS+=(keyutils-libs libkadm5 libcom_err libidn)  # we rebuild curl
 	elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
-		RUNTIME_DEPS+=(libidn tk)
+		RUNTIME_DEPS+=(tk)
 	else
-		RUNTIME_DEPS+=(libidn2 tk)
+		RUNTIME_DEPS+=(tk)
 		# for graalpy
 		RUNTIME_DEPS+=(libxcrypt-compat)
 	fi
 elif [ "${OS_ID_LIKE}" == "debian" ]; then
-  RUNTIME_DEPS=(zlib1g libbz2-1.0 libexpat1 libncurses6 libreadline8 tk libgdbm6 libdb5.3 libpcap0.8 liblzma5 libkeyutils1 libkrb5-3 libcom-err2 libidn2-0 libcurl4 uuid)
+  RUNTIME_DEPS=(zlib1g libbz2-1.0 libexpat1 libncurses6 libreadline8 tk libgdbm6 libdb5.3 liblzma5 libcurl4 uuid)
   if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_31" ]; then
   	RUNTIME_DEPS+=(libffi7 libssl1.1)
   else
   	RUNTIME_DEPS+=(libffi8 libssl3)
   fi
 elif [ "${OS_ID_LIKE}" == "alpine" ]; then
-	RUNTIME_DEPS=(zlib bzip2 expat ncurses-libs readline tk gdbm db xz openssl keyutils-libs krb5-libs libcom_err libidn2 libcurl libuuid libffi)
+	RUNTIME_DEPS=(zlib bzip2 expat ncurses-libs readline tk gdbm xz openssl libcurl libuuid libffi)
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
 	exit 1
@@ -116,7 +117,7 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	fi
 	fixup-mirrors
 elif [ "${OS_ID_LIKE}" == "rhel" ]; then
-	BASE_TOOLS+=(glibc-locale-source glibc-langpack-en hardlink hostname libcurl libnsl libxcrypt which)
+	BASE_TOOLS+=(glibc-locale-source glibc-langpack-en gzip hardlink hostname libcurl libnsl libxcrypt which)
 	echo "tsflags=nodocs" >> /etc/dnf/dnf.conf
 	dnf -y upgrade
 	EPEL=epel-release
