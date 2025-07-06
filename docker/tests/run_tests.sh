@@ -60,11 +60,8 @@ for PYTHON in /opt/python/*/bin/python; do
 	PYVERS=$(${PYTHON} -c "import sys; print('.'.join(map(str, sys.version_info[:2])))")
 	PY_GIL=$(${PYTHON} -c "import sysconfig; print('t' if sysconfig.get_config_vars().get('Py_GIL_DISABLED', 0) else '')")
 	if [ "${IMPLEMENTATION}" == "cpython" ]; then
-		# Make sure sqlite3 module can be loaded properly and is the manylinux version one
-		# c.f. https://github.com/pypa/manylinux/issues/1030
-		$PYTHON -c 'import sqlite3; print(sqlite3.sqlite_version); assert sqlite3.sqlite_version_info[0:2] >= (3, 50)'
-		# Make sure tkinter module can be loaded properly
-		$PYTHON -c 'import tkinter; print(tkinter.TkVersion); assert tkinter.TkVersion >= 8.6'
+		# check optional modules can be loaded
+		$PYTHON "${MY_DIR}/modules-check.py"
 		# cpython shall be available as python
 		LINK_VERSION=$("python${PYVERS}${PY_GIL}" -VV)
 		REAL_VERSION=$(${PYTHON} -VV)
