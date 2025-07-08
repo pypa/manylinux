@@ -78,8 +78,8 @@ RUN export CURL_ROOT=curl-8.14.1 && \
     export CURL_DOWNLOAD_URL=https://curl.haxx.se/download && \
     manylinux-entrypoint /build_scripts/build-curl.sh
 COPY build_scripts/build-git.sh /build_scripts/
-RUN export GIT_ROOT=git-2.50.0 && \
-    export GIT_HASH=920f8ca563d16a7d4fdecb44349cbffbc5cb814a8b36c96028463478197050da && \
+RUN export GIT_ROOT=git-2.50.1 && \
+    export GIT_HASH=522d1635f8b62b484b0ce24993818aad3cab8e11ebb57e196bda38a3140ea915 && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     manylinux-entrypoint /build_scripts/build-git.sh
 
