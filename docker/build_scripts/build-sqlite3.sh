@@ -23,7 +23,7 @@ tar xfz "${SQLITE_AUTOCONF_ROOT}.tar.gz"
 pushd "${SQLITE_AUTOCONF_ROOT}"
 # add rpath
 sed -i "s|^Libs:|Libs: -Wl,--enable-new-dtags,-rpath=\${libdir} |g" sqlite3.pc.in
-DESTDIR=/manylinux-rootfs do_standard_install --prefix=${PREFIX}
+DESTDIR=/manylinux-rootfs do_standard_install --prefix=${PREFIX} --enable-all
 popd
 rm -rf "${SQLITE_AUTOCONF_ROOT}" "${SQLITE_AUTOCONF_ROOT}.tar.gz"
 
