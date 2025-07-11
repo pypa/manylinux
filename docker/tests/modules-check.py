@@ -10,6 +10,11 @@ class TestModules(unittest.TestCase):
         print(f"{sqlite3.sqlite_version=}", end=" ", flush=True)
         assert sqlite3.sqlite_version_info[0:2] >= (3, 50)
 
+        # When the extension is not installed, it raises:
+        # sqlite3.OperationalError: no such module: fts5
+        conn = sqlite3.connect(":memory:")
+        conn.execute("create virtual table fts5test using fts5 (data);")
+
     def test_tkinter(self):
         # Make sure tkinter module can be loaded properly
         import tkinter as tk
