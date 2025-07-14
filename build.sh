@@ -96,10 +96,15 @@ elif [ "${MANYLINUX_BUILD_FRONTEND}" == "podman" ]; then
 	podman build "${BUILD_ARGS_COMMON[@]}"
 elif [ "${MANYLINUX_BUILD_FRONTEND}" == "docker-buildx" ]; then
 	USE_LOCAL_CACHE=1
+	CACHE_STORE=("--cache-to=type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM},mode=max,compression=zstd,compression-level=22,force-compression=true")
+	if [ "${GITHUB_REPOSITORY:-}_${GITHUB_EVENT_NAME:-}_${GITHUB_REF:-}" == "pypa/manylinux_push_refs/heads/main" ]; then
+		CACHE_STORE+=("--cache-to=type=registry,ref=quay.io/pypa/manylinux_cache:${POLICY}_${PLATFORM}_main,mode=max,compression=zstd,compression-level=22,force-compression=true")
+	fi
 	docker buildx build \
 		--load \
+		"--cache-from=type=registry,ref=quay.io/pypa/manylinux_cache:${POLICY}_${PLATFORM}_main" \
 		"--cache-from=type=local,src=$(pwd)/.buildx-cache-${POLICY}_${PLATFORM}" \
-		"--cache-to=type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM},mode=max,compression=zstd,compression-level=22,force-compression=true" \
+		"${CACHE_STORE[@]}" \
 		"${BUILD_ARGS_COMMON[@]}"
 else
 	echo "Unsupported build frontend: '${MANYLINUX_BUILD_FRONTEND}'"
