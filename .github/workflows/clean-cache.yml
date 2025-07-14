@@ -27,4 +27,4 @@ jobs:
         with:
           package: manylinux-cache
           delete-untagged: true
-          dry-run: (github.event_name == 'workflow_dispatch') && fromJSON(github.event.inputs.dry-run)
+          dry-run: ${{ (github.event_name == 'workflow_dispatch') && fromJSON(github.event.inputs.dry-run) }}
