@@ -53,6 +53,19 @@ elif [ "${POLICY}" == "manylinux_2_35" ]; then
 	DEVTOOLSET_ROOTPATH=
 	PREPEND_PATH=
 	LD_LIBRARY_PATH_ARG=
+elif [ "${POLICY}" == "manylinux_2_39" ]; then
+	BASEIMAGE="quay.io/almalinuxorg/almalinux:10"
+	case "${PLATFORM}" in
+		x86_64) GOARCH="amd64/v2";;
+		riscv64) BASEIMAGE="rockylinux/rockylinux:10";;
+	esac
+	# TODO enable gcc-toolset-15 once available (probably in 10.1)
+	# DEVTOOLSET_ROOTPATH="/opt/rh/gcc-toolset-15/root"
+	# PREPEND_PATH="/usr/local/bin:${DEVTOOLSET_ROOTPATH}/usr/bin:"
+	# LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"
+	DEVTOOLSET_ROOTPATH=
+	PREPEND_PATH=
+	LD_LIBRARY_PATH_ARG=
 elif [ "${POLICY}" == "musllinux_1_2" ]; then
 	BASEIMAGE="alpine:3.22"
 	DEVTOOLSET_ROOTPATH=

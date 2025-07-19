@@ -121,7 +121,7 @@ elif [ "${OS_ID_LIKE}" == "rhel" ]; then
 	echo "tsflags=nodocs" >> /etc/dnf/dnf.conf
 	dnf -y upgrade
 	EPEL=epel-release
-	if [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
+	if [ "${AUDITWHEEL_ARCH}" == "i686" ] || [ "${AUDITWHEEL_ARCH}" == "riscv64" ]; then
 		EPEL=
 	fi
 	dnf -y install dnf-plugins-core ${EPEL}
@@ -130,7 +130,13 @@ elif [ "${OS_ID_LIKE}" == "rhel" ]; then
 	else
 		dnf config-manager --set-enabled crb
 	fi
-	TOOLCHAIN_DEPS=(gcc-toolset-14-binutils gcc-toolset-14-gcc gcc-toolset-14-gcc-c++ gcc-toolset-14-gcc-gfortran gcc-toolset-14-libatomic-devel)
+	if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ]; then
+		TOOLCHAIN_DEPS=(gcc-toolset-14-binutils gcc-toolset-14-gcc gcc-toolset-14-gcc-c++ gcc-toolset-14-gcc-gfortran gcc-toolset-14-libatomic-devel)
+	else
+		# TODO enable gcc-toolset-15 once available (probably in 10.1)
+		# TOOLCHAIN_DEPS=(gcc-toolset-15-binutils gcc-toolset-15-gcc gcc-toolset-15-gcc-c++ gcc-toolset-15-gcc-gfortran gcc-toolset-15-libatomic-devel)
+		TOOLCHAIN_DEPS=(binutils gcc gcc-c++ gcc-gfortran libatomic)
+	fi
 	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
 		TOOLCHAIN_DEPS+=(yasm)
 	fi
