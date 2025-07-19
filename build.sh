@@ -96,10 +96,10 @@ elif [ "${MANYLINUX_BUILD_FRONTEND}" == "podman" ]; then
 	podman build "${BUILD_ARGS_COMMON[@]}"
 elif [ "${MANYLINUX_BUILD_FRONTEND}" == "docker-buildx" ]; then
 	if [ "${GITHUB_REPOSITORY:-}_${GITHUB_EVENT_NAME:-}_${GITHUB_REF:-}" == "pypa/manylinux_push_refs/heads/main" ]; then
-		CACHE_STORE="--cache-to=type=registry,ref=ghcr.io/pypa/manylinux-cache:${POLICY}_${PLATFORM}_main,mode=max,compression=zstd,compression-level=22,force-compression=true"
+		CACHE_STORE="--cache-to=type=registry,ref=ghcr.io/pypa/manylinux-cache:${POLICY}_${PLATFORM}_main,mode=max,compression=zstd,compression-level=22"
 	else
 		USE_LOCAL_CACHE=1
-		CACHE_STORE="--cache-to=type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM},mode=max,compression=zstd,compression-level=22,force-compression=true"
+		CACHE_STORE="--cache-to=type=local,dest=$(pwd)/.buildx-cache-staging-${POLICY}_${PLATFORM},mode=max,compression=zstd,compression-level=22"
 	fi
 	docker buildx build \
 		--load \
