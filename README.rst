@@ -308,7 +308,6 @@ All supported images currently contain:
    - `pip <https://pypi.org/p/pip>`_
    - `build <https://pypi.org/p/build>`_
    - `packaging <https://pypi.org/p/packaging>`_
-   - Before Python 3.12, `setuptools <https://pypi.org/p/setuptools>`_ and `wheel <https://pypi.org/p/wheel>`_ are also available.
 
 - The manylinux-interpreters tool which allows to list all available interpreters & install ones missing from the image
 
