@@ -15,6 +15,7 @@ for IMAGE in "${IMAGES[@]}"; do
 	echo "last tag is ${LAST_TAG}"
 	case ${IMAGE} in
 		manylinux_2_31) REF_IMAGE=manylinux_2_31_armv7l;;
+		manylinux_2_39) REF_IMAGE=manylinux_2_39_aarch64;;
 		*) REF_IMAGE=${IMAGE}_x86_64;;
 	esac
 	TAGS_TO_PUSH=()
