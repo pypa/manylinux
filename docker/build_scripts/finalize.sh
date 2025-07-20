@@ -87,7 +87,7 @@ for TOOL_PATH in "${MY_DIR}/requirements-tools/"*; do
 		musllinux*_ppc64le-uv) continue;;  # uv doesn't provide musl ppc64le wheels due to Rust issues
 		musllinux*_s390x-uv) continue;;  # uv doesn't provide musl s390x wheels due to Rust issues
 		musllinux*_riscv64-uv) continue;;  # uv doesn't provide musl riscv64 wheels due to Rust issues
-		*_riscv64-cmake|*_riscv64-swig) manylinux_pkg_install "${TOOL}";;
+		*_riscv64-swig) manylinux_pkg_install "${TOOL}";;
 		*) pipx install --pip-args="--require-hashes -r ${TOOL_PATH} --only-binary" "${TOOL}";;
 	esac
 done
