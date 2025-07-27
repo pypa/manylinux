@@ -261,6 +261,7 @@ Toolchain: GCC 14
 - ppc64le image: ``quay.io/pypa/musllinux_1_2_ppc64le``
 - s390x image: ``quay.io/pypa/musllinux_1_2_s390x``
 - armv7l image: ``quay.io/pypa/musllinux_1_2_armv7l``
+- riscv64 image: ``quay.io/pypa/musllinux_1_2_riscv64``
 
 
 musllinux_1_1 (Alpine Linux 3.12 based - EOL)
@@ -288,7 +289,7 @@ Image content
 
 All supported images currently contain:
 
-- CPython 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.13t, 3.14, 3.14t and PyPy 3.10, 3.11 installed in
+- CPython 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.13t, 3.14, 3.14t and PyPy 3.11 installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
   e.g. ``/opt/python/cp313-cp313`` contains a CPython 3.13 build, and
