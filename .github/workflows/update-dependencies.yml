@@ -16,7 +16,7 @@ jobs:
     name: Update dependencies
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - uses: wntrblm/nox@2025.05.01
       with:
         python-versions: "3.12"
