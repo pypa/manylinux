@@ -35,7 +35,7 @@ tar -xJf "Python-${CPYTHON_VERSION}.tar.xz"
 pushd "Python-${CPYTHON_VERSION}"
 PREFIX="/opt/_internal/cpython-${CPYTHON_VERSION}"
 mkdir -p "${PREFIX}/lib"
-CFLAGS_EXTRA=""
+LDFLAGS_EXTRA=""
 CONFIGURE_ARGS=(--disable-shared --with-ensurepip=no)
 
 if [ "${4:-}" == "nogil" ]; then
@@ -45,7 +45,7 @@ fi
 
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] ; then
 	# Python 3.11+
-	export TCLTK_LIBS="-ltk8.6 -ltcl8.6"
+	export TCLTK_LIBS="-L/usr/local/lib -ltk8.6 -ltcl8.6"
 fi
 
 if [ "${BASE_POLICY}_${AUDITWHEEL_ARCH}" == "manylinux_armv7l" ]; then
@@ -55,7 +55,7 @@ elif [ "${BASE_POLICY}_${AUDITWHEEL_ARCH}" == "musllinux_armv7l" ]; then
 fi
 
 case "${CPYTHON_VERSION}" in
-	3.8.*|3.9.*|3.10.*) sed -i "s|/usr/local/include/sqlite3|/opt/_internal/sqlite3/include|g ; s|sqlite_extra_link_args = ()|sqlite_extra_link_args = ('-Wl,--enable-new-dtags,-rpath=/opt/_internal/sqlite3/lib',)|g" setup.py;;
+	3.8.*|3.9.*|3.10.*) sed -i "s|/usr/local/include/sqlite3|/opt/_internal/sqlite3/include|g ; s|sqlite_extra_link_args = ()|sqlite_extra_link_args = ('-Wl,-rpath=/opt/_internal/sqlite3/lib',)|g" setup.py;;
 	*) ;;
 esac
 
@@ -63,22 +63,18 @@ OPENSSL_PREFIX=$(find /opt/_internal -maxdepth 1 -name 'openssl*')
 if [ "${OPENSSL_PREFIX}" != "" ]; then
 	CONFIGURE_ARGS+=("--with-openssl=${OPENSSL_PREFIX}")
 	case "${CPYTHON_VERSION}" in
-		3.8.*|3.9.*) export LD_RUN_PATH=${OPENSSL_PREFIX}/lib;;
+		3.8.*|3.9.*) export LDFLAGS_EXTRA="-Wl,-rpath,${OPENSSL_PREFIX}/lib";;
 		*) CONFIGURE_ARGS+=(--with-openssl-rpath=auto);;
 	esac
 fi
 
 unset _PYTHON_HOST_PLATFORM
 
-if [ "${AUDITWHEEL_ARCH}" == "x86_64" ] && echo | gcc -S -x c -v - 2>&1 | grep 'march=x86-64-v' > /dev/null; then
-	export EXTRA_CFLAGS="-mtune=generic -march=x86-64"
-fi
-
 # configure with hardening options only for the interpreter & stdlib C extensions
 # do not change the default for user built extension (yet?)
 ./configure \
-	CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS} ${CFLAGS_EXTRA}" \
-	LDFLAGS_NODIST="${MANYLINUX_LDFLAGS}" \
+	CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS}" \
+	LDFLAGS_NODIST="${MANYLINUX_LDFLAGS} ${LDFLAGS_EXTRA}" \
 	"--prefix=${PREFIX}" "${CONFIGURE_ARGS[@]}" > /dev/null
 make > /dev/null
 make install > /dev/null
