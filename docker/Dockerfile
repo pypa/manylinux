@@ -49,14 +49,14 @@ RUN export AUTOCONF_ROOT=autoconf-2.72 && \
     manylinux-entrypoint /build_scripts/install-autoconf.sh
 
 COPY build_scripts/install-automake.sh /build_scripts/
-RUN export AUTOMAKE_ROOT=automake-1.17 && \
-    export AUTOMAKE_HASH=397767d4db3018dd4440825b60c64258b636eaf6bf99ac8b0897f06c89310acd && \
+RUN export AUTOMAKE_ROOT=automake-1.18.1 && \
+    export AUTOMAKE_HASH=63e585246d0fc8772dffdee0724f2f988146d1a3f1c756a3dc5cfbefa3c01915 && \
     export AUTOMAKE_DOWNLOAD_URL=http://ftp.gnu.org/gnu/automake && \
     manylinux-entrypoint /build_scripts/install-automake.sh
 
 COPY build_scripts/install-libtool.sh /build_scripts/
-RUN export LIBTOOL_ROOT=libtool-2.5.3 && \
-    export LIBTOOL_HASH=9322bd8f6bc848fda3e385899dd1934957169652acef716d19d19d24053abb95 && \
+RUN export LIBTOOL_ROOT=libtool-2.5.4 && \
+    export LIBTOOL_HASH=da8ebb2ce4dcf46b90098daf962cffa68f4b4f62ea60f798d0ef12929ede6adf && \
     export LIBTOOL_DOWNLOAD_URL=http://ftp.gnu.org/gnu/libtool && \
     manylinux-entrypoint /build_scripts/install-libtool.sh
 
@@ -78,8 +78,8 @@ RUN export CURL_ROOT=curl-8.15.0 && \
     export CURL_DOWNLOAD_URL=https://curl.haxx.se/download && \
     manylinux-entrypoint /build_scripts/build-curl.sh
 COPY build_scripts/build-git.sh /build_scripts/
-RUN export GIT_ROOT=git-2.50.1 && \
-    export GIT_HASH=522d1635f8b62b484b0ce24993818aad3cab8e11ebb57e196bda38a3140ea915 && \
+RUN export GIT_ROOT=git-2.51.0 && \
+    export GIT_HASH=3d531799d2cf2cac8e294ec6e3229e07bfca60dc6c783fe69e7712738bef7283 && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     manylinux-entrypoint /build_scripts/build-git.sh
 
@@ -92,11 +92,11 @@ RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3500400 && \
 
 FROM build_base AS build_tcl_tk
 COPY build_scripts/build-tcltk.sh /build_scripts/
-RUN export TCL_ROOT=tcl8.6.16 && \
-    export TCL_HASH=91cb8fa61771c63c262efb553059b7c7ad6757afa5857af6265e4b0bdc2a14a5 && \
+RUN export TCL_ROOT=tcl8.6.17 && \
+    export TCL_HASH=a3903371efcce8a405c5c245d029e9f6850258a60fa3761c4d58995610949b31 && \
     export TCL_DOWNLOAD_URL=https://prdownloads.sourceforge.net/tcl && \
-    export TK_ROOT=tk8.6.16 && \
-    export TK_HASH=be9f94d3575d4b3099d84bc3c10de8994df2d7aa405208173c709cc404a7e5fe && \
+    export TK_ROOT=tk8.6.17 && \
+    export TK_HASH=e4982df6f969c08bf9dd858a6891059b4a3f50dc6c87c10abadbbe2fc4838946 && \
     manylinux-entrypoint /build_scripts/build-tcltk.sh
 
 FROM build_base AS build_mpdecimal
