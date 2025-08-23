@@ -38,6 +38,8 @@ jobs:
       env: POLICY="manylinux_2_34" PLATFORM="s390x"
     - arch: ppc64le
       env: POLICY="manylinux_2_34" PLATFORM="ppc64le"
+    - arch: s390x
+      env: POLICY="musllinux_1_2" PLATFORM="s390x"
     - arch: ppc64le
       env: POLICY="musllinux_1_2" PLATFORM="ppc64le"
 
