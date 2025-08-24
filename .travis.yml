@@ -28,20 +28,10 @@ jobs:
    include:
     - arch: s390x
       env: POLICY="manylinux2014" PLATFORM="s390x"
-    - arch: ppc64le
-      env: POLICY="manylinux2014" PLATFORM="ppc64le"
     - arch: s390x
       env: POLICY="manylinux_2_28" PLATFORM="s390x"
-    - arch: ppc64le
-      env: POLICY="manylinux_2_28" PLATFORM="ppc64le"
     - arch: s390x
       env: POLICY="manylinux_2_34" PLATFORM="s390x"
-    - arch: ppc64le
-      env: POLICY="manylinux_2_34" PLATFORM="ppc64le"
-    - arch: s390x
-      env: POLICY="musllinux_1_2" PLATFORM="s390x"
-    - arch: ppc64le
-      env: POLICY="musllinux_1_2" PLATFORM="ppc64le"
 
 before_install:
   - if [ -d "${HOME}/buildx-cache/.buildx-cache-${POLICY}_${PLATFORM}" ]; then cp -rlf ${HOME}/buildx-cache/.buildx-cache-${POLICY}_${PLATFORM} ./; fi
