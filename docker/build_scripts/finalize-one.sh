@@ -26,6 +26,9 @@ export PIP_NO_WARN_SCRIPT_LOCATION=0
 if [ "${PY_IMPL}" == "graalpy" ]; then
 	# GraalPy doesn't update pip/setuptools because it uses a patched version of pip/setuptools
 	"${PREFIX}/bin/python" -m ensurepip --default-pip
+	case ${PY_VER} in
+		3.11) "${PREFIX}/bin/python" -m pip uninstall -y setuptools;;
+	esac
 	"${PREFIX}/bin/python" -m pip install -U --require-hashes -r "${MY_DIR}/requirements${PY_VER}.txt"
 elif [ -f "/usr/local/bin/cpython${PY_VER}" ]; then
 	# Use the already installed cpython pip to bootstrap pip if available
