@@ -22,6 +22,11 @@ check_var "${LIBXCRYPT_HASH}"
 check_var "${LIBXCRYPT_DOWNLOAD_URL}"
 LIBXCRYPT_ROOT="libxcrypt-${LIBXCRYPT_VERSION}"
 
+if [ "${MANYLINUX_DISABLE_CLANG}" -eq 0 ]; then
+	# revert to using ld as ldd does not like the version script
+	MANYLINUX_LDFLAGS="-fuse-ld=ld ${MANYLINUX_LDFLAGS}"
+fi
+
 fetch_source "${LIBXCRYPT_ROOT}.tar.xz" "${LIBXCRYPT_DOWNLOAD_URL}/v${LIBXCRYPT_VERSION}"
 check_sha256sum "${LIBXCRYPT_ROOT}.tar.xz" "${LIBXCRYPT_HASH}"
 tar xfJ "${LIBXCRYPT_ROOT}.tar.xz"
