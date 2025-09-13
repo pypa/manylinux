@@ -73,8 +73,8 @@ RUN manylinux-entrypoint /build_scripts/install-build-packages.sh
 
 FROM build_base AS build_git
 COPY build_scripts/build-curl.sh /build_scripts/
-RUN export CURL_ROOT=curl-8.15.0 && \
-    export CURL_HASH=d85cfc79dc505ff800cb1d321a320183035011fa08cb301356425d86be8fc53c && \
+RUN export CURL_ROOT=curl-8.16.0 && \
+    export CURL_HASH=a21e20476e39eca5a4fc5cfb00acf84bbc1f5d8443ec3853ad14c26b3c85b970 && \
     export CURL_DOWNLOAD_URL=https://curl.haxx.se/download && \
     manylinux-entrypoint /build_scripts/build-curl.sh
 COPY build_scripts/build-git.sh /build_scripts/
