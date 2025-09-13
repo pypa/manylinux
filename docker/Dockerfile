@@ -167,7 +167,7 @@ RUN --mount=type=bind,target=/build_cpython38,from=build_cpython38 \
     mkdir -p /opt/_internal && \
     cp -rf /build_cpython*/opt/_internal/* /opt/_internal/ && \
     manylinux-entrypoint /opt/_internal/build_scripts/finalize.sh \
-      pp310-pypy310_pp73 pp311-pypy311_pp73
+      pp311-pypy311_pp73
 
 COPY tests /opt/_internal/tests/
 
