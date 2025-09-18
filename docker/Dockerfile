@@ -115,8 +115,8 @@ COPY --from=build_mpdecimal /manylinux-buildfs /
 COPY --from=build_sqlite3 /manylinux-buildfs /
 RUN if command -v apk >/dev/null 2>&1; then ldconfig /; else ldconfig; fi
 COPY build_scripts/build-openssl.sh /build_scripts/
-RUN export OPENSSL_ROOT=openssl-3.5.2 && \
-    export OPENSSL_HASH=c53a47e5e441c930c3928cf7bf6fb00e5d129b630e0aa873b08258656e7345ec && \
+RUN export OPENSSL_ROOT=openssl-3.5.3 && \
+    export OPENSSL_HASH=c9489d2abcf943cdc8329a57092331c598a402938054dc3a22218aea8a8ec3bf && \
     export OPENSSL_DOWNLOAD_URL=https://github.com/openssl/openssl/releases/download/${OPENSSL_ROOT} && \
     manylinux-entrypoint /build_scripts/build-openssl.sh
 COPY --from=cosign-bin /ko-app/cosign /usr/local/bin/cosign
