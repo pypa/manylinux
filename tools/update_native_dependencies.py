@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import re
 import subprocess
+import sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -206,9 +207,15 @@ def main():
     _update_sqlite(args.dry_run)
     _update_tcltk(args.dry_run)
     for tool in ["autoconf", "automake", "libtool", "git", "openssl", "curl"]:
-        _update_with_root(tool, args.dry_run)
+        try:
+            _update_with_root(tool, args.dry_run)
+        except Exception as e:
+            print(f"::warning::update: {e}\n", file=sys.stderr)
     for tool in ["libxcrypt"]:
-        _update_with_gh(tool, args.dry_run)
+        try:
+            _update_with_gh(tool, args.dry_run)
+        except Exception as e:
+            print(f"::warning::update: {e}\n", file=sys.stderr)
 
 
 if __name__ == "__main__":
