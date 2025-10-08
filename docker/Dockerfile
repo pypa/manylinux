@@ -138,16 +138,16 @@ FROM build_cpython AS build_cpython312
 RUN manylinux-entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.12.11
 
 FROM build_cpython AS build_cpython313
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.7
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.8
 
 FROM build_cpython AS build_cpython313_nogil
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.7 nogil
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.8 nogil
 
 FROM build_cpython AS build_cpython314
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.0rc3
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.0
 
 FROM build_cpython AS build_cpython314_nogil
-RUN manylinux-entrypoint /build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.0rc3 nogil
+RUN manylinux-entrypoint /build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.0 nogil
 
 FROM runtime_base
 COPY --from=build_tcl_tk /manylinux-rootfs /
