@@ -47,11 +47,16 @@ if [ "$(nproc)" -ge 2 ]; then
 	PARALLEL_BUILDS=-j2
 fi
 
+LIBATOMIC=
+if [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
+	LIBATOMIC=-latomic
+fi
+
 fetch_source "${OPENSSL_ROOT}.tar.gz" "${OPENSSL_DOWNLOAD_URL}"
 check_sha256sum "${OPENSSL_ROOT}.tar.gz" "${OPENSSL_HASH}"
 tar -xzf "${OPENSSL_ROOT}.tar.gz"
 pushd "${OPENSSL_ROOT}"
-./Configure "--prefix=${PREFIX}" "--openssldir=${PREFIX}" --libdir=lib CPPFLAGS="${MANYLINUX_CPPFLAGS}" CFLAGS="${MANYLINUX_CFLAGS}" CXXFLAGS="${MANYLINUX_CXXFLAGS}" LDFLAGS="${MANYLINUX_LDFLAGS} -Wl,-rpath,\$(LIBRPATH)" > /dev/null
+./Configure "--prefix=${PREFIX}" "--openssldir=${PREFIX}" --libdir=lib no-afalgeng CPPFLAGS="${MANYLINUX_CPPFLAGS}" CFLAGS="${MANYLINUX_CFLAGS}" CXXFLAGS="${MANYLINUX_CXXFLAGS}" LDFLAGS="${MANYLINUX_LDFLAGS} -Wl,-rpath,\$(LIBRPATH) ${LIBATOMIC}" > /dev/null
 make ${PARALLEL_BUILDS} > /dev/null
 make install_sw > /dev/null
 popd

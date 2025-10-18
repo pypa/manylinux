@@ -80,6 +80,50 @@ export DEVTOOLSET_ROOTPATH
 export PREPEND_PATH
 export LD_LIBRARY_PATH_ARG
 
+# cross-compilation tools platform, installed in any case
+if [ "${MANYLINUX_BUILDARCH:-}" == "" ]; then
+	if [ "${MANYLINUX_BUILD_FRONTEND}" == "podman" ]; then
+		MANYLINUX_BUILDARCH=$(podman version -f "{{.Server.Arch}}")
+	else
+		MANYLINUX_BUILDARCH=$(docker version -f "{{.Server.Arch}}")
+	fi
+	if [ "${MANYLINUX_BUILDARCH}" == "arm" ]; then
+		MANYLINUX_BUILDARCH="arm/v7"
+	fi
+fi
+export MANYLINUX_BUILDARCH
+
+# cross-compilation tools usage, by default, only on amd64/arm64
+if [ "${MANYLINUX_DISABLE_CLANG:-}" == "" ]; then
+	if [ "${MANYLINUX_BUILDARCH}" == "amd64" ] || [ "${MANYLINUX_BUILDARCH}" == "arm64" ]; then
+		MANYLINUX_DISABLE_CLANG=0
+	else
+		MANYLINUX_DISABLE_CLANG=1
+	fi
+fi
+if [ "${MANYLINUX_DISABLE_CLANG}" != "0" ]; then
+	MANYLINUX_DISABLE_CLANG=1  # integer bool like
+fi
+export MANYLINUX_DISABLE_CLANG
+
+# cross-compilation tools usage when building cpython, default depends on PEP11
+if [ "${MANYLINUX_DISABLE_CLANG_FOR_CPYTHON:-}" == "" ]; then
+	MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=0
+	if [ "${POLICY:0:9}" == "manylinux" ]; then
+		case "${PLATFORM}" in
+			aarch64|x86_64) MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=1;; # gcc is Tier-1, clang is Tier-2
+			armv7l) MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=1;; # gcc is Tier-3, clang not supported at all
+			s390x) MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=1;; # gcc is Tier-3, clang not supported at all
+			*) ;;
+		esac
+	fi
+fi
+if [ "${MANYLINUX_DISABLE_CLANG_FOR_CPYTHON}" != "0" ]; then
+	MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=1  # integer bool like
+fi
+export MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
+
+
 MANYLINUX_IMAGE="quay.io/pypa/${POLICY}_${PLATFORM}:${COMMIT_SHA}"
 
 BUILD_ARGS_COMMON=(
@@ -87,6 +131,7 @@ BUILD_ARGS_COMMON=(
 	"--pull=true"
 	--build-arg POLICY --build-arg PLATFORM --build-arg BASEIMAGE
 	--build-arg DEVTOOLSET_ROOTPATH --build-arg PREPEND_PATH --build-arg LD_LIBRARY_PATH_ARG
+	--build-arg MANYLINUX_BUILDARCH --build-arg MANYLINUX_DISABLE_CLANG --build-arg MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 	--rm -t "${MANYLINUX_IMAGE}"
 	-f docker/Dockerfile docker/
 )
