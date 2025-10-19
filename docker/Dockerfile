@@ -104,8 +104,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
     /tmp/cross-compiler/entrypoint /build_scripts/build-curl.sh
 COPY build_scripts/build-git.sh /build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export GIT_ROOT=git-2.51.0 && \
-    export GIT_HASH=3d531799d2cf2cac8e294ec6e3229e07bfca60dc6c783fe69e7712738bef7283 && \
+    export GIT_ROOT=git-2.51.1 && \
+    export GIT_HASH=b049d79e6a6cb3d81334bf689af6301f4d4c884191dfae65d2bb314a90384831 && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     /tmp/cross-compiler/entrypoint /build_scripts/build-git.sh
 
@@ -185,12 +185,12 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_cpython AS build_cpython313
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.8
+    /tmp/cross-compiler/entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.9
 
 FROM build_cpython AS build_cpython313_nogil
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.8 nogil
+    /tmp/cross-compiler/entrypoint /build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.9 nogil
 
 FROM build_cpython AS build_cpython314
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON

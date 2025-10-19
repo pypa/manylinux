@@ -31,13 +31,13 @@ def _sha256(url):
 
 def _update_cpython(dry_run):
     lines = DOCKERFILE.read_text().splitlines()
-    re_ = re.compile(r"^RUN.*/build-cpython.sh .*$")
+    re_ = re.compile(r"^    /tmp/cross-compiler/entrypoint /build_scripts/build-cpython.sh .*$")
     updates = defaultdict(list)
     for i in range(len(lines)):
         match = re_.match(lines[i])
         if match is None:
             continue
-        version = lines[i].strip().split()[5]
+        version = lines[i].strip().split()[4]
         current_version = Version(version)
         latest_version = latest(
             "python/cpython",
@@ -80,7 +80,7 @@ def _update_with_root(tool, dry_run):
         "libtool": r"~2\.5\.[0-2]$",  # pre-release
     }
     lines = DOCKERFILE.read_text().splitlines()
-    re_ = re.compile(f"^RUN export {tool.upper()}_ROOT={tool}-(?P<version>\\S+) && \\\\$")
+    re_ = re.compile(f"^    export {tool.upper()}_ROOT={tool}-(?P<version>\\S+) && \\\\$")
     for i in range(len(lines)):
         match = re_.match(lines[i])
         if match is None:
@@ -96,7 +96,7 @@ def _update_with_root(tool, dry_run):
             )["url"]
             url = url.replace(f"${{{tool.upper()}_ROOT}}", root)
             sha256 = _sha256(f"{url}/{root}.tar.gz")
-            lines[i + 0] = f"RUN export {tool.upper()}_ROOT={root} && \\"
+            lines[i + 0] = f"    export {tool.upper()}_ROOT={root} && \\"
             lines[i + 1] = f"    export {tool.upper()}_HASH={sha256} && \\"
             message = f"Bump {tool} {current_version} → {latest_version}"
             print(message)
@@ -108,7 +108,7 @@ def _update_with_root(tool, dry_run):
 
 def _update_sqlite(dry_run):
     lines = DOCKERFILE.read_text().splitlines()
-    re_ = re.compile("^RUN export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-(?P<version>\\S+) && \\\\$")
+    re_ = re.compile("^    export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-(?P<version>\\S+) && \\\\$")
     for i in range(len(lines)):
         match = re_.match(lines[i])
         if match is None:
@@ -131,7 +131,7 @@ def _update_sqlite(dry_run):
             root = f"sqlite-autoconf-{version_int}"
             url = f"https://www.sqlite.org/{latest_dict['tag_date'].year}"
             sha256 = _sha256(f"{url}/{root}.tar.gz")
-            lines[i + 0] = f"RUN export SQLITE_AUTOCONF_ROOT={root} && \\"
+            lines[i + 0] = f"    export SQLITE_AUTOCONF_ROOT={root} && \\"
             lines[i + 1] = f"    export SQLITE_AUTOCONF_HASH={sha256} && \\"
             lines[i + 2] = f"    export SQLITE_AUTOCONF_DOWNLOAD_URL={url} && \\"
             message = f"Bump sqlite {current_version} → {latest_version}"
@@ -147,7 +147,7 @@ def _update_with_gh(tool, dry_run):
         "libxcrypt": "besser82/libxcrypt",
     }
     lines = DOCKERFILE.read_text().splitlines()
-    re_ = re.compile(f"^RUN export {tool.upper()}_VERSION=(?P<version>\\S+) && \\\\$")
+    re_ = re.compile(f"^    export {tool.upper()}_VERSION=(?P<version>\\S+) && \\\\$")
     for i in range(len(lines)):
         match = re_.match(lines[i])
         if match is None:
@@ -160,7 +160,7 @@ def _update_with_gh(tool, dry_run):
                 f"^    export {tool.upper()}_DOWNLOAD_URL=(?P<url>\\S+) && \\\\$", lines[i + 2]
             )["url"]
             sha256 = _sha256(f"{url}/{latest_tag}/libxcrypt-{latest_version}.tar.xz")
-            lines[i + 0] = f"RUN export {tool.upper()}_VERSION={latest_version} && \\"
+            lines[i + 0] = f"    export {tool.upper()}_VERSION={latest_version} && \\"
             lines[i + 1] = f"    export {tool.upper()}_HASH={sha256} && \\"
             message = f"Bump {tool} {current_version} → {latest_version}"
             print(message)
@@ -172,7 +172,7 @@ def _update_with_gh(tool, dry_run):
 
 def _update_tcltk(dry_run):
     lines = DOCKERFILE.read_text().splitlines()
-    re_ = re.compile("^RUN export TCL_ROOT=tcl(?P<version>\\S+) && \\\\$")
+    re_ = re.compile("^    export TCL_ROOT=tcl(?P<version>\\S+) && \\\\$")
     for i in range(len(lines)):
         match = re_.match(lines[i])
         if match is None:
@@ -185,7 +185,7 @@ def _update_tcltk(dry_run):
                 "url"
             ]
             sha256 = _sha256(f"{url}/{root}-src.tar.gz")
-            lines[i + 0] = f"RUN export TCL_ROOT={root} && \\"
+            lines[i + 0] = f"    export TCL_ROOT={root} && \\"
             lines[i + 1] = f"    export TCL_HASH={sha256} && \\"
             root = f"tk{latest_version}"
             sha256 = _sha256(f"{url}/{root}-src.tar.gz")
