@@ -48,7 +48,7 @@ COPY build_scripts/build_utils.sh /build_scripts/
 
 
 # prepare cross-compilation support
-FROM --platform=linux/${MANYLINUX_BUILDARCH} ghcr.io/mayeut/static-clang:21.1.3.0 AS static_clang_bin
+FROM --platform=linux/${MANYLINUX_BUILDARCH} ghcr.io/mayeut/static-clang:21.1.4.0 AS static_clang_bin
 FROM runtime_base_packages AS static_clang_prepare
 ARG MANYLINUX_DISABLE_CLANG
 COPY build_scripts/install-clang-static.sh /build_scripts/
