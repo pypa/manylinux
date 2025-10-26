@@ -199,11 +199,32 @@ def _update_tcltk(dry_run):
         break
 
 
+def _update_git_lfs(dry_run):
+    file = PROJECT_ROOT / "docker" / "build_scripts" / "install-git-lfs.sh"
+    lines = file.read_text().splitlines()
+    re_ = re.compile(r"^GIT_LFS_VERSION=(?P<version>\S+)$")
+    for i in range(len(lines)):
+        match = re_.match(lines[i])
+        if match is None:
+            continue
+        current_version = Version(match["version"])
+        latest_version = latest("git-lfs")
+        if latest_version > current_version:
+            lines[i] = f"GIT_LFS_VERSION={latest_version}"
+            message = f"Bump git-lfs  {current_version} → {latest_version}"
+            print(message)
+            if not dry_run:
+                file.write_text("\n".join(lines) + "\n")
+                subprocess.check_call(["git", "commit", "-am", message])
+        break
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry-run", dest="dry_run", action="store_true", help="dry run")
     args = parser.parse_args()
     _update_cpython(args.dry_run)
+    _update_git_lfs(args.dry_run)
     _update_sqlite(args.dry_run)
     _update_tcltk(args.dry_run)
     for tool in ["autoconf", "automake", "libtool", "git", "openssl", "curl"]:
