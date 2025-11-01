@@ -219,10 +219,30 @@ def _update_git_lfs(dry_run):
         break
 
 
+def _update_clang(dry_run):
+    lines = DOCKERFILE.read_text().splitlines()
+    re_ = re.compile(r"^ARG MANYLINUX_CLANG_VERSION=(?P<version>\S+)$")
+    for i in range(len(lines)):
+        match = re_.match(lines[i])
+        if match is None:
+            continue
+        current_version = Version(match["version"])
+        latest_version = latest("mayeut/static-clang-images")
+        if latest_version > current_version:
+            lines[i] = f"ARG MANYLINUX_CLANG_VERSION={latest_version}"
+            message = f"Bump static-clang  {current_version} → {latest_version}"
+            print(message)
+            if not dry_run:
+                DOCKERFILE.write_text("\n".join(lines) + "\n")
+                subprocess.check_call(["git", "commit", "-am", message])
+        break
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry-run", dest="dry_run", action="store_true", help="dry run")
     args = parser.parse_args()
+    _update_clang(args.dry_run)
     _update_cpython(args.dry_run)
     _update_git_lfs(args.dry_run)
     _update_sqlite(args.dry_run)
