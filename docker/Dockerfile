@@ -8,6 +8,8 @@ ARG PREPEND_PATH=/usr/local/bin:${DEVTOOLSET_ROOTPATH}/usr/bin:
 ARG MANYLINUX_BUILDARCH=${BUILDARCH}
 ARG MANYLINUX_DISABLE_CLANG=0
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=0
+ARG MANYLINUX_CLANG_VERSION=21.1.4.0
+ARG MANYLINUX_COSIGN_VERSION=3.0.2
 
 
 FROM $BASEIMAGE AS runtime_base_packages
@@ -48,7 +50,7 @@ COPY build_scripts/build_utils.sh /build_scripts/
 
 
 # prepare cross-compilation support
-FROM --platform=linux/${MANYLINUX_BUILDARCH} ghcr.io/mayeut/static-clang:21.1.4.0 AS static_clang_bin
+FROM --platform=linux/${MANYLINUX_BUILDARCH} ghcr.io/mayeut/static-clang:${MANYLINUX_CLANG_VERSION} AS static_clang_bin
 FROM runtime_base_packages AS static_clang_prepare
 ARG MANYLINUX_DISABLE_CLANG
 COPY build_scripts/install-clang-static.sh /build_scripts/
@@ -139,7 +141,7 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
     /tmp/cross-compiler/entrypoint /build_scripts/build-mpdecimal.sh
 
 
-FROM --platform=${BUILDPLATFORM} ghcr.io/sigstore/cosign/cosign:v2.5.0 AS cosign-bin
+FROM --platform=${BUILDPLATFORM} ghcr.io/sigstore/cosign/cosign:v${MANYLINUX_COSIGN_VERSION} AS cosign-bin
 
 
 FROM build_base AS build_cpython

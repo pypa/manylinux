@@ -91,6 +91,8 @@ for TOOL_PATH in "${MY_DIR}/requirements-tools/"*; do
 	esac
 done
 
+"${MY_DIR}/install-git-lfs.sh"
+
 # We do not need the precompiled .pyc and .pyo files.
 clean_pyc /opt/_internal
 

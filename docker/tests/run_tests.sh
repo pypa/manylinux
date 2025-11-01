@@ -119,6 +119,7 @@ automake --version
 libtoolize --version
 patchelf --version
 git --version
+git lfs --version
 cmake --version
 swig -version
 pipx run nox --version
