@@ -9,6 +9,7 @@ ARG MANYLINUX_BUILDARCH=${BUILDARCH}
 ARG MANYLINUX_DISABLE_CLANG=0
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=0
 ARG MANYLINUX_CLANG_VERSION=21.1.4.0
+ARG MANYLINUX_COSIGN_VERSION=3.0.2
 
 
 FROM $BASEIMAGE AS runtime_base_packages
@@ -140,7 +141,7 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
     /tmp/cross-compiler/entrypoint /build_scripts/build-mpdecimal.sh
 
 
-FROM --platform=${BUILDPLATFORM} ghcr.io/sigstore/cosign/cosign:v2.5.0 AS cosign-bin
+FROM --platform=${BUILDPLATFORM} ghcr.io/sigstore/cosign/cosign:v${MANYLINUX_COSIGN_VERSION} AS cosign-bin
 
 
 FROM build_base AS build_cpython
