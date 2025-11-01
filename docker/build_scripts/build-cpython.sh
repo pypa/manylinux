@@ -73,6 +73,8 @@ unset _PYTHON_HOST_PLATFORM
 # configure with hardening options only for the interpreter & stdlib C extensions
 # do not change the default for user built extension (yet?)
 ./configure \
+	CC=gcc \
+	CXX=g++ \
 	CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS}" \
 	LDFLAGS_NODIST="${MANYLINUX_LDFLAGS} ${LDFLAGS_EXTRA}" \
 	"--prefix=${PREFIX}" "${CONFIGURE_ARGS[@]}" > /dev/null
