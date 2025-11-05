@@ -40,7 +40,7 @@ The manylinux project supports:
 
 - ``manylinux_2_39`` images for ``aarch64`` and ``riscv64``.
 
-- ``musllinux_1_2`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le``, ``s390x`` and ``armv7l``.
+- ``musllinux_1_2`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le``, ``s390x``, ``armv7l`` and ``riscv64``.
 
 
 Wheel packages compliant with those tags can be uploaded to
