@@ -106,12 +106,10 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 			# EPEL support (for yasm)
 			yum -y install https://archives.fedoraproject.org/pub/archive/epel/7/x86_64/Packages/e/epel-release-7-14.noarch.rpm
 		fi
-		TOOLCHAIN_DEPS+=(yasm)
 	elif [ "${AUDITWHEEL_ARCH}" == "aarch64" ] || [ "${AUDITWHEEL_ARCH}" == "ppc64le" ] || [ "${AUDITWHEEL_ARCH}" == "s390x" ]; then
 		# Software collection (for devtoolset-10)
 		yum -y install centos-release-scl-rh
 	elif [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
-		# No yasm on i686
 		# Install mayeut/devtoolset-10 repo to get devtoolset-10
 		curl -fsSLo /etc/yum.repos.d/mayeut-devtoolset-10.repo https://copr.fedorainfracloud.org/coprs/mayeut/devtoolset-10/repo/custom-1/mayeut-devtoolset-10-custom-1.repo
 	fi
@@ -137,9 +135,6 @@ elif [ "${OS_ID_LIKE}" == "rhel" ]; then
 		# TOOLCHAIN_DEPS=(gcc-toolset-15-binutils gcc-toolset-15-gcc gcc-toolset-15-gcc-c++ gcc-toolset-15-gcc-gfortran gcc-toolset-15-libatomic-devel)
 		TOOLCHAIN_DEPS=(binutils gcc gcc-c++ gcc-gfortran libatomic)
 	fi
-	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
-		TOOLCHAIN_DEPS+=(yasm)
-	fi
 elif [ "${OS_ID_LIKE}" == "debian" ]; then
 	TOOLCHAIN_DEPS+=(binutils gcc g++ gfortran libatomic1)
 	BASE_TOOLS+=(gpg gpg-agent hardlink hostname locales xz-utils)
@@ -149,6 +144,9 @@ elif [ "${OS_ID_LIKE}" == "alpine" ]; then
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
 	exit 1
+fi
+if [ "${AUDITWHEEL_ARCH}" == "x86_64" ]; then
+	TOOLCHAIN_DEPS+=(yasm)
 fi
 
 manylinux_pkg_install "${BASE_TOOLS[@]}" "${TOOLCHAIN_DEPS[@]}" "${MANYLINUX_DEPS[@]}" "${RUNTIME_DEPS[@]}"
