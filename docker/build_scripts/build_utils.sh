@@ -54,7 +54,7 @@ function fetch_source {
 	if [ -f "${file}" ]; then
 		echo "${file} exists, skipping fetch"
 	else
-		curl -fsSL -o "${file}" "${url}/${file}"
+		curl -fsSL --retry 10 -o "${file}" "${url}/${file}"
 	fi
 }
 
