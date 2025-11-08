@@ -8,7 +8,7 @@ ARG PREPEND_PATH=/usr/local/bin:${DEVTOOLSET_ROOTPATH}/usr/bin:
 ARG MANYLINUX_BUILDARCH=${BUILDARCH}
 ARG MANYLINUX_DISABLE_CLANG=0
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=0
-ARG MANYLINUX_CLANG_VERSION=21.1.4.0
+ARG MANYLINUX_CLANG_VERSION=21.1.5.0
 ARG MANYLINUX_COSIGN_VERSION=3.0.2
 
 
@@ -86,8 +86,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 
 COPY build_scripts/install-libxcrypt.sh /build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export LIBXCRYPT_VERSION=4.4.38 && \
-    export LIBXCRYPT_HASH=80304b9c306ea799327f01d9a7549bdb28317789182631f1b54f4511b4206dd6 && \
+    export LIBXCRYPT_VERSION=4.5.1 && \
+    export LIBXCRYPT_HASH=e9b46a62397c15372935f6a75dc3929c62161f2620be7b7f57f03d69102c1a86 && \
     export LIBXCRYPT_DOWNLOAD_URL=https://github.com/besser82/libxcrypt/releases/download && \
     /tmp/cross-compiler/entrypoint /build_scripts/install-libxcrypt.sh
 
@@ -100,8 +100,8 @@ RUN manylinux-entrypoint /build_scripts/install-build-packages.sh
 FROM build_base AS build_git
 COPY build_scripts/build-curl.sh /build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export CURL_ROOT=curl-8.16.0 && \
-    export CURL_HASH=a21e20476e39eca5a4fc5cfb00acf84bbc1f5d8443ec3853ad14c26b3c85b970 && \
+    export CURL_ROOT=curl-8.17.0 && \
+    export CURL_HASH=e8e74cdeefe5fb78b3ae6e90cd542babf788fa9480029cfcee6fd9ced42b7910 && \
     export CURL_DOWNLOAD_URL=https://curl.haxx.se/download && \
     /tmp/cross-compiler/entrypoint /build_scripts/build-curl.sh
 COPY build_scripts/build-git.sh /build_scripts/
@@ -115,8 +115,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_base AS build_sqlite3
 COPY build_scripts/build-sqlite3.sh /build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3500400 && \
-    export SQLITE_AUTOCONF_HASH=a3db587a1b92ee5ddac2f66b3edb41b26f9c867275782d46c3a088977d6a5b18 && \
+    export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3510000 && \
+    export SQLITE_AUTOCONF_HASH=42e26dfdd96aa2e6b1b1be5c88b0887f9959093f650d693cb02eb9c36d146ca5 && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2025 && \
     /tmp/cross-compiler/entrypoint /build_scripts/build-sqlite3.sh
 
