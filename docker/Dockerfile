@@ -67,21 +67,21 @@ COPY build_scripts/install-autoconf.sh /build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
     export AUTOCONF_ROOT=autoconf-2.72 && \
     export AUTOCONF_HASH=afb181a76e1ee72832f6581c0eddf8df032b83e2e0239ef79ebedc4467d92d6e && \
-    export AUTOCONF_DOWNLOAD_URL=http://ftp.gnu.org/gnu/autoconf && \
+    export AUTOCONF_DOWNLOAD_URL=https://ftpmirror.gnu.org/gnu/autoconf && \
     /tmp/cross-compiler/entrypoint /build_scripts/install-autoconf.sh
 
 COPY build_scripts/install-automake.sh /build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
     export AUTOMAKE_ROOT=automake-1.18.1 && \
     export AUTOMAKE_HASH=63e585246d0fc8772dffdee0724f2f988146d1a3f1c756a3dc5cfbefa3c01915 && \
-    export AUTOMAKE_DOWNLOAD_URL=http://ftp.gnu.org/gnu/automake && \
+    export AUTOMAKE_DOWNLOAD_URL=https://ftpmirror.gnu.org/gnu/automake && \
     /tmp/cross-compiler/entrypoint /build_scripts/install-automake.sh
 
 COPY build_scripts/install-libtool.sh /build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
     export LIBTOOL_ROOT=libtool-2.5.4 && \
     export LIBTOOL_HASH=da8ebb2ce4dcf46b90098daf962cffa68f4b4f62ea60f798d0ef12929ede6adf && \
-    export LIBTOOL_DOWNLOAD_URL=http://ftp.gnu.org/gnu/libtool && \
+    export LIBTOOL_DOWNLOAD_URL=https://ftpmirror.gnu.org/gnu/libtool && \
     /tmp/cross-compiler/entrypoint /build_scripts/install-libtool.sh
 
 COPY build_scripts/install-libxcrypt.sh /build_scripts/
