@@ -2,19 +2,20 @@
 
 set -euo pipefail
 
-IMAGES=(manylinux2014 manylinux_2_28 manylinux_2_31 manylinux_2_34 manylinux_2_39 musllinux_1_2)
+IMAGES=(manylinux2014 manylinux_2_28 manylinux_2_31 manylinux_2_34 manylinux_2_35 manylinux_2_39 musllinux_1_2)
 
 podman login -u "${QUAY_USERNAME}" -p "${QUAY_PASSWORD}" quay.io
 
 for IMAGE in "${IMAGES[@]}"; do
 	echo "::group::${IMAGE} check"
-	LAST_TAG="$(oras repo tags --last "2025.06.08-1" "quay.io/pypa/${IMAGE}" | tail -2 | head -1)"
+	LAST_TAG="$(oras repo tags --last "2025.11.08-2" "quay.io/pypa/${IMAGE}" | tail -2 | head -1)"
 	if [ "${LAST_TAG}" == "" ]; then
-		 LAST_TAG=2025.06.08-1
+		 LAST_TAG=2025.11.08-2
 	fi
 	echo "last tag is ${LAST_TAG}"
 	case ${IMAGE} in
 		manylinux_2_31) REF_IMAGE=manylinux_2_31_armv7l;;
+		manylinux_2_35) REF_IMAGE=manylinux_2_35_armv7l;;
 		manylinux_2_39) REF_IMAGE=manylinux_2_39_aarch64;;
 		*) REF_IMAGE=${IMAGE}_x86_64;;
 	esac
@@ -33,6 +34,7 @@ for IMAGE in "${IMAGES[@]}"; do
 
 	case ${IMAGE} in
 		manylinux_2_31) ARCHS=("armv7l");;
+		manylinux_2_35) ARCHS=("armv7l");;
 		manylinux_2_39) ARCHS=("aarch64" "riscv64");;
 		musllinux_1_2) ARCHS=("x86_64" "i686" "aarch64" "armv7l" "ppc64le" "s390x" "riscv64");;
 		*) ARCHS=("x86_64" "i686" "aarch64" "ppc64le" "s390x");;
