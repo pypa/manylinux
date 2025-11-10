@@ -22,8 +22,7 @@ on November 30th, 2020.
 PEP 599 defines the following platform tags: ``manylinux2014_x86_64``,
 ``manylinux2014_i686``, ``manylinux2014_aarch64``, ``manylinux2014_armv7l``,
 ``manylinux2014_ppc64``, ``manylinux2014_ppc64le`` and ``manylinux2014_s390x``.
-Wheels are built on CentOS 7 which will reach End of Life (EOL) on June 30th,
-2024.
+Wheels are built on CentOS 7. CentOS 7 reached End of Life (EOL) on June 30th, 2024.
 
 PEP 600 has been designed to be "future-proof" and does not enforce specific symbols and a specific distro to build.
 It only states that a wheel tagged ``manylinux_x_y`` shall work on any distro based on ``glibc>=x.y``. PEP 656 added
@@ -35,9 +34,17 @@ The manylinux project supports:
 
 - ``manylinux2014`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
 
-- ``manylinux_2_28`` images for ``x86_64``, ``aarch64``, ``ppc64le`` and ``s390x``.
+- ``manylinux_2_28`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
 
-- ``musllinux_1_2`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le``, ``s390x`` and ``armv7l``.
+- ``manylinux_2_31`` images for ``armv7l``.
+
+- ``manylinux_2_34`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le`` and ``s390x``.
+
+- ``manylinux_2_35`` images for ``armv7l``.
+
+- ``manylinux_2_39`` images for ``aarch64`` and ``riscv64``.
+
+- ``musllinux_1_2`` images for ``x86_64``, ``i686``, ``aarch64``, ``ppc64le``, ``s390x``, ``armv7l`` and ``riscv64``.
 
 
 Wheel packages compliant with those tags can be uploaded to
@@ -92,13 +99,118 @@ etc., we provide `Docker <https://docker.com/>`_ images where we've
 done the work for you. The images are uploaded to `quay.io`_ and are tagged
 for repeatable builds.
 
+manylinux_2_39 (AlmaLinux/RockyLinux 10 based) - ALPHA
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Toolchain: GCC 14
+
+- aarch64 image: ``quay.io/pypa/manylinux_2_39_aarch64``
+- riscv64 image: ``quay.io/pypa/manylinux_2_39_riscv64``
+
+Built wheels are also expected to be compatible with other
+distros using glibc 2.39 or later, including:
+
+- Debian 13+
+- Ubuntu 24.04+
+- Fedora 40+
+- CentOS/RHEL 10+
+
+
+manylinux_2_35 (Ubuntu 22.04 based) - armv7l only
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Caveat:
+
+Only Debian derivatives are available for armv7l. They do not provide recent builds of the GCC toolchain
+compatible with a vanilla install of the distribution. As such, we only get the GCC toolchain shipped with
+the base distribution.
+
+The package manager & packages names are different than what is found on other manylinux images.
+Other images are using RHEL derivatives only for now so using yum/dnf as a package manager and RHEL like
+packages names this image is using apt and Debian like packages names.
+
+If one depends on let's say OpenSSL development package, then, the commands to issue to install it are a bit different:
+
+- ``dnf -y install openssl-devel`` on RHEL derivatives
+- ``apt-get update && apt-get install -y libssl-dev`` on Debian derivatives
+
+
+Toolchain: GCC 11
+
+- armv7l image: ``quay.io/pypa/manylinux_2_35_armv7l``
+
+Built wheels are also expected to be compatible with other
+distros using glibc 2.35 or later, including:
+
+- Debian 12+
+- Ubuntu 22.04+
+
+
+manylinux_2_34 (AlmaLinux 9 based) - ALPHA
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Caveat:
+On x86_64, RHEL 9+ derivatives are using x86-64-v2 target architecture.
+While manylinux worked around that when building from sources by intercepting compiler calls to target
+x86_64 instead, every library installed with dnf will most likely target the more recent x86-64-v2 which, if
+grafted into a wheel, will fail to run on older hardware. There's no PEP to handle micro-architecture variants
+yet when it comes to packaging or installing wheels. Auditwheel doesn't detect this either.
+See https://github.com/pypa/manylinux/issues/1725
+
+Toolchain: GCC 14
+
+- x86_64 image: ``quay.io/pypa/manylinux_2_34_x86_64``
+- i686 image: ``quay.io/pypa/manylinux_2_34_i686``
+- aarch64 image: ``quay.io/pypa/manylinux_2_34_aarch64``
+- ppc64le image: ``quay.io/pypa/manylinux_2_34_ppc64le``
+- s390x image: ``quay.io/pypa/manylinux_2_34_s390x``
+
+Built wheels are also expected to be compatible with other
+distros using glibc 2.34 or later, including:
+
+- Debian 12+
+- Ubuntu 21.10+
+- Fedora 35+
+- CentOS/RHEL 9+
+
+
+manylinux_2_31 (Ubuntu 20.04 based) - armv7l only
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Caveat:
+
+Only Debian derivatives are available for armv7l. They do not provide recent builds of the GCC toolchain
+compatible with a vanilla install of the distribution. As such, we only get the GCC toolchain shipped with
+the base distribution.
+
+The package manager & packages names are different than what is found on other manylinux images.
+Other images are using RHEL derivatives only for now so using yum/dnf as a package manager and RHEL like
+packages names this image is using apt and Debian like packages names.
+
+If one depends on let's say OpenSSL development package, then, the commands to issue to install it are a bit different:
+
+- ``dnf -y install openssl-devel`` on RHEL derivatives
+- ``apt-get update && apt-get install -y libssl-dev`` on Debian derivatives
+
+
+Toolchain: GCC 9
+
+- armv7l image: ``quay.io/pypa/manylinux_2_31_armv7l``
+
+Built wheels are also expected to be compatible with other
+distros using glibc 2.31 or later, including:
+
+- Debian 11+
+- Ubuntu 20.04+
+
 
 manylinux_2_28 (AlmaLinux 8 based)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Toolchain: GCC 13
+Toolchain: GCC 14
 
 - x86_64 image: ``quay.io/pypa/manylinux_2_28_x86_64``
+- i686 image: ``quay.io/pypa/manylinux_2_28_i686``
 - aarch64 image: ``quay.io/pypa/manylinux_2_28_aarch64``
 - ppc64le image: ``quay.io/pypa/manylinux_2_28_ppc64le``
 - s390x image: ``quay.io/pypa/manylinux_2_28_s390x``
@@ -172,10 +284,10 @@ Toolchain: GCC 4.8
 - i686 image: ``quay.io/pypa/manylinux1_i686``
 
 
-musllinux_1_2 (Alpine Linux 3.20 based, 3.13+ compatible)
+musllinux_1_2 (Alpine Linux 3.22 based, 3.13+ compatible)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Toolchain: GCC 13
+Toolchain: GCC 14
 
 - x86_64 image: ``quay.io/pypa/musllinux_1_2_x86_64``
 - i686 image: ``quay.io/pypa/musllinux_1_2_i686``
@@ -183,6 +295,7 @@ Toolchain: GCC 13
 - ppc64le image: ``quay.io/pypa/musllinux_1_2_ppc64le``
 - s390x image: ``quay.io/pypa/musllinux_1_2_s390x``
 - armv7l image: ``quay.io/pypa/musllinux_1_2_armv7l``
+- riscv64 image: ``quay.io/pypa/musllinux_1_2_riscv64``
 
 
 musllinux_1_1 (Alpine Linux 3.12 based - EOL)
@@ -210,12 +323,12 @@ Image content
 
 All supported images currently contain:
 
-- CPython 3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.13t and PyPy 3.7, 3.8, 3.9, 3.10 installed in
+- CPython 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.13t, 3.14, 3.14t and PyPy 3.11 installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
-  e.g. ``/opt/python/cp37-cp37m`` contains a CPython 3.7 build, and
+  e.g. ``/opt/python/cp313-cp313`` contains a CPython 3.13 build, and
   can be used to produce wheels named like
-  ``<pkg>-<version>-cp37-cp37m-<arch>.whl``.
+  ``<pkg>-<version>-cp313-cp313-<arch>.whl``.
 
 - Development packages for all the libraries that PEP 571/599 list. One should not assume the presence of any other development package.
 
@@ -224,13 +337,12 @@ All supported images currently contain:
    - `cmake <https://pypi.org/p/cmake>`_
    - `patchelf <https://pypi.org/p/patchelf>`_
    - `swig <https://pypi.org/p/swig>`_
-   - `uv <https://pypi.org/p/uv>`_ (not available on ``musllinux s390x`` yet due to Rust limitations)
+   - `uv <https://pypi.org/p/uv>`_ (not available on ``musllinux ppc64le`` & ``musllinux s390x`` yet due to Rust limitations)
 
 - All Python interpreters have the following packages pre-installed:
    - `pip <https://pypi.org/p/pip>`_
    - `build <https://pypi.org/p/build>`_
    - `packaging <https://pypi.org/p/packaging>`_
-   - Before Python 3.12, `setuptools <https://pypi.org/p/setuptools>`_ and `wheel <https://pypi.org/p/wheel>`_ are also available.
 
 - The manylinux-interpreters tool which allows to list all available interpreters & install ones missing from the image
 

@@ -58,7 +58,7 @@ companies who have been distributing such widely-portable pre-compiled Python
 extension modules for Linux -- e.g. Enthought with Canopy [4]_ and Continuum
 Analytics with Anaconda [5]_.
 
-Building on the compability lessons learned from these companies, we thus
+Building on the compatibility lessons learned from these companies, we thus
 define a baseline ``manylinux1`` platform tag for use by binary Python
 wheels, and introduce the implementation of preliminary tools to aid in the
 construction of these ``manylinux1`` wheels.

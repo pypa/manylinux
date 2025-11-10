@@ -7,11 +7,12 @@ set -exuo pipefail
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
 # Get build utilities
-source $MY_DIR/build_utils.sh
+# shellcheck source-path=SCRIPTDIR
+source "${MY_DIR}/build_utils.sh"
 
 # most people don't need libpython*.a, and they're many megabytes.
 # compress them all together for best efficiency
-if [ $(find /opt/_internal -path '/opt/_internal/cpython-*/lib/libpython*.a' | wc -l) -ne 0 ]; then
+if [ "$(find /opt/_internal -path '/opt/_internal/cpython-*/lib/libpython*.a' | wc -l)" -ne 0 ]; then
 	pushd /opt/_internal
 	XZ_OPT=-9e tar -cJf static-libs-for-embedding-only.tar.xz cpython-*/lib/libpython*.a
 	popd
@@ -27,8 +28,8 @@ export PIP_CACHE_DIR=/tmp/pip_cache
 
 # update package, create symlinks for each python
 mkdir /opt/python
-for PREFIX in $(find /opt/_internal/ -mindepth 1 -maxdepth 1 -name 'cpython*'); do
-	${MY_DIR}/finalize-one.sh ${PREFIX}
+for PREFIX in /opt/_internal/cpython*; do
+	"${MY_DIR}/finalize-one.sh" "${PREFIX}"
 done
 
 # create manylinux-interpreters script
@@ -37,7 +38,7 @@ cat <<EOF > /usr/local/bin/manylinux-interpreters
 
 set -euo pipefail
 
-/opt/python/cp312-cp312/bin/python $MY_DIR/manylinux-interpreters.py "\$@"
+/opt/python/cp312-cp312/bin/python "${MY_DIR}/manylinux-interpreters.py" "\$@"
 EOF
 chmod 755 /usr/local/bin/manylinux-interpreters
 
@@ -48,7 +49,7 @@ TOOLS_PATH=/opt/_internal/tools
 /opt/python/cp312-cp312/bin/python -m venv --without-pip ${TOOLS_PATH}
 
 # Install certifi and pipx
-/opt/python/cp312-cp312/bin/python -m pip --python ${TOOLS_PATH}/bin/python install -U --require-hashes -r ${MY_DIR}/requirements-base-tools.txt
+/opt/python/cp312-cp312/bin/python -m pip --python ${TOOLS_PATH}/bin/python install -U --require-hashes -r "${MY_DIR}/requirements-base-tools.txt"
 
 # Make pipx available in PATH,
 # Make sure when root installs apps, they're also in the PATH
@@ -70,7 +71,7 @@ chmod 755 /usr/local/bin/pipx
 #   (https://github.com/pypa/manylinux/issues/53)
 # And it's not clear how up-to-date that is anyway
 # So let's just use the same one pip and everyone uses
-ln -s $(${TOOLS_PATH}/bin/python -c 'import certifi; print(certifi.where())') /opt/_internal/certs.pem
+ln -s "$(${TOOLS_PATH}/bin/python -c 'import certifi; print(certifi.where())')" /opt/_internal/certs.pem
 # If you modify this line you also have to modify the versions in the Dockerfiles:
 export SSL_CERT_FILE=/opt/_internal/certs.pem
 
@@ -80,13 +81,17 @@ export SSL_CERT_FILE=/opt/_internal/certs.pem
 pipx upgrade-shared --pip-args="--no-index --find-links=/tmp/pinned-wheels"
 
 # install other tools with pipx
-for TOOL_PATH in $(find ${MY_DIR}/requirements-tools -type f); do
-	TOOL=$(basename ${TOOL_PATH})
+for TOOL_PATH in "${MY_DIR}/requirements-tools/"*; do
+	TOOL=$(basename "${TOOL_PATH}")
 	case ${AUDITWHEEL_PLAT}-${TOOL} in
+		musllinux*_ppc64le-uv) continue;;  # uv doesn't provide musl ppc64le wheels due to Rust issues
 		musllinux*_s390x-uv) continue;;  # uv doesn't provide musl s390x wheels due to Rust issues
-		*) pipx install --pip-args="--require-hashes -r ${TOOL_PATH} --only-binary" ${TOOL};;
+		musllinux*_riscv64-uv) continue;;  # uv doesn't provide musl riscv64 wheels due to Rust issues
+		*) pipx install --pip-args="--require-hashes -r ${TOOL_PATH} --only-binary" "${TOOL}";;
 	esac
 done
+
+"${MY_DIR}/install-git-lfs.sh"
 
 # We do not need the precompiled .pyc and .pyo files.
 clean_pyc /opt/_internal
@@ -97,4 +102,12 @@ rm -rf /tmp/* || true
 hardlink -c /opt/_internal
 
 # update system packages
-LC_ALL=C ${MY_DIR}/update-system-packages.sh
+LC_ALL=C "${MY_DIR}/update-system-packages.sh"
+
+# wrap compilers (see https://github.com/pypa/manylinux/issues/1725)
+"${MY_DIR}/install-gcc-wrapper.sh"
+
+# patch libstdc++.so  (see https://github.com/pypa/manylinux/issues/1760)
+if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ]; then
+	find "${DEVTOOLSET_ROOTPATH}" -name 'libstdc++.so' -exec sed -i 's/INPUT\s*(\s*\([^ ]\+\)\s*\([^ ]\+\)\s*)/INPUT ( \1 \2 \1 )/g' {} \;
+fi

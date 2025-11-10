@@ -6,12 +6,14 @@ import sys
 def is_manylinux1_compatible():
     # Only Linux, and only x86-64 / i686
     from sysconfig import get_platform
+
     if get_platform() not in ["linux-x86_64", "linux-i686"]:
         return False
 
     # Check for presence of _manylinux module
     try:
         import _manylinux
+
         return bool(_manylinux.manylinux1_compatible)
     except (ImportError, AttributeError):
         # Fall through to heuristic check below
@@ -24,12 +26,14 @@ def is_manylinux1_compatible():
 def is_manylinux2010_compatible():
     # Only Linux, and only x86-64 / i686
     from sysconfig import get_platform
+
     if get_platform() not in ["linux-x86_64", "linux-i686"]:
         return False
 
     # Check for presence of _manylinux module
     try:
         import _manylinux
+
         return bool(_manylinux.manylinux2010_compatible)
     except (ImportError, AttributeError):
         # Fall through to heuristic check below
@@ -42,6 +46,7 @@ def is_manylinux2010_compatible():
 def is_manylinux2014_compatible():
     # Only Linux, and only supported architectures
     from sysconfig import get_platform
+
     if get_platform() not in [
         "linux-x86_64",
         "linux-i686",
@@ -57,6 +62,7 @@ def is_manylinux2014_compatible():
     # Check for presence of _manylinux module
     try:
         import _manylinux
+
         return bool(_manylinux.manylinux2014_compatible)
     except (ImportError, AttributeError):
         # Fall through to heuristic check below
@@ -90,32 +96,35 @@ def have_compatible_glibc(major, minimum_minor):
     assert len(version) == 2
     if major != version[0]:
         return False
-    if minimum_minor > version[1]:
-        return False
-    return True
+    return minimum_minor <= version[1]
 
 
 exit_code = 0
 
-if sys.argv[2] in {"x86_64", "i686"} and (sys.argv[1] in {"manylinux1", "manylinux2010", "manylinux2014"} or sys.argv[1].startswith("manylinux_")):
+if sys.argv[2] in {"x86_64", "i686"} and (
+    sys.argv[1] in {"manylinux1", "manylinux2010", "manylinux2014"}
+    or sys.argv[1].startswith("manylinux_")
+):
     if is_manylinux1_compatible():
-        print("%s %s is manylinux1 compatible" % (sys.argv[1], sys.executable))
+        print(f"{sys.argv[1]} {sys.executable} is manylinux1 compatible")
     else:
-        print("%s %s is NOT manylinux1 compatible" % (sys.argv[1], sys.executable))
+        print(f"{sys.argv[1]} {sys.executable} is NOT manylinux1 compatible")
         exit_code = 1
 
-if sys.argv[2] in {"x86_64", "i686"} and (sys.argv[1] in {"manylinux2010", "manylinux2014"} or sys.argv[1].startswith("manylinux_")):
+if sys.argv[2] in {"x86_64", "i686"} and (
+    sys.argv[1] in {"manylinux2010", "manylinux2014"} or sys.argv[1].startswith("manylinux_")
+):
     if is_manylinux2010_compatible():
-        print("%s %s is manylinux2010 compatible" % (sys.argv[1], sys.executable))
+        print(f"{sys.argv[1]} {sys.executable} is manylinux2010 compatible")
     else:
-        print("%s %s is NOT manylinux2010 compatible" % (sys.argv[1], sys.executable))
+        print(f"{sys.argv[1]} {sys.executable} is NOT manylinux2010 compatible")
         exit_code = 1
 
 if sys.argv[1] in {"manylinux2014"} or sys.argv[1].startswith("manylinux_"):
     if is_manylinux2014_compatible():
-        print("%s %s is manylinux2014 compatible" % (sys.argv[1], sys.executable))
+        print(f"{sys.argv[1]} {sys.executable} is manylinux2014 compatible")
     else:
-        print("%s %s is NOT manylinux2014 compatible" % (sys.argv[1], sys.executable))
+        print(f"{sys.argv[1]} {sys.executable}  is NOT manylinux2014 compatible")
         exit_code = 1
 
 sys.exit(exit_code)

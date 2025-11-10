@@ -8,40 +8,30 @@ set -exuo pipefail
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
 # Get build utilities
-source $MY_DIR/build_utils.sh
+# shellcheck source-path=SCRIPTDIR
+source "${MY_DIR}/build_utils.sh"
 
 # if a devel package is added to COMPILE_DEPS,
 # make sure the corresponding library is added to RUNTIME_DEPS if applicable
 
-if [ "${BASE_POLICY}" == "manylinux" ]; then
-	COMPILE_DEPS="bzip2-devel ncurses-devel readline-devel gdbm-devel libpcap-devel xz-devel openssl openssl-devel keyutils-libs-devel krb5-devel libcom_err-devel libidn-devel curl-devel uuid-devel libffi-devel kernel-headers libdb-devel perl-IPC-Cmd"
+if [ "${OS_ID_LIKE}" = "rhel" ]; then
+	COMPILE_DEPS=(bzip2-devel ncurses-devel readline-devel gdbm-devel xz-devel openssl openssl-devel curl-devel uuid-devel libffi-devel kernel-headers perl-IPC-Cmd)
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
-		PACKAGE_MANAGER=yum
-		COMPILE_DEPS="${COMPILE_DEPS} libXft-devel"
+		COMPILE_DEPS+=(libXft-devel)
+		COMPILE_DEPS+=(keyutils-libs-devel krb5-devel libcom_err-devel libidn-devel)  # we rebuild curl
+	elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
+		COMPILE_DEPS+=(tk-devel)
 	else
-		PACKAGE_MANAGER=dnf
-		COMPILE_DEPS="${COMPILE_DEPS} tk-devel"
+		COMPILE_DEPS+=(tk-devel)
 	fi
-elif [ "${BASE_POLICY}" == "musllinux" ]; then
-	PACKAGE_MANAGER=apk
-	COMPILE_DEPS="bzip2-dev ncurses-dev readline-dev tk-dev gdbm-dev libpcap-dev xz-dev openssl openssl-dev keyutils-dev krb5-dev libcom_err libidn-dev curl-dev util-linux-dev libffi-dev linux-headers"
+elif [ "${OS_ID_LIKE}" == "debian" ]; then
+	COMPILE_DEPS=(libbz2-dev libncurses-dev libreadline-dev tk-dev libgdbm-dev libdb-dev liblzma-dev openssl libssl-dev libcurl4-openssl-dev uuid-dev libffi-dev linux-headers-generic)
+elif [ "${OS_ID_LIKE}" == "alpine" ]; then
+	COMPILE_DEPS=(bzip2-dev ncurses-dev readline-dev tk-dev gdbm-dev xz-dev openssl openssl-dev curl-dev util-linux-dev libffi-dev linux-headers)
 else
 	echo "Unsupported policy: '${AUDITWHEEL_POLICY}'"
 	exit 1
 fi
 
-
-if [ "${PACKAGE_MANAGER}" == "yum" ]; then
-	yum -y install ${COMPILE_DEPS}
-	yum clean all
-	rm -rf /var/cache/yum
-elif [ "${PACKAGE_MANAGER}" == "apk" ]; then
-	apk add --no-cache ${COMPILE_DEPS}
-elif [ "${PACKAGE_MANAGER}" == "dnf" ]; then
- 	dnf -y install --allowerasing ${COMPILE_DEPS}
- 	dnf clean all
- 	rm -rf /var/cache/yum
-else
-	echo "Not implemented"
-	exit 1
-fi
+manylinux_pkg_install "${COMPILE_DEPS[@]}"
+manylinux_pkg_clean
