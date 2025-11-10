@@ -145,6 +145,11 @@ def _update_sqlite(dry_run):
 def _update_with_gh(tool, dry_run):
     repo = {
         "libxcrypt": "besser82/libxcrypt",
+        "zstd": "facebook/zstd",
+    }
+    extension = {
+        "libxcrypt": "tar.xz",
+        "zstd": "tar.gz",
     }
     lines = DOCKERFILE.read_text().splitlines()
     re_ = re.compile(f"^    export {tool.upper()}_VERSION=(?P<version>\\S+) && \\\\$")
@@ -153,13 +158,13 @@ def _update_with_gh(tool, dry_run):
         if match is None:
             continue
         current_version = Version(match["version"])
-        latest_tag = latest(repo[tool], output_format="tag")
+        latest_tag = latest(repo[tool], output_format="tag", having_asset=True)
         latest_version = Version(latest_tag)
         if latest_version > current_version:
             url = re.match(
                 f"^    export {tool.upper()}_DOWNLOAD_URL=(?P<url>\\S+) && \\\\$", lines[i + 2]
             )["url"]
-            sha256 = _sha256(f"{url}/{latest_tag}/libxcrypt-{latest_version}.tar.xz")
+            sha256 = _sha256(f"{url}/{latest_tag}/{tool}-{latest_version}.{extension[tool]}")
             lines[i + 0] = f"    export {tool.upper()}_VERSION={latest_version} && \\"
             lines[i + 1] = f"    export {tool.upper()}_HASH={sha256} && \\"
             message = f"Bump {tool} {current_version} → {latest_version}"
@@ -257,7 +262,7 @@ def main():
             _update_with_root(tool, args.dry_run)
         except Exception as e:
             print(f"::warning::update: {e}\n", file=sys.stderr)
-    for tool in ["libxcrypt"]:
+    for tool in ["libxcrypt", "zstd"]:
         try:
             _update_with_gh(tool, args.dry_run)
         except Exception as e:

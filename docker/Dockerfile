@@ -135,10 +135,19 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_base AS build_mpdecimal
 COPY build_scripts/build-mpdecimal.sh /build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export MPDECIMAL_ROOT=mpdecimal-4.0.0 && \
-    export MPDECIMAL_HASH=942445c3245b22730fd41a67a7c5c231d11cb1b9936b9c0f76334fb7d0b4468c && \
+    export MPDECIMAL_ROOT=mpdecimal-4.0.1 && \
+    export MPDECIMAL_HASH=96d33abb4bb0070c7be0fed4246cd38416188325f820468214471938545b1ac8 && \
     export MPDECIMAL_DOWNLOAD_URL=https://www.bytereef.org/software/mpdecimal/releases && \
     /tmp/cross-compiler/entrypoint /build_scripts/build-mpdecimal.sh
+
+
+FROM build_base AS build_zstd
+COPY build_scripts/build-zstd.sh /build_scripts/
+RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
+    export ZSTD_VERSION=1.5.7 && \
+    export ZSTD_HASH=eb33e51f49a15e023950cd7825ca74a4a2b43db8354825ac24fc1b7ee09e6fa3 && \
+    export ZSTD_DOWNLOAD_URL=https://github.com/facebook/zstd/releases/download && \
+    /tmp/cross-compiler/entrypoint /build_scripts/build-zstd.sh
 
 
 FROM --platform=${BUILDPLATFORM} ghcr.io/sigstore/cosign/cosign:v${MANYLINUX_COSIGN_VERSION} AS cosign-bin
@@ -147,6 +156,7 @@ FROM --platform=${BUILDPLATFORM} ghcr.io/sigstore/cosign/cosign:v${MANYLINUX_COS
 FROM build_base AS build_cpython
 COPY --from=build_tcl_tk /manylinux-buildfs /
 COPY --from=build_mpdecimal /manylinux-buildfs /
+COPY --from=build_zstd /manylinux-buildfs /
 COPY --from=build_sqlite3 /manylinux-buildfs /
 RUN if command -v apk >/dev/null 2>&1; then ldconfig /; else ldconfig; fi
 COPY build_scripts/build-openssl.sh /build_scripts/
@@ -208,6 +218,7 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM runtime_base
 COPY --from=build_tcl_tk /manylinux-rootfs /
 COPY --from=build_mpdecimal /manylinux-rootfs /
+COPY --from=build_zstd /manylinux-rootfs /
 COPY --from=build_sqlite3 /manylinux-rootfs /
 COPY --from=build_git /manylinux-rootfs /
 COPY build_scripts /opt/_internal/build_scripts/
@@ -221,7 +232,8 @@ RUN --mount=type=bind,target=/build_cpython38,from=build_cpython38 \
     --mount=type=bind,target=/build_cpython314,from=build_cpython314 \
     --mount=type=bind,target=/build_cpython314_nogil,from=build_cpython314_nogil \
     mkdir -p /opt/_internal && \
-    cp -rf /build_cpython*/opt/_internal/* /opt/_internal/ && \
+    cp -rf /build_cpython*/opt/_internal/cpython* /opt/_internal/ && \
+    if test -n "$(find /build_cpython314/opt/_internal -maxdepth 1 -name 'openssl*' -print -quit)"; then cp -rf /build_cpython314/opt/_internal/openssl* /opt/_internal/; fi && \
     manylinux-entrypoint /opt/_internal/build_scripts/finalize.sh \
       pp311-pypy311_pp73
 
