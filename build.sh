@@ -25,7 +25,7 @@ esac
 
 # setup BASEIMAGE and its specific properties
 if [ "${POLICY}" == "manylinux2014" ]; then
-	BASEIMAGE="quay.io/pypa/manylinux2014_base:2024.11.03-3"
+	BASEIMAGE="quay.io/pypa/manylinux2014_base:2025.11.10-3"
 	DEVTOOLSET_ROOTPATH="/opt/rh/devtoolset-10/root"
 	PREPEND_PATH="${DEVTOOLSET_ROOTPATH}/usr/bin:"
 	if [ "${PLATFORM}" == "i686" ]; then
