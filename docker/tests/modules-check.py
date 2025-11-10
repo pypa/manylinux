@@ -16,7 +16,10 @@ class TestModules(unittest.TestCase):
         # When the extension is not installed, it raises:
         # sqlite3.OperationalError: no such module: fts5
         conn = sqlite3.connect(":memory:")
-        conn.execute("create virtual table fts5test using fts5 (data);")
+        try:
+            conn.execute("create virtual table fts5test using fts5 (data);")
+        finally:
+            conn.close()
 
     def test_tkinter(self):
         # Make sure tkinter module can be loaded properly
