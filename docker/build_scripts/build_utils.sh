@@ -120,6 +120,12 @@ function manylinux_pkg_clean {
 	if [ "${PACKAGE_MANAGER}" = "yum" ]; then
 		yum clean all
 		rm -rf /var/cache/yum
+		if [ -f /var/log/anaconda/journal.log ]; then
+			rm /var/log/anaconda/journal.log
+		fi
+		if [ -d /var/lib/yum/history ]; then
+			rm -rf /var/lib/yum/history
+		fi
 	elif [ "${PACKAGE_MANAGER}" = "dnf" ]; then
 		dnf clean all
 		rm -rf /var/cache/dnf
