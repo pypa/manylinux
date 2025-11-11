@@ -7,7 +7,7 @@ if [ "${AUDITWHEEL_ARCH}" != "x86_64" ]; then
 	exit 0
 fi
 
-if ! echo | gcc -S -x c -v - 2>&1 | grep 'march=x86-64-v' > /dev/null; then
+if ! echo | gcc -S -x c -o /dev/null -v - 2>&1 | grep 'march=x86-64-v' > /dev/null; then
 	exit 0
 fi
 
@@ -91,19 +91,19 @@ for EXE in "${DEVTOOLSET_ROOTPATH}"/usr/bin/*; do
 	if diff -q "${EXE}" "${DEVTOOLSET_ROOTPATH}/usr/bin/gcc"; then
 		LINK_NAME=/usr/local/bin/$(basename "${EXE}")
 		ln -s manylinux-gcc-wrapper "${LINK_NAME}"
-		if echo | "${LINK_NAME}" -S -x c -v - 2>&1 | grep 'march=x86-64-v' > /dev/null; then
+		if echo | "${LINK_NAME}" -S -x c -o /dev/null -v - 2>&1 | grep 'march=x86-64-v' > /dev/null; then
 			exit 1
 		fi
 	elif diff -q "${EXE}" "${DEVTOOLSET_ROOTPATH}/usr/bin/g++"; then
 		LINK_NAME=/usr/local/bin/$(basename "${EXE}")
 		ln -s manylinux-gcc-wrapper "${LINK_NAME}"
-		if echo | "${LINK_NAME}" -S -x c++ -v - 2>&1 | grep 'march=x86-64-v' > /dev/null; then
+		if echo | "${LINK_NAME}" -S -x c++ -o /dev/null -v - 2>&1 | grep 'march=x86-64-v' > /dev/null; then
 			exit 1
 		fi
 	elif diff -q "${EXE}" "${DEVTOOLSET_ROOTPATH}/usr/bin/gfortran"; then
 		LINK_NAME=/usr/local/bin/$(basename "${EXE}")
 		ln -s manylinux-gcc-wrapper "${LINK_NAME}"
-		if echo | "${LINK_NAME}" -S -x f77 -v - 2>&1 | grep 'march=x86-64-v' > /dev/null; then
+		if echo | "${LINK_NAME}" -S -x f77 -o /dev/null -v - 2>&1 | grep 'march=x86-64-v' > /dev/null; then
 			exit 1
 		fi
 	fi
