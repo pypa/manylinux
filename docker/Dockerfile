@@ -81,8 +81,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 
 COPY build_scripts/install-libxcrypt.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export LIBXCRYPT_VERSION=4.5.1 && \
-    export LIBXCRYPT_HASH=e9b46a62397c15372935f6a75dc3929c62161f2620be7b7f57f03d69102c1a86 && \
+    export LIBXCRYPT_VERSION=4.5.2 && \
+    export LIBXCRYPT_HASH=71513a31c01a428bccd5367a32fd95f115d6dac50fb5b60c779d5c7942aec071 && \
     export LIBXCRYPT_DOWNLOAD_URL=https://github.com/besser82/libxcrypt/releases/download && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/install-libxcrypt.sh
 
