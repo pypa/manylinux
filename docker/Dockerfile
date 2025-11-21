@@ -101,8 +101,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-curl.sh
 COPY build_scripts/build-git.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export GIT_ROOT=git-2.51.2 && \
-    export GIT_HASH=9b44c2b337ec838e10aad42439d390963904449710d30c9e7e4ba449f45da98f && \
+    export GIT_ROOT=git-2.52.0 && \
+    export GIT_HASH=6880cb1e737e26f81cf7db9957ab2b5bb2aa1490d87619480b860816e0c10c32 && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-git.sh
 
