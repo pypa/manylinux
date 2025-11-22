@@ -19,11 +19,12 @@ case "${BASE_POLICY}-${AUDITWHEEL_ARCH}" in
 	manylinux-*) TARGET_TRIPLE=${AUDITWHEEL_ARCH}-unknown-linux-gnu;;
 	musllinux-*) TARGET_TRIPLE=${AUDITWHEEL_ARCH}-alpine-linux-musl;;
 esac
-case "${AUDITWHEEL_ARCH}" in
-	riscv64) M_ARCH="-march=rv64gc";;
-	x86_64) M_ARCH="-march=x86-64";;
-	armv7l) M_ARCH="-march=armv7a";;
-	i686) M_ARCH="-march=i686";;
+case "${BASE_POLICY}-${AUDITWHEEL_ARCH}" in
+	*-riscv64) M_ARCH="-march=rv64gc";;
+	*-x86_64) M_ARCH="-march=x86-64";;
+	*-armv7l) M_ARCH="-march=armv7a";;
+	manylinux-i686) M_ARCH="-march=k8 -mtune=generic";;  # same as gcc manylinux2014 / manylinux_2_28
+	musllinux-i686) M_ARCH="-march=pentium-m -mtune=generic";;  # same as gcc musllinux_1_2
 esac
 GCC_TRIPLE=$(gcc -dumpmachine)
 
