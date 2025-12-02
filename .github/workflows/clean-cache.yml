@@ -15,13 +15,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: false
 
+permissions: {}
+
 jobs:
   cleanup:
     if: github.repository == 'pypa/manylinux'
     name: Clean image cache
     runs-on: ubuntu-latest
     permissions:
-      packages: write
+      packages: write  # needed to delete images
     steps:
       - uses: dataaxiom/ghcr-cleanup-action@cd0cdb900b5dbf3a6f2cc869f0dbb0b8211f50c4 # v1.0.16
         with:
