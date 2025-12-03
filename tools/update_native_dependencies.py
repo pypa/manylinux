@@ -31,7 +31,9 @@ def _sha256(url):
 
 def _update_cpython(dry_run):
     lines = DOCKERFILE.read_text().splitlines()
-    re_ = re.compile(r"^    /tmp/cross-compiler/entrypoint /build_scripts/build-cpython.sh .*$")
+    re_ = re.compile(
+        r"^    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh .*$"
+    )
     updates = defaultdict(list)
     for i in range(len(lines)):
         match = re_.match(lines[i])
