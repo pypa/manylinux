@@ -20,9 +20,9 @@ pipx==1.8.0 \
     --hash=sha256:61a653ef2046de67c3201306b9d07428e93c80e6bebdcbbcb8177ecf3328b403 \
     --hash=sha256:b9535d59108d31675e7e14a837273e7816be2b8f08a96b3cc48daf09c066e696
     # via -r requirements-base-tools.in
-platformdirs==4.5.0 \
-    --hash=sha256:70ddccdd7c99fc5942e9fc25636a8b34d04c24b335100223152c2803e4063312 \
-    --hash=sha256:e578a81bb873cbb89a41fcc904c7ef523cc18284b7e3b3ccf06aca1403b7ebd3
+platformdirs==4.5.1 \
+    --hash=sha256:61d5cdcc6065745cdd94f0f878977f8de9437be93de97c1c12f853c9c0cdcbda \
+    --hash=sha256:d03afa3963c806a9bed9d5125c8f4cb2fdaf74a55ab60e5d59b3fde758104d31
     # via pipx
 userpath==1.9.2 \
     --hash=sha256:2cbf01a23d655a1ff8fc166dfb78da1b641d1ceabf0fe5f970767d380b14e89d \
