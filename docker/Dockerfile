@@ -202,6 +202,16 @@ ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.3 nogil
 
+FROM build_cpython AS build_cpython315
+ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
+RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.15.0a5
+
+FROM build_cpython AS build_cpython315_nogil
+ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
+RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.15.0a5 nogil
+
 
 FROM runtime_base
 COPY --from=build_tcl_tk /manylinux-rootfs /
@@ -217,9 +227,11 @@ RUN --mount=type=bind,target=/build_cpython39,from=build_cpython39 \
     --mount=type=bind,target=/build_cpython313,from=build_cpython313 \
     --mount=type=bind,target=/build_cpython314,from=build_cpython314 \
     --mount=type=bind,target=/build_cpython314_nogil,from=build_cpython314_nogil \
+    --mount=type=bind,target=/build_cpython315,from=build_cpython315 \
+    --mount=type=bind,target=/build_cpython315_nogil,from=build_cpython315_nogil \
     mkdir -p /opt/_internal && \
     cp -rf /build_cpython*/opt/_internal/cpython* /opt/_internal/ && \
-    if test -n "$(find /build_cpython314/opt/_internal -maxdepth 1 -name 'openssl*' -print -quit)"; then cp -rf /build_cpython314/opt/_internal/openssl* /opt/_internal/; fi && \
+    if test -n "$(find /build_cpython315/opt/_internal -maxdepth 1 -name 'openssl*' -print -quit)"; then cp -rf /build_cpython315/opt/_internal/openssl* /opt/_internal/; fi && \
     manylinux-entrypoint /opt/_internal/build_scripts/finalize.sh \
       pp311-pypy311_pp73
 
