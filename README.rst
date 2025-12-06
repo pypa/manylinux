@@ -323,7 +323,7 @@ Image content
 
 All supported images currently contain:
 
-- CPython 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.14, 3.14t and PyPy 3.11 installed in
+- CPython 3.9, 3.10, 3.11, 3.12, 3.13, 3.14, 3.14t and PyPy 3.11 installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
   e.g. ``/opt/python/cp313-cp313`` contains a CPython 3.13 build, and
