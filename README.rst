@@ -102,7 +102,7 @@ for repeatable builds.
 manylinux_2_39 (AlmaLinux/RockyLinux 10 based) - ALPHA
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Toolchain: GCC 14
+Toolchain: GCC 15
 
 - aarch64 image: ``quay.io/pypa/manylinux_2_39_aarch64``
 - riscv64 image: ``quay.io/pypa/manylinux_2_39_riscv64``
@@ -157,7 +157,7 @@ grafted into a wheel, will fail to run on older hardware. There's no PEP to hand
 yet when it comes to packaging or installing wheels. Auditwheel doesn't detect this either.
 See https://github.com/pypa/manylinux/issues/1725
 
-Toolchain: GCC 14
+Toolchain: GCC 15
 
 - x86_64 image: ``quay.io/pypa/manylinux_2_34_x86_64``
 - i686 image: ``quay.io/pypa/manylinux_2_34_i686``
@@ -207,7 +207,7 @@ distros using glibc 2.31 or later, including:
 manylinux_2_28 (AlmaLinux 8 based)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Toolchain: GCC 14
+Toolchain: GCC 15
 
 - x86_64 image: ``quay.io/pypa/manylinux_2_28_x86_64``
 - i686 image: ``quay.io/pypa/manylinux_2_28_i686``
@@ -284,10 +284,10 @@ Toolchain: GCC 4.8
 - i686 image: ``quay.io/pypa/manylinux1_i686``
 
 
-musllinux_1_2 (Alpine Linux 3.22 based, 3.13+ compatible)
+musllinux_1_2 (Alpine Linux 3.23 based, 3.13+ compatible)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Toolchain: GCC 14
+Toolchain: GCC 15
 
 - x86_64 image: ``quay.io/pypa/musllinux_1_2_x86_64``
 - i686 image: ``quay.io/pypa/musllinux_1_2_i686``
@@ -323,12 +323,12 @@ Image content
 
 All supported images currently contain:
 
-- CPython 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.13t, 3.14, 3.14t and PyPy 3.11 installed in
+- CPython 3.9, 3.10, 3.11, 3.12, 3.13, 3.14, 3.14t, 3.15, 3.15t and PyPy 3.11 installed in
   ``/opt/python/<python tag>-<abi tag>``. The directories are named
   after the PEP 425 tags for each environment --
-  e.g. ``/opt/python/cp313-cp313`` contains a CPython 3.13 build, and
+  e.g. ``/opt/python/cp314-cp314`` contains a CPython 3.14 build, and
   can be used to produce wheels named like
-  ``<pkg>-<version>-cp313-cp313-<arch>.whl``.
+  ``<pkg>-<version>-cp314-cp314-<arch>.whl``.
 
 - Development packages for all the libraries that PEP 571/599 list. One should not assume the presence of any other development package.
 
