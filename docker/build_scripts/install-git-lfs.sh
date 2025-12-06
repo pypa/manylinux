@@ -31,8 +31,8 @@ fi
 
 tar -Ozxf "${MY_DIR}/git-lfs-core-gpg-keys" | gpg --import -
 
-curl -fsSLo "${GIT_LFS_SHA256}" "https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VERSION}/sha256sums.asc"
-curl -fsSLo "${GIT_LFS_ARCHIVE}" "https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VERSION}/${GIT_LFS_ARCHIVE}"
+curl -fsSL --retry 10 -o "${GIT_LFS_SHA256}" "https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VERSION}/sha256sums.asc"
+curl -fsSL --retry 10 -o "${GIT_LFS_ARCHIVE}" "https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VERSION}/${GIT_LFS_ARCHIVE}"
 
 gpg -d "${GIT_LFS_SHA256}" | grep "${GIT_LFS_ARCHIVE}" | sha256sum -c
 if [ "${AUDITWHEEL_POLICY}" != "manylinux2014" ]; then
