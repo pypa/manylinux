@@ -197,11 +197,6 @@ ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.12
 
-FROM build_cpython AS build_cpython313_nogil
-ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
-RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.12 nogil
-
 FROM build_cpython AS build_cpython314
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
@@ -226,7 +221,6 @@ RUN --mount=type=bind,target=/build_cpython38,from=build_cpython38 \
     --mount=type=bind,target=/build_cpython311,from=build_cpython311 \
     --mount=type=bind,target=/build_cpython312,from=build_cpython312 \
     --mount=type=bind,target=/build_cpython313,from=build_cpython313 \
-    --mount=type=bind,target=/build_cpython313_nogil,from=build_cpython313_nogil \
     --mount=type=bind,target=/build_cpython314,from=build_cpython314 \
     --mount=type=bind,target=/build_cpython314_nogil,from=build_cpython314_nogil \
     mkdir -p /opt/_internal && \
