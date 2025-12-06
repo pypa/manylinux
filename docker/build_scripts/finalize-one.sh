@@ -36,7 +36,7 @@ elif [ -f "/usr/local/bin/cpython${PY_VER}" ]; then
 else
 	"${PREFIX}/bin/python" -m ensurepip
 	case ${PY_VER} in
-		3.8|3.9|3.10|3.11) "${PREFIX}/bin/python" -m pip uninstall -y setuptools;;
+		3.9|3.10|3.11) "${PREFIX}/bin/python" -m pip uninstall -y setuptools;;
 	esac
 	"${PREFIX}/bin/python" -m pip install -U --require-hashes -r "${MY_DIR}/requirements${PY_VER}.txt"
 fi
