@@ -113,7 +113,7 @@ if [ "${MANYLINUX_DISABLE_CLANG_FOR_CPYTHON:-}" == "" ]; then
 		case "${PLATFORM}" in
 			aarch64|x86_64) MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=1;; # gcc is Tier-1, clang is Tier-2
 			armv7l) MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=1;; # gcc is Tier-3, clang not supported at all
-			s390x) MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=1;; # gcc is Tier-3, clang not supported at all
+			# s390x) MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=1;; # gcc is Tier-3, clang not supported at all, gcc is too slow, use clang anyway
 			*) ;;
 		esac
 	fi
