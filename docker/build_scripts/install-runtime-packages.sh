@@ -163,6 +163,9 @@ if [ "${BASE_POLICY}" == "manylinux" ]; then
 	# as LD_LIBRARY_PATH does not seem enough.
 	# c.f. https://github.com/pypa/manylinux/issues/1022
 	echo "/usr/local/lib" > /etc/ld.so.conf.d/00-manylinux.conf
+	if [ -d "/usr/local/lib64" ]; then
+		echo "/usr/local/lib64" >> /etc/ld.so.conf.d/00-manylinux.conf
+	fi
 	ldconfig
 else
 	# set the default shell to bash
