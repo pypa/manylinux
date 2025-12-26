@@ -162,6 +162,8 @@ if [ "${BASE_POLICY}" == "manylinux" ]; then
 	# this is needed to ensure the new one will be found
 	# as LD_LIBRARY_PATH does not seem enough.
 	# c.f. https://github.com/pypa/manylinux/issues/1022
+	# we also want to keep those standard build directories searched by ld
+	# c.f. https://github.com/pypa/manylinux/issues/1886
 	echo "/usr/local/lib" > /etc/ld.so.conf.d/00-manylinux.conf
 	if [ -d "/usr/local/lib64" ]; then
 		echo "/usr/local/lib64" >> /etc/ld.so.conf.d/00-manylinux.conf
