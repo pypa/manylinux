@@ -77,6 +77,7 @@ def _update_with_root(tool, dry_run):
     }
     only = {
         "autoconf": r"~v?[0-9]+\.[0-9]+(\.[0-9]+)?$",
+        "openssl": "3.5.",
     }
     exclude = {
         "libtool": r"~2\.5\.[0-2]$",  # pre-release
@@ -87,7 +88,7 @@ def _update_with_root(tool, dry_run):
         match = re_.match(lines[i])
         if match is None:
             continue
-        current_version = Version(match["version"], char_fix_required=tool == "openssl")
+        current_version = Version(match["version"])
         latest_version = latest(
             repo[tool], major=major.get(tool), only=only.get(tool), exclude=exclude.get(tool)
         )
