@@ -405,7 +405,7 @@ the following retention policy is applied:
 
 - images will default to 5 years retention
 - tags used by `cibuildwheel <https://github.com/pypa/cibuildwheel>`_ releases will never expire
-- the last image of a specific policy will never expire
+- when a specific manylinux/musllinux policy variant goes out of support, its latest tag will be manually updated to never expire
 
 Building Docker images
 ----------------------
