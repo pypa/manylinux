@@ -82,7 +82,7 @@ def get_cibuildwheel_tags() -> dict[str, set[str]]:
             for version in versions:
                 version_ = Version(version)
                 if version_ < Version("1.10.0"):
-                    # allow removal for images used by cibuildwheel<1.10.0
+                    # skip older cibuildwheel versions; only protect images from 1.10.0 and later
                     continue
                 update_cibuildwheel_tags(version, result)
         finally:
