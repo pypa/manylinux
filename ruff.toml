@@ -24,6 +24,7 @@ extend-select = [
   "PYI",         # flake8-pyi
 ]
 ignore = [
-  "PLR",    # Design related pylint codes
-  "ISC001", # Conflicts with formatter
+  "PLC0415", # `import` should be at the top-level of a file
+  "PLR",     # Design related pylint codes
+  "ISC001",  # Conflicts with formatter
 ]
