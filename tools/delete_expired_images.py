@@ -82,6 +82,7 @@ def get_cibuildwheel_tags() -> dict[str, set[str]]:
             for version in versions:
                 version_ = Version(version)
                 if version_ < Version("1.10.0"):
+                    # allow removal for images used by cibuildwheel<1.10.0
                     continue
                 update_cibuildwheel_tags(version, result)
         finally:
@@ -107,7 +108,7 @@ def get_images_to_delete(
         "musllinux_1_1_s390x:2024-06-03-e195670",  # cibuildwheel v2.19.0
     }
     tag_re = re.compile(r"^(?P<year>\d+)[-.](?P<month>\d+)[-.](?P<day>\d+)[-.]")
-    temp_result = defaultdict(set)
+    images_to_delete_candidates = defaultdict(set)
     # keep the last tag before dropping python versions (likely already part of cibuildwheel tags)
     all_tags_to_keep = {
         "2021-02-06-3d322a5",  # last tag before python 2.7 drop
@@ -141,13 +142,13 @@ def get_images_to_delete(
                 break
             tags_dict.update({item["name"]: item for item in repo_info["tags"]})
             page += 1
-        item = tags_dict.pop("latest")
+        item = tags_dict.pop("latest")  # all repositories are guaranteed to have a "latest" tag
         manifest_to_keep = {item["manifest_digest"]}
         for tag in sorted(all_tags_to_keep):
             item = tags_dict.pop(tag, None)
             if item is None:
                 image_tag = f"{image}:{tag}"
-                if image_tag not in known_missing and tag in cibuildwheel_tags[image]:
+                if image_tag not in known_missing and tag in cibuildwheel_tags.get(image, set()):
                     print(f"::warning::image {image_tag} is missing")
                 continue
             manifest_to_keep.add(item["manifest_digest"])
@@ -162,10 +163,10 @@ def get_images_to_delete(
                 continue
             tag_date = datetime.date(int(match["year"]), int(match["month"]), int(match["day"]))
             if tag_date < expiration_date:
-                temp_result[image].add(tag)
+                images_to_delete_candidates[image].add(tag)
     # try to keep things consistent between images
     result = []
-    for image, tags in temp_result.items():
+    for image, tags in images_to_delete_candidates.items():
         tags_ = tags - all_tags_to_keep
         result.extend(f"{image}:{tag}" for tag in tags_)
     return sorted(result)
@@ -191,6 +192,9 @@ def main():
     args = parser.parse_args()
     expiration_date = datetime.datetime.now(datetime.UTC).date()
     if (expiration_date.month, expiration_date.day) == (2, 29):
+        # This avoids constructing an invalid date when the target year is not a leap year.
+        # Note: this means images may have a slightly different retention period when the
+        # script is run on a leap day compared to other days.
         expiration_date = expiration_date.replace(day=28)
     expiration_date = expiration_date.replace(year=expiration_date.year - 5)
     print(f"expiration date: {expiration_date.isoformat()}")
