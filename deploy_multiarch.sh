@@ -48,7 +48,7 @@ for IMAGE in "${IMAGES[@]}"; do
 				SRC_IMAGES+=("docker://quay.io/pypa/${IMAGE}_${ARCH}:${TAG_TO_PUSH}")
 		done
 		MANIFEST="${IMAGE}:${TAG_TO_PUSH}"
-		if ! podman manifest create "${MANIFEST}" "${SRC_IMAGES[@]}"; then
+		if ! podman manifest create --annotation "quay.expires-after=260w" "${MANIFEST}" "${SRC_IMAGES[@]}"; then
 			echo "::error ::failed to create '${MANIFEST}' manifest using ${SRC_IMAGES[*]}"
 		else
 			if ! podman manifest push --all "${MANIFEST}" "docker://quay.io/pypa/${IMAGE}:${TAG_TO_PUSH}"; then
