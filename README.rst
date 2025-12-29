@@ -404,8 +404,8 @@ In order to reduce the space used by obsolete images on `quay.io <https://quay.i
 the following retention policy is applied:
 
 - images will default to 5 years retention
-- tags used by `cibuildwheel <https://github.com/pypa/cibuildwheel>`_ releases will never expire
-- when a specific manylinux/musllinux policy variant goes out of support, its latest tag will be manually updated to never expire
+- tags used by `cibuildwheel <https://github.com/pypa/cibuildwheel>`_ 1.10.0 and later releases (including pre-releases) will never expire
+- when a specific manylinux/musllinux policy variant goes out of support, its latest tag will never expire
 
 Building Docker images
 ----------------------
