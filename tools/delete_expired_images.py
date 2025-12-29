@@ -9,6 +9,7 @@ import functools
 import os
 import re
 import subprocess
+import sys
 import tempfile
 from collections import defaultdict
 from pathlib import Path
@@ -20,7 +21,7 @@ from urllib3.util import Retry
 
 
 @functools.cache
-def requests() -> Session:
+def requests_session() -> Session:
     retries = Retry(
         total=3,
         backoff_factor=0.1,
@@ -45,8 +46,8 @@ def update_cibuildwheel_tags(version: str, tags: dict[str, set[str]]) -> None:
     )
     config_path = Path("cibuildwheel/resources/pinned_docker_images.cfg")
     if not config_path.is_file():
-        print(f"::error ::no configuration for cibuildwheel {version}")
-        exit(1)
+        print(f"::error::no configuration for cibuildwheel {version}")
+        sys.exit(1)
     config = configparser.ConfigParser()
     config.read(config_path)
     for section in config.sections():
@@ -131,7 +132,7 @@ def get_images_to_delete(
         tags_dict = {}
         page = 1
         while True:
-            response = requests().get(
+            response = requests_session().get(
                 f"https://quay.io/api/v1/repository/pypa/{image}/tag/?page={page}&limit=100&onlyActiveTags=true"
             )
             response.raise_for_status()
@@ -147,7 +148,7 @@ def get_images_to_delete(
             if item is None:
                 image_tag = f"{image}:{tag}"
                 if image_tag not in known_missing and tag in cibuildwheel_tags[image]:
-                    print(f"::warning ::image {image_tag} is missing")
+                    print(f"::warning::image {image_tag} is missing")
                 continue
             manifest_to_keep.add(item["manifest_digest"])
 
@@ -157,7 +158,7 @@ def get_images_to_delete(
                 continue
             match = tag_re.match(tag)
             if not match:
-                print(f"::warning ::image {image}:{tag} is invalid")
+                print(f"::warning::image {image}:{tag} is invalid")
                 continue
             tag_date = datetime.date(int(match["year"]), int(match["month"]), int(match["day"]))
             if tag_date < expiration_date:
@@ -180,6 +181,7 @@ def delete_images(image_list: list[str], *, dry_run: bool = True) -> None:
         subprocess.run(
             ["skopeo", "delete", f"docker://{image_url}"],
             check=True,
+            stdin=subprocess.DEVNULL,
         )
 
 
