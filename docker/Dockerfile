@@ -211,6 +211,7 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 
 
 FROM runtime_base
+LABEL quay.expires-after="260w"
 COPY --from=build_tcl_tk /manylinux-rootfs /
 COPY --from=build_mpdecimal /manylinux-rootfs /
 COPY --from=build_zstd /manylinux-rootfs /

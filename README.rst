@@ -397,6 +397,16 @@ been removed. (e.g. ``/opt/python/cp38-cp38``)
 
 Note that PyPy is not available on ppc64le & s390x or on the musllinux images.
 
+Image retention policy
+----------------------
+
+In order to reduce the space used by obsolete images on `quay.io <https://quay.io/organization/pypa>`_,
+the following retention policy is applied:
+
+- images will default to 5 years retention
+- tags used by `cibuildwheel <https://github.com/pypa/cibuildwheel>`_ releases will never expire
+- the last image of a specific policy will never expire
+
 Building Docker images
 ----------------------
 
