@@ -35,7 +35,7 @@ if [ "${POLICY}" == "manylinux2014" ]; then
 	fi
 elif [ "${POLICY}" == "manylinux_2_28" ]; then
 	BASEIMAGE="quay.io/almalinuxorg/almalinux:8"
-	DEVTOOLSET_ROOTPATH="/opt/rh/gcc-toolset-14/root"
+	DEVTOOLSET_ROOTPATH="/opt/rh/gcc-toolset-15/root"
 	PREPEND_PATH="${DEVTOOLSET_ROOTPATH}/usr/bin:"
 	LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"
 elif [ "${POLICY}" == "manylinux_2_31" ]; then
@@ -45,7 +45,7 @@ elif [ "${POLICY}" == "manylinux_2_31" ]; then
 	LD_LIBRARY_PATH_ARG=
 elif [ "${POLICY}" == "manylinux_2_34" ]; then
 	BASEIMAGE="quay.io/almalinuxorg/almalinux:9"
-	DEVTOOLSET_ROOTPATH="/opt/rh/gcc-toolset-14/root"
+	DEVTOOLSET_ROOTPATH="/opt/rh/gcc-toolset-15/root"
 	PREPEND_PATH="/usr/local/bin:${DEVTOOLSET_ROOTPATH}/usr/bin:"
 	LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"
 elif [ "${POLICY}" == "manylinux_2_35" ]; then
@@ -59,15 +59,11 @@ elif [ "${POLICY}" == "manylinux_2_39" ]; then
 		x86_64) GOARCH="amd64/v2";;
 		riscv64) BASEIMAGE="rockylinux/rockylinux:10";;
 	esac
-	# TODO enable gcc-toolset-15 once available (probably in 10.1)
-	# DEVTOOLSET_ROOTPATH="/opt/rh/gcc-toolset-15/root"
-	# PREPEND_PATH="/usr/local/bin:${DEVTOOLSET_ROOTPATH}/usr/bin:"
-	# LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"
-	DEVTOOLSET_ROOTPATH=
-	PREPEND_PATH=
-	LD_LIBRARY_PATH_ARG=
+	DEVTOOLSET_ROOTPATH="/opt/rh/gcc-toolset-15/root"
+	PREPEND_PATH="/usr/local/bin:${DEVTOOLSET_ROOTPATH}/usr/bin:"
+	LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"
 elif [ "${POLICY}" == "musllinux_1_2" ]; then
-	BASEIMAGE="alpine:3.22"
+	BASEIMAGE="alpine:3.23"
 	DEVTOOLSET_ROOTPATH=
 	PREPEND_PATH=
 	LD_LIBRARY_PATH_ARG=
