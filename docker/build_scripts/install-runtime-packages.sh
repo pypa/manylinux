@@ -128,7 +128,13 @@ elif [ "${OS_ID_LIKE}" == "rhel" ]; then
 		dnf config-manager --set-enabled crb
 	fi
 	dnf -y upgrade
-	TOOLCHAIN_DEPS=(gcc-toolset-15-binutils gcc-toolset-15-gcc gcc-toolset-15-gcc-c++ gcc-toolset-15-gcc-gfortran gcc-toolset-15-libatomic-devel)
+	if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ]; then
+		TOOLCHAIN_DEPS=(gcc-toolset-14-binutils gcc-toolset-14-gcc gcc-toolset-14-gcc-c++ gcc-toolset-14-gcc-gfortran gcc-toolset-14-libatomic-devel)
+	else
+		# TODO enable gcc-toolset-15 once available (probably in 10.1)
+		# TOOLCHAIN_DEPS=(gcc-toolset-15-binutils gcc-toolset-15-gcc gcc-toolset-15-gcc-c++ gcc-toolset-15-gcc-gfortran gcc-toolset-15-libatomic-devel)
+		TOOLCHAIN_DEPS=(binutils gcc gcc-c++ gcc-gfortran libatomic)
+	fi
 elif [ "${OS_ID_LIKE}" == "debian" ]; then
 	TOOLCHAIN_DEPS+=(binutils gcc g++ gfortran libatomic1)
 	BASE_TOOLS+=(gpg gpg-agent hardlink hostname locales xz-utils)
