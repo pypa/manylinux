@@ -42,3 +42,8 @@ repos:
   - id: codespell
     args: ["-w"]
     exclude: ^docker/build_scripts/.*pubkey.*.txt$
+
+- repo: https://github.com/zizmorcore/zizmor-pre-commit
+  rev: v1.19.0
+  hooks:
+  - id: zizmor
