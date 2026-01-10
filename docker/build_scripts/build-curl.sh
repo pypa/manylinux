@@ -31,11 +31,21 @@ fi
 SO_COMPAT=4
 PREFIX=/opt/_internal/curl-${SO_COMPAT}
 
+OPENSSL_LDFLAGS=
+if [ -d /opt/_internal ]; then
+	OPENSSL_LIB=$(find /opt/_internal -type d -name 'lib' -path '*/openssl*/*')
+	if [ "${OPENSSL_LIB}" != "" ]; then
+		test -d "${OPENSSL_LIB}/pkgconfig"
+		export PKG_CONFIG_PATH="${OPENSSL_LIB}/pkgconfig:${PKG_CONFIG_PATH}"
+		OPENSSL_LDFLAGS="-Wl,-rpath=${OPENSSL_LIB}"
+	fi
+fi
+
 fetch_source "${CURL_ROOT}.tar.gz" "${CURL_DOWNLOAD_URL}"
 check_sha256sum "${CURL_ROOT}.tar.gz" "${CURL_HASH}"
 tar -xzf "${CURL_ROOT}.tar.gz"
 pushd "${CURL_ROOT}"
-./configure --prefix=${PREFIX} --disable-static --without-libpsl --with-openssl CPPFLAGS="${MANYLINUX_CPPFLAGS}" CFLAGS="${MANYLINUX_CFLAGS}" CXXFLAGS="${MANYLINUX_CXXFLAGS}" LDFLAGS="${MANYLINUX_LDFLAGS} -Wl,-rpath=\$(LIBRPATH)" > /dev/null
+./configure --prefix=${PREFIX} --disable-static --without-libpsl --with-openssl CPPFLAGS="${MANYLINUX_CPPFLAGS}" CFLAGS="${MANYLINUX_CFLAGS}" CXXFLAGS="${MANYLINUX_CXXFLAGS}" LDFLAGS="${MANYLINUX_LDFLAGS} -Wl,-rpath=\$(LIBRPATH) ${OPENSSL_LDFLAGS}" > /dev/null
 make > /dev/null
 make install > /dev/null
 popd
