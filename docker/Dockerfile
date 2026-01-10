@@ -92,7 +92,16 @@ COPY build_scripts/install-build-packages.sh /opt/_internal/build_scripts/
 RUN manylinux-entrypoint /opt/_internal/build_scripts/install-build-packages.sh
 
 
-FROM build_base AS build_git
+FROM build_base AS build_base_openssl
+COPY build_scripts/build-openssl.sh /opt/_internal/build_scripts/
+RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
+    export OPENSSL_ROOT=openssl-3.5.4 && \
+    export OPENSSL_HASH=967311f84955316969bdb1d8d4b983718ef42338639c621ec4c34fddef355e99 && \
+    export OPENSSL_DOWNLOAD_URL=https://github.com/openssl/openssl/releases/download/${OPENSSL_ROOT} && \
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-openssl.sh
+
+
+FROM build_base_openssl AS build_git
 COPY build_scripts/build-curl.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
     export CURL_ROOT=curl-8.18.0 && \
@@ -148,18 +157,12 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM --platform=${BUILDPLATFORM} ghcr.io/sigstore/cosign/cosign:v${MANYLINUX_COSIGN_VERSION} AS cosign-bin
 
 
-FROM build_base AS build_cpython
+FROM build_base_openssl AS build_cpython
 COPY --from=build_tcl_tk /manylinux-buildfs /
 COPY --from=build_mpdecimal /manylinux-buildfs /
 COPY --from=build_zstd /manylinux-buildfs /
 COPY --from=build_sqlite3 /manylinux-buildfs /
 RUN if command -v apk >/dev/null 2>&1; then ldconfig /; else ldconfig; fi
-COPY build_scripts/build-openssl.sh /opt/_internal/build_scripts/
-RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export OPENSSL_ROOT=openssl-3.5.4 && \
-    export OPENSSL_HASH=967311f84955316969bdb1d8d4b983718ef42338639c621ec4c34fddef355e99 && \
-    export OPENSSL_DOWNLOAD_URL=https://github.com/openssl/openssl/releases/download/${OPENSSL_ROOT} && \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-openssl.sh
 COPY --from=cosign-bin /ko-app/cosign /usr/local/bin/cosign
 COPY build_scripts/build-cpython.sh /opt/_internal/build_scripts/
 
