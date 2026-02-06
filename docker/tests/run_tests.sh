@@ -96,8 +96,8 @@ for PYTHON in /opt/python/*/bin/python; do
 	fi
 	if [ "${IMPLEMENTATION}" != "graalpy" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_ppc64le" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ] && [ "${AUDITWHEEL_ARCH}" != "riscv64" ]; then
 		# no uv on musllinux ppc64le / s390x
-		UV_PYTHON=/tmp/uv-test-${IMPLEMENTATION}${PYVERS}/bin/python
-		uv venv --python "${PYTHON}" "/tmp/uv-test-${IMPLEMENTATION}${PYVERS}"
+		UV_PYTHON=/tmp/uv-test-${PY_ABI_TAGS}/bin/python
+		uv venv --python "${PYTHON}" "/tmp/uv-test-${PY_ABI_TAGS}"
 		uv pip install --python "${UV_PYTHON}" "${REPAIRED_WHEEL}"
 		if [ "$(${UV_PYTHON} -c 'import forty_two; print(forty_two.answer())')" != "42" ]; then
 			echo "invalid answer, expecting 42"
