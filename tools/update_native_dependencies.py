@@ -3,6 +3,7 @@
 # ///
 
 import argparse
+import datetime
 import hashlib
 import re
 import subprocess
@@ -124,6 +125,7 @@ def _update_sqlite(dry_run):
         patch = version_int // 100
         current_version = Version(f"{major}.{minor}.{patch}")
         latest_dict = latest("sqlite/sqlite", output_format="dict")
+        latest_dict['tag_date'] = datetime.datetime.fromisoformat(latest_dict['tag_date'])
         latest_version = latest_dict["version"]
         if latest_version > current_version:
             version_int = (
