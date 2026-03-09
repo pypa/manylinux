@@ -113,6 +113,7 @@ if [ "${EXPECTED_PYTHON_COUNT_ALL}" -ne "${PYTHON_COUNT}" ]; then
 fi
 
 # minimal tests for tools that should be present
+abi3audit --version
 auditwheel --version
 autoconf --version
 automake --version
