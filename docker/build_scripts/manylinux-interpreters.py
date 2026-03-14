@@ -33,7 +33,7 @@ def get_all_tags(no_check: bool = False):
     if no_check:
         all_tags_ |= set(PYTHON_TAGS.keys())
     all_tags = list(all_tags_)
-    all_tags.sort(key=lambda tag: sort_key(tag))
+    all_tags.sort(key=sort_key)
     return all_tags
 
 

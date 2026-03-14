@@ -69,6 +69,7 @@ jobs:
     name: ${{ matrix.policy }}_${{ matrix.platform }}
     needs: build_matrix
     runs-on: ${{ matrix.runner }}
+    environment: quay.io
     permissions:
       packages: write  # needed to write image cache
       contents: read
