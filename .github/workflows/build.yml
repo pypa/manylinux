@@ -44,6 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
+      environment: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux') && 'quay.io' || '' }}
     steps:
       - id: matrix
         name: build matrix
@@ -69,7 +70,7 @@ jobs:
     name: ${{ matrix.policy }}_${{ matrix.platform }}
     needs: build_matrix
     runs-on: ${{ matrix.runner }}
-    environment: ""
+    environment: ${{ needs.build_matrix.outputs.environment }}
     permissions:
       packages: write  # needed to write image cache
       contents: read
@@ -108,7 +109,7 @@ jobs:
         run: ./build.sh
 
       - name: Deploy
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
+        if: needs.build_matrix.outputs.environment == 'quay.io'
         run: ./deploy.sh
         env:
           QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
