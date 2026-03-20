@@ -16,9 +16,9 @@ packaging==26.0 \
     --hash=sha256:00243ae351a257117b6a241061796684b084ed1c516a08c48a3f7e147a9d80b4 \
     --hash=sha256:b36f1fef9334a5588b4166f8bcd26a14e521f2b55e6b9de3aaa80d3ff7a37529
     # via pipx
-pipx==1.8.0 \
-    --hash=sha256:61a653ef2046de67c3201306b9d07428e93c80e6bebdcbbcb8177ecf3328b403 \
-    --hash=sha256:b9535d59108d31675e7e14a837273e7816be2b8f08a96b3cc48daf09c066e696
+pipx==1.10.0 \
+    --hash=sha256:38aa67c3db53c5debbbba996c18641ee79bb4515b17122ad7795ee693c18f820 \
+    --hash=sha256:a06002900885d0cdf0577867c9b7640bc4ca52db0bac27e8b9b6fa2d2b2c3cbc
     # via -r requirements-base-tools.in
 platformdirs==4.9.4 \
     --hash=sha256:1ec356301b7dc906d83f371c8f487070e99d3ccf9e501686456394622a01a934 \
