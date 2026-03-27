@@ -60,8 +60,8 @@ COPY --from=static_clang_prepare /tmp/cross-compiler /
 FROM runtime_base_packages AS runtime_base
 COPY build_scripts/install-autoconf.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export AUTOCONF_ROOT=autoconf-2.72 && \
-    export AUTOCONF_HASH=afb181a76e1ee72832f6581c0eddf8df032b83e2e0239ef79ebedc4467d92d6e && \
+    export AUTOCONF_ROOT=autoconf-2.73 && \
+    export AUTOCONF_HASH=259ddfa3bddc799cfb81489cc0f17dfdf1bd6d1505dda53c0f45ff60d6a4f9a7 && \
     export AUTOCONF_DOWNLOAD_URL=https://ftpmirror.gnu.org/gnu/autoconf && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/install-autoconf.sh
 
