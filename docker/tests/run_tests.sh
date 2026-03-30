@@ -94,7 +94,7 @@ for PYTHON in /opt/python/*/bin/python; do
 		echo "invalid answer, expecting 42"
 		exit 1
 	fi
-	if [ "${IMPLEMENTATION}" != "graalpy" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_ppc64le" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ] && [ "${AUDITWHEEL_ARCH}" != "riscv64" ]; then
+	if [ "${IMPLEMENTATION}" != "graalpy" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_ppc64le" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ] && [ "${AUDITWHEEL_ARCH}" != "riscv64" ] && [ "${AUDITWHEEL_ARCH}" != "loongarch64" ]; then
 		# no uv on musllinux ppc64le / s390x
 		UV_PYTHON=/tmp/uv-test-${PY_ABI_TAGS}/bin/python
 		uv venv --python "${PYTHON}" "/tmp/uv-test-${PY_ABI_TAGS}"
