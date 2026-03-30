@@ -17,6 +17,7 @@ case "${AUDITWHEEL_ARCH}" in
 	i686) GOARCH=386;;
 	aarch64) GOARCH=arm64;;
 	armv7l) GOARCH=arm;;
+	loongarch64) GOARCH=loong64;;
 	*) GOARCH="${AUDITWHEEL_ARCH}";;
 esac
 

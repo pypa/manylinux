@@ -115,20 +115,28 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	fi
 	fixup-mirrors
 elif [ "${OS_ID_LIKE}" == "rhel" ]; then
-	BASE_TOOLS+=(glibc-locale-source glibc-langpack-en gnupg2 gzip hardlink hostname libcurl libnsl libxcrypt which)
+	BASE_TOOLS+=(glibc-locale-source glibc-langpack-en gnupg2 gzip hardlink hostname libcurl libxcrypt which)
+	if [ "${AUDITWHEEL_ARCH}" == "loongarch64" ]; then
+		BASE_TOOLS+=(attr cracklib-dicts dejavu-sans-fonts info langpacks-core-font-en libnsl2 libpciaccess-devel jansson keyutils pcre-devel perl-core perl-FindBin perl-IO-Socket-SSL perl-Mozilla-CA perl-NDBM_File perl-subs tar)
+	else
+		BASE_TOOLS+=(libnsl)
+	fi
 	echo "tsflags=nodocs" >> /etc/dnf/dnf.conf
 	EPEL=epel-release
 	if [ "${AUDITWHEEL_ARCH}" == "i686" ] || [ "${AUDITWHEEL_ARCH}" == "riscv64" ]; then
 		EPEL=
+	elif [ "${AUDITWHEEL_ARCH}" == "loongarch64" ]; then
+		EPEL=anolis-epao-release
+		curl -fsSLo /etc/yum.repos.d/AnolisOS-Devel.repo https://github.com/Loongson-Cloud-Community/docker-library/raw/39dd347e48f476ade13d851188848cfc7f4034f8/openanolis/anolisos/23.4/AnolisOS-Devel.repo
 	fi
 	dnf -y install dnf-plugins-core ${EPEL}
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
 		dnf config-manager --set-enabled powertools
-	else
+	elif [ "${AUDITWHEEL_ARCH}" != "loongarch64" ]; then
 		dnf config-manager --set-enabled crb
 	fi
 	dnf -y upgrade
-	if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ]; then
+	if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_38" ]; then
 		TOOLCHAIN_DEPS=(gcc-toolset-14-binutils gcc-toolset-14-gcc gcc-toolset-14-gcc-c++ gcc-toolset-14-gcc-gfortran gcc-toolset-14-libatomic-devel)
 	else
 		# TODO enable gcc-toolset-15 once available (probably in 10.1)
