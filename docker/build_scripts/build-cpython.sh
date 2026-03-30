@@ -38,6 +38,20 @@ mkdir -p "${PREFIX}/lib"
 LDFLAGS_EXTRA=""
 CONFIGURE_ARGS=(--disable-shared --with-ensurepip=no)
 
+if [ "${AUDITWHEEL_ARCH}" == "loongarch64" ]; then
+	case $CPYTHON_VERSION in
+		3.8.*)
+		    rm -f config.sub config.guess
+			fetch_source "config.sub" "https://git.savannah.gnu.org/cgit/config.git/plain"
+			fetch_source "config.guess" "https://git.savannah.gnu.org/cgit/config.git/plain"
+			curl -sL https://github.com/loong64/docker-library/raw/refs/heads/main/python/Add-platform-triplets-for-64-bit-LoongArch.patch | patch -p1
+			;;
+		3.9.*|3.10.*|3.11.*)
+			curl -sL https://github.com/loong64/docker-library/raw/refs/heads/main/python/Add-platform-triplets-for-64-bit-LoongArch.patch | patch -p1
+			;;
+	esac
+fi
+
 if [ "${4:-}" == "nogil" ]; then
 	PREFIX="${PREFIX}-nogil"
 	CONFIGURE_ARGS+=(--disable-gil)
