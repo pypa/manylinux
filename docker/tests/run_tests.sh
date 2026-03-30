@@ -94,7 +94,7 @@ for PYTHON in /opt/python/*/bin/python; do
 		echo "invalid answer, expecting 42"
 		exit 1
 	fi
-	if [ "${IMPLEMENTATION}" != "graalpy" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_ppc64le" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ] && [ "${AUDITWHEEL_ARCH}" != "riscv64" ]; then
+	if [ "${IMPLEMENTATION}" != "graalpy" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_ppc64le" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ] && [ "${AUDITWHEEL_ARCH}" != "riscv64" ] && [ "${AUDITWHEEL_ARCH}" != "loongarch64" ]; then
 		# no uv on musllinux ppc64le / s390x
 		UV_PYTHON=/tmp/uv-test-${PY_ABI_TAGS}/bin/python
 		uv venv --python "${PYTHON}" "/tmp/uv-test-${PY_ABI_TAGS}"
@@ -211,9 +211,12 @@ if manylinux-install-clang -v 21.1.8.1 -m bad_arch; then
 		exit 1
 fi
 
-manylinux-install-clang -v 20.1.8.0
-clang --version | grep '20.1.8'
-rm -rf /opt/clang
+# skip clang-20.1 check on loongarch64
+if [ "${AUDITWHEEL_ARCH}" != "loongarch64" ]; then
+	manylinux-install-clang -v 20.1.8.0
+	clang --version | grep '20.1.8'
+	rm -rf /opt/clang
+fi
 
 manylinux-install-clang -v v21.1.8.1 -c a6f87a4af8d72192219602f252d7debdf7c1e73ca4b28a2f99f2832a3ac0b487
 clang --version | grep '21.1.8'
