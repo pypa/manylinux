@@ -20,6 +20,7 @@ case "${PLATFORM}" in
 	s390x) GOARCH="s390x";;
 	armv7l) GOARCH="arm/v7";;
 	riscv64) GOARCH="riscv64";;
+	loongarch64) GOARCH="loong64";;
 	*) echo "Unsupported platform: '${PLATFORM}'"; exit 1;;
 esac
 
@@ -53,6 +54,11 @@ elif [ "${POLICY}" == "manylinux_2_35" ]; then
 	DEVTOOLSET_ROOTPATH=
 	PREPEND_PATH=
 	LD_LIBRARY_PATH_ARG=
+elif [ "${POLICY}" == "manylinux_2_38" ]; then
+	BASEIMAGE="openanolis/anolisos:23.4"
+	DEVTOOLSET_ROOTPATH="/opt/rh/gcc-toolset-14/root"
+	PREPEND_PATH="/usr/local/bin:${DEVTOOLSET_ROOTPATH}/usr/bin:"
+	LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"
 elif [ "${POLICY}" == "manylinux_2_39" ]; then
 	BASEIMAGE="quay.io/almalinuxorg/almalinux:10"
 	case "${PLATFORM}" in
@@ -68,6 +74,9 @@ elif [ "${POLICY}" == "manylinux_2_39" ]; then
 	LD_LIBRARY_PATH_ARG=
 elif [ "${POLICY}" == "musllinux_1_2" ]; then
 	BASEIMAGE="alpine:3.22"
+	case "${PLATFORM}" in
+		loongarch64) BASEIMAGE="registry.alpinelinux.org/img/alpine:3.22";;
+	esac
 	DEVTOOLSET_ROOTPATH=
 	PREPEND_PATH=
 	LD_LIBRARY_PATH_ARG=
