@@ -95,7 +95,7 @@ for PYTHON in /opt/python/*/bin/python; do
 		exit 1
 	fi
 	if [ "${IMPLEMENTATION}" != "graalpy" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_ppc64le" ] && [ "${AUDITWHEEL_POLICY:0:9}_${AUDITWHEEL_ARCH}" != "musllinux_s390x" ] && [ "${AUDITWHEEL_ARCH}" != "riscv64" ] && [ "${AUDITWHEEL_ARCH}" != "loongarch64" ]; then
-		# no uv on musllinux ppc64le / s390x
+		# no uv on GraalPy, musllinux ppc64le / s390x, riscv64, or loongarch64
 		UV_PYTHON=/tmp/uv-test-${PY_ABI_TAGS}/bin/python
 		uv venv --python "${PYTHON}" "/tmp/uv-test-${PY_ABI_TAGS}"
 		uv pip install --python "${UV_PYTHON}" "${REPAIRED_WHEEL}"
