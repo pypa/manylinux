@@ -38,25 +38,31 @@ mkdir -p "${PREFIX}/lib"
 LDFLAGS_EXTRA=""
 CONFIGURE_ARGS=(--disable-shared --with-ensurepip=no)
 
+function download_and_verify() {
+	local url=$1
+	local file=$2
+	local sha256=$3
+	curl -fsSL --retry 10 "$url" -o "$file"
+	echo "$sha256  $file" | sha256sum -c -
+}
+
 if [ "${AUDITWHEEL_ARCH}" == "loongarch64" ]; then
-	LOONG_PATCH_FILE="Add-platform-triplets-for-64-bit-LoongArch.patch"
-	# Pinned to immutable commit to avoid using moving refs/heads/main
-	LOONG_PATCH_URL="https://github.com/loong64/docker-library/raw/4f2b9e6a4b9a8f0b7f2f6e1c1b2a3c4d5e6f7a8b/python/${LOONG_PATCH_FILE}"
-	# SHA256 of the expected patch contents; update if the patch changes intentionally
-	LOONG_PATCH_SHA256="0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-	case $CPYTHON_VERSION in
-		3.8.*)
-		    rm -f config.sub config.guess
-			fetch_source "config.sub" "https://git.savannah.gnu.org/cgit/config.git/plain"
-			fetch_source "config.guess" "https://git.savannah.gnu.org/cgit/config.git/plain"
-			curl -fsSL -o "${LOONG_PATCH_FILE}" "${LOONG_PATCH_URL}"
-			echo "${LOONG_PATCH_SHA256}  ${LOONG_PATCH_FILE}" | sha256sum -c -
-			patch -p1 < "${LOONG_PATCH_FILE}"
-			;;
-		3.9.*|3.10.*|3.11.*)
-			curl -fsSL -o "${LOONG_PATCH_FILE}" "${LOONG_PATCH_URL}"
-			echo "${LOONG_PATCH_SHA256}  ${LOONG_PATCH_FILE}" | sha256sum -c -
-			patch -p1 < "${LOONG_PATCH_FILE}"
+	CONFIG_COMMIT="a2287c3041a3f2a204eb942e09c015eab00dc7dd"
+	CONFIG_SUB_SHA256="26b852f75a637448360a956931439f7e818bf63150eaadb9b85484347628d1fd"
+	CONFIG_GUESS_SHA256="50205cf3ec5c7615b17f937a0a57babf4ec5cd0aade3d7b3cccbe5f1bf91a7ef"
+	PATCH_COMMIT="5fce5d646c81528d49517a2e214022c650c52d39"
+	PATCH_FILE_SHA256="0db461609cf8385b2859cf16b4e0aa6ef1f51d368e14bd35c4b8b35b8ca00738"
+	case "$CPYTHON_VERSION" in
+		3.8.*|3.9.*|3.10.*|3.11.*)
+			if [[ $CPYTHON_VERSION == 3.8.* ]]; then
+				download_and_verify "https://git.savannah.gnu.org/cgit/config.git/plain/config.sub?id=${CONFIG_COMMIT}" "config.sub" "${CONFIG_SUB_SHA256}"
+				download_and_verify "https://git.savannah.gnu.org/cgit/config.git/plain/config.guess?id=${CONFIG_COMMIT}" "config.guess" "${CONFIG_GUESS_SHA256}"
+			fi
+			PATCH_FILE="Add-platform-triplets-for-64-bit-LoongArch.patch"
+			PATCH_URL="https://github.com/loong64/docker-library/raw/${PATCH_COMMIT}/python/${PATCH_FILE}"
+			download_and_verify "${PATCH_URL}" "${PATCH_FILE}" "${PATCH_FILE_SHA256}"
+			patch -p1 < "${PATCH_FILE}"
+			rm -f "${PATCH_FILE}"
 			;;
 	esac
 fi
