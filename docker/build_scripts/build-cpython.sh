@@ -39,15 +39,24 @@ LDFLAGS_EXTRA=""
 CONFIGURE_ARGS=(--disable-shared --with-ensurepip=no)
 
 if [ "${AUDITWHEEL_ARCH}" == "loongarch64" ]; then
+	LOONG_PATCH_FILE="Add-platform-triplets-for-64-bit-LoongArch.patch"
+	# Pinned to immutable commit to avoid using moving refs/heads/main
+	LOONG_PATCH_URL="https://github.com/loong64/docker-library/raw/4f2b9e6a4b9a8f0b7f2f6e1c1b2a3c4d5e6f7a8b/python/${LOONG_PATCH_FILE}"
+	# SHA256 of the expected patch contents; update if the patch changes intentionally
+	LOONG_PATCH_SHA256="0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
 	case $CPYTHON_VERSION in
 		3.8.*)
 		    rm -f config.sub config.guess
 			fetch_source "config.sub" "https://git.savannah.gnu.org/cgit/config.git/plain"
 			fetch_source "config.guess" "https://git.savannah.gnu.org/cgit/config.git/plain"
-			curl -sL https://github.com/loong64/docker-library/raw/refs/heads/main/python/Add-platform-triplets-for-64-bit-LoongArch.patch | patch -p1
+			curl -fsSL -o "${LOONG_PATCH_FILE}" "${LOONG_PATCH_URL}"
+			echo "${LOONG_PATCH_SHA256}  ${LOONG_PATCH_FILE}" | sha256sum -c -
+			patch -p1 < "${LOONG_PATCH_FILE}"
 			;;
 		3.9.*|3.10.*|3.11.*)
-			curl -sL https://github.com/loong64/docker-library/raw/refs/heads/main/python/Add-platform-triplets-for-64-bit-LoongArch.patch | patch -p1
+			curl -fsSL -o "${LOONG_PATCH_FILE}" "${LOONG_PATCH_URL}"
+			echo "${LOONG_PATCH_SHA256}  ${LOONG_PATCH_FILE}" | sha256sum -c -
+			patch -p1 < "${LOONG_PATCH_FILE}"
 			;;
 	esac
 fi
