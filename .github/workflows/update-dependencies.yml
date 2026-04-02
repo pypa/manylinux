@@ -24,7 +24,7 @@ jobs:
       contents: write  # needed to create new branch
       pull-requests: write  # needed to create PR for the new branch
     runs-on: ubuntu-latest
-    environment: update-bot
+    environment: ${{ ((github.repository == 'pypa/manylinux') && (github.ref == 'refs/heads/main')) && 'update-bot' || '' }}
     steps:
     - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       with:
