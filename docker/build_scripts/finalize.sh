@@ -91,7 +91,7 @@ for TOOL_PATH in "${MY_DIR}/requirements-tools/"*; do
 		*_loongarch64-cmake|*_loongarch64-swig) manylinux_pkg_install "${TOOL}";;
 		*_loongarch64-patchelf)
 			manylinux_pkg_install cmake
-			pipx install --pip-args="--require-hashes -r ${TOOL_PATH} --only-binary" "${TOOL}"
+			pipx install patchelf==0.17.2.4
 			;;
 		*) pipx install --pip-args="--require-hashes -r ${TOOL_PATH} --only-binary" "${TOOL}";;
 	esac
