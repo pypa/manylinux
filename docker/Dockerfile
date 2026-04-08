@@ -95,8 +95,8 @@ RUN manylinux-entrypoint /opt/_internal/build_scripts/install-build-packages.sh
 FROM build_base AS build_base_openssl
 COPY build_scripts/build-openssl.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export OPENSSL_ROOT=openssl-3.5.5 && \
-    export OPENSSL_HASH=b28c91532a8b65a1f983b4c28b7488174e4a01008e29ce8e69bd789f28bc2a89 && \
+    export OPENSSL_ROOT=openssl-3.5.6 && \
+    export OPENSSL_HASH=deae7c80cba99c4b4f940ecadb3c3338b13cb77418409238e57d7f31f2a3b736 && \
     export OPENSSL_DOWNLOAD_URL=https://github.com/openssl/openssl/releases/download/${OPENSSL_ROOT} && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-openssl.sh
 
