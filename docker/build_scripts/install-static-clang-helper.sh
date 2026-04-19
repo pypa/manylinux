@@ -4,7 +4,7 @@
 set -exuo pipefail
 
 # Set build environment variables
-MY_DIR=$(dirname "$(readlink -e "${BASH_SOURCE[0]}")")
+MY_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
 STATIC_CLANG_VERSIONS="${MY_DIR}/static_clang_versions.txt"
 
 usage() { echo "Usage: $0 [-v <version>] [-c <sha256sum>] [-m <machine>] [-l] [-h]"; }
