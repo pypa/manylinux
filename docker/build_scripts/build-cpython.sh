@@ -38,6 +38,35 @@ mkdir -p "${PREFIX}/lib"
 LDFLAGS_EXTRA=""
 CONFIGURE_ARGS=(--disable-shared --with-ensurepip=no)
 
+function download_and_verify() {
+	local url=$1
+	local file=$2
+	local sha256=$3
+	curl -fsSL --retry 10 "$url" -o "$file"
+	echo "$sha256  $file" | sha256sum -c -
+}
+
+if [ "${AUDITWHEEL_ARCH}" == "loongarch64" ]; then
+	CONFIG_COMMIT="a2287c3041a3f2a204eb942e09c015eab00dc7dd"
+	CONFIG_SUB_SHA256="26b852f75a637448360a956931439f7e818bf63150eaadb9b85484347628d1fd"
+	CONFIG_GUESS_SHA256="50205cf3ec5c7615b17f937a0a57babf4ec5cd0aade3d7b3cccbe5f1bf91a7ef"
+	PATCH_COMMIT="5fce5d646c81528d49517a2e214022c650c52d39"
+	PATCH_FILE_SHA256="0db461609cf8385b2859cf16b4e0aa6ef1f51d368e14bd35c4b8b35b8ca00738"
+	case "$CPYTHON_VERSION" in
+		3.8.*|3.9.*|3.10.*|3.11.*)
+			if [[ $CPYTHON_VERSION == 3.8.* ]]; then
+				download_and_verify "https://git.savannah.gnu.org/cgit/config.git/plain/config.sub?id=${CONFIG_COMMIT}" "config.sub" "${CONFIG_SUB_SHA256}"
+				download_and_verify "https://git.savannah.gnu.org/cgit/config.git/plain/config.guess?id=${CONFIG_COMMIT}" "config.guess" "${CONFIG_GUESS_SHA256}"
+			fi
+			PATCH_FILE="Add-platform-triplets-for-64-bit-LoongArch.patch"
+			PATCH_URL="https://github.com/loong64/docker-library/raw/${PATCH_COMMIT}/python/${PATCH_FILE}"
+			download_and_verify "${PATCH_URL}" "${PATCH_FILE}" "${PATCH_FILE_SHA256}"
+			patch -p1 < "${PATCH_FILE}"
+			rm -f "${PATCH_FILE}"
+			;;
+	esac
+fi
+
 if [ "${4:-}" == "nogil" ]; then
 	PREFIX="${PREFIX}-nogil"
 	CONFIGURE_ARGS+=(--disable-gil)
