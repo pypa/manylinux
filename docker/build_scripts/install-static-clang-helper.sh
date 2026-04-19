@@ -48,7 +48,9 @@ if [ "${CLANG_VERSION}" == "" ]; then
 fi
 
 if [ "${CLANG_VERSION}" == "stable" ]; then
-	CLANG_VERSION=$(grep "v21." "${STATIC_CLANG_VERSIONS}" | head -1 | awk '{ print $1 }')
+	# || test $? -eq 141 is there to ignore SIGPIPE with set -o pipefail
+  # c.f. https://stackoverflow.com/questions/22464786/ignoring-bash-pipefail-for-error-code-141#comment60412687_33026977
+	CLANG_VERSION=$( (grep "v21." "${STATIC_CLANG_VERSIONS}" | head -1 || test $? -eq 141) | awk '{ print $1 }')
 elif [ "${CLANG_VERSION}" == "latest" ]; then
 	CLANG_VERSION=$(head -1 "${STATIC_CLANG_VERSIONS}" | awk '{ print $1 }')
 fi
@@ -83,7 +85,7 @@ curl -fsSLO "${CLANG_SHA256_URL}"
 echo "${CLANG_SHA256_SHA256}  ${CLANG_SHA256_FILENAME}" > "${CLANG_SHA256_FILENAME}.sha256"
 sha256sum -c "${CLANG_SHA256_FILENAME}.sha256"
 CLANG_SHA256=$(grep "${CLANG_FILENAME}" "${CLANG_SHA256_FILENAME}" | awk '{ print $1 }')
-curl -fsSL "${CLANG_URL}"  | tee >(tar -C /opt -xJf -) | sha256sum -c <(echo "${CLANG_SHA256} -")
+curl -fsSL "${CLANG_URL}" | tee >(tar -C /opt -xJf -) | sha256sum -c <(echo "${CLANG_SHA256} -")
 rm -f ${CLANG_SHA256_FILENAME}* || true
 popd  &> /dev/null
 
