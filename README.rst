@@ -330,6 +330,11 @@ All supported images currently contain:
   can be used to produce wheels named like
   ``<pkg>-<version>-cp313-cp313-<arch>.whl``.
 
+  Note that less common or virtually unheard of flag combinations (such as ``--with-pydebug`` (``d``)) are not provided.
+
+  Note that PyPy is not available on ppc64le & s390x or on the musllinux images.
+
+
 - Development packages for all the libraries that PEP 571/599 list. One should not assume the presence of any other development package.
 
 - The following development tools, installed via `pipx <https://pypi.org/p/pipx>`_ (which is also available):
@@ -387,15 +392,30 @@ All supported images currently contain:
       options:
         -h, --help  show this help message and exit
 
-Note that less common or virtually unheard of flag combinations
-(such as ``--with-pydebug`` (``d``) and ``--without-pymalloc`` (absence of ``m``)) are not provided.
+- The ``manylinux-install-clang`` tool which allows to install a clang/LLVM toolchain (BETA)
 
-Note that `starting with CPython 3.8 <https://docs.python.org/dev/whatsnew/3.8.html#build-and-c-api-changes>`_,
-default ``sys.abiflags`` became an empty string: the ``m`` flag for pymalloc
-became useless (builds with and without pymalloc are ABI compatible) and so has
-been removed. (e.g. ``/opt/python/cp38-cp38``)
+  .. code-block:: bash
 
-Note that PyPy is not available on ppc64le & s390x or on the musllinux images.
+    usage: manylinux-install-clang [-v <version>] [-c <sha256sum>] [-m <machine>] [-l] [-h]
+
+  Installs a statically built clang/LLVM toolchain.
+
+  It can speed-up the build, provide better hardware support, allow for newer language features
+  not requiring runtime support.
+
+  Given the toolchain is built statically, if doing a QEMU build, you can install the toolchain that
+  matches the native architecture rather than the target one which will speed-up the build.
+
+  Limitations:
+
+  - These are not full LLVM toolchains but only a subset of tools that can be built
+    statically (``clang``/``lld``/``readelf``/``nm``/...).
+  - Under the hood, when building, clang is still using the libgcc/liibstdc++ coming with current
+    images so you can't get newer language features that require a newer libstdc++ than what's
+    available in the image.
+
+  Check the `discussion <https://github.com/pypa/manylinux/discussions/1871>`_ to find real-world projects using this.
+
 
 Image retention policy
 ----------------------

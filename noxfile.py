@@ -88,6 +88,15 @@ def update_interpreters_download(session):
 
 
 @nox.session(python="3.12", reuse_venv=True)
+def update_static_clang(session):
+    """Update known static clang versions"""
+    script = "tools/update_static_clang.py"
+    deps = nox.project.load_toml(script)["dependencies"]
+    session.install(*deps)
+    session.run("python", script, *session.posargs)
+
+
+@nox.session(python="3.12", reuse_venv=True)
 def lint(session: nox.Session) -> None:
     """Run linters on the codebase."""
     session.install("pre-commit")
