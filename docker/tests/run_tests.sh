@@ -226,9 +226,9 @@ rm -rf /opt/clang
 manylinux-install-clang -v stable
 clang --version | grep '21.'
 rm -rf /opt/clang
-# latest should be 21
+# latest should be 22
 manylinux-install-clang -v latest
-clang --version | grep '21.'
+clang --version | grep '22.'
 rm -rf /opt/clang
 
 manylinux-install-clang -m "$(uname -m)"
