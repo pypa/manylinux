@@ -91,11 +91,13 @@ CLANG_FILENAME="static-clang-linux-${GO_ARCH}.tar.xz"
 CLANG_URL="https://github.com/mayeut/static-clang-images/releases/download/${CLANG_VERSION}/${CLANG_FILENAME}"
 pushd /tmp &> /dev/null
 curl -fsSLO "${CLANG_SHA256_URL}"
-echo "${CLANG_SHA256SUMS_FILE_SHA256}  ${CLANG_SHA256_FILENAME}" > "${CLANG_SHA256_FILENAME}.sha256"
-sha256sum -c "${CLANG_SHA256_FILENAME}.sha256"
+echo "${CLANG_SHA256SUMS_FILE_SHA256}  ${CLANG_SHA256_FILENAME}" | sha256sum -c -
 CLANG_SHA256=$(awk -v filename="${CLANG_FILENAME}" '$2 == filename { print $1; exit }' "${CLANG_SHA256_FILENAME}")
-curl -fsSL "${CLANG_URL}" | tee >(tar -C /opt -xJf -) | sha256sum -c <(echo "${CLANG_SHA256} -")
-rm -f ${CLANG_SHA256_FILENAME}* || true
+curl -fsSLO "${CLANG_URL}"
+echo "${CLANG_SHA256}  ${CLANG_ARCHIVE}" | sha256sum -c -
+rm -rf /opt/clang || true
+tar -C /opt -xJf "${CLANG_FILENAME}"
+rm -f "${CLANG_FILENAME}" ${CLANG_SHA256_FILENAME} || true
 popd  &> /dev/null
 
 # configure target triple
