@@ -69,8 +69,8 @@ if [ "${CLANG_VERSION:0:1}" != "v" ]; then
 fi
 
 CLANG_SHA256SUMS_FILE_SHA256_DEFAULT=${CLANG_SHA256SUMS_FILE_SHA256}
-if grep "${CLANG_VERSION} " "${STATIC_CLANG_VERSIONS}" &>/dev/null; then
-	CLANG_SHA256SUMS_FILE_SHA256_DEFAULT=$(grep "${CLANG_VERSION} " "${STATIC_CLANG_VERSIONS}" | awk '{ print $2 }')
+if awk -v version="${CLANG_VERSION}" '$1 == version { found = 1; exit } END { exit !found }' "${STATIC_CLANG_VERSIONS}"; then
+	CLANG_SHA256SUMS_FILE_SHA256_DEFAULT=$(awk -v version="${CLANG_VERSION}" '$1 == version { print $2; exit }' "${STATIC_CLANG_VERSIONS}")
 fi
 
 if [ "${CLANG_SHA256SUMS_FILE_SHA256}" == "" ]; then
