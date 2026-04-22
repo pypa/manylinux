@@ -93,7 +93,7 @@ pushd /tmp &> /dev/null
 curl -fsSLO "${CLANG_SHA256_URL}"
 echo "${CLANG_SHA256SUMS_FILE_SHA256}  ${CLANG_SHA256_FILENAME}" > "${CLANG_SHA256_FILENAME}.sha256"
 sha256sum -c "${CLANG_SHA256_FILENAME}.sha256"
-CLANG_SHA256=$(grep "${CLANG_FILENAME}" "${CLANG_SHA256_FILENAME}" | awk '{ print $1 }')
+CLANG_SHA256=$(awk -v filename="${CLANG_FILENAME}" '$2 == filename { print $1; exit }' "${CLANG_SHA256_FILENAME}")
 curl -fsSL "${CLANG_URL}" | tee >(tar -C /opt -xJf -) | sha256sum -c <(echo "${CLANG_SHA256} -")
 rm -f ${CLANG_SHA256_FILENAME}* || true
 popd  &> /dev/null
