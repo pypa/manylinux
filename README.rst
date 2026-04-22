@@ -396,7 +396,14 @@ All supported images currently contain:
 
   .. code-block:: bash
 
-    usage: manylinux-install-clang [-v <version>] [-c <sha256sum>] [-m <machine>] [-l] [-h]
+    usage: manylinux-install-clang [-v <version>] [-c <sha256-of-sha256sums.txt>] [-m <machine>] [-l] [-h]
+
+    options:
+      -v <version>                    Static clang version to install
+      -c <sha256-of-sha256sums.txt>   SHA-256 of sha256sums.txt (not the toolchain archive)
+      -m <machine>                    Target machine/architecture
+      -l                              List available versions
+      -h                              Show this help
 
   Installs a statically built clang/LLVM toolchain.
 
@@ -410,7 +417,7 @@ All supported images currently contain:
 
   - These are not full LLVM toolchains but only a subset of tools that can be built
     statically (``clang``/``lld``/``readelf``/``nm``/...).
-  - Under the hood, when building, clang is still using the libgcc/liibstdc++ coming with current
+  - Under the hood, when building, clang is still using the libgcc/libstdc++ coming with current
     images so you can't get newer language features that require a newer libstdc++ than what's
     available in the image.
 

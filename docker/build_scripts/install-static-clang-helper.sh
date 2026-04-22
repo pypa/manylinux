@@ -7,16 +7,25 @@ set -exuo pipefail
 MY_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
 STATIC_CLANG_VERSIONS="${MY_DIR}/static_clang_versions.txt"
 
-usage() { echo "Usage: $0 [-v <version>] [-c <sha256sum>] [-m <machine>] [-l] [-h]"; }
+usage() {
+	echo "usage: $0 [-v <version>] [-c <sha256-of-sha256sums.txt>] [-m <machine>] [-l] [-h]"
+	echo ""
+	echo "options:"
+	echo "  -v <version>                    Static clang version to install"
+	echo "  -c <sha256-of-sha256sums.txt>   SHA-256 of sha256sums.txt (not the toolchain archive)"
+	echo "  -m <machine>                    Target machine/architecture"
+	echo "  -l                              List available versions"
+	echo "  -h                              Show this help"
+}
 
 CLANG_ARCH=
 CLANG_VERSION=
-CLANG_SHA256_SHA256=
+CLANG_SHA256SUMS_FILE_SHA256=
 
 while getopts ":v:c:m:lh" OPTION; do
 	case "${OPTION}" in
 		v) CLANG_VERSION=${OPTARG};;
-		c) CLANG_SHA256_SHA256=${OPTARG};;
+		c) CLANG_SHA256SUMS_FILE_SHA256=${OPTARG};;
 		m) CLANG_ARCH=${OPTARG};;
 		l) awk '{ print $1 }' "${STATIC_CLANG_VERSIONS}"; exit 0;;
 		h) usage; exit 0;;
@@ -59,19 +68,19 @@ if [ "${CLANG_VERSION:0:1}" != "v" ]; then
 	CLANG_VERSION="v${CLANG_VERSION}"
 fi
 
-CLANG_SHA256_SHA256_DEFAULT=${CLANG_SHA256_SHA256}
+CLANG_SHA256SUMS_FILE_SHA256_DEFAULT=${CLANG_SHA256SUMS_FILE_SHA256}
 if grep "${CLANG_VERSION} " "${STATIC_CLANG_VERSIONS}" &>/dev/null; then
-	CLANG_SHA256_SHA256_DEFAULT=$(grep "${CLANG_VERSION} " "${STATIC_CLANG_VERSIONS}" | awk '{ print $2 }')
+	CLANG_SHA256SUMS_FILE_SHA256_DEFAULT=$(grep "${CLANG_VERSION} " "${STATIC_CLANG_VERSIONS}" | awk '{ print $2 }')
 fi
 
-if [ "${CLANG_SHA256_SHA256}" == "" ]; then
-	if [ "${CLANG_SHA256_SHA256_DEFAULT}" == "" ]; then
+if [ "${CLANG_SHA256SUMS_FILE_SHA256}" == "" ]; then
+	if [ "${CLANG_SHA256SUMS_FILE_SHA256_DEFAULT}" == "" ]; then
 		echo "No known sha256 for static-clang toolchain ${CLANG_VERSION}" 1>&2
 		exit 1
 	fi
-	CLANG_SHA256_SHA256=${CLANG_SHA256_SHA256_DEFAULT}
-elif [ "${CLANG_SHA256_SHA256}" != "${CLANG_SHA256_SHA256_DEFAULT}" ]; then
-	echo "Bad sha256 for static-clang toolchain ${CLANG_VERSION}, user passed '${CLANG_SHA256_SHA256}', expected '${CLANG_SHA256_SHA256_DEFAULT}'" 1>&2
+	CLANG_SHA256SUMS_FILE_SHA256=${CLANG_SHA256SUMS_FILE_SHA256_DEFAULT}
+elif [ "${CLANG_SHA256SUMS_FILE_SHA256}" != "${CLANG_SHA256SUMS_FILE_SHA256_DEFAULT}" ]; then
+	echo "Bad sha256 for static-clang toolchain ${CLANG_VERSION}, user passed '${CLANG_SHA256SUMS_FILE_SHA256}', expected '${CLANG_SHA256SUMS_FILE_SHA256_DEFAULT}'" 1>&2
 	exit 1
 fi
 
@@ -82,7 +91,7 @@ CLANG_FILENAME="static-clang-linux-${GO_ARCH}.tar.xz"
 CLANG_URL="https://github.com/mayeut/static-clang-images/releases/download/${CLANG_VERSION}/${CLANG_FILENAME}"
 pushd /tmp &> /dev/null
 curl -fsSLO "${CLANG_SHA256_URL}"
-echo "${CLANG_SHA256_SHA256}  ${CLANG_SHA256_FILENAME}" > "${CLANG_SHA256_FILENAME}.sha256"
+echo "${CLANG_SHA256SUMS_FILE_SHA256}  ${CLANG_SHA256_FILENAME}" > "${CLANG_SHA256_FILENAME}.sha256"
 sha256sum -c "${CLANG_SHA256_FILENAME}.sha256"
 CLANG_SHA256=$(grep "${CLANG_FILENAME}" "${CLANG_SHA256_FILENAME}" | awk '{ print $1 }')
 curl -fsSL "${CLANG_URL}" | tee >(tar -C /opt -xJf -) | sha256sum -c <(echo "${CLANG_SHA256} -")
