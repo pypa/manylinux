@@ -94,10 +94,10 @@ curl -fsSLO "${CLANG_SHA256_URL}"
 echo "${CLANG_SHA256SUMS_FILE_SHA256}  ${CLANG_SHA256_FILENAME}" | sha256sum -c -
 CLANG_SHA256=$(awk -v filename="${CLANG_FILENAME}" '$2 == filename { print $1; exit }' "${CLANG_SHA256_FILENAME}")
 curl -fsSLO "${CLANG_URL}"
-echo "${CLANG_SHA256}  ${CLANG_ARCHIVE}" | sha256sum -c -
+echo "${CLANG_SHA256}  ${CLANG_FILENAME}" | sha256sum -c -
 rm -rf /opt/clang || true
 tar -C /opt -xJf "${CLANG_FILENAME}"
-rm -f "${CLANG_FILENAME}" ${CLANG_SHA256_FILENAME} || true
+rm -f "${CLANG_FILENAME}" "${CLANG_SHA256_FILENAME}" || true
 popd  &> /dev/null
 
 # configure target triple
