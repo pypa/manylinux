@@ -239,7 +239,7 @@ manylinux-install-clang
 clang --version
 for TOOL in clang clang++ lld ar nm objcopy ranlib readelf; do
 	if [ "$(which ${TOOL})" != "/opt/clang/bin/${TOOL}" ]; then
-			echo "installing clang with a bad sha256 should fail"
+			echo "${TOOL} was not resolved from /opt/clang/bin"
 			exit 1
 	fi
 done
