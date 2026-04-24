@@ -52,6 +52,10 @@ jobs:
         GITHUB_API_TOKEN: ${{ steps.generate-token.outputs.token || github.token }}
     - name: "Run update downloaded interpreters"
       run: nox -s update_interpreters_download
+    - name: "Run update static clang"
+      run: nox -s update_static_clang
+      env:
+        GITHUB_API_TOKEN: ${{ steps.generate-token.outputs.token || github.token }}
     - name: "Run update python dependencies"
       run: nox -s update_python_dependencies
     - name: Create Pull Request

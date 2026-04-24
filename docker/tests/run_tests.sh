@@ -193,5 +193,57 @@ autoreconf -ifv
 ./configure
 popd
 
+# check clang
+if manylinux-install-clang -v 18.0; then
+		echo "installing clang 18.0 should fail"
+		exit 1
+fi
+if ! manylinux-install-clang -l | grep 'v21.1.8.1'; then
+		echo "clang v21.1.8.1 should be listed as an available version"
+		exit 1
+fi
+if manylinux-install-clang -v 21.1.8.1 -c bad_sha; then
+		echo "installing clang with a bad sha256 should fail"
+		exit 1
+fi
+if manylinux-install-clang -v 21.1.8.1 -m bad_arch; then
+		echo "installing clang with a bad architecture should fail"
+		exit 1
+fi
+
+manylinux-install-clang -v 20.1.8.0
+clang --version | grep '20.1.8'
+rm -rf /opt/clang
+
+manylinux-install-clang -v v21.1.8.1 -c a6f87a4af8d72192219602f252d7debdf7c1e73ca4b28a2f99f2832a3ac0b487
+clang --version | grep '21.1.8'
+rm -rf /opt/clang
+
+# default/stable should be 21
+manylinux-install-clang
+clang --version | grep '21.'
+rm -rf /opt/clang
+manylinux-install-clang -v stable
+clang --version | grep '21.'
+rm -rf /opt/clang
+# latest should be 22
+manylinux-install-clang -v latest
+clang --version | grep '22.'
+rm -rf /opt/clang
+
+manylinux-install-clang -m "$(uname -m)"
+clang --version
+rm -rf /opt/clang
+
+manylinux-install-clang
+clang --version
+for TOOL in clang clang++ lld ar nm objcopy ranlib readelf; do
+	if [ "$(which ${TOOL})" != "/opt/clang/bin/${TOOL}" ]; then
+			echo "${TOOL} was not resolved from /opt/clang/bin"
+			exit 1
+	fi
+done
+rm -rf /opt/clang
+
 # final report
 echo "run_tests successful!"

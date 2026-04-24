@@ -237,6 +237,7 @@ RUN --mount=type=bind,target=/build_cpython38,from=build_cpython38 \
 
 COPY tests /opt/_internal/tests/
 
+ENV PATH=/opt/clang/bin:${PATH}
 ENV SSL_CERT_FILE=/opt/_internal/certs.pem
 
 CMD ["/bin/bash"]
