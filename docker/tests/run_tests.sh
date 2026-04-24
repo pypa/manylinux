@@ -211,9 +211,12 @@ if manylinux-install-clang -v 21.1.8.1 -m bad_arch; then
 		exit 1
 fi
 
-manylinux-install-clang -v 20.1.8.0
-clang --version | grep '20.1.8'
-rm -rf /opt/clang
+# skip clang-20.1 check on loongarch64
+if [ "${AUDITWHEEL_ARCH}" != "loongarch64" ]; then
+	manylinux-install-clang -v 20.1.8.0
+	clang --version | grep '20.1.8'
+	rm -rf /opt/clang
+fi
 
 manylinux-install-clang -v v21.1.8.1 -c a6f87a4af8d72192219602f252d7debdf7c1e73ca4b28a2f99f2832a3ac0b487
 clang --version | grep '21.1.8'
