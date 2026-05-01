@@ -29,7 +29,7 @@ jobs:
     - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       with:
         persist-credentials: false
-    - uses: wntrblm/nox@5a277b752f6094150e25237d47c34168e2b7526e # 2026.02.09
+    - uses: wntrblm/nox@97e345e6a26bb2c5aacff9cc4327bd4ac1b00ce6 # 2026.04.10
       with:
         python-versions: "3.12"
     - name: "Install uv"
@@ -40,7 +40,7 @@ jobs:
         git config --global user.email "89297709+manylinux-bot[bot]@users.noreply.github.com"
     # we use this step to grab a Github App auth token, so that lastversion can query GitHub API
     # without rate-limit and PRs get run by GHA.
-    - uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
+    - uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
       id: generate-token
       if: github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
       with:
@@ -60,7 +60,7 @@ jobs:
       run: nox -s update_python_dependencies
     - name: Create Pull Request
       if: github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
-      uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
+      uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
       with:
         commit-message: Update python dependencies
         title: '[Bot] Update dependencies'
