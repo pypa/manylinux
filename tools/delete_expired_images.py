@@ -179,11 +179,14 @@ def delete_images(image_list: list[str], *, dry_run: bool = True) -> None:
         print(f"deleting {image_url}{dry_run_str}")
         if dry_run:
             continue
-        subprocess.run(
-            ["skopeo", "delete", f"docker://{image_url}"],
-            check=True,
-            stdin=subprocess.DEVNULL,
-        )
+        try:
+            subprocess.run(
+                ["skopeo", "delete", f"docker://{image_url}"],
+                check=True,
+                stdin=subprocess.DEVNULL,
+            )
+        except subprocess.CalledProcessError:
+            print(f"failed to delete {image_url}")
 
 
 def main():
