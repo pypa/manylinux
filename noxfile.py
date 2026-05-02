@@ -19,7 +19,7 @@ def update_python_dependencies(session):
     # regenerate the constraints files
     env["UV_CUSTOM_COMPILE_COMMAND"] = f"nox -s {session.name}"
 
-    for python_minor in range(8, 15):
+    for python_minor in range(9, 16):
         python_version = f"3.{python_minor}"
         session.run(
             "uv",
