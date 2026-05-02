@@ -9,7 +9,7 @@ podman login -u "${QUAY_USERNAME}" -p "${QUAY_PASSWORD}" quay.io
 for IMAGE in "${IMAGES[@]}"; do
 	echo "::group::${IMAGE} check"
 	LAST_TAG="$(oras repo tags --last "2026.05.01-1" "quay.io/pypa/${IMAGE}" | tail -2 | head -1)"
-	if [ "${LAST_TAG}" == "" ]; then
+	if [ "${LAST_TAG}" == "" ] || [ "${LAST_TAG}" == "latest" ]; then
 		 LAST_TAG=2026.05.01-1
 	fi
 	echo "last tag is ${LAST_TAG}"
