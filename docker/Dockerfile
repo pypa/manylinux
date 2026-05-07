@@ -8,7 +8,7 @@ ARG PREPEND_PATH=/usr/local/bin:${DEVTOOLSET_ROOTPATH}/usr/bin:
 ARG MANYLINUX_BUILDARCH=${BUILDARCH}
 ARG MANYLINUX_DISABLE_CLANG=0
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=0
-ARG MANYLINUX_CLANG_VERSION=22.1.4.0
+ARG MANYLINUX_CLANG_VERSION=22.1.5.0
 ARG MANYLINUX_COSIGN_VERSION=3.0.6
 
 
@@ -119,8 +119,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_base AS build_sqlite3
 COPY build_scripts/build-sqlite3.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3530000 && \
-    export SQLITE_AUTOCONF_HASH=851e9b38192fe2ceaa65e0baa665e7fa06230c3d9bd1a6a9662d02380d73365a && \
+    export SQLITE_AUTOCONF_ROOT=sqlite-autoconf-3530100 && \
+    export SQLITE_AUTOCONF_HASH=83e6b2020a034e9a7ad4a72feea59e1ad52f162e09cbd26735a3ffb98359fc4f && \
     export SQLITE_AUTOCONF_DOWNLOAD_URL=https://www.sqlite.org/2026 && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-sqlite3.sh
 
