@@ -124,7 +124,7 @@ git lfs --version
 cmake --version
 swig -version
 pipx run nox --version
-pipx install --pip-args='--no-input' nox
+pipx install nox
 nox --version
 tar --version | grep "GNU tar"
 
