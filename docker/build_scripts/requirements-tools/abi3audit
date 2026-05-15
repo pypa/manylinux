@@ -153,9 +153,9 @@ charset-normalizer==3.4.7 \
     --hash=sha256:fbccdc05410c9ee21bbf16a35f4c1d16123dcdeb8a1d38f33654fa21d0234f79 \
     --hash=sha256:fea24543955a6a729c45a73fe90e08c743f0b3334bbf3201e6c4bc1b0c7fa464
     # via requests
-idna==3.13 \
-    --hash=sha256:585ea8fe5d69b9181ec1afba340451fba6ba764af97026f92a91d4eef164a242 \
-    --hash=sha256:892ea0cde124a99ce773decba204c5552b69c3c67ffd5f232eb7696135bc8bb3
+idna==3.15 \
+    --hash=sha256:048adeaf8c2d788c40fee287673ccaa74c24ffd8dcf09ffa555a2fbb59f10ac8 \
+    --hash=sha256:ca962446ea538f7092a95e057da437618e886f4d349216d2b1e294abfdb65fdc
     # via
     #   requests
     #   url-normalize
@@ -191,15 +191,15 @@ pygments==2.20.0 \
     --hash=sha256:6757cd03768053ff99f3039c1a36d6c0aa0b263438fcab17520b30a303a82b5f \
     --hash=sha256:81a9e26dd42fd28a23a2d169d86d7ac03b46e2f8b59ed4698fb4785f946d0176
     # via rich
-requests==2.33.1 \
-    --hash=sha256:18817f8c57c6263968bc123d237e3b8b08ac046f5456bd1e307ee8f4250d3517 \
-    --hash=sha256:4e6d1ef462f3626a1f0a0a9c42dd93c63bad33f9f1c1937509b8c5c8718ab56a
+requests==2.34.2 \
+    --hash=sha256:2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0 \
+    --hash=sha256:f288924cae4e29463698d6d60bc6a4da69c89185ad1e0bcc4104f584e960b9ed
     # via
     #   abi3audit
     #   requests-cache
-requests-cache==1.3.1 \
-    --hash=sha256:43a67448c3b2964c631ac7027b84607f2f63438e28104b68ad2211f32d9f606c \
-    --hash=sha256:784e9d07f72db4fe234830a065230c59eb446489528f271ba288c640897e47c4
+requests-cache==1.3.2 \
+    --hash=sha256:bdc3680931f98a1dea509d339ea6b45cea526945b47b250ce63ffd2744ee0b14 \
+    --hash=sha256:c52666c76b08daa94d05a99327dd24afc46f405abc044e8c2267b540f90673d0
     # via abi3audit
 rich==15.0.0 \
     --hash=sha256:33bd4ef74232fb73fe9279a257718407f169c09b78a87ad3d296f548e27de0bb \
