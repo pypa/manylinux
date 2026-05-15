@@ -128,11 +128,11 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_base AS build_tcl_tk
 COPY build_scripts/build-tcltk.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export TCL_ROOT=tcl8.6.17 && \
-    export TCL_HASH=a3903371efcce8a405c5c245d029e9f6850258a60fa3761c4d58995610949b31 && \
+    export TCL_ROOT=tcl8.6.18 && \
+    export TCL_HASH=14f9af32b1767ff718477a8f974ad03c34341097e6b43f4ce54644ee974e268e && \
     export TCL_DOWNLOAD_URL=https://prdownloads.sourceforge.net/tcl && \
-    export TK_ROOT=tk8.6.17 && \
-    export TK_HASH=e4982df6f969c08bf9dd858a6891059b4a3f50dc6c87c10abadbbe2fc4838946 && \
+    export TK_ROOT=tk8.6.18 && \
+    export TK_HASH=95cd528a80f5e4bdb557af9b14a7197d6860793a3894e25e7c9fad2ed05d4c3c && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-tcltk.sh
 
 
