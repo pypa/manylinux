@@ -38,6 +38,33 @@ mkdir -p "${PREFIX}/lib"
 LDFLAGS_EXTRA=""
 CONFIGURE_ARGS=(--disable-shared --with-ensurepip=no)
 
+function download_and_verify() {
+	local url=$1
+	local file=$2
+	local sha256=$3
+	curl -fsSL --retry 10 "$url" -o "$file"
+	echo "$sha256  $file" | sha256sum -c -
+}
+
+if [ "${AUDITWHEEL_ARCH}" == "loongarch64" ]; then
+	PATCH_COMMIT="8138f8f7337d95bd098b398d368d4763861f2395"
+	PATCH_FILE_SHA256="0db461609cf8385b2859cf16b4e0aa6ef1f51d368e14bd35c4b8b35b8ca00738"
+	case "$CPYTHON_VERSION" in
+		3.9.*|3.10.*|3.11.*)
+			PATCH_FILE="patch-configure-add-loongarch-triplet.patch"
+			PATCH_URL="https://github.com/astral-sh/python-build-standalone/raw/${PATCH_COMMIT}/cpython-unix/${PATCH_FILE}"
+			download_and_verify "${PATCH_URL}" "${PATCH_FILE}" "${PATCH_FILE_SHA256}"
+			patch -p1 < "${PATCH_FILE}"
+			rm -f "${PATCH_FILE}"
+			;;
+		3.15.*)
+			# gcc: error: unrecognized command-line option ‘-mno-omit-leaf-frame-pointer’
+			# https://github.com/pypa/manylinux/issues/1938
+			CONFIGURE_ARGS+=("--without-frame-pointers")
+			;;
+	esac
+fi
+
 if [ "${4:-}" == "nogil" ]; then
 	PREFIX="${PREFIX}-nogil"
 	CONFIGURE_ARGS+=(--disable-gil)
