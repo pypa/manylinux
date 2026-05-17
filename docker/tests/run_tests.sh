@@ -60,8 +60,8 @@ for PYTHON in /opt/python/*/bin/python; do
 	PYVERS=$(${PYTHON} -c "import sys; print('.'.join(map(str, sys.version_info[:2])))")
 	PY_GIL=$(${PYTHON} -c "import sysconfig; print('t' if sysconfig.get_config_vars().get('Py_GIL_DISABLED', 0) else '')")
 	if [ "${IMPLEMENTATION}" == "cpython" ]; then
-		# check optional modules can be loaded
-		$PYTHON "${MY_DIR}/modules-check.py"
+		# check all modules can be loaded
+		$PYTHON -Wignore "${MY_DIR}/modules-check.py"
 		# cpython shall be available as python
 		LINK_VERSION=$("python${PYVERS}${PY_GIL}" -VV)
 		REAL_VERSION=$(${PYTHON} -VV)
