@@ -89,6 +89,7 @@ def update_pypy_versions(versions, updates):
 
 
 def update_graalpy_version(releases, graalpy_spec, tag, arch, version_dict, updates):
+    asset_re = re.compile(r"graalpy(?:\d+\.\d+)?-(\d+\.\d+\.\d+)-linux-([^.]+)\.tar\.gz")
     graalpy_arch = {"x86_64": "amd64"}.get(arch, arch)
     current_version = None
     if "version" in version_dict:
@@ -101,7 +102,8 @@ def update_graalpy_version(releases, graalpy_spec, tag, arch, version_dict, upda
             continue
         asset_found = False
         for asset in r["assets"]:
-            if asset["name"] == f"graalpy-{version}-linux-{graalpy_arch}.tar.gz":
+            m = asset_re.fullmatch(asset["name"])
+            if m and Version(m[1]) == version and m[2] == graalpy_arch:
                 asset_found = True
                 break
         if not asset_found:
