@@ -19,7 +19,7 @@ repos:
   - id: shellcheck
 
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.15.6
+  rev: v0.15.14
   hooks:
   - id: ruff-check
     args: ["--fix", "--show-fixes", "--target-version=py38"]
@@ -44,6 +44,6 @@ repos:
     exclude: ^docker/build_scripts/.*pubkey.*.txt$
 
 - repo: https://github.com/zizmorcore/zizmor-pre-commit
-  rev: v1.23.1
+  rev: v1.25.2
   hooks:
   - id: zizmor
