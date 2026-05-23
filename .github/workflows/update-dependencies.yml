@@ -44,8 +44,10 @@ jobs:
       id: generate-token
       if: github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
       with:
-        app-id: ${{ secrets.MANYLINUX_BOT_APP_ID }}
+        client-id: ${{ secrets.MANYLINUX_BOT_APP_ID }}
         private-key: ${{ secrets.MANYLINUX_BOT_APP_PRIVATE_KEY }}
+        permission-contents: write
+        permission-pull-requests: write
     - name: "Run update native dependencies"
       run: nox -s update_native_dependencies
       env:
