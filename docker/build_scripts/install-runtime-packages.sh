@@ -115,10 +115,8 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	fi
 	fixup-mirrors
 elif [ "${OS_ID_LIKE}" == "rhel" ]; then
-	BASE_TOOLS+=(glibc-locale-source glibc-langpack-en gnupg2 gzip hardlink hostname libcurl libxcrypt which)
-	if [ "${AUDITWHEEL_ARCH}" == "loongarch64" ]; then
-		BASE_TOOLS+=(acl binutils cryptsetup-libs info langpacks-en libnsl2 tar yum)
-	else
+	BASE_TOOLS+=(glibc-locale-source glibc-langpack-en gnupg2 gzip hardlink hostname libcurl libxcrypt tar which)
+	if [ "${AUDITWHEEL_ARCH}" != "loongarch64" ]; then
 		BASE_TOOLS+=(libnsl)
 	fi
 	echo "tsflags=nodocs" >> /etc/dnf/dnf.conf
