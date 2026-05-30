@@ -36,23 +36,12 @@ case "${OS_ID_LIKE}" in
 	*) echo "unsupported image"; exit 1;;
 esac
 
-function check_var {
-	if [ -z "$1" ]; then
-		echo "required variable not defined"
-		exit 1
-	fi
-}
-
-
 function fetch_source {
 	# This is called both inside and outside the build context (e.g. in Travis) to prefetch
 	# source tarballs, where curl exists (and works)
-	local file=$1
-	check_var "${file}"
-	local url=$2
-	check_var "${url}"
-	local sha256=$3
-	check_var "${sha256}"
+	local file="$1"
+	local url="$2"
+	local sha256="$3"
 	if [ -f "${file}" ]; then
 		echo "${file} exists, skipping fetch"
 	else

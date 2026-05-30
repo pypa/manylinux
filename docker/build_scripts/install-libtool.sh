@@ -12,9 +12,6 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source "${MY_DIR}/build_utils.sh"
 
 # Install newest libtool
-check_var "${LIBTOOL_ROOT}"
-check_var "${LIBTOOL_HASH}"
-check_var "${LIBTOOL_DOWNLOAD_URL}"
 if ! fetch_source "${LIBTOOL_ROOT}.tar.gz" "${LIBTOOL_DOWNLOAD_URL}" "${LIBTOOL_HASH}"; then
 	fetch_source "${LIBTOOL_ROOT}.tar.gz" "${LIBTOOL_DOWNLOAD_URL/ftpmirror.gnu.org/mirrors.ocf.berkeley.edu}" "${LIBTOOL_HASH}"
 fi

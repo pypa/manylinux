@@ -17,9 +17,6 @@ if [ "${AUDITWHEEL_POLICY}" != "manylinux2014" ]; then
 fi
 
 # Install libcrypt.so.1 and libcrypt.so.2
-check_var "${LIBXCRYPT_VERSION}"
-check_var "${LIBXCRYPT_HASH}"
-check_var "${LIBXCRYPT_DOWNLOAD_URL}"
 LIBXCRYPT_ROOT="libxcrypt-${LIBXCRYPT_VERSION}"
 
 if [ "${MANYLINUX_DISABLE_CLANG}" -eq 0 ]; then

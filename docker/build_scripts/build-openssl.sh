@@ -12,9 +12,6 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source "${MY_DIR}/build_utils.sh"
 
 # Install a more recent openssl
-check_var "${OPENSSL_ROOT}"
-check_var "${OPENSSL_HASH}"
-check_var "${OPENSSL_DOWNLOAD_URL}"
 
 OPENSSL_VERSION=${OPENSSL_ROOT#*-}
 OPENSSL_MIN_VERSION=1.1.1

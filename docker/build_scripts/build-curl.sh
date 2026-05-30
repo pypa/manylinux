@@ -11,22 +11,13 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 # shellcheck source-path=SCRIPTDIR
 source "${MY_DIR}/build_utils.sh"
 
-# Install a more recent curl
-check_var "${CURL_ROOT}"
-check_var "${CURL_HASH}"
-check_var "${CURL_DOWNLOAD_URL}"
-
-# Only needed on manylinux2014
+# Install a more recent curl, only needed on manylinux2014
 if [ "${AUDITWHEEL_POLICY}" != "manylinux2014" ]; then
 	echo "skipping installation of ${CURL_ROOT}"
 	exit 0
 fi
 
-if which yum; then
-	yum erase -y curl-devel
-else
-	apk del curl-dev
-fi
+yum erase -y curl-devel
 
 SO_COMPAT=4
 PREFIX=/opt/_internal/curl-${SO_COMPAT}
