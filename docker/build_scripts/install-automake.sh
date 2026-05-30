@@ -12,9 +12,6 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source "${MY_DIR}/build_utils.sh"
 
 # Install newest automake
-check_var "${AUTOMAKE_ROOT}"
-check_var "${AUTOMAKE_HASH}"
-check_var "${AUTOMAKE_DOWNLOAD_URL}"
 
 AUTOMAKE_VERSION=${AUTOMAKE_ROOT#*-}
 if automake --version > /dev/null 2>&1; then

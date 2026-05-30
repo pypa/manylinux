@@ -12,9 +12,6 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source "${MY_DIR}/build_utils.sh"
 
 # Install a more recent mpdecimal
-check_var "${ZSTD_VERSION}"
-check_var "${ZSTD_HASH}"
-check_var "${ZSTD_DOWNLOAD_URL}"
 ZSTD_ROOT="zstd-${ZSTD_VERSION}"
 
 PREFIX=/opt/_internal/${ZSTD_ROOT%%.*}

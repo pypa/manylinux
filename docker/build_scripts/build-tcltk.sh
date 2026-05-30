@@ -13,11 +13,6 @@ source "${MY_DIR}/build_utils.sh"
 
 # Install a more recent Tcl/Tk 8.6
 # https://www.tcl.tk/software/tcltk/download.html
-check_var "${TCL_ROOT}"
-check_var "${TCL_HASH}"
-check_var "${TCL_DOWNLOAD_URL}"
-check_var "${TK_ROOT}"
-check_var "${TK_HASH}"
 
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] ; then
 	yum erase -y tcl tk

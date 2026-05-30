@@ -12,9 +12,6 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source "${MY_DIR}/build_utils.sh"
 
 # Install a more recent mpdecimal
-check_var "${MPDECIMAL_ROOT}"
-check_var "${MPDECIMAL_HASH}"
-check_var "${MPDECIMAL_DOWNLOAD_URL}"
 
 PREFIX=/opt/_internal/${MPDECIMAL_ROOT%%.*}
 
