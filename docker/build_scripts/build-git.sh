@@ -46,8 +46,7 @@ check_var "${GIT_ROOT}"
 check_var "${GIT_HASH}"
 check_var "${GIT_DOWNLOAD_URL}"
 
-fetch_source "${GIT_ROOT}.tar.gz" "${GIT_DOWNLOAD_URL}"
-check_sha256sum "${GIT_ROOT}.tar.gz" "${GIT_HASH}"
+fetch_source "${GIT_ROOT}.tar.gz" "${GIT_DOWNLOAD_URL}" "${GIT_HASH}"
 tar -xzf "${GIT_ROOT}.tar.gz"
 pushd "${GIT_ROOT}"
 make install \

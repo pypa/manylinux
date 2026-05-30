@@ -27,8 +27,7 @@ if [ "${MANYLINUX_DISABLE_CLANG}" -eq 0 ]; then
 	MANYLINUX_LDFLAGS="-fuse-ld=ld ${MANYLINUX_LDFLAGS}"
 fi
 
-fetch_source "${LIBXCRYPT_ROOT}.tar.xz" "${LIBXCRYPT_DOWNLOAD_URL}/v${LIBXCRYPT_VERSION}"
-check_sha256sum "${LIBXCRYPT_ROOT}.tar.xz" "${LIBXCRYPT_HASH}"
+fetch_source "${LIBXCRYPT_ROOT}.tar.xz" "${LIBXCRYPT_DOWNLOAD_URL}/v${LIBXCRYPT_VERSION}" "${LIBXCRYPT_HASH}"
 tar xfJ "${LIBXCRYPT_ROOT}.tar.xz"
 pushd "${LIBXCRYPT_ROOT}"
 DESTDIR=/manylinux-rootfs do_standard_install \

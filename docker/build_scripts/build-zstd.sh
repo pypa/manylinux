@@ -19,8 +19,7 @@ ZSTD_ROOT="zstd-${ZSTD_VERSION}"
 
 PREFIX=/opt/_internal/${ZSTD_ROOT%%.*}
 
-fetch_source "${ZSTD_ROOT}.tar.gz" "${ZSTD_DOWNLOAD_URL}/v${ZSTD_VERSION}"
-check_sha256sum "${ZSTD_ROOT}.tar.gz" "${ZSTD_HASH}"
+fetch_source "${ZSTD_ROOT}.tar.gz" "${ZSTD_DOWNLOAD_URL}/v${ZSTD_VERSION}" "${ZSTD_HASH}"
 tar xfz "${ZSTD_ROOT}.tar.gz"
 pushd "${ZSTD_ROOT}/lib"
 # add rpath
