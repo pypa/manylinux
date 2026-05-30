@@ -15,10 +15,9 @@ source "${MY_DIR}/build_utils.sh"
 check_var "${LIBTOOL_ROOT}"
 check_var "${LIBTOOL_HASH}"
 check_var "${LIBTOOL_DOWNLOAD_URL}"
-if ! fetch_source "${LIBTOOL_ROOT}.tar.gz" "${LIBTOOL_DOWNLOAD_URL}"; then
-	fetch_source "${LIBTOOL_ROOT}.tar.gz" "${LIBTOOL_DOWNLOAD_URL/ftpmirror.gnu.org/mirrors.ocf.berkeley.edu}";
+if ! fetch_source "${LIBTOOL_ROOT}.tar.gz" "${LIBTOOL_DOWNLOAD_URL}" "${LIBTOOL_HASH}"; then
+	fetch_source "${LIBTOOL_ROOT}.tar.gz" "${LIBTOOL_DOWNLOAD_URL/ftpmirror.gnu.org/mirrors.ocf.berkeley.edu}" "${LIBTOOL_HASH}"
 fi
-check_sha256sum "${LIBTOOL_ROOT}.tar.gz" "${LIBTOOL_HASH}"
 tar -zxf "${LIBTOOL_ROOT}.tar.gz"
 pushd "${LIBTOOL_ROOT}"
 DESTDIR=/manylinux-rootfs do_standard_install

@@ -51,23 +51,19 @@ function fetch_source {
 	check_var "${file}"
 	local url=$2
 	check_var "${url}"
+	local sha256=$3
+	check_var "${sha256}"
 	if [ -f "${file}" ]; then
 		echo "${file} exists, skipping fetch"
 	else
 		curl -fsSL --retry 10 -o "${file}" "${url}/${file}"
 	fi
-}
-
-
-function check_sha256sum {
-	local fname=$1
-	check_var "${fname}"
-	local sha256=$2
-	check_var "${sha256}"
-
-	echo "${sha256}  ${fname}" > "${fname}.sha256"
-	sha256sum -c "${fname}.sha256"
-	rm -f "${fname}.sha256"
+	if [ "${sha256}" != "skip-hash" ]; then
+		if ! echo "${sha256}  ${file}" | sha256sum -c -; then
+			rm "${file}"
+			return 1
+		fi
+	fi
 }
 
 # shellcheck disable=SC2120 # optional arguments

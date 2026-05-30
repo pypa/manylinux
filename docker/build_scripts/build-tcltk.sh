@@ -27,10 +27,8 @@ else
 	exit 0
 fi
 
-fetch_source "${TCL_ROOT}-src.tar.gz" "${TCL_DOWNLOAD_URL}"
-check_sha256sum "${TCL_ROOT}-src.tar.gz" "${TCL_HASH}"
-fetch_source "${TK_ROOT}-src.tar.gz" "${TCL_DOWNLOAD_URL}"
-check_sha256sum "${TK_ROOT}-src.tar.gz" "${TK_HASH}"
+fetch_source "${TCL_ROOT}-src.tar.gz" "${TCL_DOWNLOAD_URL}" "${TCL_HASH}"
+fetch_source "${TK_ROOT}-src.tar.gz" "${TCL_DOWNLOAD_URL}" "${TK_HASH}"
 
 tar xfz "${TCL_ROOT}-src.tar.gz"
 pushd "${TCL_ROOT}/unix"

@@ -41,8 +41,7 @@ if [ -d /opt/_internal ]; then
 	fi
 fi
 
-fetch_source "${CURL_ROOT}.tar.gz" "${CURL_DOWNLOAD_URL}"
-check_sha256sum "${CURL_ROOT}.tar.gz" "${CURL_HASH}"
+fetch_source "${CURL_ROOT}.tar.gz" "${CURL_DOWNLOAD_URL}" "${CURL_HASH}"
 tar -xzf "${CURL_ROOT}.tar.gz"
 pushd "${CURL_ROOT}"
 ./configure --prefix=${PREFIX} --disable-static --without-libpsl --with-openssl CPPFLAGS="${MANYLINUX_CPPFLAGS}" CFLAGS="${MANYLINUX_CFLAGS}" CXXFLAGS="${MANYLINUX_CXXFLAGS}" LDFLAGS="${MANYLINUX_LDFLAGS} -Wl,-rpath=\$(LIBRPATH) ${OPENSSL_LDFLAGS}" > /dev/null

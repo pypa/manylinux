@@ -32,10 +32,9 @@ fi
 
 SYSTEM_ACLOCAL="$(which aclocal)"
 
-if ! fetch_source "${AUTOMAKE_ROOT}.tar.gz" "${AUTOMAKE_DOWNLOAD_URL}"; then
-	fetch_source "${AUTOMAKE_ROOT}.tar.gz" "${AUTOMAKE_DOWNLOAD_URL/ftpmirror.gnu.org/mirrors.ocf.berkeley.edu}";
+if ! fetch_source "${AUTOMAKE_ROOT}.tar.gz" "${AUTOMAKE_DOWNLOAD_URL}" "${AUTOMAKE_HASH}"; then
+	fetch_source "${AUTOMAKE_ROOT}.tar.gz" "${AUTOMAKE_DOWNLOAD_URL/ftpmirror.gnu.org/mirrors.ocf.berkeley.edu}" "${AUTOMAKE_HASH}"
 fi
-check_sha256sum "${AUTOMAKE_ROOT}.tar.gz" "${AUTOMAKE_HASH}"
 tar -zxf "${AUTOMAKE_ROOT}.tar.gz"
 pushd "${AUTOMAKE_ROOT}"
 DESTDIR=/manylinux-rootfs do_standard_install
