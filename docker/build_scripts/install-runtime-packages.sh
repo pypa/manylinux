@@ -115,20 +115,25 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	fi
 	fixup-mirrors
 elif [ "${OS_ID_LIKE}" == "rhel" ]; then
-	BASE_TOOLS+=(glibc-locale-source glibc-langpack-en gnupg2 gzip hardlink hostname libcurl libnsl libxcrypt which)
+	BASE_TOOLS+=(glibc-locale-source glibc-langpack-en gnupg2 gzip hardlink hostname libcurl libxcrypt tar which)
+	if [ "${AUDITWHEEL_ARCH}" != "loongarch64" ]; then
+		BASE_TOOLS+=(libnsl)
+	fi
 	echo "tsflags=nodocs" >> /etc/dnf/dnf.conf
 	EPEL=epel-release
 	if [ "${AUDITWHEEL_ARCH}" == "i686" ] || [ "${AUDITWHEEL_ARCH}" == "riscv64" ]; then
 		EPEL=
+	elif [ "${AUDITWHEEL_ARCH}" == "loongarch64" ]; then
+		EPEL=anolis-epao-release
 	fi
 	dnf -y install dnf-plugins-core ${EPEL}
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ]; then
 		dnf config-manager --set-enabled powertools
-	else
+	elif [ "${AUDITWHEEL_ARCH}" != "loongarch64" ]; then
 		dnf config-manager --set-enabled crb
 	fi
 	dnf -y upgrade
-	if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ]; then
+	if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_38" ]; then
 		TOOLCHAIN_DEPS=(gcc-toolset-14-binutils gcc-toolset-14-gcc gcc-toolset-14-gcc-c++ gcc-toolset-14-gcc-gfortran gcc-toolset-14-libatomic-devel)
 	else
 		# TODO enable gcc-toolset-15 once available (probably in 10.1)

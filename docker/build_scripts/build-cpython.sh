@@ -40,6 +40,20 @@ CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS}"
 LDFLAGS_EXTRA=""
 CONFIGURE_ARGS=(--disable-shared --with-ensurepip=no)
 
+if [ "${AUDITWHEEL_ARCH}" == "loongarch64" ]; then
+	PATCH_COMMIT="8138f8f7337d95bd098b398d368d4763861f2395"
+	PATCH_FILE_SHA256="0db461609cf8385b2859cf16b4e0aa6ef1f51d368e14bd35c4b8b35b8ca00738"
+	case "$CPYTHON_VERSION" in
+		3.9.*|3.10.*|3.11.*)
+			PATCH_FILE="patch-configure-add-loongarch-triplet.patch"
+			PATCH_URL="https://github.com/astral-sh/python-build-standalone/raw/${PATCH_COMMIT}/cpython-unix"
+			fetch_source "${PATCH_FILE}" "${PATCH_URL}" "${PATCH_FILE_SHA256}"
+			patch -p1 < "${PATCH_FILE}"
+			rm -f "${PATCH_FILE}"
+			;;
+	esac
+fi
+
 if [ "${4:-}" == "nogil" ]; then
 	PREFIX="${PREFIX}-nogil"
 	CONFIGURE_ARGS+=(--disable-gil)
@@ -78,6 +92,7 @@ fi
 if [ "${MANYLINUX_DISABLE_CLANG}" -eq 0 ] && [ "${MANYLINUX_DISABLE_CLANG_FOR_CPYTHON}" -eq 0 ]; then
 	case "${BASE_POLICY}_${AUDITWHEEL_ARCH}" in
 	  *_armv7l) PATCH_OMIT_LEAF_FRAME_POINTER=1; PATCH_NO_THUMB=1;;
+	  *_loongarch64) PATCH_OMIT_LEAF_FRAME_POINTER=1; PATCH_NO_THUMB=0;;
 	  *) PATCH_OMIT_LEAF_FRAME_POINTER=0; PATCH_NO_THUMB=0;;
 	esac
 	case "${CPYTHON_VERSION}" in
