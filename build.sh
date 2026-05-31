@@ -116,10 +116,6 @@ if [ "${MANYLINUX_DISABLE_CLANG_FOR_CPYTHON:-}" == "" ]; then
 			# s390x) MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=1;; # gcc is Tier-3, clang not supported at all, gcc is too slow, use clang anyway
 			*) ;;
 		esac
-	elif [ "${POLICY:0:9}-${PLATFORM}" == "musllinux-armv7l" ]; then
-		# when build with clang, extra options are used to build extensions that are not compatible
-		# with gcc so build musllinux-armv7l with gcc rather than clang
-		MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=1
 	fi
 fi
 if [ "${MANYLINUX_DISABLE_CLANG_FOR_CPYTHON}" != "0" ]; then
