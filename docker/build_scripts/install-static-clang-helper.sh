@@ -90,10 +90,10 @@ CLANG_SHA256_URL="https://github.com/mayeut/static-clang-images/releases/downloa
 CLANG_FILENAME="static-clang-linux-${GO_ARCH}.tar.xz"
 CLANG_URL="https://github.com/mayeut/static-clang-images/releases/download/${CLANG_VERSION}/${CLANG_FILENAME}"
 pushd /tmp &> /dev/null
-curl -fsSLO "${CLANG_SHA256_URL}"
+curl -fsSLO --retry 10 "${CLANG_SHA256_URL}"
 echo "${CLANG_SHA256SUMS_FILE_SHA256}  ${CLANG_SHA256_FILENAME}" | sha256sum -c -
 CLANG_SHA256=$(awk -v filename="${CLANG_FILENAME}" '$2 == filename { print $1; exit }' "${CLANG_SHA256_FILENAME}")
-curl -fsSLO "${CLANG_URL}"
+curl -fsSLO --retry 10 "${CLANG_URL}"
 echo "${CLANG_SHA256}  ${CLANG_FILENAME}" | sha256sum -c -
 rm -rf /opt/clang || true
 tar -C /opt -xJf "${CLANG_FILENAME}"
