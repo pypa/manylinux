@@ -51,11 +51,6 @@ if [ "${AUDITWHEEL_ARCH}" == "loongarch64" ]; then
 			patch -p1 < "${PATCH_FILE}"
 			rm -f "${PATCH_FILE}"
 			;;
-		3.15.*)
-			# gcc: error: unrecognized command-line option ‘-mno-omit-leaf-frame-pointer’
-			# https://github.com/pypa/manylinux/issues/1938
-			CONFIGURE_ARGS+=("--without-frame-pointers")
-			;;
 	esac
 fi
 
@@ -97,6 +92,7 @@ fi
 if [ "${MANYLINUX_DISABLE_CLANG}" -eq 0 ] && [ "${MANYLINUX_DISABLE_CLANG_FOR_CPYTHON}" -eq 0 ]; then
 	case "${BASE_POLICY}_${AUDITWHEEL_ARCH}" in
 	  *_armv7l) PATCH_OMIT_LEAF_FRAME_POINTER=1; PATCH_NO_THUMB=1;;
+	  *_loongarch64) PATCH_OMIT_LEAF_FRAME_POINTER=1; PATCH_NO_THUMB=0;;
 	  *) PATCH_OMIT_LEAF_FRAME_POINTER=0; PATCH_NO_THUMB=0;;
 	esac
 	case "${CPYTHON_VERSION}" in
