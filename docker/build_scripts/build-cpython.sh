@@ -77,8 +77,8 @@ fi
 # CONFIGURE_ARGS+=("--without-frame-pointers")
 if [ "${MANYLINUX_DISABLE_CLANG}" -eq 0 ] && [ "${MANYLINUX_DISABLE_CLANG_FOR_CPYTHON}" -eq 0 ]; then
 	case "${BASE_POLICY}_${AUDITWHEEL_ARCH}" in
-	  *_armv7l) PATCH_OMIT_LEAF_FRAME_POINTER=1;;
-	  *) PATCH_OMIT_LEAF_FRAME_POINTER=0;;
+	  *_armv7l) PATCH_OMIT_LEAF_FRAME_POINTER=1; PATCH_NO_THUMB=1;;
+	  *) PATCH_OMIT_LEAF_FRAME_POINTER=0; PATCH_NO_THUMB=0;;
 	esac
 	case "${CPYTHON_VERSION}" in
 		3.9.*|3.10.*|3.11.*|3.12.*|3.13.*|3.14.*) PATCH_OMIT_LEAF_FRAME_POINTER=0;;
@@ -89,6 +89,12 @@ if [ "${MANYLINUX_DISABLE_CLANG}" -eq 0 ] && [ "${MANYLINUX_DISABLE_CLANG_FOR_CP
 		sed -i 's/frame_pointer_cflags -mno-omit-leaf-frame-pointer/frame_pointer_cflags/g' ./configure
 		# we still want to build the interpreter & stdlib modules with "-mno-omit-leaf-frame-pointer"
 		CFLAGS_NODIST="${CFLAGS_NODIST} -mno-omit-leaf-frame-pointer"
+	fi
+	if [ ${PATCH_NO_THUMB} -ne 0 ]; then
+		# patch configure when appending "-mno-thumb"
+		sed -i 's/frame_pointer_cflags -mno-thumb/frame_pointer_cflags/g' ./configure
+		# we still want to build the interpreter & stdlib modules with "-mno-thumb"
+		CFLAGS_NODIST="${CFLAGS_NODIST} -mno-thumb"
 	fi
 fi
 
