@@ -229,10 +229,17 @@ class TestModules(unittest.TestCase):
             in {"manylinux2014", "manylinux_2_28", "manylinux_2_31"}
             else ""
         )
+        ldshared = f"{cc} -shared"
+        ldcxxshared = f"{cxx} -shared"
+        if os.environ["AUDITWHEEL_POLICY"] == "musllinux_1_2" and sys.version_info[:2] >= (3, 15):
+            stack = "-Wl,-z,stack-size=1048576"
+            ldshared = f"{ldshared} {stack}"
+            ldcxxshared = f"{ldcxxshared} {stack}"
+
         assert cc == f"gcc{pthread}", cc
         assert cxx == f"g++{pthread}", cxx
-        assert config_vars["LDSHARED"] == f"{cc} -shared", config_vars["LDSHARED"]
-        assert config_vars["LDCXXSHARED"] == f"{cxx} -shared", config_vars["LDCXXSHARED"]
+        assert config_vars["LDSHARED"] == ldshared, config_vars["LDSHARED"]
+        assert config_vars["LDCXXSHARED"] == ldcxxshared, config_vars["LDCXXSHARED"]
 
     @unittest.skipIf(sys.version_info[:2] < (3, 14), reason="not supported in this version")
     def test_zstd(self):
