@@ -102,7 +102,7 @@ for repeatable builds.
 manylinux_2_39 (AlmaLinux/RockyLinux 10 based) - ALPHA
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Toolchain: GCC 14
+Toolchain: GCC 16
 
 - aarch64 image: ``quay.io/pypa/manylinux_2_39_aarch64``
 - riscv64 image: ``quay.io/pypa/manylinux_2_39_riscv64``
@@ -157,7 +157,7 @@ grafted into a wheel, will fail to run on older hardware. There's no PEP to hand
 yet when it comes to packaging or installing wheels. Auditwheel doesn't detect this either.
 See https://github.com/pypa/manylinux/issues/1725
 
-Toolchain: GCC 14
+Toolchain: GCC 16
 
 - x86_64 image: ``quay.io/pypa/manylinux_2_34_x86_64``
 - i686 image: ``quay.io/pypa/manylinux_2_34_i686``
@@ -207,7 +207,7 @@ distros using glibc 2.31 or later, including:
 manylinux_2_28 (AlmaLinux 8 based)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Toolchain: GCC 14
+Toolchain: GCC 16
 
 - x86_64 image: ``quay.io/pypa/manylinux_2_28_x86_64``
 - i686 image: ``quay.io/pypa/manylinux_2_28_i686``

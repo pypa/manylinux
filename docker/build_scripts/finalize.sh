@@ -113,10 +113,5 @@ LC_ALL=C "${MY_DIR}/update-system-packages.sh"
 # wrap compilers (see https://github.com/pypa/manylinux/issues/1725)
 "${MY_DIR}/install-gcc-wrapper.sh"
 
-# patch libstdc++.so  (see https://github.com/pypa/manylinux/issues/1760)
-if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ]; then
-	find "${DEVTOOLSET_ROOTPATH}" -name 'libstdc++.so' -exec sed -i 's/INPUT\s*(\s*\([^ ]\+\)\s*\([^ ]\+\)\s*)/INPUT ( \1 \2 \1 )/g' {} \;
-fi
-
 # add clang install helper
 ln -s "${MY_DIR}/install-static-clang-helper.sh" /usr/local/bin/manylinux-install-clang
