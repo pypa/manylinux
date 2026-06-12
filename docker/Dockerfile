@@ -9,7 +9,7 @@ ARG MANYLINUX_BUILDARCH=${BUILDARCH}
 ARG MANYLINUX_DISABLE_CLANG=0
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=0
 ARG MANYLINUX_CLANG_VERSION=22.1.7.0
-ARG MANYLINUX_COSIGN_VERSION=3.0.6
+ARG MANYLINUX_COSIGN_VERSION=3.1.1
 
 
 FROM $BASEIMAGE AS runtime_base_packages
@@ -95,8 +95,8 @@ RUN manylinux-entrypoint /opt/_internal/build_scripts/install-build-packages.sh
 FROM build_base AS build_base_openssl
 COPY build_scripts/build-openssl.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export OPENSSL_ROOT=openssl-3.5.6 && \
-    export OPENSSL_HASH=deae7c80cba99c4b4f940ecadb3c3338b13cb77418409238e57d7f31f2a3b736 && \
+    export OPENSSL_ROOT=openssl-3.5.7 && \
+    export OPENSSL_HASH=a8c0d28a529ca480f9f36cf5792e2cd21984552a3c8e4aa11a24aa31aeac98e8 && \
     export OPENSSL_DOWNLOAD_URL=https://github.com/openssl/openssl/releases/download/${OPENSSL_ROOT} && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-openssl.sh
 
@@ -190,17 +190,17 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_cpython AS build_cpython313
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.13
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.13.14
 
 FROM build_cpython AS build_cpython314
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.5
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.6
 
 FROM build_cpython AS build_cpython314_nogil
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.5 nogil
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.6 nogil
 
 FROM build_cpython AS build_cpython315
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
