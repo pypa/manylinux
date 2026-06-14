@@ -126,3 +126,9 @@ jobs:
         uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
         with:
           jobs: ${{ toJSON(needs) }}
+
+  deploy_multiarch:
+    if: needs.build_matrix.outputs.environment == 'quay.io'
+    needs: [build_matrix, all_passed]
+    name: Deploy multi-arch images
+    uses: ./.github/workflows/multiarch.yml

@@ -1,9 +1,8 @@
 name: Deploy multi-arch images
 
 on:
+  workflow_call:
   workflow_dispatch:
-  schedule:
-    - cron: "30 5 * * *"  # every day, at 5:30
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
