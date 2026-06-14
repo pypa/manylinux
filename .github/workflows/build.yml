@@ -130,5 +130,7 @@ jobs:
   deploy_multiarch:
     if: needs.build_matrix.outputs.environment == 'quay.io'
     needs: [build_matrix, all_passed]
+    permissions:
+      contents: read
     name: Deploy multi-arch images
     uses: ./.github/workflows/multiarch.yml
