@@ -132,5 +132,4 @@ jobs:
     needs: [build_matrix, all_passed]
     permissions:
       contents: read
-    name: Deploy multi-arch images
     uses: ./.github/workflows/multiarch.yml
