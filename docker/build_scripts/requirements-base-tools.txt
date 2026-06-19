@@ -4,9 +4,9 @@ argcomplete==3.6.3 \
     --hash=sha256:62e8ed4fd6a45864acc8235409461b72c9a28ee785a2011cc5eb78318786c89c \
     --hash=sha256:f5007b3a600ccac5d25bbce33089211dfd49eab4a7718da3f10e3082525a92ce
     # via pipx
-certifi==2026.5.20 \
-    --hash=sha256:3c52e209ba0a4ad7aebe60436a4ab349c39e1e602e8c134221e546902ad25897 \
-    --hash=sha256:69dea482ab64caa7b9f6aba1c6bf48bb6a5448d1c0f1b17ab42ad8c763a5344d
+certifi==2026.6.17 \
+    --hash=sha256:024c88eeec92ca068db80f02b8b07c9cef7b9fe261d1d535abfd5abd6f6af432 \
+    --hash=sha256:2227dcbaafe0d2f59279d1762ddddc37783ed4354594f194ffc31d20f41fc3db
     # via -r requirements-base-tools.in
 click==8.4.1 \
     --hash=sha256:482be17c6991b8c19c5429a1e995d9b0efdbb63172824c41f99965dc0ade8ec2 \
@@ -16,9 +16,9 @@ packaging==26.2 \
     --hash=sha256:5fc45236b9446107ff2415ce77c807cee2862cb6fac22b8a73826d0693b0980e \
     --hash=sha256:ff452ff5a3e828ce110190feff1178bb1f2ea2281fa2075aadb987c2fb221661
     # via pipx
-pipx==1.14.0 \
-    --hash=sha256:6566e35e64292d1df8a2e3c7ab51093521201cf7a9ed2f23217e5f843aad05b8 \
-    --hash=sha256:a8b0d12cd66bf6e14180b609db695d3647cafd5ac309a8b372df6a06953d0974
+pipx==1.14.1 \
+    --hash=sha256:992b599fd36f719b2a7ac898dde72803a167001c82d5747c3ea1ddf7327dd717 \
+    --hash=sha256:d11023138ac223d79e6d711ec738772c896d00366c46515a4948c3ede3389a24
     # via -r requirements-base-tools.in
 platformdirs==4.10.0 \
     --hash=sha256:31e761a6a0ca04faf7353ea759bdba55652be214725111e5aac52dfa29d4bef7 \
