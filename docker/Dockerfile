@@ -238,6 +238,7 @@ RUN --mount=type=bind,target=/build_cpython39,from=build_cpython39 \
 COPY tests /opt/_internal/tests/
 
 ENV PATH=/opt/clang/bin:${PATH}
+ENV PIPX_DISABLE_SHARED_LIBS_AUTO_UPGRADE=1
 ENV SSL_CERT_FILE=/opt/_internal/certs.pem
 
 CMD ["/bin/bash"]
