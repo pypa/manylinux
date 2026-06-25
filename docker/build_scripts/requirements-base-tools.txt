@@ -8,17 +8,17 @@ certifi==2026.6.17 \
     --hash=sha256:024c88eeec92ca068db80f02b8b07c9cef7b9fe261d1d535abfd5abd6f6af432 \
     --hash=sha256:2227dcbaafe0d2f59279d1762ddddc37783ed4354594f194ffc31d20f41fc3db
     # via -r requirements-base-tools.in
-click==8.4.1 \
-    --hash=sha256:482be17c6991b8c19c5429a1e995d9b0efdbb63172824c41f99965dc0ade8ec2 \
-    --hash=sha256:918b5633eddf6b41c32d4f454bf0de810065c74e3f7dbf8ee5452f8be88d3e96
+click==8.4.2 \
+    --hash=sha256:9a6cea6e60b17ebe0a44c5cc636d94f09bd66142c1cd7d8b4cd731c4917a15f6 \
+    --hash=sha256:e6f9f66136c816745b9d65817da91d61d957fb16e02e4dcd0552553c5a197b76
     # via userpath
 packaging==26.2 \
     --hash=sha256:5fc45236b9446107ff2415ce77c807cee2862cb6fac22b8a73826d0693b0980e \
     --hash=sha256:ff452ff5a3e828ce110190feff1178bb1f2ea2281fa2075aadb987c2fb221661
     # via pipx
-pipx==1.14.1 \
-    --hash=sha256:992b599fd36f719b2a7ac898dde72803a167001c82d5747c3ea1ddf7327dd717 \
-    --hash=sha256:d11023138ac223d79e6d711ec738772c896d00366c46515a4948c3ede3389a24
+pipx==1.15.0 \
+    --hash=sha256:135d63aa887c1b33c8bcd818d8dc1cc83528d2e330d7f1c3ccaa0192e9ef0b08 \
+    --hash=sha256:193aab4983b787903e389d623e6347f697026c0d7a2ba0b4fbd5189bed22f19d
     # via -r requirements-base-tools.in
 platformdirs==4.10.0 \
     --hash=sha256:31e761a6a0ca04faf7353ea759bdba55652be214725111e5aac52dfa29d4bef7 \

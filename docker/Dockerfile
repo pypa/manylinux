@@ -104,8 +104,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_base_openssl AS build_git
 COPY build_scripts/build-curl.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export CURL_ROOT=curl-8.20.0 && \
-    export CURL_HASH=fc5819cad3f9f5482669adcdc49a782c15f36d2a0715b395b06d9173593d2dc0 && \
+    export CURL_ROOT=curl-8.21.0 && \
+    export CURL_HASH=d9b327997999045a24cda50f3983e69e51c516bd8be6ef9842fc7f99135e33bb && \
     export CURL_DOWNLOAD_URL=https://curl.haxx.se/download && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-curl.sh
 COPY build_scripts/build-git.sh /opt/_internal/build_scripts/
@@ -205,12 +205,12 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_cpython AS build_cpython315
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.15.0b2
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.15.0b3
 
 FROM build_cpython AS build_cpython315_nogil
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.15.0b2 nogil
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.15.0b3 nogil
 
 
 FROM runtime_base
