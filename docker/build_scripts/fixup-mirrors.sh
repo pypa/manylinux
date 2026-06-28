@@ -5,15 +5,15 @@
 set -exuo pipefail
 if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
 	if [ "${AUDITWHEEL_ARCH}" == "s390x" ]; then
-		yum-config-manager --setopt=os.baseurl=https://download.sinenomine.net/clefos/7/os --save
-		yum-config-manager --setopt=updates.baseurl=https://download.sinenomine.net/clefos/7/updates --save
-		yum-config-manager --setopt=extras.baseurl=https://download.sinenomine.net/clefos/7/extras --save
-		yum-config-manager --setopt=centosplus.baseurl=https://download.sinenomine.net/clefos/7/centosplus --save
+		yum-config-manager --setopt=os.baseurl=https://download.sinenomine.net/clefos/7/os --save 1>/dev/null
+		yum-config-manager --setopt=updates.baseurl=https://download.sinenomine.net/clefos/7/updates --save 1>/dev/null
+		yum-config-manager --setopt=extras.baseurl=https://download.sinenomine.net/clefos/7/extras --save 1>/dev/null
+		yum-config-manager --setopt=centosplus.baseurl=https://download.sinenomine.net/clefos/7/centosplus --save 1>/dev/null
 		if [ -f /etc/yum.repos.d/CentOS-SCLo-scl-rh.repo ]; then
-			yum-config-manager --setopt=clefos-rh.baseurl=https://download.sinenomine.net/clefos/7/sclo/s390x/rh --save
+			yum-config-manager --setopt=clefos-rh.baseurl=https://download.sinenomine.net/clefos/7/sclo/s390x/rh --save 1>/dev/null
 		fi
 		if [ -f /etc/yum.repos.d/epel.repo ]; then
-			yum-config-manager --setopt=epel.baseurl=https://download.sinenomine.net/clefos/epel7 --save
+			yum-config-manager --setopt=epel.baseurl=https://download.sinenomine.net/clefos/epel7 --save 1>/dev/null
 		fi
 	else
 		# Centos 7 is EOL and is no longer available from the usual mirrors, so switch
