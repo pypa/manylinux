@@ -25,7 +25,7 @@ jobs:
     permissions:
       packages: write  # needed to delete images
     steps:
-      - uses: dataaxiom/ghcr-cleanup-action@f092b48ba3b604b2a83690dc4b2bbb3392e1045f # v1.2.1
+      - uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
         with:
           package: manylinux-cache
           delete-untagged: true
