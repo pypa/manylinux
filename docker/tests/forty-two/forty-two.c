@@ -1,8 +1,10 @@
+#include <eleven.h>
 #include <Python.h>
 
 static PyObject * answer(PyObject *self, PyObject *args)
 {
-    return PyLong_FromLong(42);
+    int result = 31 + eleven();
+    return PyLong_FromLong(result);
 }
 
 /* Module initialization */

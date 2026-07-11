@@ -49,6 +49,9 @@ if [ "${EXPECTED_PYTHON_COUNT_ALL}" -ne "${PYTHON_COUNT}" ]; then
 	exit 1
 fi
 
+# build dependencies for extension build smoke test
+make -C "${MY_DIR}/forty-two" all
+
 PYTHON_COUNT=0
 for PYTHON in /opt/python/*/bin/python; do
 	# Smoke test to make sure that our Pythons work, and do indeed detect as
@@ -83,7 +86,8 @@ for PYTHON in /opt/python/*/bin/python; do
 		echo "unexpected wheel built: '$(find "${DIST_DIR}" -name '*.whl' -exec basename '{}' \; -quit)' instead  of '${EXPECTED_WHEEL_NAME}'"
 		exit 1
 	fi
-	auditwheel repair --only-plat -w "${DIST_DIR}" "${DIST_DIR}/${EXPECTED_WHEEL_NAME}"
+	AUDITWHEEL_LD_LIBRARY_PATH="${SRC_DIR}/eleven:${SRC_DIR}/ten:${LD_LIBRARY_PATH}"
+	LD_LIBRARY_PATH="${AUDITWHEEL_LD_LIBRARY_PATH}" auditwheel repair --only-plat -w "${DIST_DIR}" "${DIST_DIR}/${EXPECTED_WHEEL_NAME}"
 	REPAIRED_WHEEL=$(find "${DIST_DIR}" -name "forty_two-0.1.0-${PY_ABI_TAGS}-*${AUDITWHEEL_POLICY}_${AUDITWHEEL_ARCH}*.whl")
 	if [ ! -f "${REPAIRED_WHEEL}" ]; then
 		echo "invalid repaired wheel name"
