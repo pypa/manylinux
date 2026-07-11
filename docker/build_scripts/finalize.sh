@@ -86,7 +86,6 @@ for TOOL_PATH in "${MY_DIR}/requirements-tools/"*; do
 	case ${AUDITWHEEL_PLAT}-${TOOL} in
 		musllinux*_ppc64le-uv) continue;;  # uv doesn't provide musl ppc64le wheels due to Rust issues
 		musllinux*_s390x-uv) continue;;  # uv doesn't provide musl s390x wheels due to Rust issues
-		musllinux*_riscv64-uv) continue;;  # uv doesn't provide musl riscv64 wheels due to Rust issues
 		*_loongarch64-uv) continue;;  # no uv for loongarch64
 		*_loongarch64-cmake|*_loongarch64-swig) manylinux_pkg_install "${TOOL}";;
 		*_loongarch64-patchelf)
