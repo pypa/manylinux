@@ -74,8 +74,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 
 COPY build_scripts/install-libtool.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export LIBTOOL_ROOT=libtool-2.5.4 && \
-    export LIBTOOL_HASH=da8ebb2ce4dcf46b90098daf962cffa68f4b4f62ea60f798d0ef12929ede6adf && \
+    export LIBTOOL_ROOT=libtool-2.6.2 && \
+    export LIBTOOL_HASH=24adb3aa9ae035c70faba344af57d73215eb89281045af6c7ccd307751f8b0bf && \
     export LIBTOOL_DOWNLOAD_URL=https://ftpmirror.gnu.org/gnu/libtool && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/install-libtool.sh
 
