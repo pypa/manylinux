@@ -12,13 +12,17 @@ click==8.4.2 \
     --hash=sha256:9a6cea6e60b17ebe0a44c5cc636d94f09bd66142c1cd7d8b4cd731c4917a15f6 \
     --hash=sha256:e6f9f66136c816745b9d65817da91d61d957fb16e02e4dcd0552553c5a197b76
     # via userpath
+filelock==3.30.3 \
+    --hash=sha256:06e1c6d5e12277022172b7f8d090affe0e8f940f1a37ca45f548855ee51a6b86 \
+    --hash=sha256:6575420cd497ed15fc43a7ac46c48f6b6371c733fc40cf5a4e216871397bc1e2
+    # via pipx
 packaging==26.2 \
     --hash=sha256:5fc45236b9446107ff2415ce77c807cee2862cb6fac22b8a73826d0693b0980e \
     --hash=sha256:ff452ff5a3e828ce110190feff1178bb1f2ea2281fa2075aadb987c2fb221661
     # via pipx
-pipx==1.15.0 \
-    --hash=sha256:135d63aa887c1b33c8bcd818d8dc1cc83528d2e330d7f1c3ccaa0192e9ef0b08 \
-    --hash=sha256:193aab4983b787903e389d623e6347f697026c0d7a2ba0b4fbd5189bed22f19d
+pipx==1.16.0 \
+    --hash=sha256:0ff54498fb7e15edd798009d215858ce48b070a4b751fda897983bf77c33a226 \
+    --hash=sha256:a61a88c35ed68ea99d6046634e1577c456072abc984f15c27d594a423ef2ca01
     # via -r requirements-base-tools.in
 platformdirs==4.10.0 \
     --hash=sha256:31e761a6a0ca04faf7353ea759bdba55652be214725111e5aac52dfa29d4bef7 \
