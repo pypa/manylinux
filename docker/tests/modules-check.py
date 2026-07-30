@@ -229,8 +229,12 @@ class TestModules(unittest.TestCase):
             in {"manylinux2014", "manylinux_2_28", "manylinux_2_31"}
             else ""
         )
-        ldshared = f"{cc} -shared"
+        hardening_ldflags = "-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now"
+        ldshared = f"{cc} -shared {hardening_ldflags}"
         ldcxxshared = f"{cxx} -shared"
+        if sys.version_info[:2] >= (3, 12):
+            # Added by https://github.com/python/cpython/pull/123298
+            ldcxxshared = f"{ldcxxshared} {hardening_ldflags}"
         if os.environ["AUDITWHEEL_POLICY"] == "musllinux_1_2" and sys.version_info[:2] >= (3, 15):
             stack = "-Wl,-z,stack-size=1048576"
             ldshared = f"{ldshared} {stack}"
