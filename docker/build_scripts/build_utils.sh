@@ -2,13 +2,26 @@
 # Helper utilities for build
 
 
-# use all flags used by ubuntu 20.04 for hardening builds, dpkg-buildflags --export
+# use all flags used by ubuntu 24.04 for hardening builds:
+# DEB_BUILD_MAINT_OPTIONS='hardening=+all optimize=-lto qa=-framepointer reproducible=-fixdebugpath,-fixfilepath' \
+#   dpkg-buildflags --export
 # other flags mentioned in https://wiki.ubuntu.com/ToolChain/CompilerFlags can't be
 # used because the distros used here are too old
-MANYLINUX_CPPFLAGS="-Wdate-time -D_FORTIFY_SOURCE=2"
-MANYLINUX_CFLAGS="-g -O2 -Wall -fdebug-prefix-map=/=. -fstack-protector-strong -Wformat -Werror=format-security"
-MANYLINUX_CXXFLAGS="-g -O2 -Wall -fdebug-prefix-map=/=. -fstack-protector-strong -Wformat -Werror=format-security"
+MANYLINUX_CPPFLAGS="-Wdate-time -D_FORTIFY_SOURCE=3"
+MANYLINUX_CFLAGS="-g -O2 -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security"
+MANYLINUX_CXXFLAGS="-g -O2 -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security"
 MANYLINUX_LDFLAGS="-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now"
+
+case $(uname -m) in
+aarch64)
+	MANYLINUX_CFLAGS="${MANYLINUX_CFLAGS} -mbranch-protection=standard"
+	MANYLINUX_CXXFLAGS="${MANYLINUX_CXXFLAGS} -mbranch-protection=standard"
+	;;
+x86_64)
+	MANYLINUX_CFLAGS="${MANYLINUX_CFLAGS} -fcf-protection"
+	MANYLINUX_CXXFLAGS="${MANYLINUX_CXXFLAGS} -fcf-protection"
+	;;
+esac
 
 if [ "${AUDITWHEEL_POLICY:0:10}" == "musllinux_" ]; then
 	export BASE_POLICY=musllinux

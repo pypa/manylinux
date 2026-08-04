@@ -36,7 +36,7 @@ pushd "Python-${CPYTHON_VERSION}"
 PREFIX="/opt/_internal/cpython-${CPYTHON_VERSION}"
 mkdir -p "${PREFIX}/lib"
 
-CFLAGS_NODIST="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS}"
+CFLAGS_NODIST=""
 LDFLAGS_EXTRA=""
 CONFIGURE_ARGS=(--disable-shared --with-ensurepip=no)
 
@@ -115,13 +115,15 @@ fi
 
 unset _PYTHON_HOST_PLATFORM
 
-# configure with hardening options only for the interpreter & stdlib C extensions
-# do not change the default for user built extension (yet?)
+# configure with hardening options for the interpreter & stdlib C extensions and
+# for user built extension
 ./configure \
 	CC=gcc \
 	CXX=g++ \
+	CFLAGS="${MANYLINUX_CFLAGS} ${MANYLINUX_CPPFLAGS}" \
 	CFLAGS_NODIST="${CFLAGS_NODIST}" \
-	LDFLAGS_NODIST="${MANYLINUX_LDFLAGS} ${LDFLAGS_EXTRA}" \
+	LDFLAGS="${MANYLINUX_LDFLAGS}" \
+	LDFLAGS_NODIST="${LDFLAGS_EXTRA}" \
 	"--prefix=${PREFIX}" "${CONFIGURE_ARGS[@]}" > /dev/null
 make > /dev/null
 make install > /dev/null
