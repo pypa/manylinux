@@ -195,12 +195,12 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_cpython AS build_cpython314
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.6
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.7
 
 FROM build_cpython AS build_cpython314_nogil
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.6 nogil
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh hugo@python.org https://github.com/login/oauth 3.14.7 nogil
 
 FROM build_cpython AS build_cpython315
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
