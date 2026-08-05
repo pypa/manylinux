@@ -231,7 +231,7 @@ class TestModules(unittest.TestCase):
         )
         ldshared = f"{cc} -shared"
         ldcxxshared = f"{cxx} -shared"
-        if os.environ["AUDITWHEEL_POLICY"] == "musllinux_1_2" and sys.version_info[:2] >= (3, 15):
+        if os.environ["AUDITWHEEL_POLICY"] == "musllinux_1_2" and sys.version_info[:2] >= (3, 14):
             stack = "-Wl,-z,stack-size=1048576"
             ldshared = f"{ldshared} {stack}"
             ldcxxshared = f"{ldcxxshared} {stack}"
