@@ -265,12 +265,12 @@ def main():
     for tool in ["autoconf", "automake", "libtool", "git", "openssl", "curl"]:
         try:
             _update_with_root(tool, args.dry_run)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             print(f"::warning::update: {e}\n", file=sys.stderr)
     for tool in ["libxcrypt", "zstd"]:
         try:
             _update_with_gh(tool, args.dry_run)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             print(f"::warning::update: {e}\n", file=sys.stderr)
 
 

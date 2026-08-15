@@ -175,17 +175,17 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_cpython AS build_cpython310
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh pablogsal@python.org https://accounts.google.com 3.10.20
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh pablogsal@python.org https://accounts.google.com 3.10.21
 
 FROM build_cpython AS build_cpython311
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh pablogsal@python.org https://accounts.google.com 3.11.15
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh pablogsal@python.org https://accounts.google.com 3.11.16
 
 FROM build_cpython AS build_cpython312
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.12.13
+    /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-cpython.sh thomas@python.org https://accounts.google.com 3.12.14
 
 FROM build_cpython AS build_cpython313
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON

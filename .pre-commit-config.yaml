@@ -1,7 +1,7 @@
 repos:
 
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v6.0.0
+  rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c  # frozen: v6.0.0
   hooks:
   - id: check-case-conflict
   - id: check-merge-conflict
@@ -14,12 +14,12 @@ repos:
   - id: trailing-whitespace
 
 - repo: https://github.com/shellcheck-py/shellcheck-py
-  rev: v0.11.0.1
+  rev: 745eface02aef23e168a8afb6b5737818efbea95  # frozen: v0.11.0.1
   hooks:
   - id: shellcheck
 
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.15.14
+  rev: 65dbdb59d2f2d9c3bdc343c566821ad3319ddaa3  # frozen: v0.16.3
   hooks:
   - id: ruff-check
     args: ["--fix", "--show-fixes", "--target-version=py38"]
@@ -37,13 +37,13 @@ repos:
     args: ["--target-version=py312"]
 
 - repo: https://github.com/codespell-project/codespell
-  rev: v2.4.2
+  rev: 57b21406f092110c18776e39b0bda50d37c945c8  # frozen: v2.4.3
   hooks:
   - id: codespell
     args: ["-w"]
     exclude: ^docker/build_scripts/.*pubkey.*.txt$
 
 - repo: https://github.com/zizmorcore/zizmor-pre-commit
-  rev: v1.25.2
+  rev: 451b56af716f9f0d0c2b816503a3fd0cf8b036fa  # frozen: v1.29.0
   hooks:
   - id: zizmor
