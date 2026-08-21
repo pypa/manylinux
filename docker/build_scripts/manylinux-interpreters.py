@@ -8,12 +8,31 @@ import sys
 from functools import cache
 from pathlib import Path
 
+from packaging.tags import platform_tags
+
 HERE = Path(__file__).parent.resolve(strict=True)
-PYTHON_TAGS = json.loads(HERE.joinpath("python_versions.json").read_text())
 INSTALL_DIR = Path("/opt/python")
 ARCH = os.environ["AUDITWHEEL_ARCH"]
 POLICY = os.environ["AUDITWHEEL_POLICY"]
 NO_CHECK = os.environ.get("MANYLINUX_INTERPRETERS_NO_CHECK", "0") == "1"
+
+
+def load_python_tags():
+    result = json.loads(HERE.joinpath("python_versions.json").read_text())
+    # only keep what's matching the most specific platform tag
+    platform_tags_ = list(platform_tags())
+    python_tags = list(result.keys())
+    for python_tag in python_tags:
+        update = {}
+        for platform_tag in platform_tags_:
+            if platform_tag in result[python_tag]:
+                update = {ARCH: result[python_tag][platform_tag]}
+                break
+        result[python_tag] = update
+    return result
+
+
+PYTHON_TAGS = load_python_tags()
 
 
 def sort_key(tag):
