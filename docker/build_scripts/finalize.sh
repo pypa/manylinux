@@ -46,10 +46,10 @@ MANYLINUX_INTERPRETERS_NO_CHECK=1 /usr/local/bin/manylinux-interpreters ensure "
 
 # Create venv for certifi and pipx
 TOOLS_PATH=/opt/_internal/tools
-/opt/python/cp312-cp312/bin/python -m venv --without-pip ${TOOLS_PATH}
+/opt/python/cp314-cp314/bin/python -m venv --without-pip ${TOOLS_PATH}
 
 # Install certifi and pipx
-/opt/python/cp312-cp312/bin/python -m pip --python ${TOOLS_PATH}/bin/python install -U --require-hashes -r "${MY_DIR}/requirements-base-tools.txt"
+/opt/python/cp314-cp314/bin/python -m pip --python ${TOOLS_PATH}/bin/python install -U --require-hashes -r "${MY_DIR}/requirements-base-tools.txt"
 
 # Make pipx available in PATH,
 # Make sure when root installs apps, they're also in the PATH
@@ -77,7 +77,7 @@ export SSL_CERT_FILE=/opt/_internal/certs.pem
 
 # initialize shared library
 # workaround https://github.com/pypa/pip/issues/9243
-/opt/python/cp312-cp312/bin/python -m pip download --dest /tmp/pinned-wheels --require-hashes -r /opt/_internal/build_scripts/requirements3.12.txt
+/opt/python/cp314-cp314/bin/python -m pip download --dest /tmp/pinned-wheels --require-hashes -r /opt/_internal/build_scripts/requirements3.14.txt
 pipx upgrade-shared --pip-args="--no-index --find-links=/tmp/pinned-wheels"
 
 # install other tools with pipx
