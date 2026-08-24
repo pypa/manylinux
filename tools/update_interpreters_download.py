@@ -1,5 +1,5 @@
 # /// script
-# dependencies = ["packaging", "requests"]
+# dependencies = ["packaging>=24.2", "requests"]
 # ///
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ from hashlib import sha256
 from pathlib import Path
 
 import requests
-from packaging.specifiers import Specifier
+from packaging.specifiers import Specifier, SpecifierSet
 from packaging.version import Version
 
 PROJECT_ROOT = Path(__file__).parent.parent.resolve(strict=True)
@@ -28,8 +28,24 @@ def get_sha256(url: str) -> str:
     return sha256sum.hexdigest()
 
 
-def update_pypy_version(releases, py_spec, pp_spec, tag, arch, version_dict, updates):
-    pypy_arch = {"x86_64": "x64"}.get(arch, arch)
+def update_pypy_version(
+    releases,
+    py_spec: Specifier,
+    pp_spec: Specifier,
+    tag: str,
+    platform_tag: str,
+    version_dict: dict[str, str],
+    updates: list[str],
+):
+    if platform_tag.endswith("_x86_64"):
+        pypy_arch = "x64"
+    elif platform_tag.endswith("_aarch64"):
+        pypy_arch = "aarch64"
+    elif platform_tag.endswith("_i686"):
+        pypy_arch = "i686"
+    else:
+        msg = f"unknown platform mapping for PyPy: {platform_tag}"
+        raise LookupError(msg)
     current_version = None
     if "version" in version_dict:
         current_version = Version(version_dict["version"])
@@ -46,7 +62,7 @@ def update_pypy_version(releases, py_spec, pp_spec, tag, arch, version_dict, upd
             )
         except StopIteration:
             continue
-        message = f"updating {tag} {arch} to {r['pypy_version']}"
+        message = f"updating {tag} {platform_tag} to {r['pypy_version']}"
         print(message)
         version_dict["version"] = str(r["pypy_version"])
         version_dict["download_url"] = file["download_url"]
@@ -55,7 +71,7 @@ def update_pypy_version(releases, py_spec, pp_spec, tag, arch, version_dict, upd
         break
 
 
-def update_pypy_versions(versions, updates):
+def update_pypy_versions(versions: dict[str, dict[str, dict[str, str]]], updates: list[str]):
     response = requests.get("https://downloads.python.org/pypy/versions.json")
     response.raise_for_status()
     releases = [r for r in response.json() if r["pypy_version"] != "nightly"]
@@ -71,7 +87,7 @@ def update_pypy_versions(versions, updates):
     ]
     releases.sort(key=lambda r: r["pypy_version"], reverse=True)
 
-    for tag in versions:
+    for tag, platform_versions in versions.items():
         if not tag.startswith("pp"):
             continue
         python_tag, abi_tag = tag.split("-")
@@ -84,12 +100,33 @@ def update_pypy_versions(versions, updates):
         pp_minor = int(pp_ver[3:])
         py_spec = Specifier(f"=={py_major}.{py_minor}.*")
         pp_spec = Specifier(f"=={pp_major}.{pp_minor}.*")
-        for arch in versions[tag]:
-            update_pypy_version(releases, py_spec, pp_spec, tag, arch, versions[tag][arch], updates)
+        for platform_tag in platform_versions:
+            update_pypy_version(
+                releases,
+                py_spec,
+                pp_spec,
+                tag,
+                platform_tag,
+                platform_versions[platform_tag],
+                updates,
+            )
 
 
-def update_graalpy_version(releases, graalpy_spec, tag, arch, version_dict, updates):
-    graalpy_arch = re.escape({"x86_64": "amd64"}.get(arch, arch))
+def update_graalpy_version(
+    releases,
+    graalpy_specs: SpecifierSet,
+    tag: str,
+    platform_tag: str,
+    version_dict: dict[str, str],
+    updates: list[str],
+):
+    if platform_tag.endswith("_x86_64"):
+        graalpy_arch = "amd64"
+    elif platform_tag.endswith("_aarch64"):
+        graalpy_arch = "aarch64"
+    else:
+        msg = f"unknown platform mapping for GraalPy: {platform_tag}"
+        raise LookupError(msg)
     asset_re = re.compile(
         rf"graalpy(?:\d+\.\d+)?-(?P<version>\d+\.\d+\.\d+)-linux-{graalpy_arch}\.tar\.gz"
     )
@@ -100,7 +137,7 @@ def update_graalpy_version(releases, graalpy_spec, tag, arch, version_dict, upda
         version = Version(r["tag_name"].split("-")[1])
         if current_version is not None and current_version >= version:
             continue
-        if not graalpy_spec.contains(version):
+        if not graalpy_specs.contains(version):
             continue
         asset_found = False
         for asset in r["assets"]:
@@ -110,16 +147,20 @@ def update_graalpy_version(releases, graalpy_spec, tag, arch, version_dict, upda
                 break
         if not asset_found:
             continue
-        message = f"updating {tag} {arch} to {version}"
+        message = f"updating {tag} {platform_tag} to {version}"
         print(message)
+        download_url = asset["browser_download_url"]
+        sha256_url = f"{download_url}.sha256"
         version_dict["version"] = str(version)
-        version_dict["download_url"] = asset["browser_download_url"]
-        version_dict["sha256"] = get_sha256(asset["browser_download_url"])
+        version_dict["download_url"] = download_url
+        sha256_response = requests.get(sha256_url)
+        sha256_response.raise_for_status()
+        version_dict["sha256"] = sha256_response.text.strip()
         updates.append(message)
         break
 
 
-def get_next_page_link(response):
+def get_next_page_link(response: requests.Response) -> str | None:
     link = response.headers.get("link")
     if link:
         for part in re.split(r"\s*,\s*", link):
@@ -131,7 +172,7 @@ def get_next_page_link(response):
     return None
 
 
-def update_graalpy_versions(versions, updates):
+def update_graalpy_versions(versions: dict[str, dict[str, dict[str, str]]], updates: list[str]):
     releases = []
     url = "https://api.github.com/repos/oracle/graalpython/releases"
     while url:
@@ -139,7 +180,7 @@ def update_graalpy_versions(versions, updates):
         response.raise_for_status()
         releases += response.json()
         url = get_next_page_link(response)
-    for tag in versions:
+    for tag, platform_versions in versions.items():
         if not tag.startswith("graalpy"):
             continue
         _, abi_tag = tag.split("-")
@@ -147,18 +188,24 @@ def update_graalpy_versions(versions, updates):
         assert graalpy_ver.startswith("graalpy")
         graalpy_ver = graalpy_ver[len("graalpy") :]
         graalpy_major = int(graalpy_ver[:2])
-        graalpy_minor = int(graalpy_ver[2:])
-        graalpy_spec = Specifier(f"=={graalpy_major}.{graalpy_minor}.*")
-        for arch in versions[tag]:
-            update_graalpy_version(releases, graalpy_spec, tag, arch, versions[tag][arch], updates)
+        graalpy_spec = Specifier(f"=={graalpy_major}.*")
+        graalpy_spec_ml_2_17 = Specifier("<25.1")
+        for platform_tag in platform_versions:
+            if platform_tag.startswith("manylinux_2_17_"):
+                graalpy_specs = SpecifierSet((graalpy_spec, graalpy_spec_ml_2_17))
+            else:
+                graalpy_specs = SpecifierSet((graalpy_spec,))
+            update_graalpy_version(
+                releases, graalpy_specs, tag, platform_tag, platform_versions[platform_tag], updates
+            )
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry-run", dest="dry_run", action="store_true", help="dry run")
     args = parser.parse_args()
-    versions = json.loads(PYTHON_VERSIONS.read_text())
-    updates = []
+    versions: dict[str, dict[str, dict[str, str]]] = json.loads(PYTHON_VERSIONS.read_text())
+    updates: list[str] = []
     update_pypy_versions(versions, updates)
     update_graalpy_versions(versions, updates)
     if not args.dry_run:
