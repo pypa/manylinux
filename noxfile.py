@@ -36,7 +36,7 @@ def update_python_dependencies(session):
         )
 
     # tools
-    python_version = "3.12"
+    python_version = "3.14"
     session.run(
         "uv",
         "pip",
@@ -69,7 +69,7 @@ def update_python_dependencies(session):
         )
 
 
-@nox.session(python="3.12", reuse_venv=True)
+@nox.session(python="3.14", reuse_venv=True)
 def update_native_dependencies(session):
     """Update the native dependencies"""
     script = "tools/update_native_dependencies.py"
@@ -78,7 +78,7 @@ def update_native_dependencies(session):
     session.run("python", script, *session.posargs)
 
 
-@nox.session(python="3.12", reuse_venv=True)
+@nox.session(python="3.14", reuse_venv=True)
 def update_interpreters_download(session):
     """Update all the Python interpreters"""
     script = "tools/update_interpreters_download.py"
@@ -87,7 +87,7 @@ def update_interpreters_download(session):
     session.run("python", script, *session.posargs)
 
 
-@nox.session(python="3.12", reuse_venv=True)
+@nox.session(python="3.14", reuse_venv=True)
 def update_static_clang(session):
     """Update known static clang versions"""
     script = "tools/update_static_clang.py"
@@ -96,7 +96,7 @@ def update_static_clang(session):
     session.run("python", script, *session.posargs)
 
 
-@nox.session(python="3.12", reuse_venv=True)
+@nox.session(python="3.14", reuse_venv=True)
 def lint(session: nox.Session) -> None:
     """Run linters on the codebase."""
     session.install("pre-commit")
