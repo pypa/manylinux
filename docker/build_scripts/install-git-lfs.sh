@@ -21,7 +21,7 @@ case "${AUDITWHEEL_ARCH}" in
 	*) GOARCH="${AUDITWHEEL_ARCH}";;
 esac
 
-GIT_LFS_VERSION=3.7.1
+GIT_LFS_VERSION=3.8.0
 GIT_LFS_SHA256=sha256sums.asc
 GIT_LFS_ARCHIVE="git-lfs-linux-${GOARCH}-v${GIT_LFS_VERSION}.tar.gz"
 
