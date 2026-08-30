@@ -114,6 +114,7 @@ def update_pypy_versions(versions: dict[str, dict[str, dict[str, str]]], updates
 
 def update_graalpy_version(
     releases,
+    python_ver: Version,
     graalpy_specs: SpecifierSet,
     tag: str,
     platform_tag: str,
@@ -127,8 +128,9 @@ def update_graalpy_version(
     else:
         msg = f"unknown platform mapping for GraalPy: {platform_tag}"
         raise LookupError(msg)
+    python_ver_str = re.escape(f"{python_ver.major}.{python_ver.minor}")
     asset_re = re.compile(
-        rf"graalpy(?:\d+\.\d+)?-(?P<version>\d+\.\d+\.\d+)-linux-{graalpy_arch}\.tar\.gz"
+        rf"graalpy{python_ver_str}-(?P<version>\d+\.\d+\.\d+(\.\d+)?)-linux-{graalpy_arch}\.tar\.gz"
     )
     current_version = None
     if "version" in version_dict:
@@ -183,9 +185,13 @@ def update_graalpy_versions(versions: dict[str, dict[str, dict[str, str]]], upda
     for tag, platform_versions in versions.items():
         if not tag.startswith("graalpy"):
             continue
-        _, abi_tag = tag.split("-")
-        graalpy_ver, _, _ = abi_tag.split("_")
+        python_tag, abi_tag = tag.split("-")
+        graalpy_ver, python_ver_str, _ = abi_tag.split("_")
+        assert python_tag.startswith("graalpy")
         assert graalpy_ver.startswith("graalpy")
+        assert python_ver_str == python_tag[7:]
+        assert python_ver_str.startswith("3")
+        python_ver = Version(f"3.{python_ver_str[1:]}")
         graalpy_ver = graalpy_ver[len("graalpy") :]
         graalpy_major = int(graalpy_ver[:2])
         graalpy_spec = Specifier(f"=={graalpy_major}.*")
@@ -196,7 +202,13 @@ def update_graalpy_versions(versions: dict[str, dict[str, dict[str, str]]], upda
             else:
                 graalpy_specs = SpecifierSet((graalpy_spec,))
             update_graalpy_version(
-                releases, graalpy_specs, tag, platform_tag, platform_versions[platform_tag], updates
+                releases,
+                python_ver,
+                graalpy_specs,
+                tag,
+                platform_tag,
+                platform_versions[platform_tag],
+                updates,
             )
 
 
