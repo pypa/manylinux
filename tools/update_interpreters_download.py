@@ -130,7 +130,7 @@ def update_graalpy_version(
         raise LookupError(msg)
     python_ver_str = re.escape(f"{python_ver.major}.{python_ver.minor}")
     asset_re = re.compile(
-        rf"graalpy{python_ver_str}-(?P<version>\d+\.\d+\.\d+(\.\d+)?)-linux-{graalpy_arch}\.tar\.gz"
+        rf"graalpy{python_ver_str}-(?P<version>\d+\.\d+\.\d+(\.\d+(\.\d+)?)?)-linux-{graalpy_arch}\.tar\.gz"
     )
     current_version = None
     if "version" in version_dict:
