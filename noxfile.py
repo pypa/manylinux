@@ -99,5 +99,5 @@ def update_static_clang(session):
 @nox.session(python="3.14", reuse_venv=True)
 def lint(session: nox.Session) -> None:
     """Run linters on the codebase."""
-    session.install("pre-commit")
-    session.run("pre-commit", "run", "--all-files")
+    session.install("prek")
+    session.run("prek", "run", "--all-files")
