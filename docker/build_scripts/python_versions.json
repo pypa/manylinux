@@ -36,12 +36,12 @@
   "graalpy313-graalpy253_313_native": {
     "manylinux_2_28_x86_64": {
       "version": "25.3.4.1",
-      "download_url": "https://github.com/oracle/graalpython/releases/download/graal-25.3.4.1/graalpy3.13-25.3.4.1-linux-amd64.tar.gz",
+      "download_url": "https://github.com/oracle/graalpython/releases/download/graal-25.3.4/graalpy3.13-25.3.4.1-linux-amd64.tar.gz",
       "sha256": "23515b4e659d645960517b0ceedb90faa84fcb01f0f4497beca5868a1b1ae3ea"
     },
     "manylinux_2_28_aarch64": {
       "version": "25.3.4.1",
-      "download_url": "https://github.com/oracle/graalpython/releases/download/graal-25.3.4.1/graalpy3.13-25.3.4.1-linux-aarch64.tar.gz",
+      "download_url": "https://github.com/oracle/graalpython/releases/download/graal-25.3.4/graalpy3.13-25.3.4.1-linux-aarch64.tar.gz",
       "sha256": "53b80e284e444540ae7cb67349af3dd8f6c1848fbf6abb5051742ac745f1f33d"
     }
   },
