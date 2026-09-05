@@ -104,8 +104,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_base_openssl AS build_git
 COPY build_scripts/build-curl.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export CURL_ROOT=curl-8.21.0 && \
-    export CURL_HASH=d9b327997999045a24cda50f3983e69e51c516bd8be6ef9842fc7f99135e33bb && \
+    export CURL_ROOT=curl-8.22.0 && \
+    export CURL_HASH=d54dd598bf05927a726deb38df31c6a255ba83ff1de57c5d1464dac3ed8f44a1 && \
     export CURL_DOWNLOAD_URL=https://curl.haxx.se/download && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-curl.sh
 COPY build_scripts/build-git.sh /opt/_internal/build_scripts/
