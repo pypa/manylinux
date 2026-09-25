@@ -67,8 +67,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 
 COPY build_scripts/install-automake.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export AUTOMAKE_ROOT=automake-1.18.1 && \
-    export AUTOMAKE_HASH=63e585246d0fc8772dffdee0724f2f988146d1a3f1c756a3dc5cfbefa3c01915 && \
+    export AUTOMAKE_ROOT=automake-1.19 && \
+    export AUTOMAKE_HASH=79e8b1f7a967e87ce8a9ded76bee7f793d0ce1886ab2002feb1b0510f578b75a && \
     export AUTOMAKE_DOWNLOAD_URL=https://ftpmirror.gnu.org/gnu/automake && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/install-automake.sh
 
