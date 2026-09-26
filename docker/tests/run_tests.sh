@@ -11,15 +11,21 @@ if [ "${AUDITWHEEL_POLICY:0:10}" == "musllinux_" ]; then
 	EXPECTED_PYTHON_COUNT_ALL=9
 else
 	if [ "${AUDITWHEEL_ARCH}" == "x86_64" ] || [ "${AUDITWHEEL_ARCH}" == "aarch64" ]; then
-		EXPECTED_PYTHON_COUNT=10
 		if [ "${AUDITWHEEL_POLICY:0:13}" == "manylinux2014" ]; then
+			EXPECTED_PYTHON_COUNT=10
 			EXPECTED_PYTHON_COUNT_ALL=14
 		else
-			EXPECTED_PYTHON_COUNT_ALL=15
+			EXPECTED_PYTHON_COUNT=12
+			EXPECTED_PYTHON_COUNT_ALL=17
 		fi
 	elif [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
-		EXPECTED_PYTHON_COUNT=10
-		EXPECTED_PYTHON_COUNT_ALL=12
+		if [ "${AUDITWHEEL_POLICY:0:13}" == "manylinux2014" ]; then
+		  EXPECTED_PYTHON_COUNT=10
+		  EXPECTED_PYTHON_COUNT_ALL=12
+		else
+			EXPECTED_PYTHON_COUNT=12
+			EXPECTED_PYTHON_COUNT_ALL=14
+		fi
 	else
 		EXPECTED_PYTHON_COUNT=9
 		EXPECTED_PYTHON_COUNT_ALL=9
@@ -66,6 +72,7 @@ for PYTHON in /opt/python/*/bin/python; do
 	IMPLEMENTATION=$(${PYTHON} -c "import sys; print(sys.implementation.name)")
 	PYVERS=$(${PYTHON} -c "import sys; print('.'.join(map(str, sys.version_info[:2])))")
 	PY_GIL=$(${PYTHON} -c "import sysconfig; print('t' if sysconfig.get_config_vars().get('Py_GIL_DISABLED', 0) else '')")
+	PY_ABI_TAGS=$(basename "$(dirname "$(dirname "$PYTHON")")")
 	if [ "${IMPLEMENTATION}" == "cpython" ]; then
 		# check all modules can be loaded
 		$PYTHON -Wignore "${MY_DIR}/modules-check.py"
@@ -75,12 +82,14 @@ for PYTHON in /opt/python/*/bin/python; do
 		test "${LINK_VERSION}" = "${REAL_VERSION}"
 	fi
 	# cpythonX.Y / pypyX.Y shall be available directly in PATH
-	LINK_VERSION=$("${IMPLEMENTATION}${PYVERS}${PY_GIL}" -VV)
-	REAL_VERSION=$(${PYTHON} -VV)
-	test "${LINK_VERSION}" = "${REAL_VERSION}"
+	# pypy3.11 exists with 2 different ABIs, only link pp311-pypy311_pp73 for now
+	if [[ "${PY_ABI_TAGS}" != "pp311-pypy311_pp80" ]]; then
+		LINK_VERSION=$("${IMPLEMENTATION}${PYVERS}${PY_GIL}" -VV)
+		REAL_VERSION=$(${PYTHON} -VV)
+		test "${LINK_VERSION}" = "${REAL_VERSION}"
+	fi
 
 	# check a simple project can be built
-	PY_ABI_TAGS=$(basename "$(dirname "$(dirname "$PYTHON")")")
 	SRC_DIR=/tmp/forty-two-${PY_ABI_TAGS}
 	DIST_DIR=/tmp/dist-${PY_ABI_TAGS}
 	cp -rf "${MY_DIR}/forty-two" "${SRC_DIR}"

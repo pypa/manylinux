@@ -48,6 +48,10 @@ ABI_TAG=$("${PREFIX}/bin/python" "${MY_DIR}/python-tag-abi-tag.py")
 ln -s "${PREFIX}" "/opt/python/${ABI_TAG}"
 
 # Make versioned python commands available directly in environment.
+# pypy3.11 exists with 2 different ABIs, only link pp311-pypy311_pp73 for now
+if [[ "${ABI_TAG}" == "pp311-pypy311_pp80" ]]; then
+	exit 0
+fi
 # Don't use symlinks: c.f. https://github.com/python/cpython/issues/106045
 cat <<EOF > "/usr/local/bin/${PY_IMPL}${PY_VER}${PY_GIL}"
 #!/bin/sh

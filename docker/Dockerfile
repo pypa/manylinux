@@ -233,7 +233,9 @@ RUN --mount=type=bind,target=/build_cpython39,from=build_cpython39 \
     cp -rf /build_cpython*/opt/_internal/cpython* /opt/_internal/ && \
     if test -n "$(find /build_cpython315/opt/_internal -maxdepth 1 -name 'openssl*' -print -quit)"; then cp -rf /build_cpython315/opt/_internal/openssl* /opt/_internal/; fi && \
     manylinux-entrypoint /opt/_internal/build_scripts/finalize.sh \
-      pp311-pypy311_pp73
+      pp311-pypy311_pp73 \
+      pp311-pypy311_pp80 \
+      pp312-pypy312_pp80
 
 COPY tests /opt/_internal/tests/
 
