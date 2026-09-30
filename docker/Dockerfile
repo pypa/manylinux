@@ -95,8 +95,8 @@ RUN manylinux-entrypoint /opt/_internal/build_scripts/install-build-packages.sh
 FROM build_base AS build_base_openssl
 COPY build_scripts/build-openssl.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export OPENSSL_ROOT=openssl-3.5.8 && \
-    export OPENSSL_HASH=a8f84a39918ec6415ce765d9b429d313ba97b8143169c172e734b9514464f5b2 && \
+    export OPENSSL_ROOT=openssl-3.5.9 && \
+    export OPENSSL_HASH=603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a && \
     export OPENSSL_DOWNLOAD_URL=https://github.com/openssl/openssl/releases/download/${OPENSSL_ROOT} && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-openssl.sh
 
@@ -110,8 +110,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-curl.sh
 COPY build_scripts/build-git.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export GIT_ROOT=git-2.55.0 && \
-    export GIT_HASH=0842dc384a23ac33ba3e570c4f3a8ded85963ee4713b1cd21153c3db41813d1e && \
+    export GIT_ROOT=git-2.56.0 && \
+    export GIT_HASH=826817fd3671b8565586d6d49f688298de8354ab11db829c02720e5c74b9b39f && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-git.sh
 
