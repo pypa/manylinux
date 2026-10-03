@@ -236,6 +236,11 @@ def get_images_to_delete(
         "2026.05.02-2",  # last tag before python 3.8/3.13t drop
         "2026.06.04-1",  # cibuildwheel v4.0.0, v4.1.0
         "2026.07.19-1",  # cibuildwheel v4.1.1
+        "2026.08.04-1",  # cibuildwheel v4.2.0
+        "2026.09.05-1",  # cibuildwheel v4.2.1
+        "2026.10.03-1",  # cibuildwheel v4.3.0
+        "2026.10.09-1",  # cibuildwheel v4.3.1, v4.3.2
+        "2026.10.21-1",  # cibuildwheel v4.3.3, v4.3.4
     }
     cibuildwheel_known_tags = {tag for tags in cibuildwheel_tags.values() for tag in tags}
     missing_tags = sorted(cibuildwheel_known_tags - all_tags_to_keep)
