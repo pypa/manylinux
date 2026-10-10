@@ -3,6 +3,7 @@
 set -euo pipefail
 
 IMAGES=(manylinux2014 manylinux_2_28 manylinux_2_31 manylinux_2_34 manylinux_2_35 manylinux_2_39 musllinux_1_2)
+EXIT_CODE=0
 
 podman login -u "${QUAY_USERNAME}" -p "${QUAY_PASSWORD}" quay.io
 
@@ -50,9 +51,11 @@ for IMAGE in "${IMAGES[@]}"; do
 		MANIFEST="${IMAGE}:${TAG_TO_PUSH}"
 		if ! podman manifest create "${MANIFEST}" "${SRC_IMAGES[@]}"; then
 			echo "::error ::failed to create '${MANIFEST}' manifest using ${SRC_IMAGES[*]}"
+			EXIT_CODE=1
 		else
 			if ! podman manifest push --all "${MANIFEST}" "docker://quay.io/pypa/${IMAGE}:${TAG_TO_PUSH}"; then
 				echo "::error ::failed to push 'quay.io/pypa/${IMAGE}:${TAG_TO_PUSH}' using '${MANIFEST}'"
+				EXIT_CODE=1
 			else
 				LATEST_MANIFEST="${MANIFEST}"
 			fi
@@ -66,7 +69,10 @@ for IMAGE in "${IMAGES[@]}"; do
 	else
 		if ! podman manifest push --all "${LATEST_MANIFEST}" "docker://quay.io/pypa/${IMAGE}:latest"; then
 			echo "::error ::failed to push 'quay.io/pypa/${IMAGE}:latest' using '${LATEST_MANIFEST}'"
+			EXIT_CODE=1
 		fi
 	fi
 	echo "::endgroup::"
 done
+
+exit $EXIT_CODE
