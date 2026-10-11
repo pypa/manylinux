@@ -284,7 +284,7 @@ Toolchain: GCC 4.8
 - i686 image: ``quay.io/pypa/manylinux1_i686``
 
 
-musllinux_1_2 (Alpine Linux 3.23 based, 3.13+ compatible)
+musllinux_1_2 (Alpine Linux 3.24 based, 3.13+ compatible)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Toolchain: GCC 15
