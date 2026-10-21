@@ -20,7 +20,7 @@ if [ "${PACKAGE_MANAGER}" == "yum" ]; then
 		yum -y reinstall glibc-common
 	fi
 elif [ "${PACKAGE_MANAGER}" == "dnf" ]; then
-	dnf -y upgrade
+	dnf -y upgrade --nobest
 elif [ "${PACKAGE_MANAGER}" == "apt" ]; then
 	DEBIAN_FRONTEND=noninteractive apt-get update -qq
 	DEBIAN_FRONTEND=noninteractive apt-get upgrade -qq -y

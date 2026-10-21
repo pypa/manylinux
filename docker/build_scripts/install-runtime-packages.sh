@@ -132,7 +132,7 @@ elif [ "${OS_ID_LIKE}" == "rhel" ]; then
 	elif [ "${AUDITWHEEL_ARCH}" != "loongarch64" ]; then
 		dnf config-manager --set-enabled crb
 	fi
-	dnf -y upgrade
+	dnf -y upgrade --nobest
 	if [ "${AUDITWHEEL_POLICY}" == "manylinux_2_28" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_34" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_38" ]; then
 		TOOLCHAIN_DEPS=(gcc-toolset-14-binutils gcc-toolset-14-gcc gcc-toolset-14-gcc-c++ gcc-toolset-14-gcc-gfortran gcc-toolset-14-libatomic-devel)
 	else
