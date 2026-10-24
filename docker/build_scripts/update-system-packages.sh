@@ -95,3 +95,33 @@ if [ "${BASE_POLICY}" == "musllinux" ]; then
 elif [ "${BASE_POLICY}" == "manylinux" ]; then
 	ldconfig
 fi
+
+# update ca certificates on EOL distribution
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ]; then
+  if [ -d /etc/pki/ca-trust/source/anchors ]; then
+  	rm -rf /etc/pki/ca-trust/source/anchors
+  fi
+  mkdir -p /etc/pki/ca-trust/source/anchors
+  if [ -d /usr/share/pki/ca-trust-source ]; then
+  	rm -rf /usr/share/pki/ca-trust-source
+  fi
+  mkdir -p /usr/share/pki/ca-trust-source
+  cp "${SSL_CERT_FILE}" /etc/pki/ca-trust/source/anchors/certifi.pem
+  update-ca-trust force-enable
+  update-ca-trust extract
+elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_31" ]; then
+	# disable all certificates in conf
+	sed -i 's/^mozilla\//!mozilla\//g' /etc/ca-certificates.conf
+	if [ -d /usr/local/share/ca-certificates ]; then
+		rm -rf /usr/local/share/ca-certificates
+	fi
+	mkdir -p /usr/local/share/ca-certificates
+	# extract all certificates from the bundle
+	mkdir /tmp/certify
+  csplit -z -n 4 -f /tmp/certify/certifi- "${SSL_CERT_FILE}" '/-----END CERTIFICATE-----/+1' '{*}'
+  # rename the files with .crt suffix
+	for f in /tmp/certify/certifi-*; do cp "$f" "/usr/local/share/ca-certificates/$(basename "$f").crt"; done
+	rm -rf /tmp/certify
+	# update the system trust store
+	update-ca-certificates --fresh
+fi

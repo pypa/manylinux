@@ -25,6 +25,8 @@ export PIP_DISABLE_PIP_VERSION_CHECK=1
 export PIP_NO_WARN_SCRIPT_LOCATION=0
 # all cache goes to /tmp
 export PIP_CACHE_DIR=/tmp/pip_cache
+export PIP_CERT=${SSL_CERT_FILE}
+export PIP_USE_DEPRECATED=legacy-certs
 
 # install tools first, we'll use them to patch python later on
 TOOL_PYTHON3_MINOR=14
@@ -34,18 +36,10 @@ TOOL_PYTHON=${TOOL_PYTHON_BASE}/bin/python3
 ${TOOL_PYTHON} -m ensurepip
 ${TOOL_PYTHON} -m pip install -U --require-hashes -r "${MY_DIR}/requirements-pip3.${TOOL_PYTHON3_MINOR}.txt"
 ${TOOL_PYTHON} -m pip install -U --require-hashes -r "${MY_DIR}/requirements3.${TOOL_PYTHON3_MINOR}.txt"
-# Create venv for certifi and pipx
+# Create venv for pipx
 ${TOOL_PYTHON} -m venv --without-pip ${TOOLS_PATH}
-# Install certifi and pipx
-${TOOL_PYTHON} -m pip --python ${TOOLS_PATH}/bin/python install -U --require-hashes -r "${MY_DIR}/requirements-base-tools.txt"
-
-# Our openssl doesn't know how to find the system CA trust store
-#   (https://github.com/pypa/manylinux/issues/53)
-# And it's not clear how up-to-date that is anyway
-# So let's just use the same one pip and everyone uses
-ln -s "$(${TOOLS_PATH}/bin/python -c 'import certifi; print(certifi.where())')" /opt/_internal/certs.pem
-export SSL_CERT_FILE=/opt/_internal/certs.pem
-
+# Install  pipx
+${TOOL_PYTHON} -m pip --python ${TOOLS_PATH}/bin/python install -U --require-hashes -r "${MY_DIR}/requirements-pipx.txt"
 # Make pipx available in PATH,
 # Make sure when root installs apps, they're also in the PATH
 cat <<EOF > /usr/local/bin/pipx
@@ -61,16 +55,13 @@ fi
 ${TOOLS_PATH}/bin/pipx "\$@"
 EOF
 chmod 755 /usr/local/bin/pipx
-
 # use the same config for every tool, uv being one of the tools
 export PIPX_DEFAULT_BACKEND=pip
 export PIPX_FETCH_PYTHON=never
-
 # initialize shared library
 # workaround https://github.com/pypa/pip/issues/9243
 ${TOOL_PYTHON} -m pip download --dest /tmp/pinned-wheels --require-hashes -r /opt/_internal/build_scripts/requirements-pip3.${TOOL_PYTHON3_MINOR}.txt
 pipx upgrade-shared --pip-args="--no-index --find-links=/tmp/pinned-wheels"
-
 # install other tools with pipx
 for TOOL_PATH in "${MY_DIR}/requirements-tools/"*; do
 	TOOL=$(basename "${TOOL_PATH}")
@@ -88,24 +79,25 @@ for TOOL_PATH in "${MY_DIR}/requirements-tools/"*; do
 done
 
 # download and patch pip for each python version
+# download
 for REQUIREMENTS in /opt/_internal/build_scripts/requirements-pip3.*; do
 	REQUIREMENTS_BASENAME=$(basename "${REQUIREMENTS}" .txt)
 	PY_VER=${REQUIREMENTS_BASENAME:16}
 	${TOOL_PYTHON} -m pip download --dest "/tmp/pip-wheels/" --require-hashes -c "${REQUIREMENTS}" pip
 done
-
+# patch
 mkdir /tmp/patched-pip-wheels
 mkdir /tmp/patch-pip
 pushd /tmp/patch-pip
 for PIP_WHEEL in /tmp/pip-wheels/pip-*.whl; do
 	wheel unpack "${PIP_WHEEL}"
 	PIP_CACERT_PEM=$(find . -path '*/_vendor/certifi/cacert.pem')
-	cp -f ${SSL_CERT_FILE} "${PIP_CACERT_PEM}"
+	cp -f "${PIP_CERT}" "${PIP_CACERT_PEM}"
 	wheel pack -d /tmp/patched-pip-wheels --local-version manylinux ./pip-*
 	rm -rf ./pip-*
 done
 popd
-
+# copy for each version
 mkdir /opt/_internal/pip-wheels
 for REQUIREMENTS in /opt/_internal/build_scripts/requirements-pip3.*; do
 	REQUIREMENTS_BASENAME=$(basename "${REQUIREMENTS}" .txt)
@@ -118,6 +110,7 @@ for REQUIREMENTS in /opt/_internal/build_scripts/requirements-pip3.*; do
 	cp "${SRC_WHEEL}" "/opt/_internal/pip-wheels/${PY_VER}/"
 done
 
+# CPython setup
 # update package, create symlinks for each python
 mkdir /opt/python
 for PREFIX in /opt/_internal/cpython*; do
