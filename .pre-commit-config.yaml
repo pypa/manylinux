@@ -14,12 +14,12 @@ repos:
   - id: trailing-whitespace
 
 - repo: https://github.com/shellcheck-py/shellcheck-py
-  rev: 745eface02aef23e168a8afb6b5737818efbea95  # frozen: v0.11.0.1
+  rev: a6564f5d57444e123433a5c9af733e3975c77229  # frozen: v0.11.0.1-1
   hooks:
   - id: shellcheck
 
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: 65dbdb59d2f2d9c3bdc343c566821ad3319ddaa3  # frozen: v0.16.3
+  rev: f368fb366ff7f2f808dd324b83a6d32267799e19  # frozen: v0.17.2
   hooks:
   - id: ruff-check
     args: ["--fix", "--show-fixes", "--target-version=py38"]
@@ -44,6 +44,6 @@ repos:
     exclude: ^docker/build_scripts/.*pubkey.*.txt$
 
 - repo: https://github.com/zizmorcore/zizmor-pre-commit
-  rev: 451b56af716f9f0d0c2b816503a3fd0cf8b036fa  # frozen: v1.29.0
+  rev: c92afdf2c6ca336aaa8f39e2bd8d48f62dbd8e1f  # frozen: v1.31.1
   hooks:
   - id: zizmor

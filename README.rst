@@ -343,6 +343,7 @@ All supported images currently contain:
    - `patchelf <https://pypi.org/p/patchelf>`_
    - `swig <https://pypi.org/p/swig>`_
    - `uv <https://pypi.org/p/uv>`_ (not available on ``musllinux ppc64le`` & ``musllinux s390x`` yet due to Rust limitations)
+   - `wheel <https://pypi.org/p/wheel>`_
 
 - All Python interpreters have the following packages pre-installed:
    - `pip <https://pypi.org/p/pip>`_
