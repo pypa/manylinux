@@ -27,7 +27,7 @@ export PIP_NO_WARN_SCRIPT_LOCATION=0
 export PIP_CACHE_DIR=/tmp/pip_cache
 export PIP_CERT=${SSL_CERT_FILE}
 
-# install base tools first, we'll use them to patch python later on
+# install tools first, we'll use them to patch python later on
 TOOL_PYTHON3_MINOR=14
 TOOLS_PATH=/opt/_internal/tools
 TOOL_PYTHON_BASE=$(find /opt/_internal -maxdepth 1 -name "cpython-3.${TOOL_PYTHON3_MINOR}.*" -and -not -name '*-nogil')
@@ -60,11 +60,41 @@ export PIPX_FETCH_PYTHON=never
 # workaround https://github.com/pypa/pip/issues/9243
 ${TOOL_PYTHON} -m pip download --dest /tmp/pinned-wheels --require-hashes -r /opt/_internal/build_scripts/requirements/3.${TOOL_PYTHON3_MINOR}/pip.txt
 pipx upgrade-shared --pip-args="--no-index --find-links=/tmp/pinned-wheels"
+# install other tools with pipx
+for TOOL_PATH in "${MY_DIR}/requirements/tools/"*; do
+	TOOL=$(basename "${TOOL_PATH}")
+	case ${AUDITWHEEL_PLAT}-${TOOL} in
+		musllinux*_ppc64le-uv) continue;;  # uv doesn't provide musl ppc64le wheels due to Rust issues
+		musllinux*_s390x-uv) continue;;  # uv doesn't provide musl s390x wheels due to Rust issues
+		*_loongarch64-uv) continue;;  # no uv for loongarch64
+		*_loongarch64-cmake|*_loongarch64-swig) manylinux_pkg_install "${TOOL}";;
+		*_loongarch64-patchelf)
+			manylinux_pkg_install cmake
+			pipx install patchelf==0.17.2.4
+			;;
+		*) pipx install --pip-args="--require-hashes -r ${TOOL_PATH} --only-binary" "${TOOL}";;
+	esac
+done
 
 # download pip for each python version
 for REQUIREMENTS in /opt/_internal/build_scripts/requirements/3.*/pip.txt; do
 	PY_VER=$(basename "$(dirname "${REQUIREMENTS}")")
 	${TOOL_PYTHON} -m pip download --dest "/opt/_internal/pip-wheels/${PY_VER}" --require-hashes -c "${REQUIREMENTS}" pip
+done
+
+# we need to patch pip certifi on older python versions
+# shellcheck disable=SC2043 # single version for now
+for PY_VER in "3.9"; do
+	PIP_WHEEL=$(find "/opt/_internal/pip-wheels/${PY_VER}" -name 'pip-*.whl')
+	mkdir /tmp/patch-pip
+	pushd /tmp/patch-pip
+	wheel unpack "${PIP_WHEEL}"
+	rm -f "${PIP_WHEEL}"
+	PIP_CACERT_PEM=$(find . -name 'cacert.pem')
+	cp -f ${PIP_CERT} "${PIP_CACERT_PEM}"
+	wheel pack --local-version manylinux ./pip-*
+	mv pip-*.whl "$(dirname "${PIP_WHEEL}")"
+	popd
 done
 
 # update package, create symlinks for each python
@@ -84,22 +114,6 @@ EOF
 chmod 755 /usr/local/bin/manylinux-interpreters
 
 MANYLINUX_INTERPRETERS_NO_CHECK=1 /usr/local/bin/manylinux-interpreters ensure "$@"
-
-# install other tools with pipx
-for TOOL_PATH in "${MY_DIR}/requirements/tools/"*; do
-	TOOL=$(basename "${TOOL_PATH}")
-	case ${AUDITWHEEL_PLAT}-${TOOL} in
-		musllinux*_ppc64le-uv) continue;;  # uv doesn't provide musl ppc64le wheels due to Rust issues
-		musllinux*_s390x-uv) continue;;  # uv doesn't provide musl s390x wheels due to Rust issues
-		*_loongarch64-uv) continue;;  # no uv for loongarch64
-		*_loongarch64-cmake|*_loongarch64-swig) manylinux_pkg_install "${TOOL}";;
-		*_loongarch64-patchelf)
-			manylinux_pkg_install cmake
-			pipx install patchelf==0.17.2.4
-			;;
-		*) pipx install --pip-args="--require-hashes -r ${TOOL_PATH} --only-binary" "${TOOL}";;
-	esac
-done
 
 # install git-lfs
 "${MY_DIR}/install-git-lfs.sh"
