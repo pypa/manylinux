@@ -22,26 +22,38 @@ export PIP_ROOT_USER_ACTION=ignore
 export PIP_DISABLE_PIP_VERSION_CHECK=1
 export PIP_NO_WARN_SCRIPT_LOCATION=0
 
-# Install pinned packages for this python version.
 if [ "${PY_IMPL}" == "graalpy" ]; then
-	# GraalPy doesn't update pip/setuptools because it uses a patched version of pip/setuptools
+	# GraalPy doesn't update pip because it uses a patched version of pip
 	"${PREFIX}/bin/python" -m ensurepip --default-pip
 	case ${PY_VER} in
 		3.11) "${PREFIX}/bin/python" -m pip uninstall -y setuptools;;
 	esac
-	"${PREFIX}/bin/python" -m pip install -U --require-hashes -r "${MY_DIR}/requirements/${PY_VER}/packages.txt"
-elif [ -f "/usr/local/bin/cpython${PY_VER}" ]; then
-	# Use the already installed cpython pip to bootstrap pip if available
-	"/usr/local/bin/cpython${PY_VER}" -m pip --python "${PREFIX}/bin/python" install -U --require-hashes -r "${MY_DIR}/requirements/${PY_VER}/pip.txt"
-	"/usr/local/bin/cpython${PY_VER}" -m pip --python "${PREFIX}/bin/python" install -U --require-hashes -r "${MY_DIR}/requirements/${PY_VER}/packages.txt"
 else
+	# patch bundled pip & uninstall everything (if pip already installed) & ensurepip
+	if [ "${PY_IMPL}" == "cpython" ]; then
+		ENSURE_PIP_DIR="${PREFIX}/lib/python${PY_VER}${PY_GIL}/ensurepip"
+	else
+		ENSURE_PIP_DIR="${PREFIX}/lib/${PY_IMPL}${PY_VER}/ensurepip"
+	fi
+	rm -f "${ENSURE_PIP_DIR}/_bundled/"pip-*.whl
+	PIP_WHEEL=$(find "/opt/_internal/pip-wheels/${PY_VER}" -name 'pip-*.whl')
+	cp "${PIP_WHEEL}" "${ENSURE_PIP_DIR}/_bundled/"
+	PIP_FNAME=$(basename "${PIP_WHEEL}")
+	PIP_VERSION=${PIP_FNAME:4}  # strip "pip-"
+	PIP_VERSION=${PIP_VERSION%%-py*}  # remove suffix starting at python tag, assumes it always start with -py
+	sed -i "s/^_PIP_VERSION = .*/_PIP_VERSION = \"${PIP_VERSION}\"/g" "${ENSURE_PIP_DIR}/__init__.py"
+	if "${PREFIX}/bin/python" -m pip -V &>/dev/null; then
+		"${PREFIX}/bin/python" -m pip uninstall -y -r <("${PREFIX}/bin/python" -m pip freeze --all)
+	fi
 	"${PREFIX}/bin/python" -m ensurepip
 	case ${PY_VER} in
 		3.9|3.10|3.11) "${PREFIX}/bin/python" -m pip uninstall -y setuptools;;
 	esac
-	"${PREFIX}/bin/python" -m pip install -U --require-hashes -r "${MY_DIR}/requirements/${PY_VER}/pip.txt"
-	"${PREFIX}/bin/python" -m pip install -U --require-hashes -r "${MY_DIR}/requirements/${PY_VER}/packages.txt"
 fi
+
+# Install pinned packages for this python version.
+"${PREFIX}/bin/python" -m pip install -U --require-hashes -r "${MY_DIR}/requirements/${PY_VER}/packages.txt"
+
 if [ -e "${PREFIX}/bin/pip3" ] && [ ! -e "${PREFIX}/bin/pip" ]; then
 	ln -s pip3 "${PREFIX}/bin/pip"
 fi

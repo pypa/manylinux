@@ -27,31 +27,17 @@ export PIP_NO_WARN_SCRIPT_LOCATION=0
 export PIP_CACHE_DIR=/tmp/pip_cache
 export PIP_CERT=${SSL_CERT_FILE}
 
-# update package, create symlinks for each python
-mkdir /opt/python
-for PREFIX in /opt/_internal/cpython*; do
-	"${MY_DIR}/finalize-one.sh" "${PREFIX}"
-done
-
-# create manylinux-interpreters script
-cat <<EOF > /usr/local/bin/manylinux-interpreters
-#!/bin/bash
-
-set -euo pipefail
-
-/opt/python/cp312-cp312/bin/python "${MY_DIR}/manylinux-interpreters.py" "\$@"
-EOF
-chmod 755 /usr/local/bin/manylinux-interpreters
-
-MANYLINUX_INTERPRETERS_NO_CHECK=1 /usr/local/bin/manylinux-interpreters ensure "$@"
-
-# Create venv for certifi and pipx
+# install base tools first, we'll use them to patch python later on
+TOOL_PYTHON3_MINOR=14
 TOOLS_PATH=/opt/_internal/tools
-/opt/python/cp314-cp314/bin/python -m venv --without-pip ${TOOLS_PATH}
-
-# Install certifi and pipx
-/opt/python/cp314-cp314/bin/python -m pip --python ${TOOLS_PATH}/bin/python install -U --require-hashes -r "${MY_DIR}/requirements/pipx.txt"
-
+TOOL_PYTHON_BASE=$(find /opt/_internal -maxdepth 1 -name "cpython-3.${TOOL_PYTHON3_MINOR}.*" -and -not -name '*-nogil')
+TOOL_PYTHON=${TOOL_PYTHON_BASE}/bin/python3
+${TOOL_PYTHON} -m ensurepip
+${TOOL_PYTHON} -m pip install -U --require-hashes -r "${MY_DIR}/requirements/3.${TOOL_PYTHON3_MINOR}/pip.txt"
+# Create venv for pipx
+${TOOL_PYTHON} -m venv --without-pip ${TOOLS_PATH}
+# Install pipx
+${TOOL_PYTHON} -m pip --python ${TOOLS_PATH}/bin/python install -U --require-hashes -r "${MY_DIR}/requirements/pipx.txt"
 # Make pipx available in PATH,
 # Make sure when root installs apps, they're also in the PATH
 cat <<EOF > /usr/local/bin/pipx
@@ -72,8 +58,33 @@ export PIPX_DEFAULT_BACKEND=pip
 export PIPX_FETCH_PYTHON=never
 # initialize shared library
 # workaround https://github.com/pypa/pip/issues/9243
-/opt/python/cp314-cp314/bin/python -m pip download --dest /tmp/pinned-wheels --require-hashes -r /opt/_internal/build_scripts/requirements/3.14/pip.txt
+${TOOL_PYTHON} -m pip download --dest /tmp/pinned-wheels --require-hashes -r /opt/_internal/build_scripts/requirements/3.${TOOL_PYTHON3_MINOR}/pip.txt
 pipx upgrade-shared --pip-args="--no-index --find-links=/tmp/pinned-wheels"
+
+# download pip for each python version
+for REQUIREMENTS in /opt/_internal/build_scripts/requirements/3.*/pip.txt; do
+	PY_VER=$(basename "$(dirname "${REQUIREMENTS}")")
+	${TOOL_PYTHON} -m pip download --dest "/opt/_internal/pip-wheels/${PY_VER}" --require-hashes -c "${REQUIREMENTS}" pip
+done
+
+# update package, create symlinks for each python
+mkdir /opt/python
+for PREFIX in /opt/_internal/cpython*; do
+	"${MY_DIR}/finalize-one.sh" "${PREFIX}"
+done
+
+# create manylinux-interpreters script
+cat <<EOF > /usr/local/bin/manylinux-interpreters
+#!/bin/bash
+
+set -euo pipefail
+
+${TOOL_PYTHON} "${MY_DIR}/manylinux-interpreters.py" "\$@"
+EOF
+chmod 755 /usr/local/bin/manylinux-interpreters
+
+MANYLINUX_INTERPRETERS_NO_CHECK=1 /usr/local/bin/manylinux-interpreters ensure "$@"
+
 # install other tools with pipx
 for TOOL_PATH in "${MY_DIR}/requirements/tools/"*; do
 	TOOL=$(basename "${TOOL_PATH}")
