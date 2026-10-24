@@ -26,30 +26,24 @@ export PIP_NO_WARN_SCRIPT_LOCATION=0
 # all cache goes to /tmp
 export PIP_CACHE_DIR=/tmp/pip_cache
 
-# update package, create symlinks for each python
-mkdir /opt/python
-for PREFIX in /opt/_internal/cpython*; do
-	"${MY_DIR}/finalize-one.sh" "${PREFIX}"
-done
-
-# create manylinux-interpreters script
-cat <<EOF > /usr/local/bin/manylinux-interpreters
-#!/bin/bash
-
-set -euo pipefail
-
-/opt/python/cp312-cp312/bin/python "${MY_DIR}/manylinux-interpreters.py" "\$@"
-EOF
-chmod 755 /usr/local/bin/manylinux-interpreters
-
-MANYLINUX_INTERPRETERS_NO_CHECK=1 /usr/local/bin/manylinux-interpreters ensure "$@"
-
-# Create venv for certifi and pipx
+# install base tools first, we'll use them to patch python later on
+TOOL_PYTHON3_MINOR=14
 TOOLS_PATH=/opt/_internal/tools
-/opt/python/cp314-cp314/bin/python -m venv --without-pip ${TOOLS_PATH}
-
+TOOL_PYTHON_BASE=$(find /opt/_internal -maxdepth 1 -name "cpython-3.${TOOL_PYTHON3_MINOR}.*" -and -not -name '*-nogil')
+TOOL_PYTHON=${TOOL_PYTHON_BASE}/bin/python3
+${TOOL_PYTHON} -m ensurepip
+${TOOL_PYTHON} -m pip install -U --require-hashes -r "${MY_DIR}/requirements3.${TOOL_PYTHON3_MINOR}.txt"
+# Create venv for certifi and pipx
+${TOOL_PYTHON} -m venv --without-pip ${TOOLS_PATH}
 # Install certifi and pipx
-/opt/python/cp314-cp314/bin/python -m pip --python ${TOOLS_PATH}/bin/python install -U --require-hashes -r "${MY_DIR}/requirements-base-tools.txt"
+${TOOL_PYTHON} -m pip --python ${TOOLS_PATH}/bin/python install -U --require-hashes -r "${MY_DIR}/requirements-base-tools.txt"
+
+# Our openssl doesn't know how to find the system CA trust store
+#   (https://github.com/pypa/manylinux/issues/53)
+# And it's not clear how up-to-date that is anyway
+# So let's just use the same one pip and everyone uses
+ln -s "$(${TOOLS_PATH}/bin/python -c 'import certifi; print(certifi.where())')" /opt/_internal/certs.pem
+export SSL_CERT_FILE=/opt/_internal/certs.pem
 
 # Make pipx available in PATH,
 # Make sure when root installs apps, they're also in the PATH
@@ -67,18 +61,35 @@ ${TOOLS_PATH}/bin/pipx "\$@"
 EOF
 chmod 755 /usr/local/bin/pipx
 
-# Our openssl doesn't know how to find the system CA trust store
-#   (https://github.com/pypa/manylinux/issues/53)
-# And it's not clear how up-to-date that is anyway
-# So let's just use the same one pip and everyone uses
-ln -s "$(${TOOLS_PATH}/bin/python -c 'import certifi; print(certifi.where())')" /opt/_internal/certs.pem
-# If you modify this line you also have to modify the versions in the Dockerfiles:
-export SSL_CERT_FILE=/opt/_internal/certs.pem
-
 # initialize shared library
 # workaround https://github.com/pypa/pip/issues/9243
-/opt/python/cp314-cp314/bin/python -m pip download --dest /tmp/pinned-wheels --require-hashes -r /opt/_internal/build_scripts/requirements3.14.txt
+${TOOL_PYTHON} -m pip download --dest /tmp/pinned-wheels --require-hashes -r /opt/_internal/build_scripts/requirements3.${TOOL_PYTHON3_MINOR}.txt
 pipx upgrade-shared --pip-args="--no-index --find-links=/tmp/pinned-wheels"
+
+# download pip for each python version
+for REQUIREMENTS in /opt/_internal/build_scripts/requirements3.*; do
+	REQUIREMENTS_BASENAME=$(basename "${REQUIREMENTS}" .txt)
+	PY_VER=${REQUIREMENTS_BASENAME:12}
+	${TOOL_PYTHON} -m pip download --dest "/opt/_internal/pip-wheels/${PY_VER}" --require-hashes -c "${REQUIREMENTS}" pip
+done
+
+# update package, create symlinks for each python
+mkdir /opt/python
+for PREFIX in /opt/_internal/cpython*; do
+	"${MY_DIR}/finalize-one.sh" "${PREFIX}"
+done
+
+# create manylinux-interpreters script
+cat <<EOF > /usr/local/bin/manylinux-interpreters
+#!/bin/bash
+
+set -euo pipefail
+
+${TOOL_PYTHON} "${MY_DIR}/manylinux-interpreters.py" "\$@"
+EOF
+chmod 755 /usr/local/bin/manylinux-interpreters
+
+MANYLINUX_INTERPRETERS_NO_CHECK=1 /usr/local/bin/manylinux-interpreters ensure "$@"
 
 # install other tools with pipx
 for TOOL_PATH in "${MY_DIR}/requirements-tools/"*; do
