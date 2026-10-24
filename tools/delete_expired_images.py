@@ -4,7 +4,7 @@
 
 import argparse
 import configparser
-import datetime
+import datetime as dt
 import functools
 import os
 import re
@@ -112,7 +112,7 @@ def get_cibuildwheel_tags() -> dict[str, set[str]]:
 
 
 def get_images_to_delete(
-    expiration_date: datetime.date, cibuildwheel_tags: dict[str, set[str]]
+    expiration_date: dt.date, cibuildwheel_tags: dict[str, set[str]]
 ) -> list[str]:
     known_missing = {
         "manylinux_2_24_ppc64le:2021-09-06-7b0bd5d",  # cibuildwheel v2.1.2
@@ -330,7 +330,7 @@ def get_images_to_delete(
             if not match:
                 print(f"::warning::image {image}:{tag} is invalid")
                 continue
-            tag_date = datetime.date(int(match["year"]), int(match["month"]), int(match["day"]))
+            tag_date = dt.date(int(match["year"]), int(match["month"]), int(match["day"]))
             if tag_date < expiration_date:
                 images_to_delete_candidates[image].add(tag)
     # try to keep things consistent between images
@@ -365,7 +365,7 @@ def main():
         "--force", dest="force", action="store_true", help="don't ask for confirmation"
     )
     args = parser.parse_args()
-    expiration_date = datetime.datetime.now(datetime.UTC).date()
+    expiration_date = dt.datetime.now(dt.UTC).date()
     if (expiration_date.month, expiration_date.day) == (2, 29):
         # This avoids constructing an invalid date when the target year is not a leap year.
         # Note: this means images may have a slightly different retention period when the
