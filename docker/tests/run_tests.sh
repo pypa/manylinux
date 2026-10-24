@@ -6,6 +6,23 @@ set -exuo pipefail
 # Get script directory
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 
+# https://github.com/pypa/manylinux/pull/2004
+# check curl does not trust some compromised CA
+URLS_TO_CHECK=(
+	"https://dv-g3b-emudhra.we-have-a-problem.com/"
+	"https://dv-g3b-aaa-emudhra.we-have-a-problem.com/"
+	"https://dv-g3b-noct-emudhra.we-have-a-problem.com/"
+	"https://dv-g3b-aaa-noct-emudhra.we-have-a-problem.com/"
+)
+for URL_TO_CHECK in "${URLS_TO_CHECK[@]}"; do
+	CURL_EC=0
+	curl -fs "${URL_TO_CHECK}" || CURL_EC=$?
+	# 60: Peer certificate cannot be authenticated with known CA certificates.
+	if [ ${CURL_EC} -ne 60 ]; then
+		exit 1
+	fi
+done
+
 if [ "${AUDITWHEEL_POLICY:0:10}" == "musllinux_" ]; then
 	EXPECTED_PYTHON_COUNT=9
 	EXPECTED_PYTHON_COUNT_ALL=9
