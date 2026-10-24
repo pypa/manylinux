@@ -76,25 +76,32 @@ for TOOL_PATH in "${MY_DIR}/requirements/tools/"*; do
 	esac
 done
 
-# download pip for each python version
+# download and patch pip for each python version
 for REQUIREMENTS in /opt/_internal/build_scripts/requirements/3.*/pip.txt; do
-	PY_VER=$(basename "$(dirname "${REQUIREMENTS}")")
-	${TOOL_PYTHON} -m pip download --dest "/opt/_internal/pip-wheels/${PY_VER}" --require-hashes -c "${REQUIREMENTS}" pip
+	${TOOL_PYTHON} -m pip download --dest "/tmp/pip-wheels/" --require-hashes -c "${REQUIREMENTS}" pip
 done
 
-# we need to patch pip certifi on older python versions
-# shellcheck disable=SC2043 # single version for now
-for PY_VER in "3.9"; do
-	PIP_WHEEL=$(find "/opt/_internal/pip-wheels/${PY_VER}" -name 'pip-*.whl')
-	mkdir /tmp/patch-pip
-	pushd /tmp/patch-pip
+mkdir /tmp/patched-pip-wheels
+mkdir /tmp/patch-pip
+pushd /tmp/patch-pip
+for PIP_WHEEL in /tmp/pip-wheels/pip-*.whl; do
 	wheel unpack "${PIP_WHEEL}"
-	rm -f "${PIP_WHEEL}"
-	PIP_CACERT_PEM=$(find . -name 'cacert.pem')
-	cp -f ${PIP_CERT} "${PIP_CACERT_PEM}"
-	wheel pack --local-version manylinux ./pip-*
-	mv pip-*.whl "$(dirname "${PIP_WHEEL}")"
-	popd
+	PIP_CACERT_PEM=$(find . -path '*/_vendor/certifi/cacert.pem')
+	cp -f "${PIP_CERT}" "${PIP_CACERT_PEM}"
+	wheel pack -d /tmp/patched-pip-wheels --local-version manylinux ./pip-*
+	rm -rf ./pip-*
+done
+popd
+
+mkdir /opt/_internal/pip-wheels
+for REQUIREMENTS in /opt/_internal/build_scripts/requirements/3.*/pip.txt; do
+	PY_VER=$(basename "$(dirname "${REQUIREMENTS}")")
+	PIP_VERSION=$(grep 'pip==' "${REQUIREMENTS}")
+	PIP_VERSION=${PIP_VERSION:5}
+	PIP_VERSION=${PIP_VERSION%% *}
+	SRC_WHEEL=$(find /tmp/patched-pip-wheels -name "pip-${PIP_VERSION}+manylinux-*.whl")
+	mkdir "/opt/_internal/pip-wheels/${PY_VER}"
+	cp "${SRC_WHEEL}" "/opt/_internal/pip-wheels/${PY_VER}/"
 done
 
 # update package, create symlinks for each python
