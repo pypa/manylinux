@@ -29,16 +29,18 @@ if [ "${PY_IMPL}" == "graalpy" ]; then
 	case ${PY_VER} in
 		3.11) "${PREFIX}/bin/python" -m pip uninstall -y setuptools;;
 	esac
-	"${PREFIX}/bin/python" -m pip install -U --require-hashes -r "${MY_DIR}/requirements${PY_VER}.txt"
+	"${PREFIX}/bin/python" -m pip install -U --require-hashes -r "${MY_DIR}/requirements/${PY_VER}/packages.txt"
 elif [ -f "/usr/local/bin/cpython${PY_VER}" ]; then
 	# Use the already installed cpython pip to bootstrap pip if available
-	"/usr/local/bin/cpython${PY_VER}" -m pip --python "${PREFIX}/bin/python" install -U --require-hashes -r "${MY_DIR}/requirements${PY_VER}.txt"
+	"/usr/local/bin/cpython${PY_VER}" -m pip --python "${PREFIX}/bin/python" install -U --require-hashes -r "${MY_DIR}/requirements/${PY_VER}/pip.txt"
+	"/usr/local/bin/cpython${PY_VER}" -m pip --python "${PREFIX}/bin/python" install -U --require-hashes -r "${MY_DIR}/requirements/${PY_VER}/packages.txt"
 else
 	"${PREFIX}/bin/python" -m ensurepip
 	case ${PY_VER} in
 		3.9|3.10|3.11) "${PREFIX}/bin/python" -m pip uninstall -y setuptools;;
 	esac
-	"${PREFIX}/bin/python" -m pip install -U --require-hashes -r "${MY_DIR}/requirements${PY_VER}.txt"
+	"${PREFIX}/bin/python" -m pip install -U --require-hashes -r "${MY_DIR}/requirements/${PY_VER}/pip.txt"
+	"${PREFIX}/bin/python" -m pip install -U --require-hashes -r "${MY_DIR}/requirements/${PY_VER}/packages.txt"
 fi
 if [ -e "${PREFIX}/bin/pip3" ] && [ ! -e "${PREFIX}/bin/pip" ]; then
 	ln -s pip3 "${PREFIX}/bin/pip"
