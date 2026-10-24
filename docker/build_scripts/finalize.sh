@@ -32,6 +32,7 @@ TOOLS_PATH=/opt/_internal/tools
 TOOL_PYTHON_BASE=$(find /opt/_internal -maxdepth 1 -name "cpython-3.${TOOL_PYTHON3_MINOR}.*" -and -not -name '*-nogil')
 TOOL_PYTHON=${TOOL_PYTHON_BASE}/bin/python3
 ${TOOL_PYTHON} -m ensurepip
+${TOOL_PYTHON} -m pip install -U --require-hashes -r "${MY_DIR}/requirements-pip3.${TOOL_PYTHON3_MINOR}.txt"
 ${TOOL_PYTHON} -m pip install -U --require-hashes -r "${MY_DIR}/requirements3.${TOOL_PYTHON3_MINOR}.txt"
 # Create venv for certifi and pipx
 ${TOOL_PYTHON} -m venv --without-pip ${TOOLS_PATH}
@@ -67,7 +68,7 @@ export PIPX_FETCH_PYTHON=never
 
 # initialize shared library
 # workaround https://github.com/pypa/pip/issues/9243
-${TOOL_PYTHON} -m pip download --dest /tmp/pinned-wheels --require-hashes -r /opt/_internal/build_scripts/requirements3.${TOOL_PYTHON3_MINOR}.txt
+${TOOL_PYTHON} -m pip download --dest /tmp/pinned-wheels --require-hashes -r /opt/_internal/build_scripts/requirements-pip3.${TOOL_PYTHON3_MINOR}.txt
 pipx upgrade-shared --pip-args="--no-index --find-links=/tmp/pinned-wheels"
 
 # install other tools with pipx
@@ -86,26 +87,35 @@ for TOOL_PATH in "${MY_DIR}/requirements-tools/"*; do
 	esac
 done
 
-# download pip for each python version
-for REQUIREMENTS in /opt/_internal/build_scripts/requirements3.*; do
+# download and patch pip for each python version
+for REQUIREMENTS in /opt/_internal/build_scripts/requirements-pip3.*; do
 	REQUIREMENTS_BASENAME=$(basename "${REQUIREMENTS}" .txt)
-	PY_VER=${REQUIREMENTS_BASENAME:12}
-	${TOOL_PYTHON} -m pip download --dest "/opt/_internal/pip-wheels/${PY_VER}" --require-hashes -c "${REQUIREMENTS}" pip
+	PY_VER=${REQUIREMENTS_BASENAME:16}
+	${TOOL_PYTHON} -m pip download --dest "/tmp/pip-wheels/" --require-hashes -c "${REQUIREMENTS}" pip
 done
 
-# we need to patch pip certifi on older python versions
-# shellcheck disable=SC2043 # single version for now
-for PY_VER in "3.9"; do
-	PIP_WHEEL=$(find "/opt/_internal/pip-wheels/${PY_VER}" -name 'pip-*.whl')
-	mkdir /tmp/patch-pip
-	pushd /tmp/patch-pip
+mkdir /tmp/patched-pip-wheels
+mkdir /tmp/patch-pip
+pushd /tmp/patch-pip
+for PIP_WHEEL in /tmp/pip-wheels/pip-*.whl; do
 	wheel unpack "${PIP_WHEEL}"
-	rm -f "${PIP_WHEEL}"
-	PIP_CACERT_PEM=$(find . -name 'cacert.pem')
+	PIP_CACERT_PEM=$(find . -path '*/_vendor/certifi/cacert.pem')
 	cp -f ${SSL_CERT_FILE} "${PIP_CACERT_PEM}"
-	wheel pack --local-version manylinux ./pip-*
-	mv pip-*.whl "$(dirname "${PIP_WHEEL}")"
-	popd
+	wheel pack -d /tmp/patched-pip-wheels --local-version manylinux ./pip-*
+	rm -rf ./pip-*
+done
+popd
+
+mkdir /opt/_internal/pip-wheels
+for REQUIREMENTS in /opt/_internal/build_scripts/requirements-pip3.*; do
+	REQUIREMENTS_BASENAME=$(basename "${REQUIREMENTS}" .txt)
+	PY_VER=${REQUIREMENTS_BASENAME:16}
+	PIP_VERSION=$(grep 'pip==' "${REQUIREMENTS}")
+	PIP_VERSION=${PIP_VERSION:5}
+	PIP_VERSION=${PIP_VERSION%% *}
+	SRC_WHEEL=$(find /tmp/patched-pip-wheels -name "pip-${PIP_VERSION}+manylinux-*.whl")
+	mkdir "/opt/_internal/pip-wheels/${PY_VER}"
+	cp "${SRC_WHEEL}" "/opt/_internal/pip-wheels/${PY_VER}/"
 done
 
 # update package, create symlinks for each python

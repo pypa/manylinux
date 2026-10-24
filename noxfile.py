@@ -34,6 +34,21 @@ def update_python_dependencies(session):
             f"docker/build_scripts/requirements{python_version}.txt",
             env=env,
         )
+        requirements_pip = Path(session.create_tmp()) / "requirements-pip.in"
+        requirements_pip.write_text("pip\n")
+        session.run(
+            "uv",
+            "pip",
+            "compile",
+            f"--python-version={python_version}",
+            "--generate-hashes",
+            "--no-strip-markers",
+            requirements_pip,
+            "--upgrade",
+            "--output-file",
+            f"docker/build_scripts/requirements-pip{python_version}.txt",
+            env=env,
+        )
 
     # tools
     python_version = "3.14"
