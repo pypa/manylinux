@@ -61,6 +61,10 @@ ${TOOLS_PATH}/bin/pipx "\$@"
 EOF
 chmod 755 /usr/local/bin/pipx
 
+# use the same config for every tool, uv being one of the tools
+export PIPX_DEFAULT_BACKEND=pip
+export PIPX_FETCH_PYTHON=never
+
 # initialize shared library
 # workaround https://github.com/pypa/pip/issues/9243
 ${TOOL_PYTHON} -m pip download --dest /tmp/pinned-wheels --require-hashes -r /opt/_internal/build_scripts/requirements3.${TOOL_PYTHON3_MINOR}.txt

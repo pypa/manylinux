@@ -4,3 +4,4 @@ cmake
 patchelf
 swig
 uv
+wheel
