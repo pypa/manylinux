@@ -14,59 +14,52 @@ def update_python_dependencies(session):
     if getattr(session.virtualenv, "venv_backend", "") != "uv":
         session.install("uv>=0.1.23")
 
+    packages = ["build", "packaging"]
+    tools = ["abi3audit", "auditwheel", "cmake", "patchelf", "swig", "uv"]
+
     env = os.environ.copy()
     # CUSTOM_COMPILE_COMMAND is a pip-compile option that tells users how to
     # regenerate the constraints files
     env["UV_CUSTOM_COMPILE_COMMAND"] = f"nox -s {session.name}"
 
-    for python_minor in range(9, 16):
-        python_version = f"3.{python_minor}"
+    def pip_compile(python_version_, input_, output_):
+        output_ = f"docker/build_scripts/requirements/{output_}"
         session.run(
             "uv",
             "pip",
             "compile",
-            f"--python-version={python_version}",
+            f"--python-version={python_version_}",
             "--generate-hashes",
             "--no-strip-markers",
-            "requirements.in",
+            input_,
             "--upgrade",
             "--output-file",
-            f"docker/build_scripts/requirements{python_version}.txt",
+            output_,
             env=env,
         )
 
+    tmp = Path(session.create_tmp())
+    packages_req = tmp / "packages.in"
+    packages_req.write_text("\n".join(packages) + "\n")
+    pip_req = tmp / "pip.in"
+    pip_req.write_text("pip\n")
+    for python_minor in range(9, 16):
+        python_version = f"3.{python_minor}"
+        pip_compile(python_version, packages_req, f"{python_version}/packages.txt")
+        pip_compile(python_version, pip_req, f"{python_version}/pip.txt")
+
     # tools
     python_version = "3.14"
-    session.run(
-        "uv",
-        "pip",
-        "compile",
-        f"--python-version={python_version}",
-        "--generate-hashes",
-        "requirements-base-tools.in",
-        "--upgrade",
-        "--output-file",
-        "docker/build_scripts/requirements-base-tools.txt",
-        env=env,
-    )
-    tools = Path("requirements-tools.in").read_text().split("\n")
+    certifi_req = tmp / "certifi.in"
+    certifi_req.write_text("certifi\n")
+    pip_compile(python_version, certifi_req, "certifi.txt")
+    pipx_req = tmp / "pipx.in"
+    pipx_req.write_text("pipx\n")
+    pip_compile(python_version, pipx_req, "pipx.txt")
     for tool in tools:
-        if tool.strip() == "":
-            continue
-        tmp_file = Path(session.create_tmp()) / f"{tool}.in"
-        tmp_file.write_text(f"{tool}\n")
-        session.run(
-            "uv",
-            "pip",
-            "compile",
-            f"--python-version={python_version}",
-            "--generate-hashes",
-            str(tmp_file),
-            "--upgrade",
-            "--output-file",
-            f"docker/build_scripts/requirements-tools/{tool}",
-            env=env,
-        )
+        tool_req = tmp / f"{tool}.in"
+        tool_req.write_text(f"{tool}\n")
+        pip_compile(python_version, tool_req, f"tools/{tool}")
 
 
 @nox.session(python="3.14", reuse_venv=True)
