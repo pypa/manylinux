@@ -15,7 +15,7 @@ def update_python_dependencies(session):
         session.install("uv>=0.1.23")
 
     packages = ["build", "packaging"]
-    tools = ["abi3audit", "auditwheel", "cmake", "patchelf", "swig", "uv"]
+    tools = ["abi3audit", "auditwheel", "cmake", "patchelf", "swig", "uv", "wheel"]
 
     env = os.environ.copy()
     # CUSTOM_COMPILE_COMMAND is a pip-compile option that tells users how to
