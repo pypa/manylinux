@@ -11,6 +11,14 @@ ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=0
 ARG MANYLINUX_CLANG_VERSION=23.1.3.0
 ARG MANYLINUX_COSIGN_VERSION=3.1.4
 
+# we don't need to update alpine that often given we retrieve certifi with hash checking
+# TODO, ideally, we should update alpine when certifi is updated
+# last updated 2026-10-24 with alpine:latest index digest
+FROM --platform=linux/${BUILDARCH} alpine@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a AS certifi_bundle
+RUN apk add --no-cache py3-pip
+COPY build_scripts/requirements/certifi.txt /opt/_internal/build_scripts/requirements/certifi.txt
+RUN pip install --break-system-packages --require-hashes -r /opt/_internal/build_scripts/requirements/certifi.txt
+RUN cp "$(python3 -c 'import certifi; print(certifi.where())')" /opt/_internal/certs.pem
 
 FROM $BASEIMAGE AS runtime_base_packages
 ARG POLICY
@@ -29,6 +37,9 @@ ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 
 # first copy the fixup mirrors script, keep the script around
 COPY build_scripts/fixup-mirrors.sh /usr/local/sbin/fixup-mirrors
+
+COPY --from=certifi_bundle /opt/_internal/certs.pem /opt/_internal/certs.pem
+ENV SSL_CERT_FILE=/opt/_internal/certs.pem
 
 # setup entrypoint, this will wrap commands with `linux32` with i686 images
 COPY build_scripts/install-entrypoint.sh \
@@ -241,6 +252,5 @@ COPY tests /opt/_internal/tests/
 
 ENV PATH=/opt/clang/bin:${PATH}
 ENV PIPX_DISABLE_SHARED_LIBS_AUTO_UPGRADE=1
-ENV SSL_CERT_FILE=/opt/_internal/certs.pem
 
 CMD ["/bin/bash"]

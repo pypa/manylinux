@@ -25,6 +25,7 @@ export PIP_DISABLE_PIP_VERSION_CHECK=1
 export PIP_NO_WARN_SCRIPT_LOCATION=0
 # all cache goes to /tmp
 export PIP_CACHE_DIR=/tmp/pip_cache
+export PIP_CERT=${SSL_CERT_FILE}
 
 # update package, create symlinks for each python
 mkdir /opt/python
@@ -49,7 +50,7 @@ TOOLS_PATH=/opt/_internal/tools
 /opt/python/cp314-cp314/bin/python -m venv --without-pip ${TOOLS_PATH}
 
 # Install certifi and pipx
-/opt/python/cp314-cp314/bin/python -m pip --python ${TOOLS_PATH}/bin/python install -U --require-hashes -r "${MY_DIR}/requirements/certifi.txt" -r "${MY_DIR}/requirements/pipx.txt"
+/opt/python/cp314-cp314/bin/python -m pip --python ${TOOLS_PATH}/bin/python install -U --require-hashes -r "${MY_DIR}/requirements/pipx.txt"
 
 # Make pipx available in PATH,
 # Make sure when root installs apps, they're also in the PATH
@@ -66,20 +67,13 @@ fi
 ${TOOLS_PATH}/bin/pipx "\$@"
 EOF
 chmod 755 /usr/local/bin/pipx
-
-# Our openssl doesn't know how to find the system CA trust store
-#   (https://github.com/pypa/manylinux/issues/53)
-# And it's not clear how up-to-date that is anyway
-# So let's just use the same one pip and everyone uses
-ln -s "$(${TOOLS_PATH}/bin/python -c 'import certifi; print(certifi.where())')" /opt/_internal/certs.pem
-# If you modify this line you also have to modify the versions in the Dockerfiles:
-export SSL_CERT_FILE=/opt/_internal/certs.pem
-
+# use the same config for every tool, uv being one of the tools
+export PIPX_DEFAULT_BACKEND=pip
+export PIPX_FETCH_PYTHON=never
 # initialize shared library
 # workaround https://github.com/pypa/pip/issues/9243
 /opt/python/cp314-cp314/bin/python -m pip download --dest /tmp/pinned-wheels --require-hashes -r /opt/_internal/build_scripts/requirements/3.14/pip.txt
 pipx upgrade-shared --pip-args="--no-index --find-links=/tmp/pinned-wheels"
-
 # install other tools with pipx
 for TOOL_PATH in "${MY_DIR}/requirements/tools/"*; do
 	TOOL=$(basename "${TOOL_PATH}")
@@ -96,6 +90,7 @@ for TOOL_PATH in "${MY_DIR}/requirements/tools/"*; do
 	esac
 done
 
+# install git-lfs
 "${MY_DIR}/install-git-lfs.sh"
 
 # We do not need the precompiled .pyc and .pyo files.

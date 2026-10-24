@@ -95,3 +95,46 @@ if [ "${BASE_POLICY}" == "musllinux" ]; then
 elif [ "${BASE_POLICY}" == "manylinux" ]; then
 	ldconfig
 fi
+
+# update ca certificates on EOL distribution
+if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_31" ]; then
+	# extract all certificates from the bundle
+	CERTIFI_CERT_COUNT=$(grep -c 'BEGIN CERTIFICATE' "${SSL_CERT_FILE}")
+	mkdir /tmp/certify
+	csplit -z -n 4 -f /tmp/certify/certifi- "${SSL_CERT_FILE}" '/-----END CERTIFICATE-----/+1' '{*}'
+	if [ "${OS_ID_LIKE}" == "rhel" ]; then
+		if [ -d /etc/pki/ca-trust/source/anchors ]; then
+			rm -rf /etc/pki/ca-trust/source/anchors
+		fi
+		mkdir -p /etc/pki/ca-trust/source/anchors
+		if [ -d /usr/share/pki/ca-trust-source ]; then
+			rm -rf /usr/share/pki/ca-trust-source
+			mkdir -p /usr/share/pki/ca-trust-source
+		fi
+		# rename the files with .crt suffix
+		for f in /tmp/certify/certifi-*; do
+			cp "$f" "/etc/pki/ca-trust/source/anchors/$(basename "$f").pem"
+		done
+		# update the system trust store
+		update-ca-trust extract
+		NEW_CERT_COUNT=$(grep -c 'BEGIN CERTIFICATE' /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem)
+	elif [ "${OS_ID_LIKE}" == "debian" ]; then
+		# disable all certificates in conf
+		sed -i 's/^mozilla\//!mozilla\//g' /etc/ca-certificates.conf
+		if [ -d /usr/local/share/ca-certificates ]; then
+			rm -rf /usr/local/share/ca-certificates
+		fi
+		mkdir -p /usr/local/share/ca-certificates
+		# rename the files with .crt suffix
+		for f in /tmp/certify/certifi-*; do
+			cp "$f" "/usr/local/share/ca-certificates/$(basename "$f").crt"
+		done
+		# update the system trust store
+		update-ca-certificates --fresh
+		NEW_CERT_COUNT=$(grep -c 'BEGIN CERTIFICATE' /etc/ssl/certs/ca-certificates.crt)
+	fi
+	if [ "${CERTIFI_CERT_COUNT}" -ne "${NEW_CERT_COUNT}" ]; then
+		exit 1
+	fi
+	rm -rf /tmp/certify
+fi
