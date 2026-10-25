@@ -11,7 +11,6 @@ ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=0
 ARG MANYLINUX_CLANG_VERSION=23.1.3.0
 ARG MANYLINUX_COSIGN_VERSION=3.1.4
 
-
 FROM $BASEIMAGE AS runtime_base_packages
 ARG POLICY
 ARG PLATFORM
@@ -29,6 +28,10 @@ ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 
 # first copy the fixup mirrors script, keep the script around
 COPY build_scripts/fixup-mirrors.sh /usr/local/sbin/fixup-mirrors
+
+COPY vendor /opt/_internal/vendor
+RUN test -f /opt/_internal/vendor/certifi/cacert.pem && ln -s vendor/certifi/cacert.pem /opt/_internal/certs.pem
+ENV SSL_CERT_FILE=/opt/_internal/certs.pem
 
 # setup entrypoint, this will wrap commands with `linux32` with i686 images
 COPY build_scripts/install-entrypoint.sh \
@@ -241,6 +244,5 @@ COPY tests /opt/_internal/tests/
 
 ENV PATH=/opt/clang/bin:${PATH}
 ENV PIPX_DISABLE_SHARED_LIBS_AUTO_UPGRADE=1
-ENV SSL_CERT_FILE=/opt/_internal/certs.pem
 
 CMD ["/bin/bash"]

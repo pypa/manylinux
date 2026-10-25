@@ -50,9 +50,6 @@ def update_python_dependencies(session):
 
     # tools
     python_version = "3.14"
-    certifi_req = tmp / "certifi.in"
-    certifi_req.write_text("certifi\n")
-    pip_compile(python_version, certifi_req, "certifi.txt")
     pipx_req = tmp / "pipx.in"
     pipx_req.write_text("pipx\n")
     pip_compile(python_version, pipx_req, "pipx.txt")
@@ -60,6 +57,9 @@ def update_python_dependencies(session):
         tool_req = tmp / f"{tool}.in"
         tool_req.write_text(f"{tool}\n")
         pip_compile(python_version, tool_req, f"tools/{tool}")
+
+    # vendor certifi
+    session.run("uv", "pip", "install", "-U", "--target=docker/vendor", "certifi")
 
 
 @nox.session(python="3.14", reuse_venv=True)
