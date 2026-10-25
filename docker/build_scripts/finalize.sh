@@ -78,7 +78,7 @@ done
 
 # download and patch pip for each python version
 for REQUIREMENTS in /opt/_internal/build_scripts/requirements/3.*/pip.txt; do
-	${TOOL_PYTHON} -m pip download --dest "/tmp/pip-wheels/" --require-hashes -c "${REQUIREMENTS}" pip
+	${TOOL_PYTHON} -m pip download --dest "/tmp/pip-wheels/" --only-binary :all: --require-hashes -r "${REQUIREMENTS}"
 done
 
 mkdir /tmp/patched-pip-wheels
