@@ -2,6 +2,7 @@
 # Install entrypoint:
 #   - make sure yum is configured correctly and linux32 is available on i686
 #   - install bash on Alpine as most scripts require it
+#   - install, update & patch ca-certificates
 
 # Stop at any error, show all commands
 set -exu
@@ -26,3 +27,5 @@ fi
 if [ "${AUDITWHEEL_POLICY#musllinux}" != "${AUDITWHEEL_POLICY}" ]; then
 	apk add --no-cache bash
 fi
+
+"${MY_DIR}/install-ca-certificates.sh"
