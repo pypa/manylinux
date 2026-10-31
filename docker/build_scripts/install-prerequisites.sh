@@ -2,6 +2,7 @@
 # Install entrypoint:
 #   - make sure yum is configured correctly and linux32 is available on i686
 #   - install bash on Alpine as most scripts require it
+#   - install, update & patch ca-certificates
 
 # Stop at any error, show all commands
 set -exu
@@ -9,6 +10,7 @@ set -exu
 # Set build environment variables
 MY_DIR=$(dirname "$0")
 
+export LC_ALL=C
 
 if [ "${AUDITWHEEL_PLAT}" = "manylinux2014_i686" ]; then
 	echo "i386" > /etc/yum/vars/basearch
@@ -20,9 +22,11 @@ if [ "${AUDITWHEEL_PLAT}" = "manylinux2014_i686" ]; then
 	# the following script takes care of cleaning-up some things
 	# and since it's also needed in the finalize step, everything's
 	# centralized in this script to avoid code duplication
-	LC_ALL=C "${MY_DIR}/update-system-packages.sh"
+	"${MY_DIR}/update-system-packages.sh"
 fi
 
 if [ "${AUDITWHEEL_POLICY#musllinux}" != "${AUDITWHEEL_POLICY}" ]; then
-	apk add --no-cache bash
+	apk add --no-cache bash coreutils
 fi
+
+"${MY_DIR}/install-ca-certificates.sh"
