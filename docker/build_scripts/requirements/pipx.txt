@@ -16,13 +16,13 @@ packaging==26.3 \
     --hash=sha256:94edc256424af38762eb31306eed28beb9f0efc50a8837492c9d6fd6004aed79 \
     --hash=sha256:d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c
     # via pipx
-pipx==1.18.4 \
-    --hash=sha256:4672195db7e89526cda1e54cbea116164a58bd40e1c03fe12e380de16b5399a4 \
-    --hash=sha256:7b871c2f00dd3cdbdeade21e76f58ef8c3315a68903ca7c976e20424fae78133
+pipx==1.18.10 \
+    --hash=sha256:5b303a338ced4c96786fa5657daa40e585d37dfbb7115c7ae0725bbe68f3b14f \
+    --hash=sha256:f970a652eeccc1c1815234f539c924d8e2da207d4f39cfaf8c99c9c5d541370b
     # via -r .nox/update_python_dependencies/tmp/pipx.in
-platformdirs==4.13.5 \
-    --hash=sha256:05831adf87d392760f4b5c3a0a95579ab5a10b18b9b9bd43680dcb47544788a0 \
-    --hash=sha256:53d3ec4280b815c1e0b02edad7f9ee8fda1ba9c0865dd9c2e6e63849ce82fc1e
+platformdirs==4.14.0 \
+    --hash=sha256:1dadfc59a8a5d7565b3d9270ae8fa71c065595352c4277b41c11ee6c222c4b91 \
+    --hash=sha256:83f009c1e8c5fc36869b5171755b291887bd2cade7965233cdfabd23d754720b
     # via pipx
 userpath==1.9.2 \
     --hash=sha256:2cbf01a23d655a1ff8fc166dfb78da1b641d1ceabf0fe5f970767d380b14e89d \
