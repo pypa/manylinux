@@ -48,7 +48,7 @@ function manylinux_pkg_update {
 		dnf) dnf upgrade -y "$@";;
 		apt)
 			DEBIAN_FRONTEND=noninteractive apt-get update -qq
-			DEBIAN_FRONTEND=noninteractive apt-get install -qq -y--only-upgrade "$@"
+			DEBIAN_FRONTEND=noninteractive apt-get install -qq -y --only-upgrade "$@"
 			;;
 		apk) apk upgrade --no-cache "$@";;
 		*) exit 1;;
