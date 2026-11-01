@@ -29,11 +29,12 @@ jobs:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         persist-credentials: false
+    - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      with:
+        version: "latest-known"
     - uses: wntrblm/nox@afa3983bbac3143bab5c8406244327581f76a3d7 # 2026.10.20
       with:
         python-versions: "3.12"
-    - name: "Install uv"
-      run: pipx install uv
     - name: "Setup bot user"
       run: |
         git config --global user.name "manylinux-bot[bot]"
