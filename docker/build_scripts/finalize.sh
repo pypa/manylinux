@@ -81,17 +81,9 @@ for REQUIREMENTS in /opt/_internal/build_scripts/requirements/3.*/pip.txt; do
 	${TOOL_PYTHON} -m pip download --dest "/tmp/pip-wheels/" --only-binary :all: --require-hashes -r "${REQUIREMENTS}"
 done
 
-mkdir /tmp/patched-pip-wheels
-mkdir /tmp/patch-pip
-pushd /tmp/patch-pip
 for PIP_WHEEL in /tmp/pip-wheels/pip-*.whl; do
-	wheel unpack "${PIP_WHEEL}"
-	PIP_CACERT_PEM=$(find . -path '*/_vendor/certifi/cacert.pem')
-	cp -f "${PIP_CERT}" "${PIP_CACERT_PEM}"
-	wheel pack -d /tmp/patched-pip-wheels --local-version manylinux ./pip-*
-	rm -rf ./pip-*
+	"${MY_DIR}/patch-pip-certifi.sh" "${PIP_WHEEL}" manylinux
 done
-popd
 
 mkdir /opt/_internal/pip-wheels
 for REQUIREMENTS in /opt/_internal/build_scripts/requirements/3.*/pip.txt; do
@@ -99,7 +91,7 @@ for REQUIREMENTS in /opt/_internal/build_scripts/requirements/3.*/pip.txt; do
 	PIP_VERSION=$(grep 'pip==' "${REQUIREMENTS}")
 	PIP_VERSION=${PIP_VERSION:5}
 	PIP_VERSION=${PIP_VERSION%% *}
-	SRC_WHEEL=$(find /tmp/patched-pip-wheels -name "pip-${PIP_VERSION}+manylinux-*.whl")
+	SRC_WHEEL=$(find /tmp/pip-wheels -name "pip-${PIP_VERSION}+manylinux-*.whl")
 	mkdir "/opt/_internal/pip-wheels/${PY_VER}"
 	cp "${SRC_WHEEL}" "/opt/_internal/pip-wheels/${PY_VER}/"
 done
