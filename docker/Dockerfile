@@ -33,13 +33,15 @@ COPY vendor /opt/_internal/vendor
 RUN test -f /opt/_internal/vendor/certifi/cacert.pem && ln -s vendor/certifi/cacert.pem /opt/_internal/certs.pem
 ENV SSL_CERT_FILE=/opt/_internal/certs.pem
 
-# setup entrypoint, this will wrap commands with `linux32` with i686 images
-COPY build_scripts/install-entrypoint.sh \
+# install pre-requisites and setup the entrypoint which will
+# wrap commands with `linux32` with i686/armv7l images if required
+COPY build_scripts/build_utils.sh \
+     build_scripts/install-ca-certificates.sh \
+     build_scripts/install-prerequisites.sh  \
+     build_scripts/patch-ca-certificates.sh \
      build_scripts/update-system-packages.sh \
-     build_scripts/build_utils.sh \
      /opt/_internal/build_scripts/
-
-RUN /opt/_internal/build_scripts/install-entrypoint.sh
+RUN /opt/_internal/build_scripts/install-prerequisites.sh
 COPY manylinux-entrypoint /usr/local/bin/manylinux-entrypoint
 ENTRYPOINT ["manylinux-entrypoint"]
 
