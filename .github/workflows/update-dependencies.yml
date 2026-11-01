@@ -29,7 +29,7 @@ jobs:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         persist-credentials: false
-    - uses: wntrblm/nox@a976d7ee04ab7a13634adc1016d4755a1348225f # 2026.08.17
+    - uses: wntrblm/nox@afa3983bbac3143bab5c8406244327581f76a3d7 # 2026.10.20
       with:
         python-versions: "3.12"
     - name: "Install uv"
@@ -40,7 +40,7 @@ jobs:
         git config --global user.email "89297709+manylinux-bot[bot]@users.noreply.github.com"
     # we use this step to grab a Github App auth token, so that lastversion can query GitHub API
     # without rate-limit and PRs get run by GHA.
-    - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+    - uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
       id: generate-token
       if: github.ref == 'refs/heads/main' && github.repository == 'pypa/manylinux'
       with:
