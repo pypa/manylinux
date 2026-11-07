@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Get script directory
-MY_DIR=$(dirname "${BASH_SOURCE[0]}")
+MY_DIR=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
 
 PYTHON_PREFIX=$1
 PYTHON=${PYTHON_PREFIX}/bin/python
