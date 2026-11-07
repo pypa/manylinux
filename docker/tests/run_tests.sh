@@ -89,7 +89,7 @@ fi
 # build dependencies for extension build smoke test
 make -C "${MY_DIR}/forty-two" all
 
-PYTHONS="$(find /opt/python -mindepth 1 -maxdepth 1)"
+PYTHONS="$(find /opt/python -mindepth 1 -maxdepth 1 | sort)"
 PYTHON_COUNT=$(echo "${PYTHONS}" | wc -l)
 if [ "${EXPECTED_PYTHON_COUNT_ALL}" -ne "${PYTHON_COUNT}" ]; then
 	echo "all python installations were not tested: ${PYTHON_COUNT}, expecting ${EXPECTED_PYTHON_COUNT_ALL}"
