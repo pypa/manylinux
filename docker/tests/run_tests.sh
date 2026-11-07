@@ -28,6 +28,11 @@ for _UNUSED in "SSL_CERT_FILE_UNSET" "SSL_CERT_FILE_SET"; do
 	export SSL_CERT_FILE=${SSL_CERT_FILE_BACKUP}
 done
 
+if [ "${AUDITWHEEL_POLICY}" == "musllinux_1_2" ]; then
+	# we need GNU xargs
+	apk add --no-cache findutils
+fi
+
 if [ "${AUDITWHEEL_POLICY:0:10}" == "musllinux_" ]; then
 	EXPECTED_PYTHON_COUNT=9
 	EXPECTED_PYTHON_COUNT_ALL=9
