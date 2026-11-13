@@ -72,8 +72,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 
 COPY build_scripts/install-automake.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export AUTOMAKE_ROOT=automake-1.19 && \
-    export AUTOMAKE_HASH=79e8b1f7a967e87ce8a9ded76bee7f793d0ce1886ab2002feb1b0510f578b75a && \
+    export AUTOMAKE_ROOT=automake-1.20 && \
+    export AUTOMAKE_HASH=00c0e397a3c0096b1b9167eb4a5ecb87a66fe50888d939c4e02111e603936570 && \
     export AUTOMAKE_DOWNLOAD_URL=https://ftpmirror.gnu.org/gnu/automake && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/install-automake.sh
 
@@ -115,8 +115,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-curl.sh
 COPY build_scripts/build-git.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export GIT_ROOT=git-2.56.0 && \
-    export GIT_HASH=826817fd3671b8565586d6d49f688298de8354ab11db829c02720e5c74b9b39f && \
+    export GIT_ROOT=git-2.56.1 && \
+    export GIT_HASH=fd0c0495427dc9ac445fdced8e36bb5eb6f233a14da5db3c6dfd8dcfa7f85761 && \
     export GIT_DOWNLOAD_URL=https://www.kernel.org/pub/software/scm/git && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-git.sh
 
