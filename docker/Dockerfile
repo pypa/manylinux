@@ -153,8 +153,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_base AS build_zstd
 COPY build_scripts/build-zstd.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export ZSTD_VERSION=1.5.7 && \
-    export ZSTD_HASH=eb33e51f49a15e023950cd7825ca74a4a2b43db8354825ac24fc1b7ee09e6fa3 && \
+    export ZSTD_VERSION=1.6.0 && \
+    export ZSTD_HASH=2ba599ae2a257976278e7e71e998433a387bfd18aa7b78678229fd5d84f5e9b8 && \
     export ZSTD_DOWNLOAD_URL=https://github.com/facebook/zstd/releases/download && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-zstd.sh
 
