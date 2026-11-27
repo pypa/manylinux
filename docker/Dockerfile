@@ -8,8 +8,8 @@ ARG PREPEND_PATH=/usr/local/bin:${DEVTOOLSET_ROOTPATH}/usr/bin:
 ARG MANYLINUX_BUILDARCH=${BUILDARCH}
 ARG MANYLINUX_DISABLE_CLANG=0
 ARG MANYLINUX_DISABLE_CLANG_FOR_CPYTHON=0
-ARG MANYLINUX_CLANG_VERSION=23.1.5.0
-ARG MANYLINUX_COSIGN_VERSION=3.1.4
+ARG MANYLINUX_CLANG_VERSION=23.1.6.0
+ARG MANYLINUX_COSIGN_VERSION=3.1.6
 
 FROM $BASEIMAGE AS runtime_base_packages
 ARG POLICY
@@ -153,8 +153,8 @@ RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
 FROM build_base AS build_zstd
 COPY build_scripts/build-zstd.sh /opt/_internal/build_scripts/
 RUN --mount=type=bind,from=static_clang,target=/tmp/cross-compiler,ro \
-    export ZSTD_VERSION=1.5.7 && \
-    export ZSTD_HASH=eb33e51f49a15e023950cd7825ca74a4a2b43db8354825ac24fc1b7ee09e6fa3 && \
+    export ZSTD_VERSION=1.6.0 && \
+    export ZSTD_HASH=2ba599ae2a257976278e7e71e998433a387bfd18aa7b78678229fd5d84f5e9b8 && \
     export ZSTD_DOWNLOAD_URL=https://github.com/facebook/zstd/releases/download && \
     /tmp/cross-compiler/entrypoint /opt/_internal/build_scripts/build-zstd.sh
 
